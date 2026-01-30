@@ -6,8 +6,31 @@ struct ProjectDetailView: View {
     @State private var readmeContent: String?
     @State private var commitHistory: [Commit] = []
     @State private var isLoadingReadme = false
+    @State private var showIDEMode = false
 
     var body: some View {
+        VStack(spacing: 0) {
+            if showIDEMode {
+                IDEModeView(project: project)
+            } else {
+                detailContent
+            }
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    showIDEMode.toggle()
+                } label: {
+                    Label(
+                        showIDEMode ? "Show Details" : "Open IDE",
+                        systemImage: showIDEMode ? "info.circle" : "rectangle.split.3x1"
+                    )
+                }
+            }
+        }
+    }
+
+    private var detailContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // Header
