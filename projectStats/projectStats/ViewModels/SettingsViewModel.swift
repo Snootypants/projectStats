@@ -85,7 +85,10 @@ class SettingsViewModel: ObservableObject {
     }
 
     private init() {
-        applyTheme()
+        // Defer theme application until NSApp exists
+        DispatchQueue.main.async { [weak self] in
+            self?.applyTheme()
+        }
     }
 
     private func updateLaunchAtLogin() {
