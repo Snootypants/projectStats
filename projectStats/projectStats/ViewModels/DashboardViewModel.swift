@@ -11,6 +11,7 @@ class DashboardViewModel: ObservableObject {
 
     private let scanner = ProjectScanner.shared
     private let gitService = GitService.shared
+    private let githubClient = GitHubClient.shared
 
     var recentProjects: [Project] {
         Array(projects.prefix(5))
@@ -38,6 +39,9 @@ class DashboardViewModel: ObservableObject {
 
         // Calculate aggregated stats
         calculateAggregatedStats()
+
+        // Fetch GitHub stats if authenticated
+        await fetchGitHubStats()
     }
 
     func refresh() async {
@@ -123,5 +127,28 @@ class DashboardViewModel: ObservableObject {
         }
 
         return streak
+    }
+
+    private func fetchGitHubStats() async {
+        githubClient.refreshAuthStatus()
+        guard githubClient.isAuthenticated else { return }
+
+        for i in projects.indices {
+            guard let urlString = projects[i].githubURL,
+                  let (owner, repo) = GitHubClient.parseGitHubURL(urlString) else {
+                continue
+            }
+
+            do {
+                let repoInfo = try await githubClient.getRepo(owner: owner, repo: repo)
+                projects[i].githubStats = GitHubStats(
+                    stars: repoInfo.stargazersCount,
+                    forks: repoInfo.forksCount,
+                    openIssues: repoInfo.openIssuesCount
+                )
+            } catch {
+                print("Failed to fetch GitHub stats for \(repo): \(error)")
+            }
+        }
     }
 }

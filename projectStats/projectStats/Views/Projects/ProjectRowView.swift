@@ -60,6 +60,20 @@ struct ProjectRowView: View {
 
             // Badges
             HStack(spacing: 6) {
+                if let stats = project.githubStats {
+                    HStack(spacing: 8) {
+                        Label("\(stats.stars)", systemImage: "star.fill")
+                            .foregroundStyle(.yellow)
+                        Label("\(stats.forks)", systemImage: "tuningfork")
+                            .foregroundStyle(.secondary)
+                        if stats.openIssues > 0 {
+                            Label("\(stats.openIssues)", systemImage: "exclamationmark.circle")
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                    .font(.caption)
+                }
+
                 if project.promptCount > 0 {
                     Badge(text: "\(project.promptCount) prompts", color: .purple)
                 }
@@ -68,7 +82,7 @@ struct ProjectRowView: View {
                     Badge(text: "\(project.workLogCount) logs", color: .orange)
                 }
 
-                if project.githubURL != nil {
+                if project.githubURL != nil && project.githubStats == nil {
                     Image(systemName: "link")
                         .font(.caption)
                         .foregroundStyle(.blue)

@@ -1,5 +1,12 @@
 import Foundation
 
+struct GitHubStats {
+    var stars: Int = 0
+    var forks: Int = 0
+    var openIssues: Int = 0
+    var watchers: Int = 0
+}
+
 enum ProjectStatus: String, CaseIterable {
     case active = "Active"
     case inProgress = "In Progress"
@@ -35,6 +42,7 @@ struct Project: Identifiable, Hashable {
     var workLogCount: Int
     var lastCommit: Commit?
     var lastScanned: Date
+    var githubStats: GitHubStats?
 
     var status: ProjectStatus {
         guard let lastCommitDate = lastCommit?.date else { return .dormant }
