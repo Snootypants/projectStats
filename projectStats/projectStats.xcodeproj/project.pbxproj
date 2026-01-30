@@ -1,0 +1,526 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		010000000000000000000001 /* ProjectStatsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000001 /* ProjectStatsApp.swift */; };
+		010000000000000000000002 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* Shell.swift */; };
+		010000000000000000000003 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000003 /* DateExtensions.swift */; };
+		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
+		010000000000000000000005 /* ReadmeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* ReadmeParser.swift */; };
+		010000000000000000000006 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* Project.swift */; };
+		010000000000000000000007 /* Commit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000007 /* Commit.swift */; };
+		010000000000000000000008 /* ActivityStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000008 /* ActivityStats.swift */; };
+		010000000000000000000009 /* CachedModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000009 /* CachedModels.swift */; };
+		010000000000000000000010 /* GitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000010 /* GitService.swift */; };
+		010000000000000000000011 /* LineCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000011 /* LineCounter.swift */; };
+		010000000000000000000012 /* ProjectScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000012 /* ProjectScanner.swift */; };
+		010000000000000000000013 /* GitHubClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000013 /* GitHubClient.swift */; };
+		010000000000000000000014 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000014 /* DashboardViewModel.swift */; };
+		010000000000000000000015 /* ProjectListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000015 /* ProjectListViewModel.swift */; };
+		010000000000000000000016 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000016 /* SettingsViewModel.swift */; };
+		010000000000000000000017 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000017 /* MenuBarView.swift */; };
+		010000000000000000000018 /* QuickProjectRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000018 /* QuickProjectRow.swift */; };
+		010000000000000000000019 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000019 /* DashboardView.swift */; };
+		010000000000000000000020 /* StatsCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000020 /* StatsCardsView.swift */; };
+		010000000000000000000021 /* ActivityHeatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000021 /* ActivityHeatMap.swift */; };
+		010000000000000000000022 /* ActivityChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000022 /* ActivityChart.swift */; };
+		010000000000000000000023 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000023 /* ProjectListView.swift */; };
+		010000000000000000000024 /* ProjectRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000024 /* ProjectRowView.swift */; };
+		010000000000000000000025 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000025 /* ProjectDetailView.swift */; };
+		010000000000000000000026 /* ReadmePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000026 /* ReadmePreview.swift */; };
+		010000000000000000000027 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000027 /* SettingsView.swift */; };
+		010000000000000000000028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000028 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		020000000000000000000001 /* ProjectStatsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStatsApp.swift; sourceTree = "<group>"; };
+		020000000000000000000002 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
+		020000000000000000000003 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000005 /* ReadmeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeParser.swift; sourceTree = "<group>"; };
+		020000000000000000000006 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		020000000000000000000007 /* Commit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commit.swift; sourceTree = "<group>"; };
+		020000000000000000000008 /* ActivityStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStats.swift; sourceTree = "<group>"; };
+		020000000000000000000009 /* CachedModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedModels.swift; sourceTree = "<group>"; };
+		020000000000000000000010 /* GitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitService.swift; sourceTree = "<group>"; };
+		020000000000000000000011 /* LineCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineCounter.swift; sourceTree = "<group>"; };
+		020000000000000000000012 /* ProjectScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectScanner.swift; sourceTree = "<group>"; };
+		020000000000000000000013 /* GitHubClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubClient.swift; sourceTree = "<group>"; };
+		020000000000000000000014 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000015 /* ProjectListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000016 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000017 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		020000000000000000000018 /* QuickProjectRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickProjectRow.swift; sourceTree = "<group>"; };
+		020000000000000000000019 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		020000000000000000000020 /* StatsCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCardsView.swift; sourceTree = "<group>"; };
+		020000000000000000000021 /* ActivityHeatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHeatMap.swift; sourceTree = "<group>"; };
+		020000000000000000000022 /* ActivityChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityChart.swift; sourceTree = "<group>"; };
+		020000000000000000000023 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
+		020000000000000000000024 /* ProjectRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRowView.swift; sourceTree = "<group>"; };
+		020000000000000000000025 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
+		020000000000000000000026 /* ReadmePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmePreview.swift; sourceTree = "<group>"; };
+		020000000000000000000027 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000028 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		040000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		050000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				050000000000000000000002 /* projectStats */,
+				050000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		050000000000000000000002 /* projectStats */ = {
+			isa = PBXGroup;
+			children = (
+				050000000000000000000004 /* App */,
+				050000000000000000000005 /* Views */,
+				050000000000000000000006 /* ViewModels */,
+				050000000000000000000007 /* Models */,
+				050000000000000000000008 /* Services */,
+				050000000000000000000009 /* Utilities */,
+				050000000000000000000010 /* Resources */,
+				030000000000000000000002 /* projectStats.entitlements */,
+			);
+			path = projectStats;
+			sourceTree = "<group>";
+		};
+		050000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				030000000000000000000001 /* projectStats.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		050000000000000000000004 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000001 /* ProjectStatsApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		050000000000000000000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				050000000000000000000011 /* MenuBar */,
+				050000000000000000000012 /* Dashboard */,
+				050000000000000000000013 /* Projects */,
+				050000000000000000000014 /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		050000000000000000000006 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000014 /* DashboardViewModel.swift */,
+				020000000000000000000015 /* ProjectListViewModel.swift */,
+				020000000000000000000016 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		050000000000000000000007 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000006 /* Project.swift */,
+				020000000000000000000007 /* Commit.swift */,
+				020000000000000000000008 /* ActivityStats.swift */,
+				020000000000000000000009 /* CachedModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		050000000000000000000008 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000010 /* GitService.swift */,
+				020000000000000000000011 /* LineCounter.swift */,
+				020000000000000000000012 /* ProjectScanner.swift */,
+				020000000000000000000013 /* GitHubClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		050000000000000000000009 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000002 /* Shell.swift */,
+				020000000000000000000003 /* DateExtensions.swift */,
+				020000000000000000000004 /* URLExtensions.swift */,
+				020000000000000000000005 /* ReadmeParser.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		050000000000000000000010 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000028 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		050000000000000000000011 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000017 /* MenuBarView.swift */,
+				020000000000000000000018 /* QuickProjectRow.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		050000000000000000000012 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000019 /* DashboardView.swift */,
+				020000000000000000000020 /* StatsCardsView.swift */,
+				020000000000000000000021 /* ActivityHeatMap.swift */,
+				020000000000000000000022 /* ActivityChart.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		050000000000000000000013 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000023 /* ProjectListView.swift */,
+				020000000000000000000024 /* ProjectRowView.swift */,
+				020000000000000000000025 /* ProjectDetailView.swift */,
+				020000000000000000000026 /* ReadmePreview.swift */,
+			);
+			path = Projects;
+			sourceTree = "<group>";
+		};
+		050000000000000000000014 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000027 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		060000000000000000000001 /* projectStats */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 070000000000000000000001 /* Build configuration list for PBXNativeTarget "projectStats" */;
+			buildPhases = (
+				080000000000000000000001 /* Sources */,
+				040000000000000000000001 /* Frameworks */,
+				090000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = projectStats;
+			productName = projectStats;
+			productReference = 030000000000000000000001 /* projectStats.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		100000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					060000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 070000000000000000000002 /* Build configuration list for PBXProject "projectStats" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 050000000000000000000001;
+			productRefGroup = 050000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				060000000000000000000001 /* projectStats */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		090000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000028 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		080000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000001 /* ProjectStatsApp.swift in Sources */,
+				010000000000000000000002 /* Shell.swift in Sources */,
+				010000000000000000000003 /* DateExtensions.swift in Sources */,
+				010000000000000000000004 /* URLExtensions.swift in Sources */,
+				010000000000000000000005 /* ReadmeParser.swift in Sources */,
+				010000000000000000000006 /* Project.swift in Sources */,
+				010000000000000000000007 /* Commit.swift in Sources */,
+				010000000000000000000008 /* ActivityStats.swift in Sources */,
+				010000000000000000000009 /* CachedModels.swift in Sources */,
+				010000000000000000000010 /* GitService.swift in Sources */,
+				010000000000000000000011 /* LineCounter.swift in Sources */,
+				010000000000000000000012 /* ProjectScanner.swift in Sources */,
+				010000000000000000000013 /* GitHubClient.swift in Sources */,
+				010000000000000000000014 /* DashboardViewModel.swift in Sources */,
+				010000000000000000000015 /* ProjectListViewModel.swift in Sources */,
+				010000000000000000000016 /* SettingsViewModel.swift in Sources */,
+				010000000000000000000017 /* MenuBarView.swift in Sources */,
+				010000000000000000000018 /* QuickProjectRow.swift in Sources */,
+				010000000000000000000019 /* DashboardView.swift in Sources */,
+				010000000000000000000020 /* StatsCardsView.swift in Sources */,
+				010000000000000000000021 /* ActivityHeatMap.swift in Sources */,
+				010000000000000000000022 /* ActivityChart.swift in Sources */,
+				010000000000000000000023 /* ProjectListView.swift in Sources */,
+				010000000000000000000024 /* ProjectRowView.swift in Sources */,
+				010000000000000000000025 /* ProjectDetailView.swift in Sources */,
+				010000000000000000000026 /* ReadmePreview.swift in Sources */,
+				010000000000000000000027 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		110000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		110000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		110000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = projectStats/projectStats.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ProjectStats;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.calebbelshe.projectStats;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		110000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = projectStats/projectStats.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ProjectStats;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.calebbelshe.projectStats;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		070000000000000000000001 /* Build configuration list for PBXNativeTarget "projectStats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				110000000000000000000003 /* Debug */,
+				110000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		070000000000000000000002 /* Build configuration list for PBXProject "projectStats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				110000000000000000000001 /* Debug */,
+				110000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 100000000000000000000001 /* Project object */;
+}
