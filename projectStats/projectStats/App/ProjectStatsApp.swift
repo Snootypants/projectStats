@@ -41,7 +41,7 @@ struct ProjectStatsApp: App {
         .defaultSize(width: 1100, height: 750)
 
         // Menu bar
-        MenuBarExtra("ProjectStats", systemImage: "chevron.left.forwardslash.chevron.right") {
+        MenuBarExtra("ProjectStats", systemImage: "chart.bar.xaxis") {
             MenuBarView()
                 .environmentObject(dashboardViewModel)
                 .environmentObject(settingsViewModel)
