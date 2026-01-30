@@ -20,12 +20,7 @@ struct ProjectStatsApp: App {
         }
     }()
 
-    init() {
-        // Hide from dock if needed
-        if !SettingsViewModel.shared.showInDock {
-            NSApp.setActivationPolicy(.accessory)
-        }
-    }
+    init() { }
 
     var body: some Scene {
         // Main dashboard window
@@ -34,6 +29,12 @@ struct ProjectStatsApp: App {
                 .environmentObject(dashboardViewModel)
                 .environmentObject(settingsViewModel)
                 .frame(minWidth: 900, minHeight: 600)
+                .onAppear {
+                    if !SettingsViewModel.shared.showInDock {
+                        NSApp?.setActivationPolicy(.accessory)
+                    }
+                    SettingsViewModel.shared.applyThemeIfNeeded()
+                }
         }
         .modelContainer(sharedModelContainer)
         .windowStyle(.hiddenTitleBar)

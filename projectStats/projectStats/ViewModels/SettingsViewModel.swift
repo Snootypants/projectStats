@@ -85,10 +85,7 @@ class SettingsViewModel: ObservableObject {
     }
 
     private init() {
-        // Defer theme application until NSApp exists
-        DispatchQueue.main.async { [weak self] in
-            self?.applyTheme()
-        }
+        // Theme will be applied when app is ready
     }
 
     private func updateLaunchAtLogin() {
@@ -104,14 +101,20 @@ class SettingsViewModel: ObservableObject {
     }
 
     private func applyTheme() {
+        guard let app = NSApp else { return }
+
         switch theme {
         case .system:
-            NSApp.appearance = nil
+            app.appearance = nil
         case .light:
-            NSApp.appearance = NSAppearance(named: .aqua)
+            app.appearance = NSAppearance(named: .aqua)
         case .dark:
-            NSApp.appearance = NSAppearance(named: .darkAqua)
+            app.appearance = NSAppearance(named: .darkAqua)
         }
+    }
+
+    func applyThemeIfNeeded() {
+        applyTheme()
     }
 
     func selectCodeDirectory() {
