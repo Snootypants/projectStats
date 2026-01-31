@@ -7,6 +7,16 @@ struct GitHubStats {
     var watchers: Int = 0
 }
 
+struct ProjectGitMetrics: Hashable {
+    var commits7d: Int = 0
+    var commits30d: Int = 0
+    var linesAdded7d: Int = 0
+    var linesRemoved7d: Int = 0
+    var linesAdded30d: Int = 0
+    var linesRemoved30d: Int = 0
+    var recentCommits: [Commit] = []
+}
+
 enum ProjectStatus: String, CaseIterable {
     case active = "Active"
     case inProgress = "In Progress"
@@ -44,6 +54,7 @@ struct Project: Identifiable, Hashable {
     var lastScanned: Date
     var githubStats: GitHubStats?
     var githubStatsError: String?
+    var gitMetrics: ProjectGitMetrics?
 
     var status: ProjectStatus {
         guard let lastCommitDate = lastCommit?.date else { return .dormant }
@@ -78,7 +89,8 @@ struct Project: Identifiable, Hashable {
         lastCommit: Commit? = nil,
         lastScanned: Date = Date(),
         githubStats: GitHubStats? = nil,
-        githubStatsError: String? = nil
+        githubStatsError: String? = nil,
+        gitMetrics: ProjectGitMetrics? = nil
     ) {
         self.id = id
         self.path = path
@@ -94,6 +106,7 @@ struct Project: Identifiable, Hashable {
         self.lastScanned = lastScanned
         self.githubStats = githubStats
         self.githubStatsError = githubStatsError
+        self.gitMetrics = gitMetrics
     }
 
     func hash(into hasher: inout Hasher) {

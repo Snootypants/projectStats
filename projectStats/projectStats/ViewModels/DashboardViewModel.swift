@@ -8,6 +8,7 @@ class DashboardViewModel: ObservableObject {
     @Published var aggregatedStats: AggregatedStats = .empty
     @Published var isLoading = false
     @Published var selectedProject: Project?
+    @Published var syncLogLines: [String] = []
 
     private let scanner = ProjectScanner.shared
     private let gitService = GitService.shared
@@ -27,12 +28,29 @@ class DashboardViewModel: ObservableObject {
 
     func loadData() async {
         isLoading = true
-        defer { isLoading = false }
+        syncLogLines.removeAll(keepingCapacity: true)
+        logSync("sync start")
+        defer {
+            logSync("sync end")
+            isLoading = false
+        }
 
         let codeDirectory = SettingsViewModel.shared.codeDirectory
 
         // Scan projects
         projects = await scanner.scan(directory: codeDirectory)
+
+        for project in projects {
+            if let url = project.githubURL {
+                logSync("project: \(project.name) remote=\(url)")
+            } else {
+                logSync("project: \(project.name) remote=none")
+            }
+
+            if let m = project.gitMetrics {
+                logSync("git: \(project.name) commits7d=\(m.commits7d) commits30d=\(m.commits30d) lines7d=+\(m.linesAdded7d)/-\(m.linesRemoved7d)")
+            }
+        }
 
         // Calculate activities from all projects
         await calculateActivities()
@@ -130,15 +148,35 @@ class DashboardViewModel: ObservableObject {
         return streak
     }
 
+    private func logSync(_ message: String) {
+        let ts = ISO8601DateFormatter().string(from: Date())
+        syncLogLines.append("[\(ts)] \(message)")
+        if syncLogLines.count > 500 {
+            syncLogLines.removeFirst(syncLogLines.count - 500)
+        }
+    }
+
     private func fetchGitHubStats() async {
         githubClient.refreshAuthStatus()
-        guard githubClient.isAuthenticated else { return }
-
-        var failures: [(repo: String, error: Error)] = []
+        if !githubClient.isAuthenticated {
+            logSync("github: skipped (not authenticated)")
+            return
+        }
 
         for i in projects.indices {
-            guard let urlString = projects[i].githubURL,
-                  let (owner, repo) = GitHubClient.parseGitHubURL(urlString) else {
+            let projectName = projects[i].name
+
+            guard let urlString = projects[i].githubURL, !urlString.isEmpty else {
+                projects[i].githubStats = nil
+                projects[i].githubStatsError = "skipped: no github remote"
+                logSync("github: SKIP \(projectName) (no remote)")
+                continue
+            }
+
+            guard let (owner, repo) = GitHubClient.parseGitHubURL(urlString) else {
+                projects[i].githubStats = nil
+                projects[i].githubStatsError = "skipped: unparsable github url"
+                logSync("github: SKIP \(projectName) (bad url: \(urlString))")
                 continue
             }
 
@@ -150,19 +188,13 @@ class DashboardViewModel: ObservableObject {
                     openIssues: repoInfo.openIssuesCount
                 )
                 projects[i].githubStatsError = nil
+                logSync("github: OK \(projectName) (\(owner)/\(repo))")
             } catch {
                 projects[i].githubStats = nil
                 projects[i].githubStatsError = String(describing: error)
-                failures.append((repo: "\(owner)/\(repo)", error: error))
+                logSync("github: FAIL \(projectName) (\(owner)/\(repo)) \(error)")
                 continue
             }
-        }
-
-        if !failures.isEmpty {
-            let summary = failures
-                .map { "\($0.repo): \($0.error)" }
-                .joined(separator: "\n")
-            print("GitHub stats fetch failures (\(failures.count)):\n\(summary)")
         }
     }
 }

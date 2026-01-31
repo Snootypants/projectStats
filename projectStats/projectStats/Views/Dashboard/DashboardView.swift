@@ -5,6 +5,7 @@ struct DashboardView: View {
     @EnvironmentObject var settingsViewModel: SettingsViewModel
     @StateObject private var projectListVM = ProjectListViewModel()
     @State private var selectedTab = 0
+    @State private var showSyncLog = false
 
     var body: some View {
         NavigationSplitView {
@@ -91,6 +92,14 @@ struct DashboardView: View {
 
                     Spacer()
 
+                    Button {
+                        showSyncLog = true
+                    } label: {
+                        Image(systemName: "doc.plaintext")
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
+
                     SettingsLink {
                         Image(systemName: "gear")
                     }
@@ -116,6 +125,9 @@ struct DashboardView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .sheet(isPresented: $showSyncLog) {
+            SyncLogView(lines: viewModel.syncLogLines)
         }
         .task {
             await viewModel.loadData()

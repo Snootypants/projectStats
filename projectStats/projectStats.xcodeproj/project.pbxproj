@@ -39,6 +39,7 @@
 		010000000000000000000030 /* FileViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000030 /* FileViewerView.swift */; };
 		010000000000000000000031 /* PromptManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000031 /* PromptManagerView.swift */; };
 		010000000000000000000032 /* IDEModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000032 /* IDEModeView.swift */; };
+		010000000000000000000033 /* SyncLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000033 /* SyncLogView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		020000000000000000000030 /* FileViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewerView.swift; sourceTree = "<group>"; };
 		020000000000000000000031 /* PromptManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptManagerView.swift; sourceTree = "<group>"; };
 		020000000000000000000032 /* IDEModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEModeView.swift; sourceTree = "<group>"; };
+		020000000000000000000033 /* SyncLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLogView.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -226,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000027 /* SettingsView.swift */,
+				020000000000000000000033 /* SyncLogView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				010000000000000000000030 /* FileViewerView.swift in Sources */,
 				010000000000000000000031 /* PromptManagerView.swift in Sources */,
 				010000000000000000000032 /* IDEModeView.swift in Sources */,
+				010000000000000000000033 /* SyncLogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

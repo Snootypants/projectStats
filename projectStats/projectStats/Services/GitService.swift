@@ -61,6 +61,66 @@ class GitService {
         return result.components(separatedBy: .newlines).compactMap { Commit.fromGitLog($0) }
     }
 
+    func getRecentCommitsWithStats(at path: URL, limit: Int = 20) -> [Commit] {
+        // Emits alternating commit header lines and numstat lines.
+        // Header: %H|%s|%an|%ai
+        let result = Shell.run("git log -n \(limit) --format=\"%H|%s|%an|%ai\" --numstat", at: path)
+        guard !result.isEmpty else { return [] }
+
+        var commits: [Commit] = []
+        var current: Commit? = nil
+
+        for line in result.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty { continue }
+
+            if trimmed.contains("|") {
+                if let existing = current {
+                    commits.append(existing)
+                }
+                current = Commit.fromGitLog(trimmed)
+                continue
+            }
+
+            // numstat line: added<TAB>removed<TAB>file
+            let parts = trimmed.split(separator: "\t")
+            guard parts.count >= 2 else { continue }
+
+            guard let added = Int(parts[0]), let removed = Int(parts[1]) else { continue } // skip binaries (-)
+            current?.linesAdded += added
+            current?.linesRemoved += removed
+        }
+
+        if let existing = current {
+            commits.append(existing)
+        }
+
+        return commits
+    }
+
+    func getProjectGitMetrics(at path: URL) -> ProjectGitMetrics {
+        let calendar = Calendar.current
+        let now = Date()
+        let since7d = calendar.date(byAdding: .day, value: -7, to: now)
+        let since30d = calendar.date(byAdding: .day, value: -30, to: now)
+
+        let commits7d = getCommitCount(at: path, since: since7d)
+        let commits30d = getCommitCount(at: path, since: since30d)
+
+        let lines7d = getLinesChanged(at: path, since: since7d)
+        let lines30d = getLinesChanged(at: path, since: since30d)
+
+        return ProjectGitMetrics(
+            commits7d: commits7d,
+            commits30d: commits30d,
+            linesAdded7d: lines7d.added,
+            linesRemoved7d: lines7d.removed,
+            linesAdded30d: lines30d.added,
+            linesRemoved30d: lines30d.removed,
+            recentCommits: getRecentCommitsWithStats(at: path, limit: 20)
+        )
+    }
+
     func getLinesChanged(at path: URL, since: Date? = nil) -> (added: Int, removed: Int) {
         var command = "git log --numstat --format=\"\""
 

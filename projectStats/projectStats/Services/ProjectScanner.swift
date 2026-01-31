@@ -88,6 +88,7 @@ class ProjectScanner: ObservableObject {
         let language = LineCounter.detectLanguage(in: url)
         let (lines, files) = LineCounter.countLines(in: url)
         let lastCommit = gitService.getLastCommit(at: url)
+        let gitMetrics = gitService.getProjectGitMetrics(at: url)
 
         // Count prompts folder
         let promptsDir = url.appendingPathComponent("prompts")
@@ -108,7 +109,8 @@ class ProjectScanner: ObservableObject {
             promptCount: promptCount,
             workLogCount: workLogCount,
             lastCommit: lastCommit,
-            lastScanned: Date()
+            lastScanned: Date(),
+            gitMetrics: gitMetrics
         )
     }
 
