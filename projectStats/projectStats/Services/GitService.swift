@@ -197,7 +197,8 @@ class GitService {
         formatter.dateFormat = "yyyy-MM-dd"
         let sinceDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
 
-        let command = "git log --since=\"\(formatter.string(from: sinceDate))\" --format=\"%ai\" --numstat"
+        // Use --shortstat instead of --numstat for performance (avoids hanging on large repos)
+        let command = "git log --since=\"\(formatter.string(from: sinceDate))\" --format=\"%ai\" --shortstat"
         let result = Shell.run(command, at: path)
         guard !result.isEmpty else { return [:] }
 
@@ -218,14 +219,19 @@ class GitService {
                 continue
             }
 
-            // It's a numstat line
+            // Parse shortstat line: " 3 files changed, 45 insertions(+), 12 deletions(-)"
             guard let date = currentDate else { continue }
-            let parts = trimmed.split(separator: "\t")
-            guard parts.count >= 2 else { continue }
-
-            if let added = Int(parts[0]), let removed = Int(parts[1]) {
-                activities[date]?.linesAdded += added
-                activities[date]?.linesRemoved += removed
+            if trimmed.contains("changed") {
+                // Extract insertions
+                if let insertMatch = trimmed.range(of: #"(\d+) insertion"#, options: .regularExpression) {
+                    let numStr = trimmed[insertMatch].components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+                    activities[date]?.linesAdded += Int(numStr) ?? 0
+                }
+                // Extract deletions
+                if let deleteMatch = trimmed.range(of: #"(\d+) deletion"#, options: .regularExpression) {
+                    let numStr = trimmed[deleteMatch].components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+                    activities[date]?.linesRemoved += Int(numStr) ?? 0
+                }
             }
         }
 

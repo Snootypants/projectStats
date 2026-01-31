@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct ProjectListView: View {
     @ObservedObject var viewModel: ProjectListViewModel
@@ -37,7 +38,6 @@ struct ProjectListView: View {
 // MARK: - Compact Project Card (Square for Overview Grid)
 struct CompactProjectCard: View {
     let project: Project
-    @StateObject private var projectListVM = ProjectListViewModel()
     @State private var isHovering = false
 
     var body: some View {
@@ -88,7 +88,7 @@ struct CompactProjectCard: View {
             if isHovering {
                 HStack(spacing: 6) {
                     Button {
-                        projectListVM.openInEditor(project)
+                        openInEditor()
                     } label: {
                         Image(systemName: "rectangle.and.pencil.and.ellipsis")
                     }
@@ -96,7 +96,7 @@ struct CompactProjectCard: View {
                     .controlSize(.mini)
 
                     Button {
-                        projectListVM.openInFinder(project)
+                        openInFinder()
                     } label: {
                         Image(systemName: "folder")
                     }
@@ -105,7 +105,7 @@ struct CompactProjectCard: View {
 
                     if project.githubURL != nil {
                         Button {
-                            projectListVM.openGitHub(project)
+                            openGitHub()
                         } label: {
                             Image(systemName: "link")
                         }
@@ -137,12 +137,57 @@ struct CompactProjectCard: View {
         case .dormant: return .gray
         }
     }
+
+    private func openInEditor() {
+        let editor = SettingsViewModel.shared.defaultEditor
+        let appName: String
+
+        switch editor {
+        case .vscode:
+            appName = "Visual Studio Code"
+        case .cursor:
+            appName = "Cursor"
+        case .xcode:
+            appName = "Xcode"
+        case .sublime:
+            appName = "Sublime Text"
+        case .finder:
+            openInFinder()
+            return
+        }
+
+        if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier(for: editor)) {
+            let config = NSWorkspace.OpenConfiguration()
+            NSWorkspace.shared.open([project.path], withApplicationAt: appURL, configuration: config)
+        } else {
+            _ = Shell.run("open -a \"\(appName)\" \"\(project.path.path)\"")
+        }
+    }
+
+    private func bundleIdentifier(for editor: Editor) -> String {
+        switch editor {
+        case .vscode: return "com.microsoft.VSCode"
+        case .cursor: return "com.todesktop.230313mzl4w4u92"
+        case .xcode: return "com.apple.dt.Xcode"
+        case .sublime: return "com.sublimetext.4"
+        case .finder: return "com.apple.finder"
+        }
+    }
+
+    private func openInFinder() {
+        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: project.path.path)
+    }
+
+    private func openGitHub() {
+        if let urlString = project.githubURL, let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
+        }
+    }
 }
 
 // MARK: - Full Project Card (for other uses)
 struct ProjectCard: View {
     let project: Project
-    @StateObject private var projectListVM = ProjectListViewModel()
     @State private var isHovering = false
 
     var body: some View {
@@ -206,14 +251,14 @@ struct ProjectCard: View {
             if isHovering {
                 HStack(spacing: 8) {
                     Button("Open") {
-                        projectListVM.openInEditor(project)
+                        openInEditor()
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)
 
                     if project.githubURL != nil {
                         Button {
-                            projectListVM.openGitHub(project)
+                            openGitHub()
                         } label: {
                             Image(systemName: "link")
                         }
@@ -244,6 +289,52 @@ struct ProjectCard: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        }
+    }
+
+    private func openInEditor() {
+        let editor = SettingsViewModel.shared.defaultEditor
+        let appName: String
+
+        switch editor {
+        case .vscode:
+            appName = "Visual Studio Code"
+        case .cursor:
+            appName = "Cursor"
+        case .xcode:
+            appName = "Xcode"
+        case .sublime:
+            appName = "Sublime Text"
+        case .finder:
+            openInFinder()
+            return
+        }
+
+        if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier(for: editor)) {
+            let config = NSWorkspace.OpenConfiguration()
+            NSWorkspace.shared.open([project.path], withApplicationAt: appURL, configuration: config)
+        } else {
+            _ = Shell.run("open -a \"\(appName)\" \"\(project.path.path)\"")
+        }
+    }
+
+    private func bundleIdentifier(for editor: Editor) -> String {
+        switch editor {
+        case .vscode: return "com.microsoft.VSCode"
+        case .cursor: return "com.todesktop.230313mzl4w4u92"
+        case .xcode: return "com.apple.dt.Xcode"
+        case .sublime: return "com.sublimetext.4"
+        case .finder: return "com.apple.finder"
+        }
+    }
+
+    private func openInFinder() {
+        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: project.path.path)
+    }
+
+    private func openGitHub() {
+        if let urlString = project.githubURL, let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
         }
     }
 }
