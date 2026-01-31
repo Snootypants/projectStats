@@ -256,7 +256,18 @@ struct ProjectDetailView: View {
                 .font(.callout)
                 .foregroundStyle(.primary)
                 .lineLimit(2)
-                .textSelection(allowSelection ? .enabled : .disabled)
+                .textSelectionEnabled(allowSelection)
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func textSelectionEnabled(_ enabled: Bool) -> some View {
+        if enabled {
+            self.textSelection(.enabled)
+        } else {
+            self.textSelection(.disabled)
         }
     }
 }
