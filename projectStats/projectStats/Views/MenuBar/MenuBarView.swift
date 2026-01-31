@@ -15,9 +15,7 @@ struct MenuBarView: View {
                 Text("ProjectStats")
                     .font(.headline)
                 Spacer()
-                Button {
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                } label: {
+                SettingsLink {
                     Image(systemName: "gear")
                         .foregroundStyle(.secondary)
                 }

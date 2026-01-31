@@ -91,9 +91,7 @@ struct DashboardView: View {
 
                     Spacer()
 
-                    Button {
-                        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                    } label: {
+                    SettingsLink {
                         Image(systemName: "gear")
                     }
                     .buttonStyle(.plain)
