@@ -1,8 +1,10 @@
+import AppKit
 import SwiftUI
 import SwiftData
 
 @main
 struct ProjectStatsApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var dashboardViewModel = DashboardViewModel()
     @StateObject private var settingsViewModel = SettingsViewModel.shared
 
@@ -20,8 +22,6 @@ struct ProjectStatsApp: App {
         }
     }()
 
-    init() { }
-
     var body: some Scene {
         // Main dashboard window
         WindowGroup {
@@ -29,12 +29,6 @@ struct ProjectStatsApp: App {
                 .environmentObject(dashboardViewModel)
                 .environmentObject(settingsViewModel)
                 .frame(minWidth: 900, minHeight: 600)
-                .onAppear {
-                    if !SettingsViewModel.shared.showInDock {
-                        NSApp?.setActivationPolicy(.accessory)
-                    }
-                    SettingsViewModel.shared.applyThemeIfNeeded()
-                }
         }
         .modelContainer(sharedModelContainer)
         .windowStyle(.hiddenTitleBar)
@@ -53,5 +47,16 @@ struct ProjectStatsApp: App {
             SettingsView()
                 .environmentObject(settingsViewModel)
         }
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        if !SettingsViewModel.shared.showInDock {
+            NSApplication.shared.setActivationPolicy(.accessory)
+        } else {
+            NSApplication.shared.setActivationPolicy(.regular)
+        }
+        SettingsViewModel.shared.applyThemeIfNeeded()
     }
 }
