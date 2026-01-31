@@ -40,6 +40,9 @@
 		010000000000000000000031 /* PromptManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000031 /* PromptManagerView.swift */; };
 		010000000000000000000032 /* IDEModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000032 /* IDEModeView.swift */; };
 		010000000000000000000033 /* SyncLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000033 /* SyncLogView.swift */; };
+		010000000000000000000034 /* GitRepoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000034 /* GitRepoInfo.swift */; };
+		010000000000000000000035 /* GitRepoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000035 /* GitRepoService.swift */; };
+		010000000000000000000036 /* SecurityScopedBookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000036 /* SecurityScopedBookmarkStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +79,9 @@
 		020000000000000000000031 /* PromptManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptManagerView.swift; sourceTree = "<group>"; };
 		020000000000000000000032 /* IDEModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEModeView.swift; sourceTree = "<group>"; };
 		020000000000000000000033 /* SyncLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLogView.swift; sourceTree = "<group>"; };
+		020000000000000000000034 /* GitRepoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitRepoInfo.swift; sourceTree = "<group>"; };
+		020000000000000000000035 /* GitRepoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitRepoService.swift; sourceTree = "<group>"; };
+		020000000000000000000036 /* SecurityScopedBookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityScopedBookmarkStore.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -155,6 +161,7 @@
 		050000000000000000000007 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000034 /* GitRepoInfo.swift */,
 				020000000000000000000006 /* Project.swift */,
 				020000000000000000000007 /* Commit.swift */,
 				020000000000000000000008 /* ActivityStats.swift */,
@@ -166,6 +173,7 @@
 		050000000000000000000008 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000035 /* GitRepoService.swift */,
 				020000000000000000000010 /* GitService.swift */,
 				020000000000000000000011 /* LineCounter.swift */,
 				020000000000000000000012 /* ProjectScanner.swift */,
@@ -177,6 +185,7 @@
 		050000000000000000000009 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000036 /* SecurityScopedBookmarkStore.swift */,
 				020000000000000000000002 /* Shell.swift */,
 				020000000000000000000003 /* DateExtensions.swift */,
 				020000000000000000000004 /* URLExtensions.swift */,
@@ -345,6 +354,9 @@
 				010000000000000000000031 /* PromptManagerView.swift in Sources */,
 				010000000000000000000032 /* IDEModeView.swift in Sources */,
 				010000000000000000000033 /* SyncLogView.swift in Sources */,
+				010000000000000000000034 /* GitRepoInfo.swift in Sources */,
+				010000000000000000000035 /* GitRepoService.swift in Sources */,
+				010000000000000000000036 /* SecurityScopedBookmarkStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

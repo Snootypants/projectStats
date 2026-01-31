@@ -56,11 +56,12 @@ class ProjectScanner: ObservableObject {
             return date1 > date2
         }
 
+        let result = discoveredProjects
         await MainActor.run {
-            self.projects = discoveredProjects
+            self.projects = result
         }
 
-        return discoveredProjects
+        return result
     }
 
     private func isProject(_ url: URL) -> Bool {
