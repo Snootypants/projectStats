@@ -55,7 +55,9 @@ class SettingsViewModel: ObservableObject {
         }
         set {
             codeDirectoryPath = newValue.path
-            objectWillChange.send()
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
         }
     }
 
@@ -63,7 +65,9 @@ class SettingsViewModel: ObservableObject {
         get { Editor(rawValue: defaultEditorRaw) ?? .vscode }
         set {
             defaultEditorRaw = newValue.rawValue
-            objectWillChange.send()
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
         }
     }
 
@@ -71,7 +75,9 @@ class SettingsViewModel: ObservableObject {
         get { Terminal(rawValue: defaultTerminalRaw) ?? .terminal }
         set {
             defaultTerminalRaw = newValue.rawValue
-            objectWillChange.send()
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
         }
     }
 
@@ -79,8 +85,10 @@ class SettingsViewModel: ObservableObject {
         get { AppTheme(rawValue: themeRaw) ?? .system }
         set {
             themeRaw = newValue.rawValue
-            objectWillChange.send()
-            applyTheme()
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+                self?.applyTheme()
+            }
         }
     }
 
