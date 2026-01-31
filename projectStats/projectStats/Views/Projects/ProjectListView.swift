@@ -34,6 +34,112 @@ struct ProjectListView: View {
     }
 }
 
+// MARK: - Compact Project Card (Square for Overview Grid)
+struct CompactProjectCard: View {
+    let project: Project
+    @StateObject private var projectListVM = ProjectListViewModel()
+    @State private var isHovering = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Header with status and language
+            HStack {
+                Circle()
+                    .fill(statusColor)
+                    .frame(width: 8, height: 8)
+
+                if let language = project.language {
+                    Text(language)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                if let metrics = project.gitMetrics, metrics.commits7d > 0 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "arrow.triangle.branch")
+                        Text("\(metrics.commits7d)")
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.blue)
+                }
+            }
+
+            // Project name
+            Text(project.name)
+                .font(.system(.subheadline, weight: .semibold))
+                .lineLimit(2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer(minLength: 0)
+
+            // Stats row
+            HStack(spacing: 8) {
+                Label(project.lastActivityString, systemImage: "clock")
+                Spacer()
+                Text("\(project.formattedLineCount)")
+                    .foregroundStyle(.secondary)
+            }
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+
+            // Hover actions
+            if isHovering {
+                HStack(spacing: 6) {
+                    Button {
+                        projectListVM.openInEditor(project)
+                    } label: {
+                        Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.mini)
+
+                    Button {
+                        projectListVM.openInFinder(project)
+                    } label: {
+                        Image(systemName: "folder")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.mini)
+
+                    if project.githubURL != nil {
+                        Button {
+                            projectListVM.openGitHub(project)
+                        } label: {
+                            Image(systemName: "link")
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.mini)
+                    }
+                }
+            }
+        }
+        .padding(12)
+        .frame(minHeight: 110)
+        .background(Color.primary.opacity(0.03))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(isHovering ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 1)
+        )
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.15)) {
+                isHovering = hovering
+            }
+        }
+    }
+
+    private var statusColor: Color {
+        switch project.status {
+        case .active: return .green
+        case .inProgress: return .yellow
+        case .dormant: return .gray
+        }
+    }
+}
+
+// MARK: - Full Project Card (for other uses)
 struct ProjectCard: View {
     let project: Project
     @StateObject private var projectListVM = ProjectListViewModel()

@@ -42,6 +42,8 @@
 		010000000000000000000033 /* SyncLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000033 /* SyncLogView.swift */; };
 		010000000000000000000034 /* GitRepoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000034 /* GitRepoInfo.swift */; };
 		010000000000000000000035 /* GitRepoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000035 /* GitRepoService.swift */; };
+		010000000000000000000036 /* ProjectGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000036 /* ProjectGroup.swift */; };
+		010000000000000000000037 /* ProjectGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000037 /* ProjectGroupSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +82,8 @@
 		020000000000000000000033 /* SyncLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLogView.swift; sourceTree = "<group>"; };
 		020000000000000000000034 /* GitRepoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitRepoInfo.swift; sourceTree = "<group>"; };
 		020000000000000000000035 /* GitRepoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitRepoService.swift; sourceTree = "<group>"; };
+		020000000000000000000036 /* ProjectGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectGroup.swift; sourceTree = "<group>"; };
+		020000000000000000000037 /* ProjectGroupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectGroupSheet.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,6 +168,7 @@
 				020000000000000000000007 /* Commit.swift */,
 				020000000000000000000008 /* ActivityStats.swift */,
 				020000000000000000000009 /* CachedModels.swift */,
+				020000000000000000000036 /* ProjectGroup.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -226,6 +231,7 @@
 				020000000000000000000024 /* ProjectRowView.swift */,
 				020000000000000000000025 /* ProjectDetailView.swift */,
 				020000000000000000000026 /* ReadmePreview.swift */,
+				020000000000000000000037 /* ProjectGroupSheet.swift */,
 			);
 			path = Projects;
 			sourceTree = "<group>";
@@ -353,6 +359,8 @@
 				010000000000000000000033 /* SyncLogView.swift in Sources */,
 				010000000000000000000034 /* GitRepoInfo.swift in Sources */,
 				010000000000000000000035 /* GitRepoService.swift in Sources */,
+				010000000000000000000036 /* ProjectGroup.swift in Sources */,
+				010000000000000000000037 /* ProjectGroupSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,7 +18,7 @@ class DashboardViewModel: ObservableObject {
     private var didInitialLoad = false
 
     var recentProjects: [Project] {
-        Array(projects.prefix(5))
+        Array(projects.prefix(6))
     }
 
     var activeProjectCount: Int {

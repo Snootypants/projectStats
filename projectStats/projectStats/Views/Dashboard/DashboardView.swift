@@ -158,7 +158,7 @@ struct OverviewTab: View {
                         .frame(height: 120)
                 }
 
-                // Recent projects
+                // Recent projects - 3 columns, 2 rows
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         Text("Recent Projects")
@@ -171,10 +171,11 @@ struct OverviewTab: View {
 
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
+                        GridItem(.flexible()),
                         GridItem(.flexible())
                     ], spacing: 12) {
-                        ForEach(viewModel.recentProjects) { project in
-                            ProjectCard(project: project)
+                        ForEach(Array(viewModel.recentProjects.prefix(6))) { project in
+                            CompactProjectCard(project: project)
                         }
                     }
                 }
@@ -188,6 +189,8 @@ struct OverviewTab: View {
 struct ProjectsTab: View {
     @ObservedObject var viewModel: ProjectListViewModel
     @EnvironmentObject var dashboardVM: DashboardViewModel
+    @State private var showCombineSheet = false
+    @State private var showManageGroups = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -218,6 +221,23 @@ struct ProjectsTab: View {
                 }
                 .pickerStyle(.menu)
                 .frame(width: 120)
+
+                Spacer()
+
+                Button {
+                    showCombineSheet = true
+                } label: {
+                    Label("Combine", systemImage: "square.stack.3d.up")
+                }
+                .buttonStyle(.bordered)
+
+                Button {
+                    showManageGroups = true
+                } label: {
+                    Image(systemName: "folder.badge.gearshape")
+                }
+                .buttonStyle(.bordered)
+                .help("Manage Groups")
             }
             .padding()
 
@@ -225,6 +245,14 @@ struct ProjectsTab: View {
 
             // Project list
             ProjectListView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $showCombineSheet) {
+            ProjectGroupSheet(projects: dashboardVM.projects) {
+                // Refresh after grouping
+            }
+        }
+        .sheet(isPresented: $showManageGroups) {
+            ManageGroupsView()
         }
     }
 }
