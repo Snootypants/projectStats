@@ -1,6 +1,6 @@
 import Foundation
 
-struct GitRepoInfo: Hashable {
+struct GitRepoInfo: Hashable, Sendable {
     let repoRoot: String
     let branch: String?
     let remoteURL: String?

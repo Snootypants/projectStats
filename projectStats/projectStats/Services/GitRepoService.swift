@@ -12,9 +12,6 @@ actor GitRepoService {
     private let cacheTTL: TimeInterval = 30
 
     func inspect(path: String) async -> GitRepoInfo {
-        let access = SecurityScopedAccess(path: path)
-        defer { access.stop() }
-
         let rootResult = await runGit(
             args: ["-C", path, "rev-parse", "--show-toplevel"],
             workingDir: path
@@ -39,9 +36,6 @@ actor GitRepoService {
         if let cached = cachedInfo(for: repoRoot) {
             return cached
         }
-
-        let repoAccess = SecurityScopedAccess(path: repoRoot)
-        defer { repoAccess.stop() }
 
         let branchResult = await runGit(
             args: ["-C", repoRoot, "rev-parse", "--abbrev-ref", "HEAD"],
@@ -158,26 +152,5 @@ actor GitRepoService {
         let dateISO = String(parts[1])
         let subject = parts[2...].joined(separator: "|")
         return (hash, dateISO, subject)
-    }
-}
-
-private struct SecurityScopedAccess {
-    private let url: URL?
-    private let started: Bool
-
-    init(path: String) {
-        if let resolved = SecurityScopedBookmarkStore.shared.resolveURL(forPath: path) {
-            url = resolved
-            started = resolved.startAccessingSecurityScopedResource()
-        } else {
-            url = nil
-            started = false
-        }
-    }
-
-    func stop() {
-        if started {
-            url?.stopAccessingSecurityScopedResource()
-        }
     }
 }

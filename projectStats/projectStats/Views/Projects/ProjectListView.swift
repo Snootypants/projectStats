@@ -77,9 +77,24 @@ struct ProjectCard: View {
 
                 Spacer()
 
-                Text("\(project.formattedLineCount) lines")
+                if let metrics = project.gitMetrics, metrics.commits7d > 0 {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.triangle.branch")
+                            .font(.caption2)
+                        Text("\(metrics.commits7d)")
+                            .fontWeight(.medium)
+                        if metrics.linesAdded7d > 0 || metrics.linesRemoved7d > 0 {
+                            Text("+\(metrics.linesAdded7d)/-\(metrics.linesRemoved7d)")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.blue)
+                } else {
+                    Text("\(project.formattedLineCount) lines")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             if isHovering {

@@ -107,8 +107,15 @@ class GitService {
         let commits7d = getCommitCount(at: path, since: since7d)
         let commits30d = getCommitCount(at: path, since: since30d)
 
-        let lines7d = getLinesChanged(at: path, since: since7d)
-        let lines30d = getLinesChanged(at: path, since: since30d)
+        // Only fetch line stats if there are recent commits (performance optimization)
+        var lines7d = (added: 0, removed: 0)
+        var lines30d = (added: 0, removed: 0)
+
+        if commits30d > 0 && commits30d < 100 {
+            // Skip expensive line counting for repos with too many commits
+            lines7d = getLinesChangedFast(at: path, since: since7d)
+            lines30d = getLinesChangedFast(at: path, since: since30d)
+        }
 
         return ProjectGitMetrics(
             commits7d: commits7d,
@@ -117,8 +124,43 @@ class GitService {
             linesRemoved7d: lines7d.removed,
             linesAdded30d: lines30d.added,
             linesRemoved30d: lines30d.removed,
-            recentCommits: getRecentCommitsWithStats(at: path, limit: 20)
+            recentCommits: [] // Defer to detail view for performance
         )
+    }
+
+    /// Faster version that uses --stat instead of --numstat (less parsing)
+    func getLinesChangedFast(at path: URL, since: Date?) -> (added: Int, removed: Int) {
+        var command = "git log --shortstat --format=\"\""
+
+        if let since = since {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            command += " --since=\"\(formatter.string(from: since))\""
+        }
+
+        let result = Shell.run(command, at: path)
+        guard !result.isEmpty else { return (0, 0) }
+
+        var totalAdded = 0
+        var totalRemoved = 0
+
+        // Parse shortstat format: " 3 files changed, 45 insertions(+), 12 deletions(-)"
+        for line in result.components(separatedBy: .newlines) {
+            if line.contains("insertion") || line.contains("deletion") {
+                // Extract insertions
+                if let insertMatch = line.range(of: #"(\d+) insertion"#, options: .regularExpression) {
+                    let numStr = line[insertMatch].components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+                    totalAdded += Int(numStr) ?? 0
+                }
+                // Extract deletions
+                if let deleteMatch = line.range(of: #"(\d+) deletion"#, options: .regularExpression) {
+                    let numStr = line[deleteMatch].components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+                    totalRemoved += Int(numStr) ?? 0
+                }
+            }
+        }
+
+        return (totalAdded, totalRemoved)
     }
 
     func getLinesChanged(at path: URL, since: Date? = nil) -> (added: Int, removed: Int) {

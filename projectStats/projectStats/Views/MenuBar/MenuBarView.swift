@@ -130,9 +130,7 @@ struct MenuBarView: View {
         }
         .frame(width: 340)
         .task {
-            if dashboardViewModel.projects.isEmpty {
-                await dashboardViewModel.loadData()
-            }
+            await dashboardViewModel.loadDataIfNeeded()
         }
     }
 

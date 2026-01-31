@@ -1,6 +1,6 @@
 import Foundation
 
-struct Commit: Identifiable, Hashable {
+struct Commit: Identifiable, Hashable, Sendable {
     let id: String // hash
     let message: String
     let author: String

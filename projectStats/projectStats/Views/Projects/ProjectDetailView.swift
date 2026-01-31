@@ -120,6 +120,88 @@ struct ProjectDetailView: View {
                     StatTile(title: "Work Logs", value: "\(project.workLogCount)", icon: "list.bullet.clipboard")
                 }
 
+                // Git Activity Stats
+                if let metrics = project.gitMetrics {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Git Activity")
+                            .font(.headline)
+
+                        HStack(spacing: 16) {
+                            // Last 7 days
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Last 7 Days")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+
+                                HStack(spacing: 16) {
+                                    VStack(alignment: .leading) {
+                                        Text("\(metrics.commits7d)")
+                                            .font(.title2)
+                                            .fontWeight(.semibold)
+                                        Text("commits")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+
+                                    VStack(alignment: .leading) {
+                                        HStack(spacing: 4) {
+                                            Text("+\(metrics.linesAdded7d)")
+                                                .foregroundStyle(.green)
+                                            Text("-\(metrics.linesRemoved7d)")
+                                                .foregroundStyle(.red)
+                                        }
+                                        .font(.callout)
+                                        .fontWeight(.medium)
+                                        Text("lines")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.primary.opacity(0.03))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                            // Last 30 days
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Last 30 Days")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+
+                                HStack(spacing: 16) {
+                                    VStack(alignment: .leading) {
+                                        Text("\(metrics.commits30d)")
+                                            .font(.title2)
+                                            .fontWeight(.semibold)
+                                        Text("commits")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+
+                                    VStack(alignment: .leading) {
+                                        HStack(spacing: 4) {
+                                            Text("+\(metrics.linesAdded30d)")
+                                                .foregroundStyle(.green)
+                                            Text("-\(metrics.linesRemoved30d)")
+                                                .foregroundStyle(.red)
+                                        }
+                                        .font(.callout)
+                                        .fontWeight(.medium)
+                                        Text("lines")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.primary.opacity(0.03))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+                }
+
                 // Repository info
                 if let repoInfo = project.gitRepoInfo {
                     VStack(alignment: .leading, spacing: 8) {
@@ -241,7 +323,13 @@ struct ProjectDetailView: View {
         defer { isLoadingReadme = false }
 
         readmeContent = ReadmeParser.readFullContent(from: project.path)
-        commitHistory = GitService.shared.getCommitHistory(at: project.path, limit: 20)
+
+        // Use pre-fetched commits with stats if available, otherwise fetch fresh
+        if let metrics = project.gitMetrics, !metrics.recentCommits.isEmpty {
+            commitHistory = metrics.recentCommits
+        } else {
+            commitHistory = GitService.shared.getRecentCommitsWithStats(at: project.path, limit: 20)
+        }
     }
 
     @ViewBuilder
@@ -322,6 +410,7 @@ struct StatTile: View {
 
 struct CommitRow: View {
     let commit: Commit
+    var showStats: Bool = true
 
     var body: some View {
         HStack(spacing: 10) {
@@ -331,9 +420,28 @@ struct CommitRow: View {
                 .foregroundStyle(.blue)
                 .frame(width: 60, alignment: .leading)
 
-            Text(commit.shortMessage)
-                .font(.callout)
-                .lineLimit(1)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(commit.shortMessage)
+                    .font(.callout)
+                    .lineLimit(1)
+
+                HStack(spacing: 8) {
+                    Text(commit.author)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+
+                    if showStats && (commit.linesAdded > 0 || commit.linesRemoved > 0) {
+                        HStack(spacing: 4) {
+                            Text("+\(commit.linesAdded)")
+                                .foregroundStyle(.green)
+                            Text("-\(commit.linesRemoved)")
+                                .foregroundStyle(.red)
+                        }
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                    }
+                }
+            }
 
             Spacer()
 

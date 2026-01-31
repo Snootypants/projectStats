@@ -1,13 +1,13 @@
 import Foundation
 
-struct GitHubStats {
+struct GitHubStats: Sendable {
     var stars: Int = 0
     var forks: Int = 0
     var openIssues: Int = 0
     var watchers: Int = 0
 }
 
-struct ProjectGitMetrics: Hashable {
+struct ProjectGitMetrics: Hashable, Sendable {
     var commits7d: Int = 0
     var commits30d: Int = 0
     var linesAdded7d: Int = 0
@@ -39,7 +39,7 @@ enum ProjectStatus: String, CaseIterable {
     }
 }
 
-struct Project: Identifiable, Hashable {
+struct Project: Identifiable, Hashable, Sendable {
     let id: UUID
     let path: URL
     let name: String

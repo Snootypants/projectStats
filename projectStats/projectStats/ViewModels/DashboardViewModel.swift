@@ -3,6 +3,8 @@ import SwiftUI
 
 @MainActor
 class DashboardViewModel: ObservableObject {
+    static let shared = DashboardViewModel()
+
     @Published var projects: [Project] = []
     @Published var activities: [Date: ActivityStats] = [:]
     @Published var aggregatedStats: AggregatedStats = .empty
@@ -13,6 +15,7 @@ class DashboardViewModel: ObservableObject {
     private let scanner = ProjectScanner.shared
     private let gitService = GitService.shared
     private let githubClient = GitHubClient.shared
+    private var didInitialLoad = false
 
     var recentProjects: [Project] {
         Array(projects.prefix(5))
@@ -27,6 +30,8 @@ class DashboardViewModel: ObservableObject {
     }
 
     func loadData() async {
+        if isLoading { return }
+        didInitialLoad = true
         isLoading = true
         syncLogLines.removeAll(keepingCapacity: true)
         logSync("sync start")
@@ -35,10 +40,10 @@ class DashboardViewModel: ObservableObject {
             isLoading = false
         }
 
-        let codeDirectory = SettingsViewModel.shared.codeDirectory
+        let codeDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Code")
 
         // Scan projects
-        projects = await scanner.scan(directory: codeDirectory)
+        projects = await scanner.scan(directory: codeDirectory, maxDepth: 10, existingProjects: projects)
 
         for project in projects {
             if let url = project.githubURL {
@@ -60,6 +65,11 @@ class DashboardViewModel: ObservableObject {
 
         // Fetch GitHub stats if authenticated
         await fetchGitHubStats()
+    }
+
+    func loadDataIfNeeded() async {
+        if didInitialLoad || isLoading { return }
+        await loadData()
     }
 
     func refresh() async {

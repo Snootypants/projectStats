@@ -60,6 +60,26 @@ struct ProjectRowView: View {
 
             // Badges
             HStack(spacing: 6) {
+                // Git activity (last 7 days)
+                if let metrics = project.gitMetrics, metrics.commits7d > 0 {
+                    HStack(spacing: 3) {
+                        Image(systemName: "arrow.triangle.branch")
+                        Text("\(metrics.commits7d)")
+                        if metrics.linesAdded7d > 0 || metrics.linesRemoved7d > 0 {
+                            Text("+\(metrics.linesAdded7d)")
+                                .foregroundStyle(.green)
+                            Text("-\(metrics.linesRemoved7d)")
+                                .foregroundStyle(.red)
+                        }
+                    }
+                    .font(.caption2)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.blue.opacity(0.1))
+                    .foregroundStyle(.blue)
+                    .clipShape(Capsule())
+                }
+
                 if let stats = project.githubStats {
                     HStack(spacing: 8) {
                         Label("\(stats.stars)", systemImage: "star.fill")

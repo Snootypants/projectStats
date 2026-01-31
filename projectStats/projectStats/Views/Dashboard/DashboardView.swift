@@ -130,7 +130,7 @@ struct DashboardView: View {
             SyncLogView(lines: viewModel.syncLogLines)
         }
         .task {
-            await viewModel.loadData()
+            await viewModel.loadDataIfNeeded()
             projectListVM.updateProjects(viewModel.projects)
         }
         .onChange(of: viewModel.projects) { _, newValue in

@@ -5,7 +5,7 @@ import SwiftData
 @main
 struct ProjectStatsApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject private var dashboardViewModel = DashboardViewModel()
+    @StateObject private var dashboardViewModel = DashboardViewModel.shared
     @StateObject private var settingsViewModel = SettingsViewModel.shared
 
     var sharedModelContainer: ModelContainer = {
@@ -58,5 +58,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.setActivationPolicy(.regular)
         }
         SettingsViewModel.shared.applyThemeIfNeeded()
+        Task {
+            await DashboardViewModel.shared.loadDataIfNeeded()
+        }
     }
 }
