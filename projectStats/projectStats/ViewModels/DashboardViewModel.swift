@@ -45,6 +45,7 @@ class DashboardViewModel: ObservableObject {
     }
 
     func refresh() async {
+        if isLoading { return }
         await loadData()
     }
 
@@ -133,6 +134,8 @@ class DashboardViewModel: ObservableObject {
         githubClient.refreshAuthStatus()
         guard githubClient.isAuthenticated else { return }
 
+        var failures: [(repo: String, error: Error)] = []
+
         for i in projects.indices {
             guard let urlString = projects[i].githubURL,
                   let (owner, repo) = GitHubClient.parseGitHubURL(urlString) else {
@@ -146,9 +149,20 @@ class DashboardViewModel: ObservableObject {
                     forks: repoInfo.forksCount,
                     openIssues: repoInfo.openIssuesCount
                 )
+                projects[i].githubStatsError = nil
             } catch {
-                print("Failed to fetch GitHub stats for \(repo): \(error)")
+                projects[i].githubStats = nil
+                projects[i].githubStatsError = String(describing: error)
+                failures.append((repo: "\(owner)/\(repo)", error: error))
+                continue
             }
+        }
+
+        if !failures.isEmpty {
+            let summary = failures
+                .map { "\($0.repo): \($0.error)" }
+                .joined(separator: "\n")
+            print("GitHub stats fetch failures (\(failures.count)):\n\(summary)")
         }
     }
 }

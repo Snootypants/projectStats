@@ -43,6 +43,7 @@ struct Project: Identifiable, Hashable {
     var lastCommit: Commit?
     var lastScanned: Date
     var githubStats: GitHubStats?
+    var githubStatsError: String?
 
     var status: ProjectStatus {
         guard let lastCommitDate = lastCommit?.date else { return .dormant }
@@ -75,7 +76,9 @@ struct Project: Identifiable, Hashable {
         promptCount: Int = 0,
         workLogCount: Int = 0,
         lastCommit: Commit? = nil,
-        lastScanned: Date = Date()
+        lastScanned: Date = Date(),
+        githubStats: GitHubStats? = nil,
+        githubStatsError: String? = nil
     ) {
         self.id = id
         self.path = path
@@ -89,6 +92,8 @@ struct Project: Identifiable, Hashable {
         self.workLogCount = workLogCount
         self.lastCommit = lastCommit
         self.lastScanned = lastScanned
+        self.githubStats = githubStats
+        self.githubStatsError = githubStatsError
     }
 
     func hash(into hasher: inout Hasher) {
