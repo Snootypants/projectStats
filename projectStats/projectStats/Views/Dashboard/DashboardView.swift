@@ -227,14 +227,15 @@ struct ProjectsTab: View {
                 Button {
                     showCombineSheet = true
                 } label: {
-                    Label("Combine", systemImage: "square.stack.3d.up")
+                    Label("Combine Projects", systemImage: "square.stack.3d.up")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
 
                 Button {
                     showManageGroups = true
                 } label: {
-                    Image(systemName: "folder.badge.gearshape")
+                    Label("Manage", systemImage: "folder.badge.gearshape")
                 }
                 .buttonStyle(.bordered)
                 .help("Manage Groups")
