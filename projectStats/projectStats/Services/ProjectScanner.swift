@@ -8,6 +8,7 @@ class ProjectScanner: ObservableObject {
 
     private let fileManager = FileManager.default
     private let gitService = GitService.shared
+    private let gitRepoService = GitRepoService.shared
 
     private init() {}
 
@@ -82,9 +83,10 @@ class ProjectScanner: ObservableObject {
     }
 
     private func scanProject(at url: URL) async -> Project? {
+        async let repoInfoTask = gitRepoService.inspect(path: url.path)
+
         let name = url.lastPathComponent
         let description = ReadmeParser.extractDescription(from: url)
-        let githubURL = gitService.getGitHubURL(at: url)
         let language = LineCounter.detectLanguage(in: url)
         let (lines, files) = LineCounter.countLines(in: url)
         let lastCommit = gitService.getLastCommit(at: url)
@@ -98,6 +100,9 @@ class ProjectScanner: ObservableObject {
         let workDir = url.appendingPathComponent("work")
         let workLogCount = countFiles(in: workDir)
 
+        let repoInfo = await repoInfoTask
+        let githubURL = repoInfo.webRemoteURL
+
         return Project(
             path: url,
             name: name,
@@ -110,7 +115,8 @@ class ProjectScanner: ObservableObject {
             workLogCount: workLogCount,
             lastCommit: lastCommit,
             lastScanned: Date(),
-            gitMetrics: gitMetrics
+            gitMetrics: gitMetrics,
+            gitRepoInfo: repoInfo
         )
     }
 

@@ -133,6 +133,7 @@ class SettingsViewModel: ObservableObject {
         panel.message = "Select your code directory"
 
         if panel.runModal() == .OK, let url = panel.url {
+            SecurityScopedBookmarkStore.shared.saveBookmark(for: url)
             codeDirectory = url
         }
     }

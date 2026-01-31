@@ -120,6 +120,33 @@ struct ProjectDetailView: View {
                     StatTile(title: "Work Logs", value: "\(project.workLogCount)", icon: "list.bullet.clipboard")
                 }
 
+                // Repository info
+                if let repoInfo = project.gitRepoInfo {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Repository")
+                            .font(.headline)
+
+                        if repoInfo.isGitRepo {
+                            VStack(alignment: .leading, spacing: 6) {
+                                repoInfoRow("Repository", repoInfo.displayName)
+                                repoInfoRow("Branch", repoInfo.branch ?? "Unknown")
+                                repoInfoRow("Last Commit", repoInfo.lastCommitSubject ?? "Unknown")
+
+                                if let remote = repoInfo.remoteURL {
+                                    repoInfoRow("Remote", remote, allowSelection: true)
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.primary.opacity(0.03))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        } else {
+                            Text("Not a Git repo")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
                 // Last commit
                 if let commit = project.lastCommit {
                     VStack(alignment: .leading, spacing: 8) {
@@ -215,6 +242,22 @@ struct ProjectDetailView: View {
 
         readmeContent = ReadmeParser.readFullContent(from: project.path)
         commitHistory = GitService.shared.getCommitHistory(at: project.path, limit: 20)
+    }
+
+    @ViewBuilder
+    private func repoInfoRow(_ label: String, _ value: String, allowSelection: Bool = false) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(width: 100, alignment: .leading)
+
+            Text(value)
+                .font(.callout)
+                .foregroundStyle(.primary)
+                .lineLimit(2)
+                .textSelection(allowSelection ? .enabled : .disabled)
+        }
     }
 }
 
