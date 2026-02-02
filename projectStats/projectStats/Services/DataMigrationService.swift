@@ -20,8 +20,6 @@ class DataMigrationService {
             await performFullRebuild(modelContext: modelContext)
             UserDefaults.standard.set(currentDataVersion, forKey: dataVersionKey)
             print("[DataMigration] Migration complete")
-        } else {
-            print("[DataMigration] No migration needed (v\(storedVersion))")
         }
     }
 
@@ -44,7 +42,6 @@ class DataMigrationService {
             if let project = createCachedProject(from: jsonURL, modelContext: modelContext) {
                 modelContext.insert(project)
                 projectPaths.append(projectDir)
-                print("[DataMigration] Added: \(project.name)")
             }
         }
 
@@ -71,7 +68,6 @@ class DataMigrationService {
             for project in projects {
                 modelContext.delete(project)
             }
-            print("[DataMigration] Deleted \(projects.count) CachedProject records")
 
             // Delete all CachedDailyActivity records
             let activityDescriptor = FetchDescriptor<CachedDailyActivity>()
@@ -79,7 +75,6 @@ class DataMigrationService {
             for activity in activities {
                 modelContext.delete(activity)
             }
-            print("[DataMigration] Deleted \(activities.count) CachedDailyActivity records")
 
             try modelContext.save()
         } catch {
@@ -128,7 +123,6 @@ class DataMigrationService {
     /// Create a CachedProject from a projectstats.json file
     private func createCachedProject(from jsonURL: URL, modelContext: ModelContext) -> CachedProject? {
         guard let stats = JSONStatsReader.shared.read(from: jsonURL.deletingLastPathComponent()) else {
-            print("[DataMigration] Failed to parse: \(jsonURL.path)")
             return nil
         }
 
@@ -189,8 +183,6 @@ class DataMigrationService {
 
     /// Rebuild CachedDailyActivity from git logs for all projects
     private func rebuildDailyActivity(for projectPaths: [URL], modelContext: ModelContext) async {
-        print("[DataMigration] Rebuilding daily activity from git logs...")
-
         let gitService = GitService.shared
         var totalActivities = 0
 
