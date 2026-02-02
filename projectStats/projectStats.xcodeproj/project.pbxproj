@@ -46,6 +46,13 @@
 		010000000000000000000037 /* ProjectGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000037 /* ProjectGroupSheet.swift */; };
 		010000000000000000000038 /* JSONStatsReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000038 /* JSONStatsReader.swift */; };
 		010000000000000000000039 /* DataMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000039 /* DataMigrationService.swift */; };
+		010000000000000000000040 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000040 /* AppTab.swift */; };
+		010000000000000000000041 /* TabManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000041 /* TabManagerViewModel.swift */; };
+		010000000000000000000042 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000042 /* TabBarView.swift */; };
+		010000000000000000000043 /* ProjectPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000043 /* ProjectPickerView.swift */; };
+		010000000000000000000044 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000044 /* HomeView.swift */; };
+		010000000000000000000045 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000045 /* WorkspaceView.swift */; };
+		010000000000000000000046 /* TabShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* TabShellView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +95,13 @@
 		020000000000000000000037 /* ProjectGroupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectGroupSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000038 /* JSONStatsReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStatsReader.swift; sourceTree = "<group>"; };
 		020000000000000000000039 /* DataMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMigrationService.swift; sourceTree = "<group>"; };
+		020000000000000000000040 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		020000000000000000000041 /* TabManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManagerViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000042 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		020000000000000000000043 /* ProjectPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPickerView.swift; sourceTree = "<group>"; };
+		020000000000000000000044 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		020000000000000000000045 /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
+		020000000000000000000046 /* TabShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabShellView.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,6 +164,7 @@
 				050000000000000000000013 /* Projects */,
 				050000000000000000000014 /* Settings */,
 				050000000000000000000015 /* IDE */,
+				050000000000000000000016 /* TabBar */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -160,6 +175,7 @@
 				020000000000000000000014 /* DashboardViewModel.swift */,
 				020000000000000000000015 /* ProjectListViewModel.swift */,
 				020000000000000000000016 /* SettingsViewModel.swift */,
+				020000000000000000000041 /* TabManagerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -173,6 +189,7 @@
 				020000000000000000000008 /* ActivityStats.swift */,
 				020000000000000000000009 /* CachedModels.swift */,
 				020000000000000000000036 /* ProjectGroup.swift */,
+				020000000000000000000040 /* AppTab.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,6 +277,18 @@
 				020000000000000000000032 /* IDEModeView.swift */,
 			);
 			path = IDE;
+			sourceTree = "<group>";
+		};
+		050000000000000000000016 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000042 /* TabBarView.swift */,
+				020000000000000000000043 /* ProjectPickerView.swift */,
+				020000000000000000000044 /* HomeView.swift */,
+				020000000000000000000045 /* WorkspaceView.swift */,
+				020000000000000000000046 /* TabShellView.swift */,
+			);
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -369,6 +398,13 @@
 				010000000000000000000037 /* ProjectGroupSheet.swift in Sources */,
 				010000000000000000000038 /* JSONStatsReader.swift in Sources */,
 				010000000000000000000039 /* DataMigrationService.swift in Sources */,
+				010000000000000000000040 /* AppTab.swift in Sources */,
+				010000000000000000000041 /* TabManagerViewModel.swift in Sources */,
+				010000000000000000000042 /* TabBarView.swift in Sources */,
+				010000000000000000000043 /* ProjectPickerView.swift in Sources */,
+				010000000000000000000044 /* HomeView.swift in Sources */,
+				010000000000000000000045 /* WorkspaceView.swift in Sources */,
+				010000000000000000000046 /* TabShellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,14 +5,16 @@ import SwiftUI
 class TabManagerViewModel: ObservableObject {
     static let shared = TabManagerViewModel()
 
-    @Published var tabs: [AppTab] = [.homeTab()]
+    @Published var tabs: [AppTab]
     @Published var activeTabID: UUID
 
     /// Workspace state preserved when a project tab navigates "back" to picker
     private var parkedWorkspaces: [String: ParkedWorkspaceState] = [:]
 
     private init() {
-        activeTabID = tabs[0].id
+        let homeTab = AppTab.homeTab()
+        self.tabs = [homeTab]
+        self.activeTabID = homeTab.id
     }
 
     var activeTab: AppTab? {
