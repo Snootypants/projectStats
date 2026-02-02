@@ -175,9 +175,15 @@ class CachedProject {
     }
 
     func toProject() -> Project {
+        // Only require lastCommitDate to build a commit - use sensible defaults for missing fields
         var commit: Commit? = nil
-        if let hash = lastCommitHash, let message = lastCommitMessage, let author = lastCommitAuthor, let date = lastCommitDate {
-            commit = Commit(id: hash, message: message, author: author, date: date)
+        if let date = lastCommitDate {
+            commit = Commit(
+                id: lastCommitHash ?? "unknown",
+                message: lastCommitMessage ?? "",
+                author: lastCommitAuthor ?? "Unknown",
+                date: date
+            )
         }
 
         return Project(

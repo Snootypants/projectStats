@@ -28,7 +28,7 @@ struct StatsCardsView: View {
 
             StatsCard(
                 title: "All Time",
-                lines: stats.total.totalLines,
+                lines: stats.totalSourceLines,
                 commits: stats.total.commits,
                 color: .purple
             )
@@ -97,7 +97,8 @@ struct StatsCard: View {
         thisWeek: DailyStats(linesAdded: 3500, linesRemoved: 800, commits: 28),
         thisMonth: DailyStats(linesAdded: 15000, linesRemoved: 4200, commits: 120),
         total: DailyStats(linesAdded: 150000, linesRemoved: 45000, commits: 1247),
-        currentStreak: 12
+        currentStreak: 12,
+        totalSourceLines: 213000
     ))
     .padding()
     .frame(width: 900)

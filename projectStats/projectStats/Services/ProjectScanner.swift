@@ -151,7 +151,11 @@ private actor RepoDiscoveryService {
         results.sort { (p1, p2) -> Bool in
             let date1 = p1.lastCommit?.date ?? .distantPast
             let date2 = p2.lastCommit?.date ?? .distantPast
-            return date1 > date2
+            if date1 != date2 {
+                return date1 > date2
+            }
+            // Secondary sort by name for projects with the same date
+            return p1.name.localizedCaseInsensitiveCompare(p2.name) == .orderedAscending
         }
 
         return results

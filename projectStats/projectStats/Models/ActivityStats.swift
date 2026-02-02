@@ -46,6 +46,7 @@ struct AggregatedStats {
     let thisMonth: DailyStats
     let total: DailyStats
     let currentStreak: Int
+    let totalSourceLines: Int  // Sum of lineCount from all countable projects
 
     static var empty: AggregatedStats {
         AggregatedStats(
@@ -53,7 +54,8 @@ struct AggregatedStats {
             thisWeek: DailyStats(),
             thisMonth: DailyStats(),
             total: DailyStats(),
-            currentStreak: 0
+            currentStreak: 0,
+            totalSourceLines: 0
         )
     }
 }

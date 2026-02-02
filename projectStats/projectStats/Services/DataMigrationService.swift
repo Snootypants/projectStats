@@ -6,7 +6,7 @@ import SwiftData
 class DataMigrationService {
     static let shared = DataMigrationService()
 
-    private let currentDataVersion = 2
+    private let currentDataVersion = 3
     private let dataVersionKey = "dataVersion"
 
     private init() {}
@@ -130,8 +130,10 @@ class DataMigrationService {
 
         // Parse dates
         let firstCommitDate = JSONStatsReader.parseDate(stats.git?.firstCommitDate)
-        let lastCommitDate = JSONStatsReader.parseDate(stats.git?.lastCommitDate)
         let statsGeneratedAt = JSONStatsReader.generatedAtDate(from: stats)
+
+        // Get last commit info from JSON
+        let lastCommit = JSONStatsReader.lastCommit(from: stats)
 
         // Get GitHub URL
         let githubURL: String?
@@ -158,10 +160,10 @@ class DataMigrationService {
             fileCount: stats.fileCount,
             promptCount: promptCount,
             workLogCount: workLogCount,
-            lastCommitHash: nil,
-            lastCommitMessage: stats.git?.lastCommitMessage,
-            lastCommitAuthor: nil,
-            lastCommitDate: lastCommitDate,
+            lastCommitHash: lastCommit?.id,
+            lastCommitMessage: lastCommit?.message,
+            lastCommitAuthor: lastCommit?.author,
+            lastCommitDate: lastCommit?.date,
             lastScanned: Date(),
             jsonStatus: stats.status,
             techStack: stats.techStack,

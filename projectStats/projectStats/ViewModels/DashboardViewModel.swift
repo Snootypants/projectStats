@@ -127,6 +127,14 @@ class DashboardViewModel: ObservableObject {
 
         // Fetch GitHub stats if authenticated
         await fetchGitHubStats()
+
+        // Kick off a background refresh to update cache with latest data
+        Task.detached { @MainActor [weak self] in
+            guard let self = self else { return }
+            print("[Dashboard] Starting background refresh...")
+            await self.loadDataFromScanner()
+            print("[Dashboard] Background refresh complete")
+        }
     }
 
     /// Force refresh from scanner (used by manual refresh)
@@ -167,6 +175,9 @@ class DashboardViewModel: ObservableObject {
 
         // Calculate aggregated stats
         calculateAggregatedStats()
+
+        // Sync back to SwiftData cache
+        await syncToSwiftData()
 
         // Fetch GitHub stats if authenticated
         await fetchGitHubStats()
@@ -231,7 +242,8 @@ class DashboardViewModel: ObservableObject {
             thisWeek: thisWeek,
             thisMonth: thisMonth,
             total: total,
-            currentStreak: calculateStreak()
+            currentStreak: calculateStreak(),
+            totalSourceLines: totalLineCount
         )
     }
 
@@ -258,6 +270,99 @@ class DashboardViewModel: ObservableObject {
         syncLogLines.append("[\(ts)] \(message)")
         if syncLogLines.count > 500 {
             syncLogLines.removeFirst(syncLogLines.count - 500)
+        }
+    }
+
+    /// Sync current projects and activities back to SwiftData cache
+    private func syncToSwiftData() async {
+        let context = AppModelContainer.shared.mainContext
+
+        do {
+            // Fetch existing cached projects
+            let existingDescriptor = FetchDescriptor<CachedProject>()
+            let existingCached = try context.fetch(existingDescriptor)
+            let existingByPath = Dictionary(uniqueKeysWithValues: existingCached.map { ($0.path, $0) })
+
+            // Update or insert projects
+            for project in projects {
+                if let cached = existingByPath[project.path.path] {
+                    cached.update(from: project)
+                } else {
+                    let newCached = CachedProject(
+                        path: project.path.path,
+                        name: project.name,
+                        descriptionText: project.description,
+                        githubURL: project.githubURL,
+                        language: project.language,
+                        lineCount: project.lineCount,
+                        fileCount: project.fileCount,
+                        promptCount: project.promptCount,
+                        workLogCount: project.workLogCount,
+                        lastCommitHash: project.lastCommit?.id,
+                        lastCommitMessage: project.lastCommit?.message,
+                        lastCommitAuthor: project.lastCommit?.author,
+                        lastCommitDate: project.lastCommit?.date,
+                        lastScanned: project.lastScanned,
+                        jsonStatus: project.jsonStatus,
+                        techStack: project.techStack,
+                        languageBreakdown: project.languageBreakdown,
+                        structure: project.structure,
+                        structureNotes: project.structureNotes,
+                        sourceDirectories: project.sourceDirectories,
+                        excludedDirectories: project.excludedDirectories,
+                        firstCommitDate: project.firstCommitDate,
+                        totalCommits: project.totalCommits,
+                        branches: project.branches,
+                        currentBranch: project.currentBranch,
+                        statsGeneratedAt: project.statsGeneratedAt,
+                        statsSource: project.statsSource
+                    )
+                    context.insert(newCached)
+                }
+            }
+
+            // Delete cached projects that no longer exist
+            let currentPaths = Set(projects.map { $0.path.path })
+            for cached in existingCached {
+                if !currentPaths.contains(cached.path) {
+                    context.delete(cached)
+                }
+            }
+
+            try context.save()
+            print("[Dashboard] Synced \(projects.count) projects to SwiftData")
+        } catch {
+            print("[Dashboard] Error syncing projects to SwiftData: \(error)")
+        }
+
+        // Sync activities
+        do {
+            // Delete existing activities and recreate (simpler than diffing)
+            let activityDescriptor = FetchDescriptor<CachedDailyActivity>()
+            let existingActivities = try context.fetch(activityDescriptor)
+            for activity in existingActivities {
+                context.delete(activity)
+            }
+
+            // Insert fresh activities per project
+            for project in projects {
+                let projectActivities = gitService.getDailyActivity(at: project.path, days: 365)
+                for (date, stats) in projectActivities {
+                    let cached = CachedDailyActivity(
+                        date: date,
+                        projectPath: project.path.path,
+                        linesAdded: stats.linesAdded,
+                        linesRemoved: stats.linesRemoved,
+                        commits: stats.commits
+                    )
+                    context.insert(cached)
+                }
+            }
+
+            try context.save()
+            print("[Dashboard] Synced activities to SwiftData")
+        } catch {
+            print("[Dashboard] Error syncing activities to SwiftData: \(error)")
         }
     }
 
