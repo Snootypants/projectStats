@@ -260,3 +260,81 @@ class CachedDailyActivity {
         self.commits = commits
     }
 }
+
+@Model
+class CachedPrompt {
+    var projectPath: String           // Parent project path (foreign key to CachedProject)
+    var promptNumber: Int             // e.g. 1, 2, 3 — parsed from filename "1.md"
+    var filename: String              // e.g. "1.md", "2c.md"
+    var content: String               // Full markdown content
+    var contentHash: String           // SHA256 of content, for change detection
+    var fileModified: Date            // File modification date from filesystem
+    var cachedAt: Date                // When this was last synced
+
+    init(
+        projectPath: String,
+        promptNumber: Int,
+        filename: String,
+        content: String,
+        contentHash: String,
+        fileModified: Date,
+        cachedAt: Date = Date()
+    ) {
+        self.projectPath = projectPath
+        self.promptNumber = promptNumber
+        self.filename = filename
+        self.content = content
+        self.contentHash = contentHash
+        self.fileModified = fileModified
+        self.cachedAt = cachedAt
+    }
+}
+
+@Model
+class CachedWorkLog {
+    var projectPath: String           // Parent project path
+    var filename: String              // e.g. "2026-01-30_0122_menubar-and-github-api.md"
+    var content: String               // Full markdown content
+    var contentHash: String           // SHA256 for change detection
+    var fileModified: Date            // File modification date from filesystem
+    var cachedAt: Date                // When this was last synced
+    var isStatsFile: Bool             // true if from /work/stats/, false if from /work/
+
+    // Parsed fields (from stats files only — nil for regular work logs)
+    var started: Date?
+    var ended: Date?
+    var linesAdded: Int?
+    var linesDeleted: Int?
+    var commitHash: String?
+    var summary: String?              // The description text after the YAML-like header
+
+    init(
+        projectPath: String,
+        filename: String,
+        content: String,
+        contentHash: String,
+        fileModified: Date,
+        cachedAt: Date = Date(),
+        isStatsFile: Bool = false,
+        started: Date? = nil,
+        ended: Date? = nil,
+        linesAdded: Int? = nil,
+        linesDeleted: Int? = nil,
+        commitHash: String? = nil,
+        summary: String? = nil
+    ) {
+        self.projectPath = projectPath
+        self.filename = filename
+        self.content = content
+        self.contentHash = contentHash
+        self.fileModified = fileModified
+        self.cachedAt = cachedAt
+        self.isStatsFile = isStatsFile
+        self.started = started
+        self.ended = ended
+        self.linesAdded = linesAdded
+        self.linesDeleted = linesDeleted
+        self.commitHash = commitHash
+        self.summary = summary
+    }
+}

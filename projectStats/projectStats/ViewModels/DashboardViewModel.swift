@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import CryptoKit
 
 @MainActor
 class DashboardViewModel: ObservableObject {
@@ -367,6 +368,287 @@ class DashboardViewModel: ObservableObject {
         } catch {
             print("[Dashboard] Error syncing activities to SwiftData: \(error)")
         }
+
+        // Sync prompts and work logs
+        await syncPromptsToSwiftData(context: context)
+        await syncWorkLogsToSwiftData(context: context)
+    }
+
+    // MARK: - Prompt and Work Log Sync
+
+    private func contentHash(_ string: String) -> String {
+        let data = Data(string.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.prefix(16).map { String(format: "%02x", $0) }.joined()
+    }
+
+    private func syncPromptsToSwiftData(context: ModelContext) async {
+        let fm = FileManager.default
+
+        do {
+            let existingDescriptor = FetchDescriptor<CachedPrompt>()
+            let existingCached = try context.fetch(existingDescriptor)
+            let existingByKey = Dictionary(
+                uniqueKeysWithValues: existingCached.map { ("\($0.projectPath)::\($0.filename)", $0) }
+            )
+
+            var seenKeys: Set<String> = []
+
+            for project in projects {
+                let promptsDir = project.path.appendingPathComponent("prompts")
+                guard fm.fileExists(atPath: promptsDir.path) else { continue }
+
+                guard let files = try? fm.contentsOfDirectory(
+                    at: promptsDir,
+                    includingPropertiesForKeys: [.contentModificationDateKey],
+                    options: [.skipsHiddenFiles]
+                ) else { continue }
+
+                let mdFiles = files.filter { $0.pathExtension == "md" }
+
+                for fileURL in mdFiles {
+                    let filename = fileURL.lastPathComponent
+                    let key = "\(project.path.path)::\(filename)"
+                    seenKeys.insert(key)
+
+                    // Parse prompt number from filename (e.g. "1.md" → 1, "2c.md" → 2)
+                    let baseName = fileURL.deletingPathExtension().lastPathComponent
+                    let promptNumber = Int(baseName.filter { $0.isNumber }) ?? 0
+
+                    guard let content = try? String(contentsOf: fileURL, encoding: .utf8) else { continue }
+                    let hash = contentHash(content)
+
+                    let attrs = try? fm.attributesOfItem(atPath: fileURL.path)
+                    let fileModified = (attrs?[.modificationDate] as? Date) ?? Date()
+
+                    // Skip if unchanged
+                    if let existing = existingByKey[key], existing.contentHash == hash {
+                        continue
+                    }
+
+                    if let existing = existingByKey[key] {
+                        existing.content = content
+                        existing.contentHash = hash
+                        existing.promptNumber = promptNumber
+                        existing.fileModified = fileModified
+                        existing.cachedAt = Date()
+                    } else {
+                        let cached = CachedPrompt(
+                            projectPath: project.path.path,
+                            promptNumber: promptNumber,
+                            filename: filename,
+                            content: content,
+                            contentHash: hash,
+                            fileModified: fileModified
+                        )
+                        context.insert(cached)
+                    }
+                }
+            }
+
+            // Delete prompts for files that no longer exist
+            for cached in existingCached {
+                let key = "\(cached.projectPath)::\(cached.filename)"
+                if !seenKeys.contains(key) {
+                    context.delete(cached)
+                }
+            }
+
+            try context.save()
+            print("[Dashboard] Synced prompts to SwiftData")
+        } catch {
+            print("[Dashboard] Error syncing prompts: \(error)")
+        }
+    }
+
+    private func syncWorkLogsToSwiftData(context: ModelContext) async {
+        let fm = FileManager.default
+
+        do {
+            let existingDescriptor = FetchDescriptor<CachedWorkLog>()
+            let existingCached = try context.fetch(existingDescriptor)
+            let existingByKey = Dictionary(
+                uniqueKeysWithValues: existingCached.map { ("\($0.projectPath)::\($0.filename)::\($0.isStatsFile)", $0) }
+            )
+
+            var seenKeys: Set<String> = []
+
+            for project in projects {
+                let workDir = project.path.appendingPathComponent("work")
+                guard fm.fileExists(atPath: workDir.path) else { continue }
+
+                // Sync top-level work logs (work/*.md)
+                syncWorkLogFiles(
+                    in: workDir,
+                    projectPath: project.path.path,
+                    isStats: false,
+                    existingByKey: existingByKey,
+                    seenKeys: &seenKeys,
+                    context: context
+                )
+
+                // Sync stats files (work/stats/*.md)
+                let statsDir = workDir.appendingPathComponent("stats")
+                if fm.fileExists(atPath: statsDir.path) {
+                    syncWorkLogFiles(
+                        in: statsDir,
+                        projectPath: project.path.path,
+                        isStats: true,
+                        existingByKey: existingByKey,
+                        seenKeys: &seenKeys,
+                        context: context
+                    )
+                }
+            }
+
+            // Delete work logs for files that no longer exist
+            for cached in existingCached {
+                let key = "\(cached.projectPath)::\(cached.filename)::\(cached.isStatsFile)"
+                if !seenKeys.contains(key) {
+                    context.delete(cached)
+                }
+            }
+
+            try context.save()
+            print("[Dashboard] Synced work logs to SwiftData")
+        } catch {
+            print("[Dashboard] Error syncing work logs: \(error)")
+        }
+    }
+
+    private func syncWorkLogFiles(
+        in directory: URL,
+        projectPath: String,
+        isStats: Bool,
+        existingByKey: [String: CachedWorkLog],
+        seenKeys: inout Set<String>,
+        context: ModelContext
+    ) {
+        let fm = FileManager.default
+        guard let files = try? fm.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.contentModificationDateKey],
+            options: [.skipsHiddenFiles]
+        ) else { return }
+
+        let mdFiles = files.filter { $0.pathExtension == "md" }
+
+        for fileURL in mdFiles {
+            let filename = fileURL.lastPathComponent
+            let key = "\(projectPath)::\(filename)::\(isStats)"
+            seenKeys.insert(key)
+
+            guard let content = try? String(contentsOf: fileURL, encoding: .utf8) else { continue }
+            let hash = contentHash(content)
+
+            let attrs = try? fm.attributesOfItem(atPath: fileURL.path)
+            let fileModified = (attrs?[.modificationDate] as? Date) ?? Date()
+
+            // Skip if unchanged
+            if let existing = existingByKey[key], existing.contentHash == hash {
+                continue
+            }
+
+            // Parse stats fields if this is a stats file
+            var started: Date? = nil
+            var ended: Date? = nil
+            var linesAdded: Int? = nil
+            var linesDeleted: Int? = nil
+            var commitHash: String? = nil
+            var summary: String? = nil
+
+            if isStats {
+                let parsed = parseStatsFile(content)
+                started = parsed.started
+                ended = parsed.ended
+                linesAdded = parsed.linesAdded
+                linesDeleted = parsed.linesDeleted
+                commitHash = parsed.commitHash
+                summary = parsed.summary
+            }
+
+            if let existing = existingByKey[key] {
+                existing.content = content
+                existing.contentHash = hash
+                existing.fileModified = fileModified
+                existing.cachedAt = Date()
+                existing.started = started
+                existing.ended = ended
+                existing.linesAdded = linesAdded
+                existing.linesDeleted = linesDeleted
+                existing.commitHash = commitHash
+                existing.summary = summary
+            } else {
+                let cached = CachedWorkLog(
+                    projectPath: projectPath,
+                    filename: filename,
+                    content: content,
+                    contentHash: hash,
+                    fileModified: fileModified,
+                    isStatsFile: isStats,
+                    started: started,
+                    ended: ended,
+                    linesAdded: linesAdded,
+                    linesDeleted: linesDeleted,
+                    commitHash: commitHash,
+                    summary: summary
+                )
+                context.insert(cached)
+            }
+        }
+    }
+
+    private func parseStatsFile(_ content: String) -> (
+        started: Date?, ended: Date?, linesAdded: Int?,
+        linesDeleted: Int?, commitHash: String?, summary: String?
+    ) {
+        let lines = content.components(separatedBy: .newlines)
+        var started: Date? = nil
+        var ended: Date? = nil
+        var linesAdded: Int? = nil
+        var linesDeleted: Int? = nil
+        var commitHash: String? = nil
+        var summaryLines: [String] = []
+        var pastHeader = false
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
+
+        let simpleDateFormatter = DateFormatter()
+        simpleDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+
+            if !pastHeader {
+                if trimmed.isEmpty && (started != nil || commitHash != nil) {
+                    pastHeader = true
+                    continue
+                }
+
+                if trimmed.hasPrefix("started:") {
+                    let value = trimmed.replacingOccurrences(of: "started:", with: "").trimmingCharacters(in: .whitespaces)
+                    started = dateFormatter.date(from: value) ?? simpleDateFormatter.date(from: value)
+                } else if trimmed.hasPrefix("ended:") {
+                    let value = trimmed.replacingOccurrences(of: "ended:", with: "").trimmingCharacters(in: .whitespaces)
+                    ended = dateFormatter.date(from: value) ?? simpleDateFormatter.date(from: value)
+                } else if trimmed.hasPrefix("lines_added:") {
+                    let value = trimmed.replacingOccurrences(of: "lines_added:", with: "").trimmingCharacters(in: .whitespaces)
+                    linesAdded = Int(value)
+                } else if trimmed.hasPrefix("lines_deleted:") {
+                    let value = trimmed.replacingOccurrences(of: "lines_deleted:", with: "").trimmingCharacters(in: .whitespaces)
+                    linesDeleted = Int(value)
+                } else if trimmed.hasPrefix("commit:") {
+                    commitHash = trimmed.replacingOccurrences(of: "commit:", with: "").trimmingCharacters(in: .whitespaces)
+                }
+            } else {
+                summaryLines.append(line)
+            }
+        }
+
+        let summary = summaryLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return (started, ended, linesAdded, linesDeleted, commitHash, summary.isEmpty ? nil : summary)
     }
 
     private func fetchGitHubStats() async {

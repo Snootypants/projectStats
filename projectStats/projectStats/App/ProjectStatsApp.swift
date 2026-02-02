@@ -7,7 +7,9 @@ enum AppModelContainer {
     static let shared: ModelContainer = {
         let schema = Schema([
             CachedProject.self,
-            CachedDailyActivity.self
+            CachedDailyActivity.self,
+            CachedPrompt.self,
+            CachedWorkLog.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
