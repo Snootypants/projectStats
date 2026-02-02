@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import SwiftData
 
 @MainActor
 class DashboardViewModel: ObservableObject {
@@ -62,9 +63,80 @@ class DashboardViewModel: ObservableObject {
         calculateStreak()
     }
 
-    func loadData() async {
-        if isLoading { return }
+    /// Load data from SwiftData cache
+    func loadDataIfNeeded() async {
+        if didInitialLoad || isLoading { return }
         didInitialLoad = true
+        isLoading = true
+        defer { isLoading = false }
+
+        let context = AppModelContainer.shared.mainContext
+
+        // Load projects from cache
+        do {
+            let descriptor = FetchDescriptor<CachedProject>(
+                sortBy: [SortDescriptor(\.lastCommitDate, order: .reverse)]
+            )
+            let cachedProjects = try context.fetch(descriptor)
+
+            if !cachedProjects.isEmpty {
+                projects = cachedProjects.map { $0.toProject() }
+                print("[Dashboard] Loaded \(projects.count) projects from cache")
+            } else {
+                // Fall back to scanning if cache is empty
+                print("[Dashboard] Cache empty, falling back to scanner")
+                await loadDataFromScanner()
+                return
+            }
+        } catch {
+            print("[Dashboard] Error loading from cache: \(error)")
+            await loadDataFromScanner()
+            return
+        }
+
+        // Load activities from cache
+        do {
+            let activityDescriptor = FetchDescriptor<CachedDailyActivity>()
+            let cachedActivities = try context.fetch(activityDescriptor)
+
+            var allActivities: [Date: ActivityStats] = [:]
+            for cached in cachedActivities {
+                let date = cached.date.startOfDay
+                if var existing = allActivities[date] {
+                    existing.linesAdded += cached.linesAdded
+                    existing.linesRemoved += cached.linesRemoved
+                    existing.commits += cached.commits
+                    allActivities[date] = existing
+                } else {
+                    allActivities[date] = ActivityStats(
+                        date: date,
+                        linesAdded: cached.linesAdded,
+                        linesRemoved: cached.linesRemoved,
+                        commits: cached.commits
+                    )
+                }
+            }
+            activities = allActivities
+            print("[Dashboard] Loaded \(cachedActivities.count) activity records from cache")
+        } catch {
+            print("[Dashboard] Error loading activities: \(error)")
+        }
+
+        // Calculate aggregated stats
+        calculateAggregatedStats()
+
+        // Fetch GitHub stats if authenticated
+        await fetchGitHubStats()
+    }
+
+    /// Force refresh from scanner (used by manual refresh)
+    func refresh() async {
+        if isLoading { return }
+        await loadDataFromScanner()
+    }
+
+    /// Load data by scanning the filesystem (fallback/refresh)
+    private func loadDataFromScanner() async {
         isLoading = true
         syncLogLines.removeAll(keepingCapacity: true)
         logSync("sync start")
@@ -91,7 +163,7 @@ class DashboardViewModel: ObservableObject {
         }
 
         // Calculate activities from all projects
-        await calculateActivities()
+        await calculateActivitiesFromGit()
 
         // Calculate aggregated stats
         calculateAggregatedStats()
@@ -100,17 +172,7 @@ class DashboardViewModel: ObservableObject {
         await fetchGitHubStats()
     }
 
-    func loadDataIfNeeded() async {
-        if didInitialLoad || isLoading { return }
-        await loadData()
-    }
-
-    func refresh() async {
-        if isLoading { return }
-        await loadData()
-    }
-
-    private func calculateActivities() async {
+    private func calculateActivitiesFromGit() async {
         var allActivities: [Date: ActivityStats] = [:]
 
         for project in projects {
