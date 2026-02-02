@@ -112,7 +112,7 @@ struct MenuBarView: View {
 
                 if dashboardViewModel.isLoading {
                     ProgressView()
-                        .scaleEffect(0.6)
+                        .controlSize(.small)
                 } else {
                     Button {
                         Task {

@@ -140,7 +140,7 @@ struct GitHubSettingsView: View {
 
                     if isTesting {
                         ProgressView()
-                            .scaleEffect(0.7)
+                            .controlSize(.small)
                     }
 
                     Spacer()

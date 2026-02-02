@@ -96,7 +96,7 @@ struct DashboardView: View {
                         HStack {
                             if viewModel.isLoading {
                                 ProgressView()
-                                    .scaleEffect(0.7)
+                                    .controlSize(.small)
                             } else {
                                 Image(systemName: "arrow.clockwise")
                             }

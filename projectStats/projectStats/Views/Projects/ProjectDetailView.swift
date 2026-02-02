@@ -364,7 +364,7 @@ struct ProjectDetailView: View {
 
                         if isLoadingReadme {
                             ProgressView()
-                                .scaleEffect(0.7)
+                                .controlSize(.small)
                         }
                     }
 

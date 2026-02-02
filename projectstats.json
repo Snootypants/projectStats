@@ -1,0 +1,28 @@
+{
+  "name": "ProjectStats",
+  "description": "Native macOS menu bar application serving as a personal developer dashboard for tracking coding activity, project statistics, and GitHub integration across multiple local projects.",
+  "status": "active",
+  "language": "Swift",
+  "languages": {
+    "Swift": 5987
+  },
+  "lineCount": 5987,
+  "fileCount": 39,
+  "structure": "standard",
+  "structureNotes": "Xcode project with SwiftUI + SwiftData architecture. Menu bar application with multiple view components. Includes AI development prompts in prompts/ directory.",
+  "sourceDirectories": ["projectStats/projectStats/"],
+  "excludedDirectories": [".git/", "build/", "DerivedData/", "xcuserdata/", "prompts/", "work/", "docs/"],
+  "techStack": ["Swift 5.9+", "SwiftUI", "SwiftData", "Charts", "macOS 14+"],
+  "git": {
+    "remoteUrl": "https://github.com/Snootypants/projectStats.git",
+    "currentBranch": "main",
+    "defaultBranch": "main",
+    "firstCommitDate": "2026-01-29T23:25:00-06:00",
+    "lastCommitDate": "2026-01-31T01:24:39-06:00",
+    "lastCommitMessage": "Make Combine Projects button more prominent",
+    "totalCommits": 31,
+    "branches": ["main"]
+  },
+  "generatedAt": "2026-02-01T00:00:00Z",
+  "generatedBy": "claude-code-audit"
+}
