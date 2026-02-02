@@ -24,14 +24,16 @@ struct ProjectStatsApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var dashboardViewModel = DashboardViewModel.shared
     @StateObject private var settingsViewModel = SettingsViewModel.shared
+    @StateObject private var tabManager = TabManagerViewModel.shared
     @State private var hasMigrated = false
 
     var body: some Scene {
-        // Main dashboard window
+        // Main window with tab-based navigation
         WindowGroup {
-            DashboardView()
+            TabShellView()
                 .environmentObject(dashboardViewModel)
                 .environmentObject(settingsViewModel)
+                .environmentObject(tabManager)
                 .frame(minWidth: 900, minHeight: 600)
                 .task {
                     guard !hasMigrated else { return }
@@ -39,6 +41,10 @@ struct ProjectStatsApp: App {
                     let context = AppModelContainer.shared.mainContext
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
+                    tabManager.restoreState()
+                }
+                .onDisappear {
+                    tabManager.saveState()
                 }
         }
         .modelContainer(AppModelContainer.shared)
