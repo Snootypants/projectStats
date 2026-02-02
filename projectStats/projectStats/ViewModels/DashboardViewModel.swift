@@ -18,11 +18,44 @@ class DashboardViewModel: ObservableObject {
     private var didInitialLoad = false
 
     var recentProjects: [Project] {
-        Array(projects.prefix(6))
+        // Only show projects that count toward totals in recent projects
+        Array(projects.filter { $0.countsTowardTotals }.prefix(6))
     }
 
+    /// Count of projects with recent activity (commits in last 7 days)
     var activeProjectCount: Int {
         projects.filter { $0.status == .active }.count
+    }
+
+    /// Count of projects that count toward totals (excludes archived/abandoned)
+    var countableProjectCount: Int {
+        projects.filter { $0.countsTowardTotals }.count
+    }
+
+    /// Count of archived/abandoned projects
+    var archivedProjectCount: Int {
+        projects.filter { !$0.countsTowardTotals }.count
+    }
+
+    /// Total line count across all countable projects
+    var totalLineCount: Int {
+        projects.filter { $0.countsTowardTotals }.reduce(0) { $0 + $1.lineCount }
+    }
+
+    /// Total file count across all countable projects
+    var totalFileCount: Int {
+        projects.filter { $0.countsTowardTotals }.reduce(0) { $0 + $1.fileCount }
+    }
+
+    /// Formatted total line count (e.g., "1.2M")
+    var formattedTotalLineCount: String {
+        let count = totalLineCount
+        if count >= 1_000_000 {
+            return String(format: "%.1fM", Double(count) / 1_000_000.0)
+        } else if count >= 1000 {
+            return String(format: "%.1fk", Double(count) / 1000.0)
+        }
+        return "\(count)"
     }
 
     var currentStreak: Int {

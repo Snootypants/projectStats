@@ -143,6 +143,7 @@ struct ProjectRowView: View {
         }
         .padding(.vertical, 6)
         .contentShape(Rectangle())
+        .opacity(isArchived ? 0.6 : 1.0)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.1)) {
                 isHovering = hovering
@@ -155,7 +156,16 @@ struct ProjectRowView: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        case .paused: return .yellow
+        case .experimental: return .blue
+        case .archived: return .gray
+        case .abandoned: return .gray
         }
+    }
+
+    /// Whether this project is archived or abandoned
+    private var isArchived: Bool {
+        !project.countsTowardTotals
     }
 
     private var languageColor: Color {

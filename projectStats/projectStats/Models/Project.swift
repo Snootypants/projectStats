@@ -21,12 +21,20 @@ enum ProjectStatus: String, CaseIterable {
     case active = "Active"
     case inProgress = "In Progress"
     case dormant = "Dormant"
+    case paused = "Paused"
+    case experimental = "Experimental"
+    case archived = "Archived"
+    case abandoned = "Abandoned"
 
     var color: String {
         switch self {
         case .active: return "green"
         case .inProgress: return "yellow"
         case .dormant: return "gray"
+        case .paused: return "yellow"
+        case .experimental: return "blue"
+        case .archived: return "gray"
+        case .abandoned: return "gray"
         }
     }
 
@@ -35,6 +43,32 @@ enum ProjectStatus: String, CaseIterable {
         case .active: return "🟢"
         case .inProgress: return "🟡"
         case .dormant: return "⚪"
+        case .paused: return "🟡"
+        case .experimental: return "🔵"
+        case .archived: return "⚫"
+        case .abandoned: return "⚫"
+        }
+    }
+
+    /// Whether this status should count toward aggregate totals
+    var countsTowardTotals: Bool {
+        switch self {
+        case .archived, .abandoned:
+            return false
+        default:
+            return true
+        }
+    }
+
+    /// Create from JSON status string
+    static func from(jsonStatus: String) -> ProjectStatus {
+        switch jsonStatus.lowercased() {
+        case "active": return .active
+        case "paused": return .paused
+        case "experimental": return .experimental
+        case "archived": return .archived
+        case "abandoned": return .abandoned
+        default: return .dormant
         }
     }
 }
@@ -57,12 +91,37 @@ struct Project: Identifiable, Hashable, Sendable {
     var gitMetrics: ProjectGitMetrics?
     var gitRepoInfo: GitRepoInfo?
 
+    // New fields from projectstats.json
+    var jsonStatus: String?
+    var techStack: [String]
+    var languageBreakdown: [String: Int]
+    var structure: String?
+    var structureNotes: String?
+    var sourceDirectories: [String]
+    var excludedDirectories: [String]
+    var firstCommitDate: Date?
+    var totalCommits: Int?
+    var branches: [String]
+    var currentBranch: String?
+    var statsGeneratedAt: Date?
+    var statsSource: String?
+
     var status: ProjectStatus {
+        // If we have a JSON status, use it
+        if let jsonStatus = jsonStatus {
+            return ProjectStatus.from(jsonStatus: jsonStatus)
+        }
+        // Otherwise fall back to commit-based calculation
         guard let lastCommitDate = lastCommit?.date else { return .dormant }
         let daysSince = Calendar.current.dateComponents([.day], from: lastCommitDate, to: Date()).day ?? 0
         if daysSince <= 7 { return .active }
         if daysSince <= 30 { return .inProgress }
         return .dormant
+    }
+
+    /// Whether this project should count toward aggregate totals
+    var countsTowardTotals: Bool {
+        status.countsTowardTotals
     }
 
     var formattedLineCount: String {
@@ -92,7 +151,20 @@ struct Project: Identifiable, Hashable, Sendable {
         githubStats: GitHubStats? = nil,
         githubStatsError: String? = nil,
         gitMetrics: ProjectGitMetrics? = nil,
-        gitRepoInfo: GitRepoInfo? = nil
+        gitRepoInfo: GitRepoInfo? = nil,
+        jsonStatus: String? = nil,
+        techStack: [String] = [],
+        languageBreakdown: [String: Int] = [:],
+        structure: String? = nil,
+        structureNotes: String? = nil,
+        sourceDirectories: [String] = [],
+        excludedDirectories: [String] = [],
+        firstCommitDate: Date? = nil,
+        totalCommits: Int? = nil,
+        branches: [String] = [],
+        currentBranch: String? = nil,
+        statsGeneratedAt: Date? = nil,
+        statsSource: String? = nil
     ) {
         self.id = id
         self.path = path
@@ -110,6 +182,19 @@ struct Project: Identifiable, Hashable, Sendable {
         self.githubStatsError = githubStatsError
         self.gitMetrics = gitMetrics
         self.gitRepoInfo = gitRepoInfo
+        self.jsonStatus = jsonStatus
+        self.techStack = techStack
+        self.languageBreakdown = languageBreakdown
+        self.structure = structure
+        self.structureNotes = structureNotes
+        self.sourceDirectories = sourceDirectories
+        self.excludedDirectories = excludedDirectories
+        self.firstCommitDate = firstCommitDate
+        self.totalCommits = totalCommits
+        self.branches = branches
+        self.currentBranch = currentBranch
+        self.statsGeneratedAt = statsGeneratedAt
+        self.statsSource = statsSource
     }
 
     func hash(into hasher: inout Hasher) {

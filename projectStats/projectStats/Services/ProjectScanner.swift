@@ -111,6 +111,7 @@ private actor RepoDiscoveryService {
     private let fileManager = FileManager.default
     private let gitService = GitService.shared
     private let gitRepoService = GitRepoService.shared
+    private let jsonStatsReader = JSONStatsReader.shared
     private let skipDirectories: Set<String> = [
         "node_modules",
         "DerivedData",
@@ -218,6 +219,106 @@ private actor RepoDiscoveryService {
     }
 
     private func buildProject(at url: URL, existing: Project?) async -> Project? {
+        let projectId = existing?.id ?? UUID()
+
+        // Check for projectstats.json first (primary data source)
+        if let jsonStats = jsonStatsReader.read(from: url) {
+            // Check if we already have cached data with the same generatedAt timestamp
+            if let existingGeneratedAt = existing?.statsGeneratedAt,
+               let jsonGeneratedAt = JSONStatsReader.generatedAtDate(from: jsonStats),
+               existingGeneratedAt == jsonGeneratedAt {
+                // Cache is current, return existing project with preserved runtime data
+                var project = existing!
+                project.githubStats = existing?.githubStats
+                project.githubStatsError = existing?.githubStatsError
+                return project
+            }
+
+            // Build project from JSON data
+            return await buildProjectFromJSON(jsonStats, at: url, id: projectId, existing: existing)
+        }
+
+        // Fall back to scanner-based discovery
+        return await buildProjectFromScanner(at: url, id: projectId, existing: existing)
+    }
+
+    /// Build a Project from projectstats.json data
+    private func buildProjectFromJSON(_ stats: ProjectStatsJSON, at url: URL, id: UUID, existing: Project?) async -> Project {
+        // Get git repo info for additional runtime data (we still need this for some features)
+        let repoInfo = await gitRepoService.inspect(path: url.path)
+
+        // Use JSON git info for github URL, fall back to repo inspection
+        let githubURL: String?
+        if let gitInfo = stats.git, let remoteUrl = gitInfo.remoteUrl {
+            // Convert git remote URL to web URL if needed
+            githubURL = convertToWebURL(remoteUrl)
+        } else {
+            githubURL = repoInfo.webRemoteURL
+        }
+
+        // Parse dates from JSON
+        let firstCommitDate = JSONStatsReader.parseDate(stats.git?.firstCommitDate)
+        let statsGeneratedAt = JSONStatsReader.generatedAtDate(from: stats)
+
+        // Build last commit from JSON if available, otherwise use git service
+        let lastCommit: Commit?
+        if let jsonCommit = JSONStatsReader.lastCommit(from: stats) {
+            lastCommit = jsonCommit
+        } else {
+            lastCommit = gitService.getLastCommit(at: url)
+        }
+
+        // Get git metrics for activity tracking (still need this for dashboard)
+        let gitMetrics = gitService.getProjectGitMetrics(at: url)
+
+        // Count prompts and work folders (not in JSON)
+        let promptsDir = url.appendingPathComponent("prompts")
+        let promptCount = countFiles(in: promptsDir)
+
+        let workDir = url.appendingPathComponent("work")
+        let workLogCount = countFiles(in: workDir)
+
+        var project = Project(
+            id: id,
+            path: url,
+            name: stats.name,
+            description: stats.description,
+            githubURL: githubURL,
+            language: stats.language,
+            lineCount: stats.lineCount,
+            fileCount: stats.fileCount,
+            promptCount: promptCount,
+            workLogCount: workLogCount,
+            lastCommit: lastCommit,
+            lastScanned: Date(),
+            gitMetrics: gitMetrics,
+            gitRepoInfo: repoInfo,
+            jsonStatus: stats.status,
+            techStack: stats.techStack,
+            languageBreakdown: stats.languages,
+            structure: stats.structure,
+            structureNotes: stats.structureNotes,
+            sourceDirectories: stats.sourceDirectories,
+            excludedDirectories: stats.excludedDirectories,
+            firstCommitDate: firstCommitDate,
+            totalCommits: stats.git?.totalCommits,
+            branches: stats.git?.branches ?? [],
+            currentBranch: stats.git?.currentBranch,
+            statsGeneratedAt: statsGeneratedAt,
+            statsSource: "json"
+        )
+
+        // Preserve GitHub stats from previous scan
+        if let existing = existing {
+            project.githubStats = existing.githubStats
+            project.githubStatsError = existing.githubStatsError
+        }
+
+        return project
+    }
+
+    /// Build a Project using the original scanner-based approach (fallback)
+    private func buildProjectFromScanner(at url: URL, id: UUID, existing: Project?) async -> Project {
         let name = url.lastPathComponent
         let repoInfo = await gitRepoService.inspect(path: url.path)
         let githubURL = repoInfo.webRemoteURL
@@ -235,7 +336,7 @@ private actor RepoDiscoveryService {
         let workLogCount = countFiles(in: workDir)
 
         var project = Project(
-            id: existing?.id ?? UUID(),
+            id: id,
             path: url,
             name: name,
             description: description,
@@ -248,7 +349,8 @@ private actor RepoDiscoveryService {
             lastCommit: lastCommit,
             lastScanned: Date(),
             gitMetrics: gitMetrics,
-            gitRepoInfo: repoInfo
+            gitRepoInfo: repoInfo,
+            statsSource: "scanner"
         )
 
         if let existing = existing {
@@ -257,6 +359,24 @@ private actor RepoDiscoveryService {
         }
 
         return project
+    }
+
+    /// Convert a git remote URL to a web URL
+    private func convertToWebURL(_ remoteUrl: String) -> String {
+        var url = remoteUrl
+
+        // Handle SSH URLs: git@github.com:owner/repo.git -> https://github.com/owner/repo
+        if url.hasPrefix("git@") {
+            url = url.replacingOccurrences(of: "git@", with: "https://")
+            url = url.replacingOccurrences(of: ":", with: "/", options: [], range: url.range(of: ":")!)
+        }
+
+        // Remove .git suffix
+        if url.hasSuffix(".git") {
+            url = String(url.dropLast(4))
+        }
+
+        return url
     }
 
     private func countFiles(in directory: URL) -> Int {

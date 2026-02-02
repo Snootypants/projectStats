@@ -48,10 +48,26 @@ struct DashboardView: View {
                         HStack {
                             Text("Total Projects")
                             Spacer()
-                            Text("\(viewModel.projects.count)")
-                                .foregroundStyle(.secondary)
+                            if viewModel.archivedProjectCount > 0 {
+                                Text("\(viewModel.countableProjectCount)")
+                                    .foregroundStyle(.secondary)
+                                Text("(\(viewModel.projects.count))")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                            } else {
+                                Text("\(viewModel.projects.count)")
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         .tag(-2)
+
+                        HStack {
+                            Text("Total Lines")
+                            Spacer()
+                            Text(viewModel.formattedTotalLineCount)
+                                .foregroundStyle(.secondary)
+                        }
+                        .tag(-4)
 
                         if viewModel.aggregatedStats.currentStreak > 0 {
                             HStack {
@@ -164,9 +180,15 @@ struct OverviewTab: View {
                         Text("Recent Projects")
                             .font(.headline)
                         Spacer()
-                        Text("\(viewModel.projects.count) total")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        if viewModel.archivedProjectCount > 0 {
+                            Text("\(viewModel.countableProjectCount) active (\(viewModel.projects.count) total)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("\(viewModel.projects.count) total")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
 
                     LazyVGrid(columns: [

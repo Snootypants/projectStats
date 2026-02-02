@@ -14,6 +14,9 @@ enum ProjectFilterOption: String, CaseIterable {
     case active = "Active"
     case inProgress = "In Progress"
     case dormant = "Dormant"
+    case paused = "Paused"
+    case experimental = "Experimental"
+    case archived = "Archived"
 }
 
 @MainActor
@@ -38,6 +41,12 @@ class ProjectListViewModel: ObservableObject {
             result = result.filter { $0.status == .inProgress }
         case .dormant:
             result = result.filter { $0.status == .dormant }
+        case .paused:
+            result = result.filter { $0.status == .paused }
+        case .experimental:
+            result = result.filter { $0.status == .experimental }
+        case .archived:
+            result = result.filter { $0.status == .archived || $0.status == .abandoned }
         }
 
         // Apply search

@@ -18,12 +18,90 @@ class CachedProject {
     var lastCommitDate: Date?
     var lastScanned: Date
 
+    // New fields from projectstats.json
+    var jsonStatus: String?              // "active", "paused", "archived", "abandoned", "experimental"
+    var techStackData: Data?             // JSON-encoded [String]
+    var languageBreakdownData: Data?     // JSON-encoded [String: Int]
+    var structure: String?               // "standard", "monorepo", "multi-version", "fullstack", "workspace"
+    var structureNotes: String?
+    var sourceDirectoriesData: Data?     // JSON-encoded [String]
+    var excludedDirectoriesData: Data?   // JSON-encoded [String]
+    var firstCommitDate: Date?
+    var totalCommits: Int?
+    var branchesData: Data?              // JSON-encoded [String]
+    var currentBranch: String?
+    var statsGeneratedAt: Date?
+    var statsSource: String?             // "json" or "scanner"
+
+    // Computed properties for array access
+    var techStack: [String] {
+        get {
+            guard let data = techStackData else { return [] }
+            return (try? JSONDecoder().decode([String].self, from: data)) ?? []
+        }
+        set {
+            techStackData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
+    var languageBreakdown: [String: Int] {
+        get {
+            guard let data = languageBreakdownData else { return [:] }
+            return (try? JSONDecoder().decode([String: Int].self, from: data)) ?? [:]
+        }
+        set {
+            languageBreakdownData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
+    var sourceDirectories: [String] {
+        get {
+            guard let data = sourceDirectoriesData else { return [] }
+            return (try? JSONDecoder().decode([String].self, from: data)) ?? []
+        }
+        set {
+            sourceDirectoriesData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
+    var excludedDirectories: [String] {
+        get {
+            guard let data = excludedDirectoriesData else { return [] }
+            return (try? JSONDecoder().decode([String].self, from: data)) ?? []
+        }
+        set {
+            excludedDirectoriesData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
+    var branches: [String] {
+        get {
+            guard let data = branchesData else { return [] }
+            return (try? JSONDecoder().decode([String].self, from: data)) ?? []
+        }
+        set {
+            branchesData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
     var status: ProjectStatus {
+        // If we have a JSON status, use it
+        if let jsonStatus = jsonStatus {
+            return ProjectStatus.from(jsonStatus: jsonStatus)
+        }
+        // Otherwise fall back to commit-based calculation
         guard let lastCommit = lastCommitDate else { return .dormant }
         let daysSince = Calendar.current.dateComponents([.day], from: lastCommit, to: Date()).day ?? 0
         if daysSince <= 7 { return .active }
         if daysSince <= 30 { return .inProgress }
         return .dormant
+    }
+
+    var countsTowardTotals: Bool {
+        if let jsonStatus = jsonStatus {
+            return jsonStatus != "archived" && jsonStatus != "abandoned"
+        }
+        return true
     }
 
     init(
@@ -40,7 +118,20 @@ class CachedProject {
         lastCommitMessage: String? = nil,
         lastCommitAuthor: String? = nil,
         lastCommitDate: Date? = nil,
-        lastScanned: Date = Date()
+        lastScanned: Date = Date(),
+        jsonStatus: String? = nil,
+        techStack: [String]? = nil,
+        languageBreakdown: [String: Int]? = nil,
+        structure: String? = nil,
+        structureNotes: String? = nil,
+        sourceDirectories: [String]? = nil,
+        excludedDirectories: [String]? = nil,
+        firstCommitDate: Date? = nil,
+        totalCommits: Int? = nil,
+        branches: [String]? = nil,
+        currentBranch: String? = nil,
+        statsGeneratedAt: Date? = nil,
+        statsSource: String? = nil
     ) {
         self.path = path
         self.name = name
@@ -56,6 +147,31 @@ class CachedProject {
         self.lastCommitAuthor = lastCommitAuthor
         self.lastCommitDate = lastCommitDate
         self.lastScanned = lastScanned
+        self.jsonStatus = jsonStatus
+        self.structure = structure
+        self.structureNotes = structureNotes
+        self.firstCommitDate = firstCommitDate
+        self.totalCommits = totalCommits
+        self.currentBranch = currentBranch
+        self.statsGeneratedAt = statsGeneratedAt
+        self.statsSource = statsSource
+
+        // Encode arrays
+        if let techStack = techStack {
+            self.techStackData = try? JSONEncoder().encode(techStack)
+        }
+        if let languageBreakdown = languageBreakdown {
+            self.languageBreakdownData = try? JSONEncoder().encode(languageBreakdown)
+        }
+        if let sourceDirectories = sourceDirectories {
+            self.sourceDirectoriesData = try? JSONEncoder().encode(sourceDirectories)
+        }
+        if let excludedDirectories = excludedDirectories {
+            self.excludedDirectoriesData = try? JSONEncoder().encode(excludedDirectories)
+        }
+        if let branches = branches {
+            self.branchesData = try? JSONEncoder().encode(branches)
+        }
     }
 
     func toProject() -> Project {
@@ -75,7 +191,20 @@ class CachedProject {
             promptCount: promptCount,
             workLogCount: workLogCount,
             lastCommit: commit,
-            lastScanned: lastScanned
+            lastScanned: lastScanned,
+            jsonStatus: jsonStatus,
+            techStack: techStack,
+            languageBreakdown: languageBreakdown,
+            structure: structure,
+            structureNotes: structureNotes,
+            sourceDirectories: sourceDirectories,
+            excludedDirectories: excludedDirectories,
+            firstCommitDate: firstCommitDate,
+            totalCommits: totalCommits,
+            branches: branches,
+            currentBranch: currentBranch,
+            statsGeneratedAt: statsGeneratedAt,
+            statsSource: statsSource
         )
     }
 
@@ -93,6 +222,19 @@ class CachedProject {
         self.lastCommitAuthor = project.lastCommit?.author
         self.lastCommitDate = project.lastCommit?.date
         self.lastScanned = project.lastScanned
+        self.jsonStatus = project.jsonStatus
+        self.techStack = project.techStack
+        self.languageBreakdown = project.languageBreakdown
+        self.structure = project.structure
+        self.structureNotes = project.structureNotes
+        self.sourceDirectories = project.sourceDirectories
+        self.excludedDirectories = project.excludedDirectories
+        self.firstCommitDate = project.firstCommitDate
+        self.totalCommits = project.totalCommits
+        self.branches = project.branches
+        self.currentBranch = project.currentBranch
+        self.statsGeneratedAt = project.statsGeneratedAt
+        self.statsSource = project.statsSource
     }
 }
 

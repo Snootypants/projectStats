@@ -98,6 +98,10 @@ struct QuickProjectRow: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        case .paused: return .yellow
+        case .experimental: return .blue
+        case .archived: return .gray
+        case .abandoned: return .gray
         }
     }
 }

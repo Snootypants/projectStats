@@ -40,6 +40,10 @@ struct CompactProjectCard: View {
     let project: Project
     @State private var isHovering = false
 
+    private var isArchived: Bool {
+        !project.countsTowardTotals
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Header with status and language
@@ -123,6 +127,7 @@ struct CompactProjectCard: View {
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(isHovering ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 1)
         )
+        .opacity(isArchived ? 0.6 : 1.0)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovering = hovering
@@ -135,6 +140,10 @@ struct CompactProjectCard: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        case .paused: return .yellow
+        case .experimental: return .blue
+        case .archived: return .gray
+        case .abandoned: return .gray
         }
     }
 
@@ -189,6 +198,10 @@ struct CompactProjectCard: View {
 struct ProjectCard: View {
     let project: Project
     @State private var isHovering = false
+
+    private var isArchived: Bool {
+        !project.countsTowardTotals
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -277,6 +290,7 @@ struct ProjectCard: View {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(isHovering ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 1)
         )
+        .opacity(isArchived ? 0.6 : 1.0)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovering = hovering
@@ -289,6 +303,10 @@ struct ProjectCard: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        case .paused: return .yellow
+        case .experimental: return .blue
+        case .archived: return .gray
+        case .abandoned: return .gray
         }
     }
 

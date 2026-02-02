@@ -116,8 +116,84 @@ struct ProjectDetailView: View {
                 ], spacing: 12) {
                     StatTile(title: "Lines", value: project.formattedLineCount, icon: "text.alignleft")
                     StatTile(title: "Files", value: "\(project.fileCount)", icon: "doc.text")
-                    StatTile(title: "Prompts", value: "\(project.promptCount)", icon: "text.bubble")
+                    if let totalCommits = project.totalCommits {
+                        StatTile(title: "Commits", value: "\(totalCommits)", icon: "arrow.triangle.branch")
+                    } else {
+                        StatTile(title: "Prompts", value: "\(project.promptCount)", icon: "text.bubble")
+                    }
                     StatTile(title: "Work Logs", value: "\(project.workLogCount)", icon: "list.bullet.clipboard")
+                }
+
+                // Tech Stack (if available from JSON)
+                if !project.techStack.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Tech Stack")
+                            .font(.headline)
+
+                        FlowLayout(spacing: 6) {
+                            ForEach(project.techStack, id: \.self) { tech in
+                                Text(tech)
+                                    .font(.caption)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5)
+                                    .background(Color.blue.opacity(0.1))
+                                    .foregroundStyle(.blue)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
+                }
+
+                // Language Breakdown (if available from JSON)
+                if !project.languageBreakdown.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Languages")
+                            .font(.headline)
+
+                        VStack(spacing: 6) {
+                            ForEach(project.languageBreakdown.sorted(by: { $0.value > $1.value }), id: \.key) { lang, lines in
+                                HStack {
+                                    Text(lang)
+                                        .font(.callout)
+                                    Spacer()
+                                    Text(formatLineCount(lines))
+                                        .font(.callout)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color.primary.opacity(0.03))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                }
+
+                // Structure info (if available and noteworthy)
+                if let structure = project.structure, structure != "standard" {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Project Structure")
+                            .font(.headline)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("Type")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 100, alignment: .leading)
+                                Text(structure.capitalized)
+                                    .font(.callout)
+                            }
+
+                            if let notes = project.structureNotes {
+                                Text(notes)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding()
+                        .background(Color.primary.opacity(0.03))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
                 }
 
                 // Git Activity Stats
@@ -211,7 +287,20 @@ struct ProjectDetailView: View {
                         if repoInfo.isGitRepo {
                             VStack(alignment: .leading, spacing: 6) {
                                 repoInfoRow("Repository", repoInfo.displayName)
-                                repoInfoRow("Branch", repoInfo.branch ?? "Unknown")
+                                repoInfoRow("Branch", project.currentBranch ?? repoInfo.branch ?? "Unknown")
+
+                                if let firstCommit = project.firstCommitDate {
+                                    repoInfoRow("First Commit", firstCommit.formatted(date: .abbreviated, time: .omitted))
+                                }
+
+                                if let totalCommits = project.totalCommits {
+                                    repoInfoRow("Total Commits", "\(totalCommits)")
+                                }
+
+                                if !project.branches.isEmpty && project.branches.count > 1 {
+                                    repoInfoRow("Branches", "\(project.branches.count)")
+                                }
+
                                 repoInfoRow("Last Commit", repoInfo.lastCommitSubject ?? "Unknown")
 
                                 if let remote = repoInfo.remoteURL {
@@ -332,6 +421,15 @@ struct ProjectDetailView: View {
         }
     }
 
+    private func formatLineCount(_ count: Int) -> String {
+        if count >= 1_000_000 {
+            return String(format: "%.1fM lines", Double(count) / 1_000_000.0)
+        } else if count >= 1000 {
+            return String(format: "%.1fk lines", Double(count) / 1000.0)
+        }
+        return "\(count) lines"
+    }
+
     @ViewBuilder
     private func repoInfoRow(_ label: String, _ value: String, allowSelection: Bool = false) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -378,6 +476,10 @@ struct StatusBadge: View {
         case .active: return .green
         case .inProgress: return .yellow
         case .dormant: return .gray
+        case .paused: return .yellow
+        case .experimental: return .blue
+        case .archived: return .gray
+        case .abandoned: return .gray
         }
     }
 }
@@ -454,6 +556,52 @@ struct CommitRow: View {
     }
 }
 
+/// A layout that wraps items to new lines when they don't fit
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let result = arrangeSubviews(proposal: proposal, subviews: subviews)
+        return result.size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = arrangeSubviews(proposal: proposal, subviews: subviews)
+
+        for (index, frame) in result.frames.enumerated() {
+            subviews[index].place(
+                at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                proposal: ProposedViewSize(frame.size)
+            )
+        }
+    }
+
+    private func arrangeSubviews(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, frames: [CGRect]) {
+        let maxWidth = proposal.width ?? .infinity
+        var frames: [CGRect] = []
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        var rowHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+
+            if x + size.width > maxWidth && x > 0 {
+                x = 0
+                y += rowHeight + spacing
+                rowHeight = 0
+            }
+
+            frames.append(CGRect(origin: CGPoint(x: x, y: y), size: size))
+            rowHeight = max(rowHeight, size.height)
+            x += size.width + spacing
+        }
+
+        let totalHeight = y + rowHeight
+        return (CGSize(width: maxWidth, height: totalHeight), frames)
+    }
+}
+
 #Preview {
     ProjectDetailView(project: Project(
         path: URL(fileURLWithPath: "/Users/test/Code/myproject"),
@@ -465,7 +613,12 @@ struct CommitRow: View {
         fileCount: 87,
         promptCount: 3,
         workLogCount: 12,
-        lastCommit: Commit(id: "abc123def456789", message: "Fix critical bug in authentication flow", author: "Caleb Belshe", date: Date())
+        lastCommit: Commit(id: "abc123def456789", message: "Fix critical bug in authentication flow", author: "Caleb Belshe", date: Date()),
+        techStack: ["Swift", "SwiftUI", "SwiftData", "Combine"],
+        languageBreakdown: ["Swift": 12000, "JSON": 1500, "Markdown": 300],
+        structure: "monorepo",
+        totalCommits: 156,
+        currentBranch: "main"
     ))
     .frame(width: 600, height: 800)
 }
