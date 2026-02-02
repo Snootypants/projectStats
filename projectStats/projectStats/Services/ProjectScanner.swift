@@ -144,9 +144,8 @@ private actor RepoDiscoveryService {
             }
         }
 
-        for (path, project) in existingByPath where !seenPaths.contains(path) {
-            results.append(project)
-        }
+        // Note: We no longer preserve stale projects that weren't found in the scan.
+        // Only JSON-sourced projects are included.
 
         results.sort { (p1, p2) -> Bool in
             let date1 = p1.lastCommit?.date ?? .distantPast
@@ -242,8 +241,9 @@ private actor RepoDiscoveryService {
             return await buildProjectFromJSON(jsonStats, at: url, id: projectId, existing: existing)
         }
 
-        // Fall back to scanner-based discovery
-        return await buildProjectFromScanner(at: url, id: projectId, existing: existing)
+        // No projectstats.json — skip this repo entirely
+        // It was intentionally excluded from the audit
+        return nil
     }
 
     /// Build a Project from projectstats.json data

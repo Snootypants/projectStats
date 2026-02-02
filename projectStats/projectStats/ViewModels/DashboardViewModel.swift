@@ -17,6 +17,7 @@ class DashboardViewModel: ObservableObject {
     private let gitService = GitService.shared
     private let githubClient = GitHubClient.shared
     private var didInitialLoad = false
+    private var perProjectActivities: [String: [Date: ActivityStats]] = [:]
 
     var recentProjects: [Project] {
         // Only show projects that count toward totals in recent projects
@@ -155,8 +156,8 @@ class DashboardViewModel: ObservableObject {
 
         let codeDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Code")
 
-        // Scan projects
-        projects = await scanner.scan(directory: codeDirectory, maxDepth: 10, existingProjects: projects)
+        // Scan projects - pass empty array to get a clean scan (only JSON-sourced projects)
+        projects = await scanner.scan(directory: codeDirectory, maxDepth: 10, existingProjects: [])
 
         for project in projects {
             if let url = project.githubURL {
@@ -185,9 +186,11 @@ class DashboardViewModel: ObservableObject {
 
     private func calculateActivitiesFromGit() async {
         var allActivities: [Date: ActivityStats] = [:]
+        var projectActivitiesMap: [String: [Date: ActivityStats]] = [:]
 
         for project in projects {
             let projectActivities = gitService.getDailyActivity(at: project.path, days: 365)
+            projectActivitiesMap[project.path.path] = projectActivities
 
             for (date, activity) in projectActivities {
                 if var existing = allActivities[date] {
@@ -200,6 +203,7 @@ class DashboardViewModel: ObservableObject {
         }
 
         activities = allActivities
+        perProjectActivities = projectActivitiesMap
     }
 
     private func calculateAggregatedStats() {
@@ -335,22 +339,21 @@ class DashboardViewModel: ObservableObject {
             print("[Dashboard] Error syncing projects to SwiftData: \(error)")
         }
 
-        // Sync activities
+        // Sync activities - reuse the already-computed perProjectActivities
         do {
-            // Delete existing activities and recreate (simpler than diffing)
+            // Delete existing activities and recreate
             let activityDescriptor = FetchDescriptor<CachedDailyActivity>()
             let existingActivities = try context.fetch(activityDescriptor)
             for activity in existingActivities {
                 context.delete(activity)
             }
 
-            // Insert fresh activities per project
-            for project in projects {
-                let projectActivities = gitService.getDailyActivity(at: project.path, days: 365)
-                for (date, stats) in projectActivities {
+            // Insert from perProjectActivities (already computed in calculateActivitiesFromGit)
+            for (projectPath, activities) in perProjectActivities {
+                for (date, stats) in activities {
                     let cached = CachedDailyActivity(
                         date: date,
-                        projectPath: project.path.path,
+                        projectPath: projectPath,
                         linesAdded: stats.linesAdded,
                         linesRemoved: stats.linesRemoved,
                         commits: stats.commits
@@ -360,7 +363,7 @@ class DashboardViewModel: ObservableObject {
             }
 
             try context.save()
-            print("[Dashboard] Synced activities to SwiftData")
+            print("[Dashboard] Synced \(perProjectActivities.count) projects' activities to SwiftData")
         } catch {
             print("[Dashboard] Error syncing activities to SwiftData: \(error)")
         }
