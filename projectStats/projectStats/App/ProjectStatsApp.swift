@@ -22,6 +22,11 @@ struct ProjectStatsApp: App {
         }
     }()
 
+    init() {
+        // Pass the model container to the app delegate for migration
+        appDelegate.modelContainer = sharedModelContainer
+    }
+
     var body: some Scene {
         // Main dashboard window
         WindowGroup {
@@ -51,6 +56,8 @@ struct ProjectStatsApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    var modelContainer: ModelContainer?
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         if !SettingsViewModel.shared.showInDock {
             NSApplication.shared.setActivationPolicy(.accessory)
@@ -58,7 +65,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.setActivationPolicy(.regular)
         }
         SettingsViewModel.shared.applyThemeIfNeeded()
-        Task {
+
+        // Run migration if needed, then load data
+        Task { @MainActor in
+            if let container = modelContainer {
+                let context = container.mainContext
+                await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
+            }
             await DashboardViewModel.shared.loadDataIfNeeded()
         }
     }
