@@ -21,6 +21,16 @@ final class AchievementService: ObservableObject {
         unlockedAchievements = Set(unlocks.compactMap { Achievement(rawValue: $0.key) })
     }
 
+    var mostRecentAchievement: Achievement? {
+        let context = AppModelContainer.shared.mainContext
+        var descriptor = FetchDescriptor<AchievementUnlock>(
+            sortBy: [SortDescriptor(\.unlockedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        guard let unlock = try? context.fetch(descriptor).first else { return nil }
+        return Achievement(rawValue: unlock.key)
+    }
+
     func checkAndUnlock(_ achievement: Achievement, projectPath: String? = nil) {
         guard !unlockedAchievements.contains(achievement) else { return }
 

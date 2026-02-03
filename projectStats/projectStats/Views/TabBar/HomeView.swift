@@ -4,6 +4,8 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
     @State private var showActivityDetails = false
+    @State private var showAchievements = false
+    @StateObject private var achievementService = AchievementService.shared
 
     var body: some View {
         ScrollView {
@@ -11,9 +13,11 @@ struct HomeView: View {
                 // Quick Stats row (moved from sidebar)
                 quickStatsRow
 
-                HStack(spacing: 16) {
+                HStack(alignment: .top, spacing: 16) {
                     TimeTrackingCard()
+                        .frame(maxWidth: .infinity, minHeight: 140)
                     GitHubNotificationsCard()
+                        .frame(maxWidth: .infinity, minHeight: 140)
                 }
 
                 // Stats cards (existing component, unchanged)
@@ -103,6 +107,9 @@ struct HomeView: View {
             }
             .padding(24)
         }
+        .sheet(isPresented: $showAchievements) {
+            AchievementsSheet()
+        }
     }
 
     private var quickStatsRow: some View {
@@ -113,6 +120,27 @@ struct HomeView: View {
             if viewModel.aggregatedStats.currentStreak > 0 {
                 QuickStatPill(label: "Streak", value: "\(viewModel.aggregatedStats.currentStreak)d", color: .orange, icon: "flame.fill")
             }
+
+            // Achievement badge
+            Button {
+                showAchievements = true
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: achievementService.mostRecentAchievement?.icon ?? "trophy.fill")
+                        .foregroundStyle(.yellow)
+                    Text("\(achievementService.unlockedAchievements.count)/\(Achievement.allCases.count)")
+                        .font(.caption.bold())
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.purple.opacity(0.2))
+                .cornerRadius(16)
+            }
+            .buttonStyle(.plain)
+            .help(achievementService.mostRecentAchievement != nil
+                ? "Last: \(achievementService.mostRecentAchievement!.title) — \(achievementService.mostRecentAchievement!.description)"
+                : "View Achievements")
+
             Spacer()
         }
     }
