@@ -5,6 +5,7 @@ struct TabShellView: View {
     @EnvironmentObject var tabManager: TabManagerViewModel
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @EnvironmentObject var settingsVM: SettingsViewModel
+    @StateObject private var achievementService = AchievementService.shared
     @State private var previousTabs: [AppTab] = []
     @State private var showCommandPalette = false
 
@@ -14,6 +15,9 @@ struct TabShellView: View {
             TabBarView()
 
             Divider()
+
+            // XP Progress Bar
+            XPProgressBar()
 
             // Active tab content
             if let activeTab = tabManager.activeTab {
@@ -119,5 +123,76 @@ struct TabShellView: View {
             Command(name: "Refresh Project Stats", icon: "arrow.clockwise", shortcut: "⌘R", action: { Task { await dashboardVM.refresh() } }),
             Command(name: "Open Settings", icon: "gear", shortcut: "⌘,", action: { NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil) })
         ]
+    }
+}
+
+// MARK: - XP Progress Bar
+
+struct XPProgressBar: View {
+    @StateObject private var achievementService = AchievementService.shared
+
+    private var totalXP: Int {
+        achievementService.unlockedAchievements.reduce(0) { $0 + $1.points }
+    }
+
+    private var currentLevel: Int {
+        // 250 XP per level
+        return (totalXP / 250) + 1
+    }
+
+    private var xpInCurrentLevel: Int {
+        return totalXP % 250
+    }
+
+    private var xpForNextLevel: Int {
+        return 250
+    }
+
+    private var progress: CGFloat {
+        guard xpForNextLevel > 0 else { return 0 }
+        return CGFloat(xpInCurrentLevel) / CGFloat(xpForNextLevel)
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            // Progress bar
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    // Background
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.secondary.opacity(0.2))
+
+                    // Fill
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(
+                            LinearGradient(
+                                colors: [.purple, .blue],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .frame(width: max(0, geo.size.width * progress))
+                        .animation(.easeInOut(duration: 0.3), value: progress)
+                }
+            }
+            .frame(height: 8)
+
+            // XP text
+            Text("\(xpInCurrentLevel) / \(xpForNextLevel) XP")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+
+            // Level badge
+            Text("Lvl \(currentLevel)")
+                .font(.caption.bold())
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Color.purple.opacity(0.2))
+                .cornerRadius(8)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 6)
+        .background(Color(nsColor: .windowBackgroundColor))
     }
 }

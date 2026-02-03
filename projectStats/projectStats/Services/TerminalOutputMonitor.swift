@@ -48,9 +48,31 @@ final class TerminalOutputMonitor: ObservableObject {
             scheduleSyncDebounced()
         }
 
-        if SettingsViewModel.shared.notifyGitPushCompleted,
-           cleanLine.contains("To github.com") || cleanLine.contains("To gitlab.com") || cleanLine.contains("To bitbucket.org") {
-            NotificationService.shared.sendNotification(title: "Git push completed", message: cleanLine)
+        // Detect git push and trigger notifications + achievements
+        if cleanLine.contains("To github.com") || cleanLine.contains("To gitlab.com") || cleanLine.contains("To bitbucket.org") {
+            if SettingsViewModel.shared.notifyGitPushCompleted {
+                NotificationService.shared.sendNotification(title: "Git push completed", message: cleanLine)
+            }
+
+            // Trigger achievement checks on git push
+            if let projectPath = activeProjectPath {
+                Task { @MainActor in
+                    AchievementService.shared.onGitPushDetected(projectPath: projectPath)
+                }
+            }
+        }
+
+        // Also check achievements on git commit detection
+        if cleanLine.contains("[main ") || cleanLine.contains("[master ") ||
+           cleanLine.contains("[develop ") || cleanLine.contains("[feature/") ||
+           cleanLine.contains("[bugfix/") || cleanLine.contains("[hotfix/") {
+            if let projectPath = activeProjectPath {
+                Task { @MainActor in
+                    // Commit detected - check first blood and time-based achievements
+                    AchievementService.shared.checkFirstCommitOfDay(projectPath: projectPath)
+                    AchievementService.shared.checkTimeBasedAchievements(projectPath: projectPath)
+                }
+            }
         }
 
         if let detected = errorDetector.detectError(in: cleanLine) {
