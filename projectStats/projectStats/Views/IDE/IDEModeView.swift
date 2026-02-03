@@ -1,6 +1,26 @@
 import AppKit
 import SwiftUI
 
+// MARK: - Color Hex Extension
+
+private extension Color {
+    static func fromHex(_ hex: String) -> Color? {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.hasPrefix("#") ? String(hexSanitized.dropFirst()) : hexSanitized
+
+        guard hexSanitized.count == 6,
+              let hexNumber = UInt64(hexSanitized, radix: 16) else {
+            return nil
+        }
+
+        let r = Double((hexNumber & 0xFF0000) >> 16) / 255
+        let g = Double((hexNumber & 0x00FF00) >> 8) / 255
+        let b = Double(hexNumber & 0x0000FF) / 255
+
+        return Color(red: r, green: g, blue: b)
+    }
+}
+
 struct IDEModeView: View {
     let project: Project
 
@@ -287,13 +307,31 @@ private struct ResizableDivider: View {
 
     @State private var isHovering = false
     @State private var isDragging = false
+    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+
+    private var glowColor: Color {
+        Color.fromHex(accentColorHex) ?? .orange
+    }
+
+    private var isActive: Bool {
+        isHovering || isDragging
+    }
 
     var body: some View {
         ZStack {
-            // Full-height subtle line (always visible)
+            // Glow effect layer (behind the line)
+            if isActive {
+                Rectangle()
+                    .fill(glowColor.opacity(0.3))
+                    .frame(width: 6)
+                    .blur(radius: 4)
+            }
+
+            // Full-height line (glows when active)
             Rectangle()
-                .fill(Color.secondary.opacity(0.2))
-                .frame(width: 1)
+                .fill(isActive ? glowColor : Color.secondary.opacity(0.2))
+                .frame(width: isActive ? 2 : 1)
+                .shadow(color: isActive ? glowColor.opacity(0.6) : .clear, radius: 4)
 
             // Invisible hit area (wider for easier grabbing)
             Rectangle()
@@ -303,10 +341,13 @@ private struct ResizableDivider: View {
 
             // Drag handle pill (centered on the line)
             Capsule()
-                .fill(Color.secondary.opacity(isHovering || isDragging ? 0.6 : 0.4))
+                .fill(isActive ? glowColor : Color.secondary.opacity(0.4))
                 .frame(width: 4, height: 36)
+                .shadow(color: isActive ? glowColor.opacity(0.5) : .clear, radius: 3)
         }
         .frame(width: 12)
+        .animation(.easeInOut(duration: 0.15), value: isHovering)
+        .animation(.easeInOut(duration: 0.15), value: isDragging)
         .onTapGesture(count: 2) {
             onDoubleTap()
         }
