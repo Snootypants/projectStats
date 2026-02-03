@@ -10,7 +10,11 @@ enum AppModelContainer {
             CachedDailyActivity.self,
             CachedPrompt.self,
             CachedWorkLog.self,
-            CachedCommit.self
+            CachedCommit.self,
+            ChatMessage.self,
+            TimeEntry.self,
+            AchievementUnlock.self,
+            ProjectNote.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -28,6 +32,14 @@ struct ProjectStatsApp: App {
     @StateObject private var dashboardViewModel = DashboardViewModel.shared
     @StateObject private var settingsViewModel = SettingsViewModel.shared
     @StateObject private var tabManager = TabManagerViewModel.shared
+    @StateObject private var claudePlanUsage = ClaudePlanUsageService.shared
+    @StateObject private var claudeContextMonitor = ClaudeContextMonitor.shared
+    @StateObject private var messagingService = MessagingService.shared
+    @StateObject private var cloudSyncService = CloudSyncService.shared
+    @StateObject private var achievementService = AchievementService.shared
+    @StateObject private var timeTrackingService = TimeTrackingService.shared
+    @StateObject private var featureFlags = FeatureFlags.shared
+    @StateObject private var githubService = GitHubService.shared
     @State private var hasMigrated = false
 
     var body: some Scene {
@@ -44,6 +56,8 @@ struct ProjectStatsApp: App {
                     let context = AppModelContainer.shared.mainContext
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
+                    await ClaudePlanUsageService.shared.fetchUsage()
+                    await ClaudeContextMonitor.shared.refresh()
                     tabManager.restoreState()
                 }
                 .onDisappear {
@@ -66,6 +80,7 @@ struct ProjectStatsApp: App {
         Settings {
             SettingsView()
                 .environmentObject(settingsViewModel)
+                .environmentObject(dashboardViewModel)
         }
     }
 }

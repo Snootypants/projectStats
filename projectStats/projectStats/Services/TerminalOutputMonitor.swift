@@ -4,9 +4,11 @@ import Foundation
 final class TerminalOutputMonitor: ObservableObject {
     static let shared = TerminalOutputMonitor()
 
+    @Published var lastDetectedError: DetectedError?
     var activeProjectPath: String?
 
     private var syncDebounceTask: Task<Void, Never>?
+    private let errorDetector = ErrorDetector()
 
     private let gitTriggerPatterns: [String] = [
         "[main ",
@@ -44,6 +46,15 @@ final class TerminalOutputMonitor: ObservableObject {
 
         if isGitEvent {
             scheduleSyncDebounced()
+        }
+
+        if SettingsViewModel.shared.notifyGitPushCompleted,
+           cleanLine.contains(\"To github.com\") || cleanLine.contains(\"To gitlab.com\") || cleanLine.contains(\"To bitbucket.org\") {
+            NotificationService.shared.sendNotification(title: \"Git push completed\", message: cleanLine)
+        }
+
+        if let detected = errorDetector.detectError(in: cleanLine) {
+            lastDetectedError = detected
         }
     }
 

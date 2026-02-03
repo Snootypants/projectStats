@@ -10,11 +10,16 @@ class TabManagerViewModel: ObservableObject {
 
     /// Workspace state preserved when a project tab navigates "back" to picker
     private var parkedWorkspaces: [String: ParkedWorkspaceState] = [:]
+    @Published private(set) var favoriteTabProjects: Set<String> = [] {
+        didSet { saveFavoriteTabs() }
+    }
+    private let favoriteTabsKey = "favoriteTabProjects"
 
     private init() {
         let homeTab = AppTab.homeTab()
         self.tabs = [homeTab]
         self.activeTabID = homeTab.id
+        loadFavoriteTabs()
     }
 
     var activeTab: AppTab? {
@@ -51,6 +56,11 @@ class TabManagerViewModel: ObservableObject {
         tabs.removeAll { $0.id == id }
     }
 
+    func closeOtherTabs(keeping id: UUID) {
+        tabs = tabs.filter { $0.id == id || !$0.isCloseable }
+        activeTabID = id
+    }
+
     /// Switch to a specific tab
     func selectTab(_ id: UUID) {
         if tabs.contains(where: { $0.id == id }) {
@@ -62,6 +72,20 @@ class TabManagerViewModel: ObservableObject {
     func selectTab(at index: Int) {
         guard index >= 0, index < tabs.count else { return }
         activeTabID = tabs[index].id
+    }
+
+    func isFavorite(_ tab: AppTab) -> Bool {
+        guard case .projectWorkspace(let path) = tab.content else { return false }
+        return favoriteTabProjects.contains(path)
+    }
+
+    func toggleFavorite(_ tab: AppTab) {
+        guard case .projectWorkspace(let path) = tab.content else { return }
+        if favoriteTabProjects.contains(path) {
+            favoriteTabProjects.remove(path)
+        } else {
+            favoriteTabProjects.insert(path)
+        }
     }
 
     /// Navigate to next tab
@@ -170,6 +194,21 @@ class TabManagerViewModel: ObservableObject {
             activeTabID = tabs[savedIndex].id
         } else {
             activeTabID = tabs[0].id
+        }
+    }
+
+    private func loadFavoriteTabs() {
+        guard let data = UserDefaults.standard.data(forKey: favoriteTabsKey),
+              let decoded = try? JSONDecoder().decode([String].self, from: data) else {
+            return
+        }
+        favoriteTabProjects = Set(decoded)
+    }
+
+    private func saveFavoriteTabs() {
+        let list = Array(favoriteTabProjects)
+        if let data = try? JSONEncoder().encode(list) {
+            UserDefaults.standard.set(data, forKey: favoriteTabsKey)
         }
     }
 }

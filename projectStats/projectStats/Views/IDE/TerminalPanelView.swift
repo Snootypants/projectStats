@@ -1,39 +1,78 @@
-import AppKit
 import SwiftUI
-import SwiftTerm
 
 struct TerminalPanelView: View {
-    let projectPath: URL
-    @StateObject private var controller = TerminalController()
+    @ObservedObject var viewModel: TerminalTabsViewModel
+    @State private var showHistory = false
+    @StateObject private var outputMonitor = TerminalOutputMonitor.shared
 
     var body: some View {
         VStack(spacing: 0) {
+            ContextUsageBar()
+
+            Divider()
+
             header
 
             Divider()
 
-            SwiftTermContainer(projectPath: projectPath, controller: controller)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 6)
+            if let detected = outputMonitor.lastDetectedError {
+                ErrorBannerView(error: detected) {
+                    outputMonitor.lastDetectedError = nil
+                }
+                Divider()
+            }
+
+            if let activeTab = viewModel.activeTab, activeTab.kind == .devServer {
+                DevServerToolbar(tab: activeTab)
+                Divider()
+            }
+
+            HStack(spacing: 0) {
+                TerminalTabView(viewModel: viewModel)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+
+                TerminalTabBar(viewModel: viewModel)
+            }
         }
         .background(Color.primary.opacity(0.02))
+        .background {
+            terminalShortcuts
+        }
     }
 
     private var header: some View {
-        VStack(spacing: 6) {
-            HStack {
-                Spacer()
-                terminalActions
-                Spacer()
-            }
-
-            HStack(spacing: 8) {
+        HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 Image(systemName: "terminal")
                     .font(.system(size: 12, weight: .semibold))
-                Text("Terminal")
+                Text(viewModel.activeTab?.title ?? "Terminal")
                     .font(.system(size: 12, weight: .semibold))
+            }
 
-                Spacer()
+            Spacer()
+
+            Button("Claude") {
+                viewModel.addClaudeTab()
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
+            Button("ccYOLO") {
+                viewModel.addCcYoloTab()
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
+            Button {
+                showHistory.toggle()
+            } label: {
+                Image(systemName: "clock")
+            }
+            .buttonStyle(.borderless)
+            .popover(isPresented: $showHistory, arrowEdge: .top) {
+                TerminalHistoryPopover(commands: viewModel.activeTab?.commandHistory ?? [])
+                    .frame(width: 280)
             }
         }
         .padding(.horizontal, 12)
@@ -41,93 +80,89 @@ struct TerminalPanelView: View {
         .background(Color.primary.opacity(0.03))
     }
 
-    private var terminalActions: some View {
-        HStack(spacing: 10) {
-            Button("codex") {
-                controller.sendCommand("claude")
-            }
+    private var terminalShortcuts: some View {
+        Group {
+            Button("") { viewModel.selectTab(at: 0) }
+                .keyboardShortcut("1", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 1) }
+                .keyboardShortcut("2", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 2) }
+                .keyboardShortcut("3", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 3) }
+                .keyboardShortcut("4", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 4) }
+                .keyboardShortcut("5", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 5) }
+                .keyboardShortcut("6", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 6) }
+                .keyboardShortcut("7", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 7) }
+                .keyboardShortcut("8", modifiers: .command)
+            Button("") { viewModel.selectTab(at: 8) }
+                .keyboardShortcut("9", modifiers: .command)
 
-            Button("ccYOLO") {
-                controller.sendCommand("claude code --dangerously-skip-permissions")
-            }
+            Button("") { viewModel.addDevServerTab(command: "npm run dev") }
+                .keyboardShortcut("t", modifiers: .command)
+            Button("") { viewModel.closeActiveTab() }
+                .keyboardShortcut("w", modifiers: .command)
+            Button("") { viewModel.clearActiveTab() }
+                .keyboardShortcut("k", modifiers: .command)
+            Button("") { viewModel.copyActiveDevServerURL() }
+                .keyboardShortcut("c", modifiers: [.command, .shift])
         }
-        .buttonStyle(.borderedProminent)
-        .controlSize(.regular)
-        .font(.system(size: 12, weight: .semibold))
-        .padding(.vertical, 2)
+        .opacity(0)
+        .frame(width: 0, height: 0)
     }
 }
 
-private final class TerminalController: ObservableObject {
-    weak var terminalView: LocalProcessTerminalView?
-    private var followTimer: Timer?
+private struct ErrorBannerView: View {
+    let error: DetectedError
+    let onDismiss: () -> Void
 
-    func sendCommand(_ command: String) {
-        guard let terminalView else { return }
-        terminalView.getTerminal().sendResponse(text: command + "\n")
-    }
-
-    func attach(_ terminalView: LocalProcessTerminalView) {
-        self.terminalView = terminalView
-        startFollowTimer()
-    }
-
-    private func startFollowTimer() {
-        followTimer?.invalidate()
-        followTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            guard let self, let terminalView = self.terminalView else { return }
-
-            let atBottom = !terminalView.canScroll || terminalView.scrollPosition >= 0.99
-            if atBottom && terminalView.scrollPosition < 0.999 {
-                terminalView.scroll(toPosition: 1)
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.yellow)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Error Detected")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(error.snippet)
+                    .font(.caption2)
+                    .lineLimit(2)
             }
+            Spacer()
+            Button("Dismiss") { onDismiss() }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
         }
-    }
-
-    deinit {
-        followTimer?.invalidate()
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color.yellow.opacity(0.1))
     }
 }
 
-private final class MonitoringTerminalView: LocalProcessTerminalView {
-    override func dataReceived(slice: ArraySlice<UInt8>) {
-        if let text = String(bytes: slice, encoding: .utf8), !text.isEmpty {
-            Task { @MainActor in
-                TerminalOutputMonitor.shared.processTerminalChunk(text)
+private struct TerminalHistoryPopover: View {
+    let commands: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Recent Commands")
+                .font(.system(size: 12, weight: .semibold))
+
+            if commands.isEmpty {
+                Text("No commands recorded yet")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(commands, id: \.self) { command in
+                    Text(command)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
             }
         }
-        super.dataReceived(slice: slice)
-    }
-}
-
-private struct SwiftTermContainer: NSViewRepresentable {
-    let projectPath: URL
-    @ObservedObject var controller: TerminalController
-
-    func makeNSView(context: Context) -> LocalProcessTerminalView {
-        let terminalView = MonitoringTerminalView(frame: .zero)
-        terminalView.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
-        terminalView.configureNativeColors()
-
-        let shellPath = "/bin/zsh"
-        let command = "cd '\(shellEscape(projectPath.path))'; exec \(shellPath) -l"
-        terminalView.startProcess(
-            executable: shellPath,
-            args: ["-l", "-c", command]
-        )
-
-        controller.attach(terminalView)
-        return terminalView
-    }
-
-    func updateNSView(_ nsView: LocalProcessTerminalView, context: Context) {
-        // Recreated when project changes via .id(projectPath) in the parent view.
-        if controller.terminalView !== nsView {
-            controller.attach(nsView)
-        }
-    }
-
-    private func shellEscape(_ path: String) -> String {
-        path.replacingOccurrences(of: "'", with: "'\\''")
+        .padding(12)
     }
 }

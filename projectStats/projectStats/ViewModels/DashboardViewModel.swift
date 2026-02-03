@@ -31,6 +31,12 @@ class DashboardViewModel: ObservableObject {
     private let favoritesKey = "favoriteProjectPaths"
     private let favoriteLimit = 3
 
+    struct ScanResult: Hashable {
+        let projectsFound: Int
+        let promptsImported: Int
+        let workLogsImported: Int
+    }
+
     init() {
         loadFavorites()
     }
@@ -226,6 +232,24 @@ class DashboardViewModel: ObservableObject {
     func refresh() async {
         if isLoading { return }
         await loadDataFromScanner()
+    }
+
+    func scanWorkingFolder(at url: URL) async -> ScanResult {
+        if isLoading { return ScanResult(projectsFound: 0, promptsImported: 0, workLogsImported: 0) }
+        isLoading = true
+        defer { isLoading = false }
+
+        projects = await scanner.scan(directory: url, maxDepth: 10, existingProjects: projects)
+
+        let promptCount = countPromptFiles(for: projects)
+        let workCount = countWorkLogFiles(for: projects)
+
+        await calculateActivitiesFromGit()
+        calculateAggregatedStats()
+        await syncToSwiftData()
+        await reloadFromCache(context: AppModelContainer.shared.mainContext)
+
+        return ScanResult(projectsFound: projects.count, promptsImported: promptCount, workLogsImported: workCount)
     }
 
     // MARK: - Comprehensive Data Sync
@@ -917,6 +941,36 @@ class DashboardViewModel: ObservableObject {
         return commits
     }
 
+    private func countPromptFiles(for projects: [Project]) -> Int {
+        let fm = FileManager.default
+        var count = 0
+        for project in projects {
+            let promptsDir = project.path.appendingPathComponent("prompts")
+            guard fm.fileExists(atPath: promptsDir.path) else { continue }
+            guard let files = try? fm.contentsOfDirectory(at: promptsDir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]) else { continue }
+            count += files.filter { $0.pathExtension == "md" }.count
+        }
+        return count
+    }
+
+    private func countWorkLogFiles(for projects: [Project]) -> Int {
+        let fm = FileManager.default
+        var count = 0
+        for project in projects {
+            let workDir = project.path.appendingPathComponent("work")
+            guard fm.fileExists(atPath: workDir.path) else { continue }
+            if let files = try? fm.contentsOfDirectory(at: workDir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]) {
+                count += files.filter { $0.pathExtension == "md" }.count
+            }
+            let statsDir = workDir.appendingPathComponent("stats")
+            if fm.fileExists(atPath: statsDir.path),
+               let statFiles = try? fm.contentsOfDirectory(at: statsDir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]) {
+                count += statFiles.filter { $0.pathExtension == "md" }.count
+            }
+        }
+        return count
+    }
+
     private func syncWorkLogFiles(
         in directory: URL,
         projectPath: String,
@@ -1080,6 +1134,10 @@ class DashboardViewModel: ObservableObject {
                 cached.lastCommitAuthor = latestCommit.author
                 cached.lastCommitDate = latestCommit.date
             }
+
+            let (freshLines, freshFiles) = LineCounter.countLines(in: project.path)
+            cached.lineCount = freshLines
+            cached.fileCount = freshFiles
 
             cached.lastScanned = Date()
         } catch {

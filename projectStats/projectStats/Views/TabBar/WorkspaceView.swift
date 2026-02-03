@@ -1,9 +1,11 @@
+import AppKit
 import SwiftUI
 
 struct WorkspaceView: View {
     let projectPath: String
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
+    @State private var showClaudeConfig = false
 
     /// Resolve the Project from the path
     private var project: Project? {
@@ -23,11 +25,17 @@ struct WorkspaceView: View {
             }
             .onAppear {
                 TerminalOutputMonitor.shared.activeProjectPath = project.path.path
+                TimeTrackingService.shared.startTracking(project: project.path.path)
+                Task {
+                    await ClaudePlanUsageService.shared.fetchUsage()
+                    await ClaudeContextMonitor.shared.refresh()
+                }
             }
             .onDisappear {
                 if TerminalOutputMonitor.shared.activeProjectPath == project.path.path {
                     TerminalOutputMonitor.shared.activeProjectPath = nil
                 }
+                TimeTrackingService.shared.stopTracking()
             }
         } else {
             // Project not found (maybe directory was deleted)
@@ -78,24 +86,29 @@ struct WorkspaceView: View {
                     .font(.system(size: 13, weight: .semibold))
             }
 
-            // Branch indicator
-            if let branch = project.currentBranch {
-                HStack(spacing: 4) {
-                    Image(systemName: "arrow.triangle.branch")
-                        .font(.caption2)
-                    Text(branch)
-                        .font(.system(size: 11))
-                }
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.primary.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 4))
-            }
-
             Spacer()
 
-            // Line count
+            Menu("Open In") {
+                Button("VS Code") { openIn(app: "Visual Studio Code", project: project) }
+                Button("Cursor") { openIn(app: "Cursor", project: project) }
+                Button("Xcode") { openIn(app: "Xcode", project: project) }
+                Button("Finder") { openInFinder(project: project) }
+                Button("Terminal") { openInTerminal(project: project) }
+                Divider()
+                Button("Copy Path") { copyPath(project: project) }
+            }
+            .menuStyle(.borderlessButton)
+
+            GitControlsView(projectPath: project.path)
+
+            Button {
+                showClaudeConfig = true
+            } label: {
+                Image(systemName: "gearshape")
+            }
+            .buttonStyle(.plain)
+            .help("Claude Config")
+
             Text("\(project.formattedLineCount) lines")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -103,6 +116,9 @@ struct WorkspaceView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(Color.primary.opacity(0.02))
+        .sheet(isPresented: $showClaudeConfig) {
+            ClaudeConfigSheet(projectPath: project.path)
+        }
     }
 
     private func statusColor(for status: ProjectStatus) -> Color {
@@ -113,5 +129,22 @@ struct WorkspaceView: View {
         case .experimental: return .blue
         case .dormant, .archived, .abandoned: return .gray
         }
+    }
+
+    private func openIn(app: String, project: Project) {
+        Shell.run("open -a '\(app)' '\(project.path.path)'")
+    }
+
+    private func openInFinder(project: Project) {
+        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: project.path.path)
+    }
+
+    private func openInTerminal(project: Project) {
+        Shell.run("open -a 'Terminal' '\(project.path.path)'")
+    }
+
+    private func copyPath(project: Project) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(project.path.path, forType: .string)
     }
 }

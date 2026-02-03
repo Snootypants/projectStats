@@ -59,6 +59,13 @@ class DataMigrationService {
         print("[DataMigration] Rebuild complete!")
     }
 
+    /// Clear all cached data without rebuilding
+    func clearDatabase(modelContext: ModelContext) async {
+        print("[DataMigration] Clearing database...")
+        await deleteAllRecords(modelContext: modelContext)
+        print("[DataMigration] Database cleared")
+    }
+
     /// Delete all CachedProject and CachedDailyActivity records
     private func deleteAllRecords(modelContext: ModelContext) async {
         do {
@@ -127,6 +134,7 @@ class DataMigrationService {
         }
 
         let projectDir = jsonURL.deletingLastPathComponent()
+        let (freshLines, freshFiles) = LineCounter.countLines(in: projectDir)
 
         // Parse dates
         let firstCommitDate = JSONStatsReader.parseDate(stats.git?.firstCommitDate)
@@ -156,8 +164,8 @@ class DataMigrationService {
             descriptionText: stats.description,
             githubURL: githubURL,
             language: stats.language,
-            lineCount: stats.lineCount,
-            fileCount: stats.fileCount,
+            lineCount: freshLines,
+            fileCount: freshFiles,
             promptCount: promptCount,
             workLogCount: workLogCount,
             lastCommitHash: lastCommit?.id,

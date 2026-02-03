@@ -2,11 +2,7 @@ import AppKit
 import SwiftUI
 
 struct EnvironmentManagerView: View {
-    @StateObject private var viewModel: EnvironmentViewModel
-
-    init(projectPath: URL) {
-        _viewModel = StateObject(wrappedValue: EnvironmentViewModel(projectPath: projectPath))
-    }
+    @ObservedObject var viewModel: EnvironmentViewModel
 
     var body: some View {
         VStack(spacing: 0) {
@@ -155,5 +151,5 @@ struct EnvironmentManagerView: View {
 }
 
 #Preview {
-    EnvironmentManagerView(projectPath: URL(fileURLWithPath: "/tmp"))
+    EnvironmentManagerView(viewModel: EnvironmentViewModel(projectPath: URL(fileURLWithPath: "/tmp")))
 }

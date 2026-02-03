@@ -236,6 +236,9 @@ private actor RepoDiscoveryService {
         let workDir = url.appendingPathComponent("work")
         let workLogCount = countFiles(in: workDir)
 
+        // Always compute fresh line count from disk (avoid stale JSON cache)
+        let (freshLines, freshFiles) = LineCounter.countLines(in: url)
+
         var project = Project(
             id: id,
             path: url,
@@ -243,8 +246,8 @@ private actor RepoDiscoveryService {
             description: stats.description,
             githubURL: githubURL,
             language: stats.language,
-            lineCount: stats.lineCount,
-            fileCount: stats.fileCount,
+            lineCount: freshLines,
+            fileCount: freshFiles,
             promptCount: promptCount,
             workLogCount: workLogCount,
             lastCommit: lastCommit,

@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import SwiftUI
 import ServiceManagement
@@ -46,6 +47,41 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("showInDock") var showInDock: Bool = false
     @AppStorage("themeRaw") private var themeRaw: String = AppTheme.system.rawValue
 
+    @AppStorage("notifyClaudeFinished") var notifyClaudeFinished: Bool = true
+    @AppStorage("playSoundOnClaudeFinished") var playSoundOnClaudeFinished: Bool = true
+    @AppStorage("notificationSound") var notificationSound: String = "Ping"
+    @AppStorage("notifyBuildComplete") var notifyBuildComplete: Bool = true
+    @AppStorage("notifyServerStart") var notifyServerStart: Bool = true
+    @AppStorage("notifyContextHigh") var notifyContextHigh: Bool = true
+    @AppStorage("notifyPlanUsageHigh") var notifyPlanUsageHigh: Bool = true
+    @AppStorage("notifyGitPushCompleted") var notifyGitPushCompleted: Bool = false
+    @AppStorage("notifyAchievementUnlocked") var notifyAchievementUnlocked: Bool = false
+    @AppStorage("pushNotificationsEnabled") var pushNotificationsEnabled: Bool = false
+    @AppStorage("ntfyTopic") var ntfyTopic: String = "projectstats-caleb"
+
+    @AppStorage("messaging.service") private var messagingServiceRaw: String = MessagingServiceType.telegram.rawValue
+    @AppStorage("messaging.telegram.token") var telegramBotToken: String = ""
+    @AppStorage("messaging.telegram.chat") var telegramChatId: String = ""
+    @AppStorage("messaging.slack.webhook") var slackWebhookURL: String = ""
+    @AppStorage("messaging.discord.webhook") var discordWebhookURL: String = ""
+    @AppStorage("messaging.ntfy.topic") var messagingNtfyTopic: String = ""
+    @AppStorage("messaging.notifications.enabled") var messagingNotificationsEnabled: Bool = false
+    @AppStorage("messaging.remote.enabled") var remoteCommandsEnabled: Bool = false {
+        didSet {
+            MessagingService.shared.startPollingIfNeeded()
+        }
+    }
+    @AppStorage("messaging.remote.interval") var remoteCommandsInterval: Int = 30 {
+        didSet {
+            MessagingService.shared.startPollingIfNeeded()
+        }
+    }
+
+    @AppStorage("ai.provider") private var aiProviderRaw: String = AIProvider.anthropic.rawValue
+    @AppStorage("ai.apiKey") var aiApiKey: String = ""
+    @AppStorage("ai.model") var aiModel: String = "claude-3-5-sonnet-latest"
+    @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
+
     var codeDirectory: URL {
         get {
             if codeDirectoryPath.isEmpty {
@@ -88,6 +124,26 @@ class SettingsViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.objectWillChange.send()
                 self?.applyTheme()
+            }
+        }
+    }
+
+    var messagingServiceType: MessagingServiceType {
+        get { MessagingServiceType(rawValue: messagingServiceRaw) ?? .telegram }
+        set {
+            messagingServiceRaw = newValue.rawValue
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
+            }
+        }
+    }
+
+    var aiProvider: AIProvider {
+        get { AIProvider(rawValue: aiProviderRaw) ?? .anthropic }
+        set {
+            aiProviderRaw = newValue.rawValue
+            DispatchQueue.main.async { [weak self] in
+                self?.objectWillChange.send()
             }
         }
     }
@@ -150,5 +206,9 @@ class SettingsViewModel: ObservableObject {
         }
 
         Shell.run("open -a \"\(terminalApp)\" \"\(path.path)\"")
+    }
+
+    func testNotification() {
+        NotificationService.shared.sendNotification(title: "ProjectStats", message: "Test notification sent.")
     }
 }

@@ -14,6 +14,7 @@ final class EnvironmentViewModel: ObservableObject {
     private let keychainService = KeychainService.shared
     private var keychainCache: [String: String] = [:]
     private var missingKeychainKeys: Set<String> = []
+    private var hasLoaded = false
 
     private let commonSuggestedKeys: [String] = [
         "OPENAI_API_KEY",
@@ -47,6 +48,8 @@ final class EnvironmentViewModel: ObservableObject {
     }
 
     func load() {
+        guard !hasLoaded else { return }
+        hasLoaded = true
         refreshKeychainKeys()
 
         let envVars = envFileService.parseEnvFile(at: envURL)
@@ -90,6 +93,9 @@ final class EnvironmentViewModel: ObservableObject {
         guard FileManager.default.fileExists(atPath: url.path) else {
             statusMessage = "No file found at \(url.lastPathComponent)."
             return
+        }
+        if !hasLoaded {
+            load()
         }
 
         let imported = envFileService.parseEnvFile(at: url)

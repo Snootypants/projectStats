@@ -24,14 +24,56 @@ struct SettingsView: View {
                 }
                 .tag(2)
 
+            MessagingSettingsView()
+                .tabItem {
+                    Label("Messaging", systemImage: "message")
+                }
+                .tag(3)
+
+            CloudSyncSettingsView()
+                .tabItem {
+                    Label("Cloud Sync", systemImage: "icloud")
+                }
+                .tag(4)
+
+            AISettingsView()
+                .tabItem {
+                    Label("AI", systemImage: "sparkles")
+                }
+                .tag(5)
+
+            DataManagementView()
+                .tabItem {
+                    Label("Data", systemImage: "tray.full")
+                }
+                .tag(6)
+
+            NotificationSettingsView()
+                .tabItem {
+                    Label("Notifications", systemImage: "bell")
+                }
+                .tag(7)
+
+            SubscriptionView()
+                .tabItem {
+                    Label("Subscription", systemImage: "creditcard")
+                }
+                .tag(8)
+
+            AccountView()
+                .tabItem {
+                    Label("Account", systemImage: "person.crop.circle")
+                }
+                .tag(9)
+
             AboutView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")
                 }
-                .tag(3)
+                .tag(10)
         }
         .environmentObject(viewModel)
-        .frame(width: 500, height: 350)
+        .frame(width: 560, height: 420)
     }
 }
 
@@ -227,4 +269,5 @@ struct AboutView: View {
 #Preview {
     SettingsView()
         .environmentObject(SettingsViewModel.shared)
+        .environmentObject(DashboardViewModel.shared)
 }

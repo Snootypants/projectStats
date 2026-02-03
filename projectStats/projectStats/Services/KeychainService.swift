@@ -81,6 +81,29 @@ final class KeychainService {
         return Array(Set(filtered)).sorted()
     }
 
+    @discardableResult
+    func setSecret(_ value: String, forKey key: String) -> Bool {
+        let data = value.data(using: .utf8) ?? Data()
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key
+        ]
+
+        let attributes: [String: Any] = [
+            kSecValueData as String: data
+        ]
+
+        let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+        if status == errSecSuccess {
+            return true
+        }
+
+        var addQuery = query
+        addQuery[kSecValueData as String] = data
+        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
+        return addStatus == errSecSuccess
+    }
+
     private func isLikelyEnvKey(_ key: String) -> Bool {
         if preferredKeys.contains(key) { return true }
         for suffix in likelySuffixes where key.hasSuffix(suffix) {
