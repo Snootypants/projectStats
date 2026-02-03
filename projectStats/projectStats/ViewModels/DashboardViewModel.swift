@@ -7,22 +7,105 @@ import CryptoKit
 class DashboardViewModel: ObservableObject {
     static let shared = DashboardViewModel()
 
-    @Published var projects: [Project] = []
+    @Published var projects: [Project] = [] {
+        didSet {
+            pruneFavoritesForCurrentProjects()
+        }
+    }
     @Published var activities: [Date: ActivityStats] = [:]
     @Published var aggregatedStats: AggregatedStats = .empty
     @Published var isLoading = false
     @Published var selectedProject: Project?
     @Published var syncLogLines: [String] = []
+    @Published private(set) var favoriteProjectPaths: [String] = [] {
+        didSet {
+            saveFavorites()
+        }
+    }
 
     private let scanner = ProjectScanner.shared
     private let gitService = GitService.shared
     private let githubClient = GitHubClient.shared
     private var didInitialLoad = false
     private var perProjectActivities: [String: [Date: ActivityStats]] = [:]
+    private let favoritesKey = "favoriteProjectPaths"
+    private let favoriteLimit = 3
+
+    init() {
+        loadFavorites()
+    }
 
     var recentProjects: [Project] {
         // Only show projects that count toward totals in recent projects
-        Array(projects.filter { $0.countsTowardTotals }.prefix(6))
+        Array(recentProjectsSorted.prefix(6))
+    }
+
+    /// Projects to show in the Home grid (favorites can take slots 4-6)
+    var homeProjects: [Project] {
+        let recents = recentProjectsSorted
+        var selected: [Project] = []
+
+        for project in recents {
+            if selected.count >= 3 { break }
+            selected.append(project)
+        }
+
+        let favoriteCandidates = favoriteProjects.filter { favorite in
+            !selected.contains(favorite)
+        }
+
+        for favorite in favoriteCandidates {
+            if selected.count >= 6 { break }
+            selected.append(favorite)
+        }
+
+        if selected.count < 6 {
+            for project in recents {
+                if selected.count >= 6 { break }
+                if !selected.contains(project) {
+                    selected.append(project)
+                }
+            }
+        }
+
+        return selected
+    }
+
+    var canAddFavorite: Bool {
+        favoriteProjectPaths.count < favoriteLimit
+    }
+
+    func isFavorite(_ project: Project) -> Bool {
+        favoriteProjectPaths.contains(project.path.path)
+    }
+
+    func toggleFavorite(_ project: Project) {
+        let path = project.path.path
+        if let index = favoriteProjectPaths.firstIndex(of: path) {
+            favoriteProjectPaths.remove(at: index)
+            return
+        }
+
+        guard favoriteProjectPaths.count < favoriteLimit else { return }
+        favoriteProjectPaths.append(path)
+    }
+
+    private var favoriteProjects: [Project] {
+        favoriteProjectPaths.compactMap { path in
+            projects.first { $0.path.path == path }
+        }
+    }
+
+    private var recentProjectsSorted: [Project] {
+        let countableProjects = projects.filter { $0.countsTowardTotals }
+        return countableProjects.sorted { (p1, p2) -> Bool in
+            let date1 = p1.lastCommit?.date ?? .distantPast
+            let date2 = p2.lastCommit?.date ?? .distantPast
+            if date1 != date2 {
+                return date1 > date2
+            }
+            return p1.name.localizedCaseInsensitiveCompare(p2.name) == .orderedAscending
+        }
     }
 
     /// Count of projects with recent activity (commits in last 7 days)
@@ -145,6 +228,27 @@ class DashboardViewModel: ObservableObject {
         await loadDataFromScanner()
     }
 
+    // MARK: - Comprehensive Data Sync
+
+    func syncSingleProject(path: String) async {
+        guard let project = projects.first(where: { $0.path.path == path }) else { return }
+
+        let context = AppModelContainer.shared.mainContext
+
+        await syncPrompts(for: project, context: context)
+        await syncWorkLogs(for: project, context: context)
+        await syncProjectStats(for: project, context: context)
+
+        do {
+            try context.save()
+        } catch {
+            print("[Dashboard] Error saving single-project sync: \(error)")
+        }
+
+        await reloadFromCache(context: context)
+        print("[Dashboard] Synced project: \(project.name)")
+    }
+
     /// Load data by scanning the filesystem (fallback/refresh)
     private func loadDataFromScanner() async {
         isLoading = true
@@ -183,6 +287,9 @@ class DashboardViewModel: ObservableObject {
 
         // Fetch GitHub stats if authenticated
         await fetchGitHubStats()
+
+        // Reload from SwiftData for UI consistency
+        await reloadFromCache(context: AppModelContainer.shared.mainContext)
     }
 
     private func calculateActivitiesFromGit() async {
@@ -268,6 +375,45 @@ class DashboardViewModel: ObservableObject {
         }
 
         return streak
+    }
+
+    private func loadFavorites() {
+        guard let data = UserDefaults.standard.data(forKey: favoritesKey),
+              let decoded = try? JSONDecoder().decode([String].self, from: data) else {
+            return
+        }
+
+        favoriteProjectPaths = normalizedFavoritePaths(decoded)
+    }
+
+    private func saveFavorites() {
+        guard let encoded = try? JSONEncoder().encode(favoriteProjectPaths) else { return }
+        UserDefaults.standard.set(encoded, forKey: favoritesKey)
+    }
+
+    private func normalizedFavoritePaths(_ paths: [String]) -> [String] {
+        var seen = Set<String>()
+        var normalized: [String] = []
+
+        for path in paths {
+            if seen.insert(path).inserted {
+                normalized.append(path)
+            }
+            if normalized.count >= favoriteLimit {
+                break
+            }
+        }
+
+        return normalized
+    }
+
+    private func pruneFavoritesForCurrentProjects() {
+        guard !favoriteProjectPaths.isEmpty else { return }
+        let existingPaths = Set(projects.map { $0.path.path })
+        let pruned = normalizedFavoritePaths(favoriteProjectPaths.filter { existingPaths.contains($0) })
+        if pruned != favoriteProjectPaths {
+            favoriteProjectPaths = pruned
+        }
     }
 
     private func logSync(_ message: String) {
@@ -377,9 +523,47 @@ class DashboardViewModel: ObservableObject {
     // MARK: - Prompt and Work Log Sync
 
     private func contentHash(_ string: String) -> String {
-        let data = Data(string.utf8)
-        let hash = SHA256.hash(data: data)
-        return hash.prefix(16).map { String(format: "%02x", $0) }.joined()
+        string.sha256Hash
+    }
+
+    private func reloadFromCache(context: ModelContext) async {
+        do {
+            let descriptor = FetchDescriptor<CachedProject>(
+                sortBy: [SortDescriptor(\.lastCommitDate, order: .reverse)]
+            )
+            let cachedProjects = try context.fetch(descriptor)
+            projects = cachedProjects.map { $0.toProject() }
+        } catch {
+            print("[Dashboard] Error loading projects from cache: \(error)")
+        }
+
+        do {
+            let activityDescriptor = FetchDescriptor<CachedDailyActivity>()
+            let cachedActivities = try context.fetch(activityDescriptor)
+
+            var allActivities: [Date: ActivityStats] = [:]
+            for cached in cachedActivities {
+                let date = cached.date.startOfDay
+                if var existing = allActivities[date] {
+                    existing.linesAdded += cached.linesAdded
+                    existing.linesRemoved += cached.linesRemoved
+                    existing.commits += cached.commits
+                    allActivities[date] = existing
+                } else {
+                    allActivities[date] = ActivityStats(
+                        date: date,
+                        linesAdded: cached.linesAdded,
+                        linesRemoved: cached.linesRemoved,
+                        commits: cached.commits
+                    )
+                }
+            }
+            activities = allActivities
+        } catch {
+            print("[Dashboard] Error loading activities from cache: \(error)")
+        }
+
+        calculateAggregatedStats()
     }
 
     private func syncPromptsToSwiftData(context: ModelContext) async {
@@ -461,6 +645,72 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    private func syncPrompts(for project: Project, context: ModelContext) async {
+        let fm = FileManager.default
+        let promptsDir = project.path.appendingPathComponent("prompts")
+        guard fm.fileExists(atPath: promptsDir.path) else { return }
+
+        do {
+            let existingDescriptor = FetchDescriptor<CachedPrompt>(
+                predicate: #Predicate { $0.projectPath == project.path.path }
+            )
+            let existingCached = try context.fetch(existingDescriptor)
+            let existingByFilename = Dictionary(uniqueKeysWithValues: existingCached.map { ($0.filename, $0) })
+
+            var seen: Set<String> = []
+
+            guard let files = try? fm.contentsOfDirectory(
+                at: promptsDir,
+                includingPropertiesForKeys: [.contentModificationDateKey],
+                options: [.skipsHiddenFiles]
+            ) else { return }
+
+            let mdFiles = files.filter { $0.pathExtension == "md" }
+
+            for fileURL in mdFiles {
+                let filename = fileURL.lastPathComponent
+                seen.insert(filename)
+
+                let baseName = fileURL.deletingPathExtension().lastPathComponent
+                let promptNumber = Int(baseName.filter { $0.isNumber }) ?? 0
+
+                guard let content = try? String(contentsOf: fileURL, encoding: .utf8) else { continue }
+                let hash = contentHash(content)
+
+                let attrs = try? fm.attributesOfItem(atPath: fileURL.path)
+                let fileModified = (attrs?[.modificationDate] as? Date) ?? Date()
+
+                if let existing = existingByFilename[filename], existing.contentHash == hash {
+                    continue
+                }
+
+                if let existing = existingByFilename[filename] {
+                    existing.content = content
+                    existing.contentHash = hash
+                    existing.promptNumber = promptNumber
+                    existing.fileModified = fileModified
+                    existing.cachedAt = Date()
+                } else {
+                    let cached = CachedPrompt(
+                        projectPath: project.path.path,
+                        promptNumber: promptNumber,
+                        filename: filename,
+                        content: content,
+                        contentHash: hash,
+                        fileModified: fileModified
+                    )
+                    context.insert(cached)
+                }
+            }
+
+            for cached in existingCached where !seen.contains(cached.filename) {
+                context.delete(cached)
+            }
+        } catch {
+            print("[Dashboard] Error syncing prompts for project: \(error)")
+        }
+    }
+
     private func syncWorkLogsToSwiftData(context: ModelContext) async {
         let fm = FileManager.default
 
@@ -513,6 +763,54 @@ class DashboardViewModel: ObservableObject {
             print("[Dashboard] Synced work logs to SwiftData")
         } catch {
             print("[Dashboard] Error syncing work logs: \(error)")
+        }
+    }
+
+    private func syncWorkLogs(for project: Project, context: ModelContext) async {
+        let fm = FileManager.default
+        let workDir = project.path.appendingPathComponent("work")
+        guard fm.fileExists(atPath: workDir.path) else { return }
+
+        do {
+            let existingDescriptor = FetchDescriptor<CachedWorkLog>(
+                predicate: #Predicate { $0.projectPath == project.path.path }
+            )
+            let existingCached = try context.fetch(existingDescriptor)
+            let existingByKey = Dictionary(
+                uniqueKeysWithValues: existingCached.map { ("\($0.filename)::\($0.isStatsFile)", $0) }
+            )
+
+            var seenKeys: Set<String> = []
+
+            syncWorkLogFiles(
+                in: workDir,
+                projectPath: project.path.path,
+                isStats: false,
+                existingByKey: existingByKey,
+                seenKeys: &seenKeys,
+                context: context
+            )
+
+            let statsDir = workDir.appendingPathComponent("stats")
+            if fm.fileExists(atPath: statsDir.path) {
+                syncWorkLogFiles(
+                    in: statsDir,
+                    projectPath: project.path.path,
+                    isStats: true,
+                    existingByKey: existingByKey,
+                    seenKeys: &seenKeys,
+                    context: context
+                )
+            }
+
+            for cached in existingCached {
+                let key = "\(cached.filename)::\(cached.isStatsFile)"
+                if !seenKeys.contains(key) {
+                    context.delete(cached)
+                }
+            }
+        } catch {
+            print("[Dashboard] Error syncing work logs for project: \(error)")
         }
     }
 
@@ -649,6 +947,29 @@ class DashboardViewModel: ObservableObject {
         let summary = summaryLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
 
         return (started, ended, linesAdded, linesDeleted, commitHash, summary.isEmpty ? nil : summary)
+    }
+
+    private func syncProjectStats(for project: Project, context: ModelContext) async {
+        do {
+            let projectDescriptor = FetchDescriptor<CachedProject>(
+                predicate: #Predicate { $0.path == project.path.path }
+            )
+            guard let cached = try context.fetch(projectDescriptor).first else { return }
+
+            let promptDescriptor = FetchDescriptor<CachedPrompt>(
+                predicate: #Predicate { $0.projectPath == project.path.path }
+            )
+            cached.promptCount = (try? context.fetchCount(promptDescriptor)) ?? 0
+
+            let workLogDescriptor = FetchDescriptor<CachedWorkLog>(
+                predicate: #Predicate { $0.projectPath == project.path.path && $0.isStatsFile == false }
+            )
+            cached.workLogCount = (try? context.fetchCount(workLogDescriptor)) ?? 0
+
+            cached.lastScanned = Date()
+        } catch {
+            print("[Dashboard] Error syncing project stats: \(error)")
+        }
     }
 
     private func fetchGitHubStats() async {

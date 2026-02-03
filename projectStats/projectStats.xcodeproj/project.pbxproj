@@ -61,6 +61,7 @@
 		010000000000000000000053 /* EnvironmentManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000053 /* EnvironmentManagerView.swift */; };
 		010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000054 /* EnvironmentVariableRow.swift */; };
 		010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000055 /* TerminalOutputMonitor.swift */; };
+		010000000000000000000056 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000056 /* StringExtensions.swift */; };
 		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,7 @@
 		020000000000000000000053 /* EnvironmentManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManagerView.swift; sourceTree = "<group>"; };
 		020000000000000000000054 /* EnvironmentVariableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariableRow.swift; sourceTree = "<group>"; };
 		020000000000000000000055 /* TerminalOutputMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalOutputMonitor.swift; sourceTree = "<group>"; };
+		020000000000000000000056 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -236,6 +238,7 @@
 			children = (
 				020000000000000000000002 /* Shell.swift */,
 				020000000000000000000003 /* DateExtensions.swift */,
+				020000000000000000000056 /* StringExtensions.swift */,
 				020000000000000000000004 /* URLExtensions.swift */,
 				020000000000000000000005 /* ReadmeParser.swift */,
 			);
@@ -445,6 +448,7 @@
 				010000000000000000000053 /* EnvironmentManagerView.swift in Sources */,
 				010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */,
 				010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */,
+				010000000000000000000056 /* StringExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
