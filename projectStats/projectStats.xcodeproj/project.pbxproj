@@ -60,6 +60,7 @@
 		010000000000000000000052 /* EnvironmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000052 /* EnvironmentViewModel.swift */; };
 		010000000000000000000053 /* EnvironmentManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000053 /* EnvironmentManagerView.swift */; };
 		010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000054 /* EnvironmentVariableRow.swift */; };
+		010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000055 /* TerminalOutputMonitor.swift */; };
 		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,7 @@
 		020000000000000000000052 /* EnvironmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentViewModel.swift; sourceTree = "<group>"; };
 		020000000000000000000053 /* EnvironmentManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManagerView.swift; sourceTree = "<group>"; };
 		020000000000000000000054 /* EnvironmentVariableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariableRow.swift; sourceTree = "<group>"; };
+		020000000000000000000055 /* TerminalOutputMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalOutputMonitor.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -223,6 +225,7 @@
 				020000000000000000000038 /* JSONStatsReader.swift */,
 				020000000000000000000011 /* LineCounter.swift */,
 				020000000000000000000012 /* ProjectScanner.swift */,
+				020000000000000000000055 /* TerminalOutputMonitor.swift */,
 				020000000000000000000013 /* GitHubClient.swift */,
 			);
 			path = Services;
@@ -441,6 +444,7 @@
 				010000000000000000000052 /* EnvironmentViewModel.swift in Sources */,
 				010000000000000000000053 /* EnvironmentManagerView.swift in Sources */,
 				010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */,
+				010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
