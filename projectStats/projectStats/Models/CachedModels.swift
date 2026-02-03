@@ -342,7 +342,7 @@ class CachedWorkLog {
 @Model
 class CachedCommit {
     var projectPath: String
-    var hash: String
+    var commitHash: String?
     var shortHash: String
     var message: String
     var author: String
@@ -354,7 +354,7 @@ class CachedCommit {
 
     init(
         projectPath: String,
-        hash: String,
+        commitHash: String? = nil,
         shortHash: String,
         message: String,
         author: String,
@@ -365,7 +365,7 @@ class CachedCommit {
         filesChanged: Int = 0
     ) {
         self.projectPath = projectPath
-        self.hash = hash
+        self.commitHash = commitHash
         self.shortHash = shortHash
         self.message = message
         self.author = author

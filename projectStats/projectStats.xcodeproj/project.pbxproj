@@ -63,6 +63,66 @@
 		010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000055 /* TerminalOutputMonitor.swift */; };
 		010000000000000000000056 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000056 /* StringExtensions.swift */; };
 		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
+		010000000000000000000057 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000057 /* Achievement.swift */; };
+		010000000000000000000058 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000058 /* ChatMessage.swift */; };
+		010000000000000000000059 /* ProjectNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000059 /* ProjectNote.swift */; };
+		010000000000000000000060 /* ProjectTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000060 /* ProjectTemplate.swift */; };
+		010000000000000000000061 /* SecretMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000061 /* SecretMatch.swift */; };
+		010000000000000000000062 /* TimeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000062 /* TimeEntry.swift */; };
+		010000000000000000000063 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000063 /* AIService.swift */; };
+		010000000000000000000064 /* AchievementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000064 /* AchievementService.swift */; };
+		010000000000000000000065 /* ClaudeContextMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000065 /* ClaudeContextMonitor.swift */; };
+		010000000000000000000066 /* ClaudePlanUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000066 /* ClaudePlanUsageService.swift */; };
+		010000000000000000000067 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000067 /* CloudSyncService.swift */; };
+		010000000000000000000068 /* CodeVectorDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000068 /* CodeVectorDB.swift */; };
+		010000000000000000000069 /* DiscordProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000069 /* DiscordProvider.swift */; };
+		010000000000000000000070 /* ErrorDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000070 /* ErrorDetector.swift */; };
+		010000000000000000000071 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000071 /* FeatureFlags.swift */; };
+		010000000000000000000072 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000072 /* GitHubService.swift */; };
+		010000000000000000000073 /* MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000073 /* MessagingService.swift */; };
+		010000000000000000000074 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000074 /* NotificationService.swift */; };
+		010000000000000000000075 /* NtfyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000075 /* NtfyProvider.swift */; };
+		010000000000000000000076 /* ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000076 /* ReportGenerator.swift */; };
+		010000000000000000000077 /* SecretsScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000077 /* SecretsScanner.swift */; };
+		010000000000000000000078 /* SlackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000078 /* SlackProvider.swift */; };
+		010000000000000000000079 /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000079 /* StoreKitManager.swift */; };
+		010000000000000000000080 /* TelegramProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000080 /* TelegramProvider.swift */; };
+		010000000000000000000081 /* TimeTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000081 /* TimeTrackingService.swift */; };
+		010000000000000000000082 /* VoiceNoteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000082 /* VoiceNoteRecorder.swift */; };
+		010000000000000000000083 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000083 /* NotificationNames.swift */; };
+		010000000000000000000084 /* GitControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000084 /* GitControlsViewModel.swift */; };
+		010000000000000000000085 /* TerminalTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000085 /* TerminalTabsViewModel.swift */; };
+		010000000000000000000086 /* AchievementBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000086 /* AchievementBanner.swift */; };
+		010000000000000000000087 /* AchievementsDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000087 /* AchievementsDashboard.swift */; };
+		010000000000000000000088 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000088 /* ShareCardView.swift */; };
+		010000000000000000000089 /* ClaudeConfigSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000089 /* ClaudeConfigSheet.swift */; };
+		010000000000000000000090 /* CommandPaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000090 /* CommandPaletteView.swift */; };
+		010000000000000000000091 /* ProBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000091 /* ProBadge.swift */; };
+		010000000000000000000092 /* ClaudeUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000092 /* ClaudeUsageCard.swift */; };
+		010000000000000000000093 /* GitHubNotificationsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000093 /* GitHubNotificationsCard.swift */; };
+		010000000000000000000094 /* TimeTrackingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000094 /* TimeTrackingCard.swift */; };
+		010000000000000000000095 /* FocusModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000095 /* FocusModeView.swift */; };
+		010000000000000000000096 /* CommitDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000096 /* CommitDialog.swift */; };
+		010000000000000000000097 /* GitControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000097 /* GitControlsView.swift */; };
+		010000000000000000000098 /* ContextUsageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000098 /* ContextUsageBar.swift */; };
+		010000000000000000000099 /* DevServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000099 /* DevServerTab.swift */; };
+		010000000000000000000100 /* RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* RunningServersPopover.swift */; };
+		010000000000000000000101 /* TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* TerminalTabBar.swift */; };
+		010000000000000000000102 /* TerminalTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000102 /* TerminalTabView.swift */; };
+		010000000000000000000103 /* ScratchPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000103 /* ScratchPadView.swift */; };
+		010000000000000000000104 /* VoiceNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000104 /* VoiceNoteView.swift */; };
+		010000000000000000000105 /* ReportGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000105 /* ReportGeneratorView.swift */; };
+		010000000000000000000106 /* ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000106 /* ReportPreviewView.swift */; };
+		010000000000000000000107 /* HygieneReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000107 /* HygieneReportView.swift */; };
+		010000000000000000000108 /* SecretsWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000108 /* SecretsWarningView.swift */; };
+		010000000000000000000109 /* AISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000109 /* AISettings.swift */; };
+		010000000000000000000110 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000110 /* AccountView.swift */; };
+		010000000000000000000111 /* CloudSyncSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000111 /* CloudSyncSettings.swift */; };
+		010000000000000000000112 /* DataManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000112 /* DataManagementView.swift */; };
+		010000000000000000000113 /* MessagingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000113 /* MessagingSettings.swift */; };
+		010000000000000000000114 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000114 /* NotificationSettings.swift */; };
+		010000000000000000000115 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000115 /* SubscriptionView.swift */; };
+		010000000000000000000116 /* NewProjectWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000116 /* NewProjectWizard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +183,66 @@
 		020000000000000000000056 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
+		020000000000000000000057 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Achievement.swift; sourceTree = "<group>"; };
+		020000000000000000000058 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ChatMessage.swift; sourceTree = "<group>"; };
+		020000000000000000000059 /* ProjectNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectNote.swift; sourceTree = "<group>"; };
+		020000000000000000000060 /* ProjectTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectTemplate.swift; sourceTree = "<group>"; };
+		020000000000000000000061 /* SecretMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SecretMatch.swift; sourceTree = "<group>"; };
+		020000000000000000000062 /* TimeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/TimeEntry.swift; sourceTree = "<group>"; };
+		020000000000000000000063 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIService.swift; sourceTree = "<group>"; };
+		020000000000000000000064 /* AchievementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AchievementService.swift; sourceTree = "<group>"; };
+		020000000000000000000065 /* ClaudeContextMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeContextMonitor.swift; sourceTree = "<group>"; };
+		020000000000000000000066 /* ClaudePlanUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudePlanUsageService.swift; sourceTree = "<group>"; };
+		020000000000000000000067 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudSyncService.swift; sourceTree = "<group>"; };
+		020000000000000000000068 /* CodeVectorDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodeVectorDB.swift; sourceTree = "<group>"; };
+		020000000000000000000069 /* DiscordProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DiscordProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000070 /* ErrorDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ErrorDetector.swift; sourceTree = "<group>"; };
+		020000000000000000000071 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/FeatureFlags.swift; sourceTree = "<group>"; };
+		020000000000000000000072 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/GitHubService.swift; sourceTree = "<group>"; };
+		020000000000000000000073 /* MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/MessagingService.swift; sourceTree = "<group>"; };
+		020000000000000000000074 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NotificationService.swift; sourceTree = "<group>"; };
+		020000000000000000000075 /* NtfyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NtfyProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000076 /* ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ReportGenerator.swift; sourceTree = "<group>"; };
+		020000000000000000000077 /* SecretsScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SecretsScanner.swift; sourceTree = "<group>"; };
+		020000000000000000000078 /* SlackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SlackProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000079 /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/StoreKitManager.swift; sourceTree = "<group>"; };
+		020000000000000000000080 /* TelegramProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TelegramProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000081 /* TimeTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TimeTrackingService.swift; sourceTree = "<group>"; };
+		020000000000000000000082 /* VoiceNoteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VoiceNoteRecorder.swift; sourceTree = "<group>"; };
+		020000000000000000000083 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/NotificationNames.swift; sourceTree = "<group>"; };
+		020000000000000000000084 /* GitControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/GitControlsViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000085 /* TerminalTabsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/TerminalTabsViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000086 /* AchievementBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementBanner.swift; sourceTree = "<group>"; };
+		020000000000000000000087 /* AchievementsDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsDashboard.swift; sourceTree = "<group>"; };
+		020000000000000000000088 /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/ShareCardView.swift; sourceTree = "<group>"; };
+		020000000000000000000089 /* ClaudeConfigSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Claude/ClaudeConfigSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000090 /* CommandPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/CommandPalette/CommandPaletteView.swift; sourceTree = "<group>"; };
+		020000000000000000000091 /* ProBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ProBadge.swift; sourceTree = "<group>"; };
+		020000000000000000000092 /* ClaudeUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeUsageCard.swift; sourceTree = "<group>"; };
+		020000000000000000000093 /* GitHubNotificationsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/GitHubNotificationsCard.swift; sourceTree = "<group>"; };
+		020000000000000000000094 /* TimeTrackingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/TimeTrackingCard.swift; sourceTree = "<group>"; };
+		020000000000000000000095 /* FocusModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/FocusModeView.swift; sourceTree = "<group>"; };
+		020000000000000000000096 /* CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
+		020000000000000000000097 /* GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
+		020000000000000000000098 /* ContextUsageBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/ContextUsageBar.swift; sourceTree = "<group>"; };
+		020000000000000000000099 /* DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
+		020000000000000000000100 /* RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
+		020000000000000000000101 /* TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
+		020000000000000000000102 /* TerminalTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabView.swift; sourceTree = "<group>"; };
+		020000000000000000000103 /* ScratchPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/ScratchPadView.swift; sourceTree = "<group>"; };
+		020000000000000000000104 /* VoiceNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/VoiceNoteView.swift; sourceTree = "<group>"; };
+		020000000000000000000105 /* ReportGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportGeneratorView.swift; sourceTree = "<group>"; };
+		020000000000000000000106 /* ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportPreviewView.swift; sourceTree = "<group>"; };
+		020000000000000000000107 /* HygieneReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/HygieneReportView.swift; sourceTree = "<group>"; };
+		020000000000000000000108 /* SecretsWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/SecretsWarningView.swift; sourceTree = "<group>"; };
+		020000000000000000000109 /* AISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AISettings.swift; sourceTree = "<group>"; };
+		020000000000000000000110 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AccountView.swift; sourceTree = "<group>"; };
+		020000000000000000000111 /* CloudSyncSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/CloudSyncSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000112 /* DataManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/DataManagementView.swift; sourceTree = "<group>"; };
+		020000000000000000000113 /* MessagingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/MessagingSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000114 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/NotificationSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000115 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SubscriptionView.swift; sourceTree = "<group>"; };
+		020000000000000000000116 /* NewProjectWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Templates/NewProjectWizard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -449,6 +569,66 @@
 				010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */,
 				010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */,
 				010000000000000000000056 /* StringExtensions.swift in Sources */,
+				010000000000000000000057 /* Achievement.swift in Sources */,
+				010000000000000000000058 /* ChatMessage.swift in Sources */,
+				010000000000000000000059 /* ProjectNote.swift in Sources */,
+				010000000000000000000060 /* ProjectTemplate.swift in Sources */,
+				010000000000000000000061 /* SecretMatch.swift in Sources */,
+				010000000000000000000062 /* TimeEntry.swift in Sources */,
+				010000000000000000000063 /* AIService.swift in Sources */,
+				010000000000000000000064 /* AchievementService.swift in Sources */,
+				010000000000000000000065 /* ClaudeContextMonitor.swift in Sources */,
+				010000000000000000000066 /* ClaudePlanUsageService.swift in Sources */,
+				010000000000000000000067 /* CloudSyncService.swift in Sources */,
+				010000000000000000000068 /* CodeVectorDB.swift in Sources */,
+				010000000000000000000069 /* DiscordProvider.swift in Sources */,
+				010000000000000000000070 /* ErrorDetector.swift in Sources */,
+				010000000000000000000071 /* FeatureFlags.swift in Sources */,
+				010000000000000000000072 /* GitHubService.swift in Sources */,
+				010000000000000000000073 /* MessagingService.swift in Sources */,
+				010000000000000000000074 /* NotificationService.swift in Sources */,
+				010000000000000000000075 /* NtfyProvider.swift in Sources */,
+				010000000000000000000076 /* ReportGenerator.swift in Sources */,
+				010000000000000000000077 /* SecretsScanner.swift in Sources */,
+				010000000000000000000078 /* SlackProvider.swift in Sources */,
+				010000000000000000000079 /* StoreKitManager.swift in Sources */,
+				010000000000000000000080 /* TelegramProvider.swift in Sources */,
+				010000000000000000000081 /* TimeTrackingService.swift in Sources */,
+				010000000000000000000082 /* VoiceNoteRecorder.swift in Sources */,
+				010000000000000000000083 /* NotificationNames.swift in Sources */,
+				010000000000000000000084 /* GitControlsViewModel.swift in Sources */,
+				010000000000000000000085 /* TerminalTabsViewModel.swift in Sources */,
+				010000000000000000000086 /* AchievementBanner.swift in Sources */,
+				010000000000000000000087 /* AchievementsDashboard.swift in Sources */,
+				010000000000000000000088 /* ShareCardView.swift in Sources */,
+				010000000000000000000089 /* ClaudeConfigSheet.swift in Sources */,
+				010000000000000000000090 /* CommandPaletteView.swift in Sources */,
+				010000000000000000000091 /* ProBadge.swift in Sources */,
+				010000000000000000000092 /* ClaudeUsageCard.swift in Sources */,
+				010000000000000000000093 /* GitHubNotificationsCard.swift in Sources */,
+				010000000000000000000094 /* TimeTrackingCard.swift in Sources */,
+				010000000000000000000095 /* FocusModeView.swift in Sources */,
+				010000000000000000000096 /* CommitDialog.swift in Sources */,
+				010000000000000000000097 /* GitControlsView.swift in Sources */,
+				010000000000000000000098 /* ContextUsageBar.swift in Sources */,
+				010000000000000000000099 /* DevServerTab.swift in Sources */,
+				010000000000000000000100 /* RunningServersPopover.swift in Sources */,
+				010000000000000000000101 /* TerminalTabBar.swift in Sources */,
+				010000000000000000000102 /* TerminalTabView.swift in Sources */,
+				010000000000000000000103 /* ScratchPadView.swift in Sources */,
+				010000000000000000000104 /* VoiceNoteView.swift in Sources */,
+				010000000000000000000105 /* ReportGeneratorView.swift in Sources */,
+				010000000000000000000106 /* ReportPreviewView.swift in Sources */,
+				010000000000000000000107 /* HygieneReportView.swift in Sources */,
+				010000000000000000000108 /* SecretsWarningView.swift in Sources */,
+				010000000000000000000109 /* AISettings.swift in Sources */,
+				010000000000000000000110 /* AccountView.swift in Sources */,
+				010000000000000000000111 /* CloudSyncSettings.swift in Sources */,
+				010000000000000000000112 /* DataManagementView.swift in Sources */,
+				010000000000000000000113 /* MessagingSettings.swift in Sources */,
+				010000000000000000000114 /* NotificationSettings.swift in Sources */,
+				010000000000000000000115 /* SubscriptionView.swift in Sources */,
+				010000000000000000000116 /* NewProjectWizard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,8 +11,6 @@ struct HomeView: View {
                 // Quick Stats row (moved from sidebar)
                 quickStatsRow
 
-                ClaudeUsageCard()
-
                 HStack(spacing: 16) {
                     TimeTrackingCard()
                     GitHubNotificationsCard()

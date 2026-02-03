@@ -68,12 +68,12 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("messaging.notifications.enabled") var messagingNotificationsEnabled: Bool = false
     @AppStorage("messaging.remote.enabled") var remoteCommandsEnabled: Bool = false {
         didSet {
-            MessagingService.shared.startPollingIfNeeded()
+            startRemotePollingIfNeeded()
         }
     }
     @AppStorage("messaging.remote.interval") var remoteCommandsInterval: Int = 30 {
         didSet {
-            MessagingService.shared.startPollingIfNeeded()
+            startRemotePollingIfNeeded()
         }
     }
 
@@ -150,6 +150,12 @@ class SettingsViewModel: ObservableObject {
 
     private init() {
         // Theme will be applied when app is ready
+    }
+
+    private func startRemotePollingIfNeeded() {
+        Task { @MainActor in
+            MessagingService.shared.startPollingIfNeeded()
+        }
     }
 
     private func updateLaunchAtLogin() {

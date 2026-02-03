@@ -45,9 +45,7 @@ private struct TerminalSessionView: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: LocalProcessTerminalView, context: Context) {
-        if tab.terminalView !== nsView {
-            tab.attach(nsView)
-        }
+        tab.attach(nsView)
     }
 
     private func shellEscape(_ path: String) -> String {

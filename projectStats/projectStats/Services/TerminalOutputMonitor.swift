@@ -49,8 +49,8 @@ final class TerminalOutputMonitor: ObservableObject {
         }
 
         if SettingsViewModel.shared.notifyGitPushCompleted,
-           cleanLine.contains(\"To github.com\") || cleanLine.contains(\"To gitlab.com\") || cleanLine.contains(\"To bitbucket.org\") {
-            NotificationService.shared.sendNotification(title: \"Git push completed\", message: cleanLine)
+           cleanLine.contains("To github.com") || cleanLine.contains("To gitlab.com") || cleanLine.contains("To bitbucket.org") {
+            NotificationService.shared.sendNotification(title: "Git push completed", message: cleanLine)
         }
 
         if let detected = errorDetector.detectError(in: cleanLine) {

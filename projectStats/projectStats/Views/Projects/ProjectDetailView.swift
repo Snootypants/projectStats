@@ -442,7 +442,7 @@ struct ProjectDetailView: View {
 
         return cachedCommits.map {
             Commit(
-                id: $0.hash,
+                id: $0.commitHash ?? $0.shortHash,
                 message: $0.message,
                 author: $0.author,
                 date: $0.date,

@@ -113,7 +113,7 @@ struct TabBarItem: View {
                 Button(action: onToggleFavorite) {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.system(size: 10))
-                        .foregroundStyle(isFavorite ? Color.yellow : .tertiary)
+                        .foregroundStyle(isFavorite ? AnyShapeStyle(.yellow) : AnyShapeStyle(.tertiary))
                 }
                 .buttonStyle(.plain)
             }
@@ -136,7 +136,7 @@ struct TabBarItem: View {
         )
         .overlay(
             TabShape(cornerRadius: 6)
-                .strokeBorder(Color.primary.opacity(isActive ? 0.15 : 0.05), lineWidth: 1)
+                .stroke(Color.primary.opacity(isActive ? 0.15 : 0.05), lineWidth: 1)
         )
         .contentShape(Rectangle())
         .onTapGesture(perform: onSelect)

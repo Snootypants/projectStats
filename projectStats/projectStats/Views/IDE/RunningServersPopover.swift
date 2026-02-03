@@ -32,7 +32,8 @@ struct RunningServersPopover: View {
                         }
                     }
                     .buttonStyle(.plain)
-                    .onTapGesture(modifiers: .control) {
+                    .onTapGesture {
+                        guard NSApp.currentEvent?.modifierFlags.contains(.control) == true else { return }
                         openURL(for: server)
                     }
                     .contextMenu {

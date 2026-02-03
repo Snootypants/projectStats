@@ -859,9 +859,11 @@ class DashboardViewModel: ObservableObject {
                 predicate: #Predicate { $0.projectPath == projectPath }
             )
             let existing = try context.fetch(existingDescriptor)
-            let existingHashes = Set(existing.map { $0.hash })
+            let existingIds = Set(existing.map { $0.commitHash ?? $0.shortHash })
 
-            for commit in commits where !existingHashes.contains(commit.hash) {
+            for commit in commits {
+                let commitId = commit.commitHash ?? commit.shortHash
+                if existingIds.contains(commitId) { continue }
                 context.insert(commit)
             }
         } catch {
@@ -884,7 +886,7 @@ class DashboardViewModel: ObservableObject {
                 if let current = current {
                     commits.append(CachedCommit(
                         projectPath: projectPath,
-                        hash: current.hash,
+                        commitHash: current.hash,
                         shortHash: current.shortHash,
                         message: current.message,
                         author: current.author,
@@ -926,7 +928,7 @@ class DashboardViewModel: ObservableObject {
         if let current = current {
             commits.append(CachedCommit(
                 projectPath: projectPath,
-                hash: current.hash,
+                commitHash: current.hash,
                 shortHash: current.shortHash,
                 message: current.message,
                 author: current.author,

@@ -22,7 +22,10 @@ final class NotificationService {
 
         if settings.messagingNotificationsEnabled {
             Task {
-                await MessagingService.shared.send(message: \"\\(title): \\(message)\", projectPath: TerminalOutputMonitor.shared.activeProjectPath)
+                await MessagingService.shared.send(
+                    message: "\(title): \(message)",
+                    projectPath: TerminalOutputMonitor.shared.activeProjectPath
+                )
             }
         }
     }

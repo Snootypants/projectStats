@@ -35,7 +35,7 @@ struct TabShellView: View {
                 Task { await DashboardViewModel.shared.syncSingleProject(path: path) }
             }
         }
-        .onChange(of: tabManager.tabs) { newTabs in
+        .onChange(of: tabManager.tabs) { _, newTabs in
             let removedTabs = previousTabs.filter { oldTab in
                 !newTabs.contains(where: { $0.id == oldTab.id })
             }
@@ -105,8 +105,8 @@ struct TabShellView: View {
             Button("") { tabManager.selectTab(at: 8) }
                 .keyboardShortcut("9", modifiers: [.command, .option])
 
-            Button(\"\") { showCommandPalette.toggle() }
-                .keyboardShortcut(\"k\", modifiers: [.command])
+            Button("") { showCommandPalette.toggle() }
+                .keyboardShortcut("k", modifiers: [.command])
         }
         .opacity(0)
         .frame(width: 0, height: 0)
@@ -114,10 +114,10 @@ struct TabShellView: View {
 
     private func commandPaletteCommands() -> [Command] {
         [
-            Command(name: \"New Terminal Tab\", icon: \"terminal\", shortcut: \"⌘T\", action: { /* TODO */ }),
-            Command(name: \"Commit Changes\", icon: \"arrow.up.circle\", shortcut: \"⌘⇧C\", action: { /* TODO */ }),
-            Command(name: \"Refresh Project Stats\", icon: \"arrow.clockwise\", shortcut: \"⌘R\", action: { Task { await dashboardVM.refresh() } }),
-            Command(name: \"Open Settings\", icon: \"gear\", shortcut: \"⌘,\", action: { NSApp.sendAction(Selector((\"showPreferencesWindow:\")), to: nil, from: nil) })
+            Command(name: "New Terminal Tab", icon: "terminal", shortcut: "⌘T", action: { /* TODO */ }),
+            Command(name: "Commit Changes", icon: "arrow.up.circle", shortcut: "⌘⇧C", action: { /* TODO */ }),
+            Command(name: "Refresh Project Stats", icon: "arrow.clockwise", shortcut: "⌘R", action: { Task { await dashboardVM.refresh() } }),
+            Command(name: "Open Settings", icon: "gear", shortcut: "⌘,", action: { NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil) })
         ]
     }
 }

@@ -198,7 +198,8 @@ private struct TerminalTabButton: View {
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             }
             .buttonStyle(.plain)
-            .onTapGesture(modifiers: .control) {
+            .onTapGesture {
+                guard NSApp.currentEvent?.modifierFlags.contains(.control) == true else { return }
                 onCtrlSelect()
             }
             .onHover { hovering in

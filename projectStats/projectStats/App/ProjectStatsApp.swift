@@ -21,9 +21,48 @@ enum AppModelContainer {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            print("[SwiftData] ModelContainer creation failed: \(error). Clearing store and retrying.")
+            if let cleanupError = deletePersistentStoreFiles() {
+                print("[SwiftData] Failed to clear store: \(cleanupError)")
+            }
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer after cleanup: \(error)")
+            }
         }
     }()
+
+    private static func deletePersistentStoreFiles() -> Error? {
+        let fm = FileManager.default
+        guard let appSupport = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.calebbelshe.projectStats"
+        let candidateDirs = [
+            appSupport,
+            appSupport.appendingPathComponent(bundleID, isDirectory: true)
+        ]
+
+        var firstError: Error?
+        for dir in candidateDirs {
+            guard let items = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else {
+                continue
+            }
+            for url in items where url.lastPathComponent.hasPrefix("default.store") {
+                do {
+                    try fm.removeItem(at: url)
+                } catch {
+                    if firstError == nil {
+                        firstError = error
+                    }
+                }
+            }
+        }
+
+        return firstError
+    }
 }
 
 @main
@@ -44,7 +83,7 @@ struct ProjectStatsApp: App {
 
     var body: some Scene {
         // Main window with tab-based navigation
-        WindowGroup {
+        WindowGroup(id: "main") {
             TabShellView()
                 .environmentObject(dashboardViewModel)
                 .environmentObject(settingsViewModel)
@@ -62,6 +101,9 @@ struct ProjectStatsApp: App {
                 }
                 .onDisappear {
                     tabManager.saveState()
+                }
+                .onAppear {
+                    NSApp.activate(ignoringOtherApps: true)
                 }
         }
         .modelContainer(AppModelContainer.shared)

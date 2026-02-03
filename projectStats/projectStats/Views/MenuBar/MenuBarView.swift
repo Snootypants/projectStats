@@ -3,6 +3,7 @@ import SwiftUI
 struct MenuBarView: View {
     @EnvironmentObject var dashboardViewModel: DashboardViewModel
     @EnvironmentObject var settingsViewModel: SettingsViewModel
+    @Environment(\.openWindow) private var openWindow
     @State private var isHovering = false
 
     var body: some View {
@@ -143,12 +144,7 @@ struct MenuBarView: View {
 
     private func openDashboard() {
         NSApp.activate(ignoringOtherApps: true)
-        if let window = NSApp.windows.first(where: { $0.title.isEmpty || $0.title == "ProjectStats" }) {
-            window.makeKeyAndOrderFront(nil)
-        } else {
-            // Open a new window
-            NSApp.sendAction(#selector(NSResponder.newWindowForTab(_:)), to: nil, from: nil)
-        }
+        openWindow(id: "main")
     }
 }
 
