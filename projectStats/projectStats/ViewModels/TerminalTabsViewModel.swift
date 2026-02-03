@@ -95,7 +95,9 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
         recordCommand(command)
         let textWithNewline = command + "\n"
-        terminalView.send(textWithNewline.data(using: .utf8) ?? Data())
+        if let data = textWithNewline.data(using: .utf8) {
+            terminalView.send([UInt8](data))
+        }
         print("[Terminal] ✅ Sent \(textWithNewline.count) chars to terminal")
 
         if kind == .devServer {
@@ -105,7 +107,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
     func sendControlC() {
         guard let terminalView else { return }
-        terminalView.send(Data([0x03]))  // ETX (Ctrl+C)
+        terminalView.send([0x03])  // ETX (Ctrl+C)
     }
 
     func markViewed() {
