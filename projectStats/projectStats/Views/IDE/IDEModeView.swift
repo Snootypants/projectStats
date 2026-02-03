@@ -284,30 +284,32 @@ private struct ResizableDivider: View {
     let onDoubleTap: () -> Void
 
     @State private var isHovering = false
+    @State private var isDragging = false
 
     var body: some View {
         Rectangle()
             .fill(Color.clear)
-            .frame(width: 6)
+            .frame(width: 8)
             .overlay(
-                Rectangle()
-                    .fill(isHovering ? Color.accentColor.opacity(0.5) : Color.primary.opacity(0.2))
-                    .frame(width: isHovering ? 3 : 1)
-                    .animation(.easeInOut(duration: 0.15), value: isHovering)
+                Capsule()
+                    .fill(Color.secondary.opacity(isHovering || isDragging ? 0.6 : 0.4))
+                    .frame(width: 4, height: 36)
             )
             .contentShape(Rectangle())
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        onDrag(value.translation.width)
-                    }
-                    .onEnded { _ in
-                        onEnd()
-                    }
-            )
             .onTapGesture(count: 2) {
                 onDoubleTap()
             }
+            .highPriorityGesture(
+                DragGesture(minimumDistance: 1)
+                    .onChanged { value in
+                        isDragging = true
+                        onDrag(value.translation.width)
+                    }
+                    .onEnded { _ in
+                        isDragging = false
+                        onEnd()
+                    }
+            )
             .onHover { hovering in
                 isHovering = hovering
                 if hovering {

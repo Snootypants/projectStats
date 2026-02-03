@@ -35,10 +35,14 @@ private struct TerminalSessionView: NSViewRepresentable {
 
         let shellPath = "/bin/zsh"
         let command = "cd '\(shellEscape(projectPath.path))'; exec \(shellPath) -l"
-        terminalView.startProcess(
-            executable: shellPath,
-            args: ["-l", "-c", command]
-        )
+
+        // Defer process start to avoid blocking UI
+        Task { @MainActor in
+            terminalView.startProcess(
+                executable: shellPath,
+                args: ["-l", "-c", command]
+            )
+        }
 
         tab.attach(terminalView)
         return terminalView
