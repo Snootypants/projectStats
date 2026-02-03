@@ -136,4 +136,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         SettingsViewModel.shared.applyThemeIfNeeded()
     }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        // Bring main window to front after system dialogs (e.g., Keychain prompts)
+        DispatchQueue.main.async {
+            if let mainWindow = NSApplication.shared.windows.first(where: { $0.isVisible && $0.canBecomeKey }) {
+                mainWindow.makeKeyAndOrderFront(nil)
+            }
+        }
+    }
 }

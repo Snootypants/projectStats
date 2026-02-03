@@ -36,20 +36,22 @@ private struct TerminalSessionView: NSViewRepresentable {
         let shellPath = "/bin/zsh"
         let command = "cd '\(shellEscape(projectPath.path))'; exec \(shellPath) -l"
 
-        // Defer process start to avoid blocking UI
+        // Defer process start to avoid blocking UI, then attach after shell initializes
         Task { @MainActor in
             terminalView.startProcess(
                 executable: shellPath,
                 args: ["-l", "-c", command]
             )
+            // Wait for shell to initialize before attaching (sends pending commands)
+            try? await Task.sleep(for: .milliseconds(300))
+            tab.attach(terminalView)
         }
 
-        tab.attach(terminalView)
         return terminalView
     }
 
     func updateNSView(_ nsView: LocalProcessTerminalView, context: Context) {
-        tab.attach(nsView)
+        // No-op: attachment is handled in makeNSView after shell initializes
     }
 
     private func shellEscape(_ path: String) -> String {

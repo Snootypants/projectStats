@@ -91,9 +91,6 @@ class SettingsViewModel: ObservableObject {
         }
         set {
             codeDirectoryPath = newValue.path
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-            }
         }
     }
 
@@ -101,9 +98,6 @@ class SettingsViewModel: ObservableObject {
         get { Editor(rawValue: defaultEditorRaw) ?? .vscode }
         set {
             defaultEditorRaw = newValue.rawValue
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-            }
         }
     }
 
@@ -111,9 +105,6 @@ class SettingsViewModel: ObservableObject {
         get { Terminal(rawValue: defaultTerminalRaw) ?? .terminal }
         set {
             defaultTerminalRaw = newValue.rawValue
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-            }
         }
     }
 
@@ -121,10 +112,7 @@ class SettingsViewModel: ObservableObject {
         get { AppTheme(rawValue: themeRaw) ?? .system }
         set {
             themeRaw = newValue.rawValue
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-                self?.applyTheme()
-            }
+            applyTheme()
         }
     }
 
@@ -132,9 +120,6 @@ class SettingsViewModel: ObservableObject {
         get { MessagingServiceType(rawValue: messagingServiceRaw) ?? .telegram }
         set {
             messagingServiceRaw = newValue.rawValue
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-            }
         }
     }
 
@@ -142,9 +127,6 @@ class SettingsViewModel: ObservableObject {
         get { AIProvider(rawValue: aiProviderRaw) ?? .anthropic }
         set {
             aiProviderRaw = newValue.rawValue
-            DispatchQueue.main.async { [weak self] in
-                self?.objectWillChange.send()
-            }
         }
     }
 
