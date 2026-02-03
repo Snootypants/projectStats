@@ -176,7 +176,7 @@ struct IDEModeView: View {
         let minTerminal: CGFloat = 300
         let minExplorer: CGFloat = 150
         let minViewer: CGFloat = 300
-        let dividerWidth: CGFloat = 6
+        let dividerWidth: CGFloat = 12
 
         let visibleCount = [showTerminal, showExplorer, showViewer].filter { $0 }.count
         let available = totalWidth - CGFloat(max(0, visibleCount - 1)) * dividerWidth
@@ -289,36 +289,45 @@ private struct ResizableDivider: View {
     @State private var isDragging = false
 
     var body: some View {
-        Rectangle()
-            .fill(Color.clear)
-            .frame(width: 8)
-            .overlay(
-                Capsule()
-                    .fill(Color.secondary.opacity(isHovering || isDragging ? 0.6 : 0.4))
-                    .frame(width: 4, height: 36)
-            )
-            .contentShape(Rectangle())
-            .onTapGesture(count: 2) {
-                onDoubleTap()
-            }
-            .highPriorityGesture(
-                DragGesture(minimumDistance: 1)
-                    .onChanged { value in
-                        isDragging = true
-                        onDrag(value.translation.width)
-                    }
-                    .onEnded { _ in
-                        isDragging = false
-                        onEnd()
-                    }
-            )
-            .onHover { hovering in
-                isHovering = hovering
-                if hovering {
-                    NSCursor.resizeLeftRight.push()
-                } else {
-                    NSCursor.pop()
+        ZStack {
+            // Full-height subtle line (always visible)
+            Rectangle()
+                .fill(Color.secondary.opacity(0.2))
+                .frame(width: 1)
+
+            // Invisible hit area (wider for easier grabbing)
+            Rectangle()
+                .fill(Color.clear)
+                .frame(width: 12)
+                .contentShape(Rectangle())
+
+            // Drag handle pill (centered on the line)
+            Capsule()
+                .fill(Color.secondary.opacity(isHovering || isDragging ? 0.6 : 0.4))
+                .frame(width: 4, height: 36)
+        }
+        .frame(width: 12)
+        .onTapGesture(count: 2) {
+            onDoubleTap()
+        }
+        .highPriorityGesture(
+            DragGesture(minimumDistance: 1)
+                .onChanged { value in
+                    isDragging = true
+                    onDrag(value.translation.width)
                 }
+                .onEnded { _ in
+                    isDragging = false
+                    onEnd()
+                }
+        )
+        .onHover { hovering in
+            isHovering = hovering
+            if hovering {
+                NSCursor.resizeLeftRight.push()
+            } else {
+                NSCursor.pop()
             }
+        }
     }
 }

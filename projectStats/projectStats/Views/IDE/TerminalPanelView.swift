@@ -4,6 +4,8 @@ struct TerminalPanelView: View {
     @ObservedObject var viewModel: TerminalTabsViewModel
     @State private var showHistory = false
     @StateObject private var outputMonitor = TerminalOutputMonitor.shared
+    @State private var promptText: String = ""
+    @FocusState private var isPromptFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -23,17 +25,78 @@ struct TerminalPanelView: View {
                 Divider()
             }
 
+            // Terminal content area with equal margins and clipping
             HStack(spacing: 0) {
                 TerminalTabView(viewModel: viewModel)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 6)
+                    .clipped()
 
                 TerminalTabBar(viewModel: viewModel)
             }
+            .clipped()
+
+            Divider()
+
+            // Send Prompt field
+            sendPromptField
         }
         .background(Color.primary.opacity(0.02))
         .background {
             terminalShortcuts
+        }
+    }
+
+    private var sendPromptField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "text.bubble")
+                .foregroundStyle(.secondary)
+                .font(.system(size: 14))
+
+            TextField("Send prompt to Claude...", text: $promptText, axis: .vertical)
+                .textFieldStyle(.plain)
+                .lineLimit(1...5)
+                .focused($isPromptFocused)
+                .onSubmit {
+                    sendPrompt()
+                }
+
+            Button {
+                sendPrompt()
+            } label: {
+                Image(systemName: "paperplane.fill")
+                    .foregroundStyle(promptText.isEmpty ? Color.secondary : Color.blue)
+            }
+            .buttonStyle(.plain)
+            .disabled(promptText.isEmpty)
+            .keyboardShortcut(.return, modifiers: .command)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(Color.primary.opacity(0.03))
+    }
+
+    private func sendPrompt() {
+        guard !promptText.isEmpty else { return }
+
+        let textToSend = promptText
+        promptText = ""
+
+        // Save to database
+        Task { @MainActor in
+            let context = AppModelContainer.shared.mainContext
+            let saved = SavedPrompt(
+                text: textToSend,
+                projectPath: TerminalOutputMonitor.shared.activeProjectPath
+            )
+            context.insert(saved)
+            try? context.save()
+            print("[Prompts] Saved prompt: \(textToSend.prefix(50))...")
+        }
+
+        // Send to terminal (sendCommand adds newline)
+        if let activeTab = viewModel.activeTab {
+            activeTab.sendCommand(textToSend)
         }
     }
 

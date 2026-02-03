@@ -14,7 +14,8 @@ enum AppModelContainer {
             ChatMessage.self,
             TimeEntry.self,
             AchievementUnlock.self,
-            ProjectNote.self
+            ProjectNote.self,
+            SavedPrompt.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

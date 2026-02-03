@@ -26,8 +26,11 @@ struct TimeTrackingCard: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            Spacer(minLength: 0)
         }
         .padding()
+        .frame(minHeight: 140, alignment: .topLeading)
         .background(.background)
         .overlay(
             RoundedRectangle(cornerRadius: 12)

@@ -71,10 +71,13 @@ struct FileBrowserView: View {
     @State private var selectedFolder: URL?
     @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = false
 
-    @State private var showNewFilePrompt = false
-    @State private var showNewFolderPrompt = false
-    @State private var newFileName = ""
-    @State private var newFolderName = ""
+    // Inline creation state
+    @State private var isCreatingFile = false
+    @State private var isCreatingFolder = false
+    @State private var newItemName = ""
+    @State private var creationParentPath: URL?
+    @FocusState private var isNewItemFocused: Bool
+
     @State private var showRenamePrompt = false
     @State private var renameText = ""
     @State private var renameTarget: URL?
@@ -96,6 +99,18 @@ struct FileBrowserView: View {
 
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
+                    // Inline creation at root level (when nothing selected or root selected)
+                    if (isCreatingFile || isCreatingFolder) && creationParentPath == rootPath {
+                        InlineFileCreationRow(
+                            name: $newItemName,
+                            isFocused: $isNewItemFocused,
+                            isFolder: isCreatingFolder,
+                            onCreate: confirmCreation,
+                            onCancel: cancelCreation
+                        )
+                        .padding(.horizontal, 8)
+                    }
+
                     if let root = rootNode {
                         FileNodeView(
                             node: root,
@@ -103,7 +118,14 @@ struct FileBrowserView: View {
                             selectedFolder: $selectedFolder,
                             expandedPaths: $expandedPaths,
                             level: 0,
-                            actions: actions
+                            actions: actions,
+                            isCreatingFile: isCreatingFile,
+                            isCreatingFolder: isCreatingFolder,
+                            creationParentPath: creationParentPath,
+                            newItemName: $newItemName,
+                            isNewItemFocused: $isNewItemFocused,
+                            onCreateConfirm: confirmCreation,
+                            onCreateCancel: cancelCreation
                         )
                     }
                 }
@@ -112,16 +134,6 @@ struct FileBrowserView: View {
         }
         .onAppear { loadFileTree() }
         .onChange(of: rootPath) { _, _ in loadFileTree() }
-        .alert("New File", isPresented: $showNewFilePrompt) {
-            TextField("Filename", text: $newFileName)
-            Button("Cancel", role: .cancel) {}
-            Button("Create") { createFile() }
-        }
-        .alert("New Folder", isPresented: $showNewFolderPrompt) {
-            TextField("Folder name", text: $newFolderName)
-            Button("Cancel", role: .cancel) {}
-            Button("Create") { createFolder() }
-        }
         .alert("Rename", isPresented: $showRenamePrompt) {
             TextField("Name", text: $renameText)
             Button("Cancel", role: .cancel) {}
@@ -138,7 +150,7 @@ struct FileBrowserView: View {
     private var toolbar: some View {
         HStack(spacing: 10) {
             Button {
-                showNewFilePrompt = true
+                startCreatingFile()
             } label: {
                 Image(systemName: "doc.badge.plus")
             }
@@ -146,7 +158,7 @@ struct FileBrowserView: View {
             .help("New File")
 
             Button {
-                showNewFolderPrompt = true
+                startCreatingFolder()
             } label: {
                 Image(systemName: "folder.badge.plus")
             }
@@ -281,24 +293,74 @@ struct FileBrowserView: View {
         }
     }
 
-    private func createFile() {
-        let trimmed = newFileName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        let directory = selectedFolder ?? rootPath
-        let newURL = directory.appendingPathComponent(trimmed)
-        FileManager.default.createFile(atPath: newURL.path, contents: nil)
-        newFileName = ""
+    private func startCreatingFile() {
+        determineCreationParent()
+        isCreatingFile = true
+        isCreatingFolder = false
+        newItemName = ""
+        // Expand parent folder if it's a directory
+        if let parent = creationParentPath, parent != rootPath {
+            expandedPaths.insert(parent)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            isNewItemFocused = true
+        }
+    }
+
+    private func startCreatingFolder() {
+        determineCreationParent()
+        isCreatingFolder = true
+        isCreatingFile = false
+        newItemName = ""
+        // Expand parent folder if it's a directory
+        if let parent = creationParentPath, parent != rootPath {
+            expandedPaths.insert(parent)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            isNewItemFocused = true
+        }
+    }
+
+    private func determineCreationParent() {
+        if let selected = selectedFolder {
+            creationParentPath = selected
+        } else if let selected = selectedFile {
+            creationParentPath = selected.deletingLastPathComponent()
+        } else {
+            creationParentPath = rootPath
+        }
+    }
+
+    private func confirmCreation() {
+        guard let parent = creationParentPath else {
+            cancelCreation()
+            return
+        }
+
+        let trimmed = newItemName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            cancelCreation()
+            return
+        }
+
+        let newURL = parent.appendingPathComponent(trimmed)
+
+        if isCreatingFolder {
+            try? FileManager.default.createDirectory(at: newURL, withIntermediateDirectories: true)
+        } else {
+            FileManager.default.createFile(atPath: newURL.path, contents: nil)
+        }
+
+        selectedFile = newURL
+        cancelCreation()
         refreshTree()
     }
 
-    private func createFolder() {
-        let trimmed = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        let directory = selectedFolder ?? rootPath
-        let newURL = directory.appendingPathComponent(trimmed)
-        try? FileManager.default.createDirectory(at: newURL, withIntermediateDirectories: true)
-        newFolderName = ""
-        refreshTree()
+    private func cancelCreation() {
+        isCreatingFile = false
+        isCreatingFolder = false
+        newItemName = ""
+        creationParentPath = nil
     }
 
     private func renameItem() {
@@ -382,8 +444,21 @@ struct FileNodeView: View {
     let level: Int
     let actions: FileBrowserActions
 
+    // Inline creation support
+    var isCreatingFile: Bool = false
+    var isCreatingFolder: Bool = false
+    var creationParentPath: URL?
+    @Binding var newItemName: String
+    @FocusState.Binding var isNewItemFocused: Bool
+    var onCreateConfirm: () -> Void = {}
+    var onCreateCancel: () -> Void = {}
+
     private var isExpanded: Bool {
         expandedPaths.contains(node.path)
+    }
+
+    private var shouldShowInlineCreation: Bool {
+        (isCreatingFile || isCreatingFolder) && creationParentPath == node.path && node.isDirectory
     }
 
     var body: some View {
@@ -434,6 +509,18 @@ struct FileNodeView: View {
             }
             .contextMenu { contextMenu }
 
+            // Show inline creation row as first child of this folder
+            if shouldShowInlineCreation && isExpanded {
+                InlineFileCreationRow(
+                    name: $newItemName,
+                    isFocused: $isNewItemFocused,
+                    isFolder: isCreatingFolder,
+                    level: level + 1,
+                    onCreate: onCreateConfirm,
+                    onCancel: onCreateCancel
+                )
+            }
+
             if node.isDirectory && isExpanded, let children = node.children {
                 ForEach(children) { child in
                     FileNodeView(
@@ -442,7 +529,14 @@ struct FileNodeView: View {
                         selectedFolder: $selectedFolder,
                         expandedPaths: $expandedPaths,
                         level: level + 1,
-                        actions: actions
+                        actions: actions,
+                        isCreatingFile: isCreatingFile,
+                        isCreatingFolder: isCreatingFolder,
+                        creationParentPath: creationParentPath,
+                        newItemName: $newItemName,
+                        isNewItemFocused: $isNewItemFocused,
+                        onCreateConfirm: onCreateConfirm,
+                        onCreateCancel: onCreateCancel
                     )
                 }
             }
@@ -485,5 +579,51 @@ final class FileClipboard {
 
     func copy(_ url: URL) {
         contents = url
+    }
+}
+
+struct InlineFileCreationRow: View {
+    @Binding var name: String
+    @FocusState.Binding var isFocused: Bool
+    let isFolder: Bool
+    var level: Int = 0
+    let onCreate: () -> Void
+    let onCancel: () -> Void
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if level > 0 {
+                Spacer()
+                    .frame(width: CGFloat(level) * 16)
+            }
+
+            Spacer().frame(width: 12)
+
+            Image(systemName: isFolder ? "folder.badge.plus" : "doc.badge.plus")
+                .font(.system(size: 14))
+                .foregroundStyle(.blue)
+                .frame(width: 18)
+
+            TextField(isFolder ? "folder name" : "filename", text: $name)
+                .textFieldStyle(.plain)
+                .font(.system(size: 13))
+                .focused($isFocused)
+                .onSubmit {
+                    if !name.isEmpty {
+                        onCreate()
+                    }
+                }
+                .onExitCommand {
+                    onCancel()
+                }
+
+            Spacer()
+        }
+        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
+        .background(Color.blue.opacity(0.1))
+        .onAppear {
+            isFocused = true
+        }
     }
 }
