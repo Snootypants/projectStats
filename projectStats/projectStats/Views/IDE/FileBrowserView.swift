@@ -107,7 +107,7 @@ struct FileBrowserView: View {
             // Limit depth to prevent performance issues
             guard depth < 10 else { return FileNode(name: name, path: url, isDirectory: true, children: []) }
 
-            let contents = (try? fm.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])) ?? []
+            let contents = (try? fm.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey])) ?? []
 
             let children = contents
                 .sorted { (a, b) -> Bool in

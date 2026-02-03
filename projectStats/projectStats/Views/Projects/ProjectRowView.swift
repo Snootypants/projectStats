@@ -2,8 +2,22 @@ import SwiftUI
 
 struct ProjectRowView: View {
     let project: Project
+    @EnvironmentObject var dashboardVM: DashboardViewModel
     @StateObject private var projectListVM = ProjectListViewModel()
     @State private var isHovering = false
+
+    private var isFavorite: Bool {
+        dashboardVM.isFavorite(project)
+    }
+
+    private var canToggleFavorite: Bool {
+        isFavorite || dashboardVM.canAddFavorite
+    }
+
+    private var favoriteHelpText: String {
+        if isFavorite { return "Unfavorite" }
+        return canToggleFavorite ? "Favorite" : "Max 3 favorites"
+    }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -20,6 +34,17 @@ struct ProjectRowView: View {
                 HStack {
                     Text(project.name)
                         .font(.system(.body, weight: .medium))
+
+                    Button {
+                        dashboardVM.toggleFavorite(project)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.caption)
+                            .foregroundStyle(isFavorite ? .yellow : .secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help(favoriteHelpText)
+                    .disabled(!canToggleFavorite)
 
                     if let language = project.language {
                         Text(language)
@@ -224,4 +249,5 @@ struct Badge: View {
     }
     .listStyle(.inset)
     .frame(width: 500, height: 300)
+    .environmentObject(DashboardViewModel())
 }

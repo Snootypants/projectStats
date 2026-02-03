@@ -196,7 +196,7 @@ struct OverviewTab: View {
                         GridItem(.flexible()),
                         GridItem(.flexible())
                     ], spacing: 12) {
-                        ForEach(Array(viewModel.recentProjects.prefix(6))) { project in
+                        ForEach(viewModel.homeProjects) { project in
                             CompactProjectCard(project: project)
                         }
                     }

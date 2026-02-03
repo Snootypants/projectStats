@@ -211,12 +211,19 @@ private actor RepoDiscoveryService {
         let firstCommitDate = JSONStatsReader.parseDate(stats.git?.firstCommitDate)
         let statsGeneratedAt = JSONStatsReader.generatedAtDate(from: stats)
 
-        // Build last commit from JSON if available, otherwise use git service
+        // Build last commit - prefer live git data if available, fall back to JSON
+        let jsonCommit = JSONStatsReader.lastCommit(from: stats)
+        let gitCommit = gitService.getLastCommit(at: url)
+
         let lastCommit: Commit?
-        if let jsonCommit = JSONStatsReader.lastCommit(from: stats) {
-            lastCommit = jsonCommit
+        if let gitCommit = gitCommit {
+            if let jsonCommit = jsonCommit {
+                lastCommit = gitCommit.date >= jsonCommit.date ? gitCommit : jsonCommit
+            } else {
+                lastCommit = gitCommit
+            }
         } else {
-            lastCommit = gitService.getLastCommit(at: url)
+            lastCommit = jsonCommit
         }
 
         // Get git metrics for activity tracking (still need this for dashboard)

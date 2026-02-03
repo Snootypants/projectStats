@@ -82,7 +82,21 @@ struct ProjectPickerView: View {
 /// Card used in the project picker grid
 struct ProjectPickerCard: View {
     let project: Project
+    @EnvironmentObject var dashboardVM: DashboardViewModel
     @State private var isHovering = false
+
+    private var isFavorite: Bool {
+        dashboardVM.isFavorite(project)
+    }
+
+    private var canToggleFavorite: Bool {
+        isFavorite || dashboardVM.canAddFavorite
+    }
+
+    private var favoriteHelpText: String {
+        if isFavorite { return "Unfavorite" }
+        return canToggleFavorite ? "Favorite" : "Max 3 favorites"
+    }
 
     private var languageColor: Color {
         switch project.language?.lowercased() {
@@ -108,14 +122,26 @@ struct ProjectPickerCard: View {
 
                 Spacer()
 
-                if project.promptCount > 0 {
-                    HStack(spacing: 2) {
-                        Image(systemName: "text.badge.plus")
-                            .font(.caption2)
-                        Text("\(project.promptCount)")
-                            .font(.caption)
+                HStack(spacing: 6) {
+                    if project.promptCount > 0 {
+                        HStack(spacing: 2) {
+                            Image(systemName: "text.badge.plus")
+                                .font(.caption2)
+                            Text("\(project.promptCount)")
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.orange)
                     }
-                    .foregroundStyle(.orange)
+
+                    Button {
+                        dashboardVM.toggleFavorite(project)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .foregroundStyle(isFavorite ? .yellow : .secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help(favoriteHelpText)
+                    .disabled(!canToggleFavorite)
                 }
             }
 

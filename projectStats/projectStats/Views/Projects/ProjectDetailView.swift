@@ -1,12 +1,23 @@
 import SwiftUI
+import SwiftData
 
 struct ProjectDetailView: View {
     let project: Project
+    @Query private var cachedCommits: [CachedCommit]
     @StateObject private var projectListVM = ProjectListViewModel()
     @State private var readmeContent: String?
     @State private var commitHistory: [Commit] = []
     @State private var isLoadingReadme = false
     @State private var showIDEMode = false
+
+    init(project: Project) {
+        self.project = project
+        let projectPath = project.path.path
+        _cachedCommits = Query(
+            filter: #Predicate<CachedCommit> { $0.projectPath == projectPath },
+            sort: [SortDescriptor(\CachedCommit.date, order: .reverse)]
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -381,16 +392,17 @@ struct ProjectDetailView: View {
                 }
 
                 // Commit history
-                if !commitHistory.isEmpty {
+                let commits = displayCommits
+                if !commits.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Recent Commits")
                             .font(.headline)
 
                         VStack(spacing: 0) {
-                            ForEach(commitHistory.prefix(10)) { commit in
+                            ForEach(commits.prefix(10)) { commit in
                                 CommitRow(commit: commit)
 
-                                if commit.id != commitHistory.prefix(10).last?.id {
+                                if commit.id != commits.prefix(10).last?.id {
                                     Divider()
                                 }
                             }
@@ -413,11 +425,30 @@ struct ProjectDetailView: View {
 
         readmeContent = ReadmeParser.readFullContent(from: project.path)
 
-        // Use pre-fetched commits with stats if available, otherwise fetch fresh
-        if let metrics = project.gitMetrics, !metrics.recentCommits.isEmpty {
-            commitHistory = metrics.recentCommits
-        } else {
-            commitHistory = GitService.shared.getRecentCommitsWithStats(at: project.path, limit: 20)
+        if cachedCommits.isEmpty {
+            // Use pre-fetched commits with stats if available, otherwise fetch fresh
+            if let metrics = project.gitMetrics, !metrics.recentCommits.isEmpty {
+                commitHistory = metrics.recentCommits
+            } else {
+                commitHistory = GitService.shared.getRecentCommitsWithStats(at: project.path, limit: 20)
+            }
+        }
+    }
+
+    private var displayCommits: [Commit] {
+        if cachedCommits.isEmpty {
+            return commitHistory
+        }
+
+        return cachedCommits.map {
+            Commit(
+                id: $0.hash,
+                message: $0.message,
+                author: $0.author,
+                date: $0.date,
+                linesAdded: $0.linesAdded,
+                linesRemoved: $0.linesDeleted
+            )
         }
     }
 
@@ -621,4 +652,5 @@ struct FlowLayout: Layout {
         currentBranch: "main"
     ))
     .frame(width: 600, height: 800)
+    .modelContainer(for: [CachedCommit.self], inMemory: true)
 }

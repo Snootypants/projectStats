@@ -38,10 +38,24 @@ struct ProjectListView: View {
 // MARK: - Compact Project Card (Square for Overview Grid)
 struct CompactProjectCard: View {
     let project: Project
+    @EnvironmentObject var dashboardVM: DashboardViewModel
     @State private var isHovering = false
 
     private var isArchived: Bool {
         !project.countsTowardTotals
+    }
+
+    private var isFavorite: Bool {
+        dashboardVM.isFavorite(project)
+    }
+
+    private var canToggleFavorite: Bool {
+        isFavorite || dashboardVM.canAddFavorite
+    }
+
+    private var favoriteHelpText: String {
+        if isFavorite { return "Unfavorite" }
+        return canToggleFavorite ? "Favorite" : "Max 3 favorites"
     }
 
     var body: some View {
@@ -60,13 +74,25 @@ struct CompactProjectCard: View {
 
                 Spacer()
 
-                if let metrics = project.gitMetrics, metrics.commits7d > 0 {
-                    HStack(spacing: 2) {
-                        Image(systemName: "arrow.triangle.branch")
-                        Text("\(metrics.commits7d)")
+                HStack(spacing: 6) {
+                    if let metrics = project.gitMetrics, metrics.commits7d > 0 {
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.triangle.branch")
+                            Text("\(metrics.commits7d)")
+                        }
+                        .font(.caption2)
+                        .foregroundStyle(.blue)
                     }
-                    .font(.caption2)
-                    .foregroundStyle(.blue)
+
+                    Button {
+                        dashboardVM.toggleFavorite(project)
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .foregroundStyle(isFavorite ? .yellow : .secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help(favoriteHelpText)
+                    .disabled(!canToggleFavorite)
                 }
             }
 
@@ -362,4 +388,5 @@ struct ProjectCard: View {
 
     return ProjectListView(viewModel: vm)
         .frame(width: 900, height: 600)
+        .environmentObject(DashboardViewModel())
 }
