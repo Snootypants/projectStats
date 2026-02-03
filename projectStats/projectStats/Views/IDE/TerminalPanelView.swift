@@ -89,12 +89,23 @@ private final class TerminalController: ObservableObject {
     }
 }
 
+private final class MonitoringTerminalView: LocalProcessTerminalView {
+    override func dataReceived(slice: ArraySlice<UInt8>) {
+        if let text = String(bytes: slice, encoding: .utf8), !text.isEmpty {
+            Task { @MainActor in
+                TerminalOutputMonitor.shared.processTerminalChunk(text)
+            }
+        }
+        super.dataReceived(slice: slice)
+    }
+}
+
 private struct SwiftTermContainer: NSViewRepresentable {
     let projectPath: URL
     @ObservedObject var controller: TerminalController
 
     func makeNSView(context: Context) -> LocalProcessTerminalView {
-        let terminalView = LocalProcessTerminalView(frame: .zero)
+        let terminalView = MonitoringTerminalView(frame: .zero)
         terminalView.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         terminalView.configureNativeColors()
 

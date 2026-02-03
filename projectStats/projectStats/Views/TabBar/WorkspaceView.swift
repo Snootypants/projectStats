@@ -21,6 +21,14 @@ struct WorkspaceView: View {
                 // Existing IDE Mode view (reused as-is)
                 IDEModeView(project: project)
             }
+            .onAppear {
+                TerminalOutputMonitor.shared.activeProjectPath = project.path.path
+            }
+            .onDisappear {
+                if TerminalOutputMonitor.shared.activeProjectPath == project.path.path {
+                    TerminalOutputMonitor.shared.activeProjectPath = nil
+                }
+            }
         } else {
             // Project not found (maybe directory was deleted)
             VStack(spacing: 16) {
