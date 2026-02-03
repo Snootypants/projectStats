@@ -307,31 +307,37 @@ private struct ResizableDivider: View {
 
     @State private var isHovering = false
     @State private var isDragging = false
+
+    // All settings from @AppStorage — NO hardcoded values
     @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
+    @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
+    @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
+    @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
 
     private var glowColor: Color {
         Color.fromHex(accentColorHex) ?? .orange
     }
 
-    private var isActive: Bool {
-        isHovering || isDragging
+    private var shouldGlow: Bool {
+        isHovering || isDragging || previewGlow
     }
 
     var body: some View {
         ZStack {
             // Glow effect layer (behind the line)
-            if isActive {
+            if shouldGlow {
                 Rectangle()
-                    .fill(glowColor.opacity(0.3))
-                    .frame(width: 6)
-                    .blur(radius: 4)
+                    .fill(glowColor.opacity(glowOpacity * 0.6))
+                    .frame(width: lineThickness * 3)
+                    .blur(radius: glowRadius)
             }
 
             // Full-height line (glows when active)
             Rectangle()
-                .fill(isActive ? glowColor : Color.secondary.opacity(0.2))
-                .frame(width: isActive ? 2 : 1)
-                .shadow(color: isActive ? glowColor.opacity(0.6) : .clear, radius: 4)
+                .fill(shouldGlow ? glowColor : Color.secondary.opacity(0.2))
+                .frame(width: shouldGlow ? lineThickness : 1)
+                .shadow(color: shouldGlow ? glowColor.opacity(glowOpacity) : .clear, radius: glowRadius)
 
             // Invisible hit area (wider for easier grabbing)
             Rectangle()
@@ -341,13 +347,14 @@ private struct ResizableDivider: View {
 
             // Drag handle pill (centered on the line)
             Capsule()
-                .fill(isActive ? glowColor : Color.secondary.opacity(0.4))
-                .frame(width: 4, height: 36)
-                .shadow(color: isActive ? glowColor.opacity(0.5) : .clear, radius: 3)
+                .fill(shouldGlow ? glowColor : Color.secondary.opacity(0.4))
+                .frame(width: max(4, lineThickness), height: 36)
+                .shadow(color: shouldGlow ? glowColor.opacity(glowOpacity * 0.8) : .clear, radius: glowRadius * 0.75)
         }
         .frame(width: 12)
         .animation(.easeInOut(duration: 0.15), value: isHovering)
         .animation(.easeInOut(duration: 0.15), value: isDragging)
+        .animation(.easeInOut(duration: 0.15), value: previewGlow)
         .onTapGesture(count: 2) {
             onDoubleTap()
         }
