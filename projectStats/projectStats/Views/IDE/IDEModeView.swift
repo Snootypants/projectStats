@@ -4,7 +4,7 @@ import SwiftUI
 struct IDEModeView: View {
     let project: Project
 
-    @StateObject private var terminalTabs: TerminalTabsViewModel
+    @ObservedObject private var terminalTabs = TerminalTabsViewModel.shared
     @StateObject private var environmentViewModel: EnvironmentViewModel
 
     @State private var selectedFile: URL?
@@ -30,7 +30,6 @@ struct IDEModeView: View {
 
     init(project: Project) {
         self.project = project
-        _terminalTabs = StateObject(wrappedValue: TerminalTabsViewModel(projectPath: project.path))
         _environmentViewModel = StateObject(wrappedValue: EnvironmentViewModel(projectPath: project.path))
     }
 
@@ -102,6 +101,9 @@ struct IDEModeView: View {
         }
         .background {
             keyboardShortcuts
+        }
+        .onAppear {
+            terminalTabs.setProject(project.path)
         }
     }
 

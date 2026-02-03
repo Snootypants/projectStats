@@ -22,6 +22,12 @@ private struct TerminalSessionView: NSViewRepresentable {
     @ObservedObject var tab: TerminalTabItem
 
     func makeNSView(context: Context) -> LocalProcessTerminalView {
+        // CRITICAL: Reuse existing terminal view if one exists (persists across tab switches)
+        if let existingView = tab.existingTerminalView as? MonitoringTerminalView {
+            return existingView
+        }
+
+        // Create new terminal view only if one doesn't exist
         let terminalView = MonitoringTerminalView(frame: .zero)
         terminalView.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         terminalView.configureNativeColors()

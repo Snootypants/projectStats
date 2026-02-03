@@ -30,7 +30,8 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     var isGhost: Bool
     var startTime: Date?
 
-    fileprivate weak var terminalView: LocalProcessTerminalView?
+    // Strong reference to keep terminal view alive across tab switches
+    fileprivate var terminalView: LocalProcessTerminalView?
     fileprivate var pendingCommands: [String] = []
 
     private var lastOutputAt: Date?
@@ -48,6 +49,16 @@ final class TerminalTabItem: ObservableObject, Identifiable {
         self.kind = kind
         self.title = title
         self.isGhost = isGhost
+    }
+
+    /// Returns existing terminal view if already attached, nil otherwise
+    var existingTerminalView: LocalProcessTerminalView? {
+        terminalView
+    }
+
+    /// Returns true if terminal view is already attached
+    var hasTerminalView: Bool {
+        terminalView != nil
     }
 
     func attach(_ terminalView: LocalProcessTerminalView) {
@@ -181,11 +192,13 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     private func startFollowTimer() {
         followTimer?.invalidate()
         followTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            guard let self, let terminalView = self.terminalView else { return }
+            Task { @MainActor in
+                guard let self, let terminalView = self.terminalView else { return }
 
-            let atBottom = !terminalView.canScroll || terminalView.scrollPosition >= 0.99
-            if atBottom && terminalView.scrollPosition < 0.999 {
-                terminalView.scroll(toPosition: 1)
+                let atBottom = !terminalView.canScroll || terminalView.scrollPosition >= 0.99
+                if atBottom && terminalView.scrollPosition < 0.999 {
+                    terminalView.scroll(toPosition: 1)
+                }
             }
         }
     }
@@ -230,18 +243,56 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
 @MainActor
 final class TerminalTabsViewModel: ObservableObject {
-    @Published var tabs: [TerminalTabItem] = []
-    @Published var activeTabID: UUID
-    let projectPath: URL
+    static let shared = TerminalTabsViewModel()
+
+    // Store tabs and active tab PER PROJECT PATH - persists across tab switches
+    @Published private var tabsByProject: [String: [TerminalTabItem]] = [:]
+    @Published private var activeTabByProject: [String: UUID] = [:]
+
+    // Current project path for convenience (set when view appears)
+    @Published var currentProjectPath: String = ""
 
     private var statusTimer: Timer?
 
-    init(projectPath: URL) {
-        self.projectPath = projectPath
-        let baseTab = TerminalTabItem(kind: .shell, title: "Terminal")
-        self.tabs = [baseTab]
-        self.activeTabID = baseTab.id
+    private init() {
         startStatusTimer()
+    }
+
+    // MARK: - Per-Project Accessors
+
+    var tabs: [TerminalTabItem] {
+        get { tabsByProject[currentProjectPath] ?? [] }
+        set { tabsByProject[currentProjectPath] = newValue }
+    }
+
+    var activeTabID: UUID {
+        get { activeTabByProject[currentProjectPath] ?? UUID() }
+        set { activeTabByProject[currentProjectPath] = newValue }
+    }
+
+    func setProject(_ path: URL) {
+        let pathString = path.path
+        currentProjectPath = pathString
+
+        // Initialize tabs for this project if not already present
+        if tabsByProject[pathString] == nil {
+            let baseTab = TerminalTabItem(kind: .shell, title: "Terminal")
+            tabsByProject[pathString] = [baseTab]
+            activeTabByProject[pathString] = baseTab.id
+        }
+    }
+
+    func tabs(for projectPath: String) -> [TerminalTabItem] {
+        return tabsByProject[projectPath] ?? []
+    }
+
+    func activeTab(for projectPath: String) -> UUID? {
+        return activeTabByProject[projectPath]
+    }
+
+    // Convenience property to get current project path as URL
+    var projectPath: URL {
+        URL(fileURLWithPath: currentProjectPath)
     }
 
     var activeTab: TerminalTabItem? {
@@ -344,12 +395,18 @@ final class TerminalTabsViewModel: ObservableObject {
         let now = Date()
         let notifyOnAttention = SettingsViewModel.shared.notifyClaudeFinished
 
-        for tab in tabs {
-            tab.updateStatus(now: now, notifyOnAttention: notifyOnAttention && (tab.kind == .claude || tab.kind == .ccYolo || tab.kind == .ghost))
-        }
-        let ghostsToClose = tabs.filter { $0.shouldCloseGhost(now: now) }
-        for tab in ghostsToClose {
-            closeTab(tab)
+        // Iterate over ALL projects' tabs to keep background terminals updated
+        for (projectPath, projectTabs) in tabsByProject {
+            for tab in projectTabs {
+                tab.updateStatus(now: now, notifyOnAttention: notifyOnAttention && (tab.kind == .claude || tab.kind == .ccYolo || tab.kind == .ghost))
+            }
+
+            let ghostsToClose = projectTabs.filter { $0.shouldCloseGhost(now: now) }
+            for tab in ghostsToClose {
+                // Close ghost tabs for this specific project
+                tab.reset()
+                tabsByProject[projectPath]?.removeAll { $0.id == tab.id }
+            }
         }
     }
 }
