@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct IDEModeView: View {
@@ -282,15 +283,19 @@ private struct ResizableDivider: View {
     let onEnd: () -> Void
     let onDoubleTap: () -> Void
 
+    @State private var isHovering = false
+
     var body: some View {
         Rectangle()
             .fill(Color.clear)
             .frame(width: 6)
             .overlay(
                 Rectangle()
-                    .fill(Color.primary.opacity(0.2))
-                    .frame(width: 1)
+                    .fill(isHovering ? Color.accentColor.opacity(0.5) : Color.primary.opacity(0.2))
+                    .frame(width: isHovering ? 3 : 1)
+                    .animation(.easeInOut(duration: 0.15), value: isHovering)
             )
+            .contentShape(Rectangle())
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -302,6 +307,14 @@ private struct ResizableDivider: View {
             )
             .onTapGesture(count: 2) {
                 onDoubleTap()
+            }
+            .onHover { hovering in
+                isHovering = hovering
+                if hovering {
+                    NSCursor.resizeLeftRight.push()
+                } else {
+                    NSCursor.pop()
+                }
             }
     }
 }

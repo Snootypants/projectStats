@@ -22,6 +22,13 @@ struct TabBarView: View {
                             onUpdateDocs: { requestDocUpdate(tab) },
                             onCloseOthers: { tabManager.closeOtherTabs(keeping: tab.id) }
                         )
+                        .draggable(tab.id.uuidString)
+                        .dropDestination(for: String.self) { items, _ in
+                            guard let draggedIdString = items.first,
+                                  let draggedId = UUID(uuidString: draggedIdString) else { return false }
+                            tabManager.moveTab(from: draggedId, to: tab.id)
+                            return true
+                        }
                     }
                 }
             }

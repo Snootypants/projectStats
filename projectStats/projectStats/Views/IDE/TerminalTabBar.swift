@@ -61,8 +61,6 @@ struct TerminalTabBar: View {
                 }
             }
 
-            Spacer()
-
             Menu {
                 Button("Dev Server: npm run dev") {
                     viewModel.addDevServerTab(command: "npm run dev")
@@ -84,14 +82,18 @@ struct TerminalTabBar: View {
                     showCustomCommandSheet = true
                 }
             } label: {
-                Text("+")
-                    .font(.system(size: 14, weight: .semibold))
-                    .frame(width: 30, height: 30)
+                Image(systemName: "plus")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 36, height: 36)
+                    .background(Color.primary.opacity(0.04))
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                     .contentShape(Rectangle())
             }
             .menuStyle(.borderlessButton)
             .buttonStyle(.plain)
-            .padding(.bottom, 4)
+
+            Spacer()
 
             Button {
                 showServerPopover.toggle()
@@ -203,16 +205,17 @@ private struct TerminalTabButton: View {
                 onCtrlSelect()
             }
             .onHover { hovering in
-                isHovering = hovering
+                withAnimation(.none) {
+                    isHovering = hovering
+                }
             }
 
             if isHovering {
                 TerminalTabHoverCard(tab: tab)
                     .offset(x: -220)
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .animation(.easeInOut(duration: 0.15), value: isHovering)
+        .animation(.none, value: isHovering)
     }
 
     private var tabIcon: some View {

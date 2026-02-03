@@ -102,6 +102,17 @@ class TabManagerViewModel: ObservableObject {
         activeTabID = tabs[prevIndex].id
     }
 
+    /// Move a tab from one position to another
+    func moveTab(from sourceId: UUID, to destinationId: UUID) {
+        guard let sourceIndex = tabs.firstIndex(where: { $0.id == sourceId }),
+              let destIndex = tabs.firstIndex(where: { $0.id == destinationId }),
+              sourceIndex != destIndex else { return }
+
+        let tab = tabs.remove(at: sourceIndex)
+        let newIndex = sourceIndex < destIndex ? destIndex : destIndex
+        tabs.insert(tab, at: newIndex)
+    }
+
     /// Open a project in the current tab (transforms picker → workspace)
     /// If the project is already open in another tab, switch to that tab instead
     func openProject(path: String) {

@@ -112,6 +112,7 @@ struct WorkspaceView: View {
             Text("\(project.formattedLineCount) lines")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .help(projectStatsTooltip(project))
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
@@ -146,5 +147,21 @@ struct WorkspaceView: View {
     private func copyPath(project: Project) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(project.path.path, forType: .string)
+    }
+
+    private func projectStatsTooltip(_ project: Project) -> String {
+        var lines: [String] = []
+        lines.append("Lines: \(project.lineCount.formatted())")
+        lines.append("Files: \(project.fileCount)")
+        if let commits = project.totalCommits {
+            lines.append("Commits: \(commits.formatted())")
+        }
+        if let language = project.language {
+            lines.append("Language: \(language)")
+        }
+        if let commit = project.lastCommit {
+            lines.append("Last commit: \(commit.message)")
+        }
+        return lines.joined(separator: "\n")
     }
 }

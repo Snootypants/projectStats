@@ -7,10 +7,6 @@ struct TerminalPanelView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ContextUsageBar()
-
-            Divider()
-
             header
 
             Divider()
