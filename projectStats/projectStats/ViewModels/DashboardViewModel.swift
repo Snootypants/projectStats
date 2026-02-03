@@ -651,9 +651,10 @@ class DashboardViewModel: ObservableObject {
         let promptsDir = project.path.appendingPathComponent("prompts")
         guard fm.fileExists(atPath: promptsDir.path) else { return }
 
+        let projectPath = project.path.path
         do {
             let existingDescriptor = FetchDescriptor<CachedPrompt>(
-                predicate: #Predicate { $0.projectPath == project.path.path }
+                predicate: #Predicate { $0.projectPath == projectPath }
             )
             let existingCached = try context.fetch(existingDescriptor)
             let existingByFilename = Dictionary(uniqueKeysWithValues: existingCached.map { ($0.filename, $0) })
@@ -693,7 +694,7 @@ class DashboardViewModel: ObservableObject {
                     existing.cachedAt = Date()
                 } else {
                     let cached = CachedPrompt(
-                        projectPath: project.path.path,
+                        projectPath: projectPath,
                         promptNumber: promptNumber,
                         filename: filename,
                         content: content,
@@ -772,9 +773,10 @@ class DashboardViewModel: ObservableObject {
         let workDir = project.path.appendingPathComponent("work")
         guard fm.fileExists(atPath: workDir.path) else { return }
 
+        let projectPath = project.path.path
         do {
             let existingDescriptor = FetchDescriptor<CachedWorkLog>(
-                predicate: #Predicate { $0.projectPath == project.path.path }
+                predicate: #Predicate { $0.projectPath == projectPath }
             )
             let existingCached = try context.fetch(existingDescriptor)
             let existingByKey = Dictionary(
@@ -819,17 +821,18 @@ class DashboardViewModel: ObservableObject {
         let gitDir = project.path.appendingPathComponent(".git")
         guard FileManager.default.fileExists(atPath: gitDir.path) else { return }
 
+        let projectPath = project.path.path
         let format = "%H%x1f%h%x1f%s%x1f%an%x1f%ae%x1f%aI"
-        let command = "cd '\(project.path.path)' && git log --pretty=format:'\(format)' --numstat -50"
+        let command = "cd '\(projectPath)' && git log --pretty=format:'\(format)' --numstat -50"
         let result = Shell.runResult(command)
         guard result.exitCode == 0, !result.output.isEmpty else { return }
 
-        let commits = parseGitLogOutput(result.output, projectPath: project.path.path)
+        let commits = parseGitLogOutput(result.output, projectPath: projectPath)
         if commits.isEmpty { return }
 
         do {
             let existingDescriptor = FetchDescriptor<CachedCommit>(
-                predicate: #Predicate { $0.projectPath == project.path.path }
+                predicate: #Predicate { $0.projectPath == projectPath }
             )
             let existing = try context.fetch(existingDescriptor)
             let existingHashes = Set(existing.map { $0.hash })
@@ -1051,23 +1054,24 @@ class DashboardViewModel: ObservableObject {
 
     private func syncProjectStats(for project: Project, context: ModelContext) async {
         do {
+            let projectPath = project.path.path
             let projectDescriptor = FetchDescriptor<CachedProject>(
-                predicate: #Predicate { $0.path == project.path.path }
+                predicate: #Predicate { $0.path == projectPath }
             )
             guard let cached = try context.fetch(projectDescriptor).first else { return }
 
             let promptDescriptor = FetchDescriptor<CachedPrompt>(
-                predicate: #Predicate { $0.projectPath == project.path.path }
+                predicate: #Predicate { $0.projectPath == projectPath }
             )
             cached.promptCount = (try? context.fetchCount(promptDescriptor)) ?? 0
 
             let workLogDescriptor = FetchDescriptor<CachedWorkLog>(
-                predicate: #Predicate { $0.projectPath == project.path.path && $0.isStatsFile == false }
+                predicate: #Predicate { $0.projectPath == projectPath && $0.isStatsFile == false }
             )
             cached.workLogCount = (try? context.fetchCount(workLogDescriptor)) ?? 0
 
             let commitDescriptor = FetchDescriptor<CachedCommit>(
-                predicate: #Predicate { $0.projectPath == project.path.path },
+                predicate: #Predicate { $0.projectPath == projectPath },
                 sortBy: [SortDescriptor(\.date, order: .reverse)]
             )
             if let latestCommit = try? context.fetch(commitDescriptor).first {
