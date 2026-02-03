@@ -1,146 +1,461 @@
+import AppKit
 import SwiftUI
+
+// MARK: - Color Hex Extension for Settings
+
+private extension Color {
+    static func fromHex(_ hex: String) -> Color? {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.hasPrefix("#") ? String(hexSanitized.dropFirst()) : hexSanitized
+
+        guard hexSanitized.count == 6,
+              let hexNumber = UInt64(hexSanitized, radix: 16) else {
+            return nil
+        }
+
+        let r = Double((hexNumber & 0xFF0000) >> 16) / 255
+        let g = Double((hexNumber & 0x00FF00) >> 8) / 255
+        let b = Double(hexNumber & 0x0000FF) / 255
+
+        return Color(red: r, green: g, blue: b)
+    }
+
+    func toHex() -> String? {
+        guard let components = NSColor(self).usingColorSpace(.deviceRGB) else {
+            return nil
+        }
+
+        let r = Int(components.redComponent * 255)
+        let g = Int(components.greenComponent * 255)
+        let b = Int(components.blueComponent * 255)
+
+        return String(format: "#%02X%02X%02X", r, g, b)
+    }
+}
+
+// MARK: - Settings Tab Enum
+
+enum SettingsTab: String, CaseIterable, Identifiable {
+    case general
+    case appearance
+    case github
+    case messaging
+    case cloudSync
+    case ai
+    case data
+    case notifications
+    case subscription
+    case account
+    case about
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .general: return "gear"
+        case .appearance: return "paintbrush"
+        case .github: return "link"
+        case .messaging: return "message"
+        case .cloudSync: return "icloud"
+        case .ai: return "sparkles"
+        case .data: return "tray.full"
+        case .notifications: return "bell"
+        case .subscription: return "creditcard"
+        case .account: return "person.crop.circle"
+        case .about: return "info.circle"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .general: return "General"
+        case .appearance: return "Appearance"
+        case .github: return "GitHub"
+        case .messaging: return "Messaging"
+        case .cloudSync: return "Cloud"
+        case .ai: return "AI"
+        case .data: return "Data"
+        case .notifications: return "Alerts"
+        case .subscription: return "Subscribe"
+        case .account: return "Account"
+        case .about: return "About"
+        }
+    }
+}
+
+// MARK: - Settings View
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
-    @State private var selectedTab = 0
+    @State private var selectedTab: SettingsTab = .general
+    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+
+    private var accentColor: Color {
+        Color.fromHex(accentColorHex) ?? .orange
+    }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            GeneralSettingsView()
-                .tabItem {
-                    Label("General", systemImage: "gear")
+        HStack(spacing: 0) {
+            // Sidebar
+            VStack(spacing: 2) {
+                ForEach(SettingsTab.allCases) { tab in
+                    SettingsSidebarItem(
+                        tab: tab,
+                        isSelected: selectedTab == tab,
+                        accentColor: accentColor
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            selectedTab = tab
+                        }
+                    }
                 }
-                .tag(0)
+                Spacer()
+            }
+            .frame(width: 90)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 4)
+            .background(Color(NSColor.windowBackgroundColor).opacity(0.5))
 
-            AppearanceSettingsView()
-                .tabItem {
-                    Label("Appearance", systemImage: "paintbrush")
-                }
-                .tag(1)
+            // Divider with subtle glow when hovered
+            SettingsDivider(accentColor: accentColor)
 
-            GitHubSettingsView()
-                .tabItem {
-                    Label("GitHub", systemImage: "link")
-                }
-                .tag(2)
-
-            MessagingSettingsView()
-                .tabItem {
-                    Label("Messaging", systemImage: "message")
-                }
-                .tag(3)
-
-            CloudSyncSettingsView()
-                .tabItem {
-                    Label("Cloud Sync", systemImage: "icloud")
-                }
-                .tag(4)
-
-            AISettingsView()
-                .tabItem {
-                    Label("AI", systemImage: "sparkles")
-                }
-                .tag(5)
-
-            DataManagementView()
-                .tabItem {
-                    Label("Data", systemImage: "tray.full")
-                }
-                .tag(6)
-
-            NotificationSettingsView()
-                .tabItem {
-                    Label("Notifications", systemImage: "bell")
-                }
-                .tag(7)
-
-            SubscriptionView()
-                .tabItem {
-                    Label("Subscription", systemImage: "creditcard")
-                }
-                .tag(8)
-
-            AccountView()
-                .tabItem {
-                    Label("Account", systemImage: "person.crop.circle")
-                }
-                .tag(9)
-
-            AboutView()
-                .tabItem {
-                    Label("About", systemImage: "info.circle")
-                }
-                .tag(10)
+            // Content
+            ScrollView {
+                contentView(for: selectedTab)
+                    .padding(20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(NSColor.textBackgroundColor).opacity(0.3))
         }
         .environmentObject(viewModel)
-        .frame(width: 560, height: 420)
+        .frame(width: 650, height: 500)
+    }
+
+    @ViewBuilder
+    private func contentView(for tab: SettingsTab) -> some View {
+        switch tab {
+        case .general:
+            GeneralSettingsView()
+        case .appearance:
+            AppearanceSettingsView()
+        case .github:
+            GitHubSettingsView()
+        case .messaging:
+            MessagingSettingsView()
+        case .cloudSync:
+            CloudSyncSettingsView()
+        case .ai:
+            AISettingsView()
+        case .data:
+            DataManagementView()
+        case .notifications:
+            NotificationSettingsView()
+        case .subscription:
+            SubscriptionView()
+        case .account:
+            AccountView()
+        case .about:
+            AboutView()
+        }
     }
 }
+
+// MARK: - Sidebar Item
+
+private struct SettingsSidebarItem: View {
+    let tab: SettingsTab
+    let isSelected: Bool
+    let accentColor: Color
+    let action: () -> Void
+
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: tab.icon)
+                    .font(.system(size: 20))
+                Text(tab.label)
+                    .font(.caption2)
+                    .lineLimit(1)
+            }
+            .frame(width: 70, height: 56)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(backgroundColor)
+                    .shadow(color: isSelected ? accentColor.opacity(0.3) : .clear, radius: 4)
+            )
+            .foregroundColor(foregroundColor)
+            .scaleEffect(isHovering && !isSelected ? 1.03 : 1.0)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.15)) {
+                isHovering = hovering
+            }
+        }
+    }
+
+    private var backgroundColor: Color {
+        if isSelected {
+            return accentColor
+        } else if isHovering {
+            return Color.gray.opacity(0.15)
+        }
+        return Color.clear
+    }
+
+    private var foregroundColor: Color {
+        isSelected ? .white : .primary
+    }
+}
+
+// MARK: - Settings Divider
+
+private struct SettingsDivider: View {
+    let accentColor: Color
+    @State private var isHovering = false
+
+    var body: some View {
+        Rectangle()
+            .fill(isHovering ? accentColor.opacity(0.5) : Color.secondary.opacity(0.2))
+            .frame(width: 1)
+            .animation(.easeInOut(duration: 0.15), value: isHovering)
+            .onHover { isHovering = $0 }
+    }
+}
+
+// MARK: - General Settings
 
 struct GeneralSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Form {
-            Section {
-                HStack {
-                    TextField("Code Directory", text: .constant(viewModel.codeDirectory.path))
-                        .textFieldStyle(.roundedBorder)
-                        .disabled(true)
+        VStack(alignment: .leading, spacing: 24) {
+            Text("General")
+                .font(.title2.bold())
 
-                    Button("Browse...") {
-                        viewModel.selectCodeDirectory()
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                // Code Directory
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Code Directory")
+                        .font(.headline)
+                    HStack {
+                        TextField("", text: .constant(viewModel.codeDirectory.path))
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(true)
+
+                        Button("Browse...") {
+                            viewModel.selectCodeDirectory()
+                        }
                     }
+                    Text("The root directory where your projects are located.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
-                Picker("Default Editor", selection: $viewModel.defaultEditor) {
-                    ForEach(Editor.allCases, id: \.self) { editor in
-                        Label(editor.rawValue, systemImage: editor.icon)
-                            .tag(editor)
+                // Default Editor
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Default Editor")
+                        .font(.headline)
+                    Picker("", selection: $viewModel.defaultEditor) {
+                        ForEach(Editor.allCases, id: \.self) { editor in
+                            Label(editor.rawValue, systemImage: editor.icon)
+                                .tag(editor)
+                        }
                     }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(maxWidth: 200)
                 }
 
-                Picker("Default Terminal", selection: $viewModel.defaultTerminal) {
-                    ForEach(Terminal.allCases, id: \.self) { terminal in
-                        Text(terminal.rawValue).tag(terminal)
+                // Default Terminal
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Default Terminal")
+                        .font(.headline)
+                    Picker("", selection: $viewModel.defaultTerminal) {
+                        ForEach(Terminal.allCases, id: \.self) { terminal in
+                            Text(terminal.rawValue).tag(terminal)
+                        }
                     }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(maxWidth: 200)
                 }
 
-                Stepper("Refresh Interval: \(viewModel.refreshInterval) min", value: $viewModel.refreshInterval, in: 5...60, step: 5)
+                // Refresh Interval
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Refresh Interval")
+                        .font(.headline)
+                    Stepper("\(viewModel.refreshInterval) minutes", value: $viewModel.refreshInterval, in: 5...60, step: 5)
+                        .frame(maxWidth: 200)
+                    Text("How often to automatically refresh project statistics.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Divider()
+
+                // Launch Options
+                VStack(alignment: .leading, spacing: 12) {
+                    Toggle("Launch at Login", isOn: $viewModel.launchAtLogin)
+                    Toggle("Show in Dock", isOn: $viewModel.showInDock)
+                }
             }
 
-            Section {
-                Toggle("Launch at Login", isOn: $viewModel.launchAtLogin)
-                Toggle("Show in Dock", isOn: $viewModel.showInDock)
-            }
+            Spacer()
         }
-        .formStyle(.grouped)
-        .padding()
     }
 }
 
+// MARK: - Appearance Settings
+
 struct AppearanceSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
+    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+
+    private let colorPresets: [(name: String, hex: String)] = [
+        ("Orange", "#FF9500"),
+        ("Blue", "#007AFF"),
+        ("Purple", "#AF52DE"),
+        ("Green", "#34C759"),
+        ("Pink", "#FF2D55"),
+        ("Teal", "#5AC8FA"),
+        ("Indigo", "#5856D6")
+    ]
 
     var body: some View {
-        Form {
-            Section {
-                Picker("Theme", selection: $viewModel.theme) {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Appearance")
+                .font(.title2.bold())
+
+            Divider()
+
+            // Theme Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Theme")
+                    .font(.headline)
+
+                Picker("", selection: $viewModel.theme) {
                     ForEach(AppTheme.allCases, id: \.self) { theme in
                         Text(theme.rawValue).tag(theme)
                     }
                 }
                 .pickerStyle(.segmented)
-            } header: {
-                Text("Theme")
-            } footer: {
+                .frame(maxWidth: 300)
+
                 Text("Choose your preferred appearance for the app.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+
+            Divider()
+
+            // Accent Color Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Accent Color")
+                    .font(.headline)
+
+                Text("Used for dividers, selections, and UI highlights.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 10) {
+                    ForEach(colorPresets, id: \.hex) { preset in
+                        ColorPresetButton(
+                            name: preset.name,
+                            hex: preset.hex,
+                            isSelected: accentColorHex == preset.hex
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                accentColorHex = preset.hex
+                            }
+                        }
+                    }
+
+                    Divider()
+                        .frame(height: 30)
+
+                    // Custom color picker
+                    ColorPicker("", selection: Binding(
+                        get: { Color.fromHex(accentColorHex) ?? .orange },
+                        set: { accentColorHex = $0.toHex() ?? "#FF9500" }
+                    ))
+                    .labelsHidden()
+                    .frame(width: 30, height: 30)
+                }
+
+                // Preview
+                HStack(spacing: 12) {
+                    Text("Preview:")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    // Divider preview
+                    Rectangle()
+                        .fill(Color.fromHex(accentColorHex) ?? .orange)
+                        .frame(width: 80, height: 3)
+                        .shadow(color: (Color.fromHex(accentColorHex) ?? .orange).opacity(0.6), radius: 4)
+
+                    // Button preview
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.fromHex(accentColorHex) ?? .orange)
+                        .frame(width: 60, height: 24)
+                        .overlay(
+                            Text("Button")
+                                .font(.caption2)
+                                .foregroundColor(.white)
+                        )
+                }
+                .padding(.top, 8)
+            }
+
+            Spacer()
         }
-        .formStyle(.grouped)
-        .padding()
     }
 }
+
+// MARK: - Color Preset Button
+
+private struct ColorPresetButton: View {
+    let name: String
+    let hex: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    @State private var isHovering = false
+
+    private var color: Color {
+        Color.fromHex(hex) ?? .orange
+    }
+
+    var body: some View {
+        Button(action: action) {
+            Circle()
+                .fill(color)
+                .frame(width: 28, height: 28)
+                .overlay(
+                    Circle()
+                        .stroke(Color.white, lineWidth: isSelected ? 2 : 0)
+                )
+                .overlay(
+                    Circle()
+                        .stroke(color.opacity(0.3), lineWidth: isSelected ? 4 : 0)
+                )
+                .shadow(color: isHovering ? color.opacity(0.5) : .clear, radius: 4)
+                .scaleEffect(isHovering ? 1.1 : 1.0)
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovering = $0 }
+        .animation(.easeInOut(duration: 0.15), value: isHovering)
+        .help(name)
+    }
+}
+
+// MARK: - GitHub Settings
 
 struct GitHubSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
@@ -149,8 +464,16 @@ struct GitHubSettingsView: View {
     @State private var isTesting = false
 
     var body: some View {
-        Form {
-            Section {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("GitHub")
+                .font(.title2.bold())
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Personal Access Token")
+                    .font(.headline)
+
                 HStack {
                     if showToken {
                         TextField("GitHub Token", text: $viewModel.githubToken)
@@ -167,6 +490,7 @@ struct GitHubSettingsView: View {
                     }
                     .buttonStyle(.borderless)
                 }
+                .frame(maxWidth: 400)
 
                 if let result = testResult {
                     Text(result)
@@ -189,14 +513,14 @@ struct GitHubSettingsView: View {
 
                     Link("Create Token", destination: URL(string: "https://github.com/settings/tokens/new?scopes=repo,read:user")!)
                 }
-            } header: {
-                Text("Personal Access Token")
-            } footer: {
+
                 Text("Optional. Allows fetching additional repository information like stars and forks. Requires 'repo' scope.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+
+            Spacer()
         }
-        .formStyle(.grouped)
-        .padding()
     }
 
     private func testConnection() {
@@ -205,7 +529,6 @@ struct GitHubSettingsView: View {
 
         Task {
             do {
-                // Test by fetching user info
                 let url = URL(string: "https://api.github.com/user")!
                 var request = URLRequest(url: url)
                 request.setValue("Bearer \(viewModel.githubToken)", forHTTPHeaderField: "Authorization")
@@ -231,6 +554,8 @@ struct GitHubSettingsView: View {
     }
 }
 
+// MARK: - About View
+
 struct AboutView: View {
     var body: some View {
         VStack(spacing: 20) {
@@ -249,7 +574,7 @@ struct AboutView: View {
             Text("A developer dashboard for tracking your coding activity across all projects.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-                .padding(.horizontal)
+                .frame(maxWidth: 300)
 
             Spacer()
 
