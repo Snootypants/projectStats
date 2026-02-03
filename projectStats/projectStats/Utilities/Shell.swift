@@ -3,11 +3,22 @@ import Foundation
 struct Shell {
     @discardableResult
     static func run(_ command: String, at path: URL? = nil) -> String {
-        let task = Process()
-        let pipe = Pipe()
+        runResult(command, at: path).output
+    }
 
-        task.standardOutput = pipe
-        task.standardError = pipe
+    struct Result {
+        let output: String
+        let error: String
+        let exitCode: Int
+    }
+
+    static func runResult(_ command: String, at path: URL? = nil) -> Result {
+        let task = Process()
+        let stdoutPipe = Pipe()
+        let stderrPipe = Pipe()
+
+        task.standardOutput = stdoutPipe
+        task.standardError = stderrPipe
         task.executableURL = URL(fileURLWithPath: "/bin/zsh")
         task.arguments = ["-c", command]
 
@@ -19,11 +30,16 @@ struct Shell {
             try task.run()
             task.waitUntilExit()
         } catch {
-            return ""
+            return Result(output: "", error: error.localizedDescription, exitCode: 1)
         }
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
+        let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: stdoutData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let error = String(data: stderrData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let exitCode = Int(task.terminationStatus)
+
+        return Result(output: output, error: error, exitCode: exitCode)
     }
 
     static func runAsync(_ command: String, at path: URL? = nil) async -> String {

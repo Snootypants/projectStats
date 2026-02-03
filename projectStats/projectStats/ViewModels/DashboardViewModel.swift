@@ -237,6 +237,7 @@ class DashboardViewModel: ObservableObject {
 
         await syncPrompts(for: project, context: context)
         await syncWorkLogs(for: project, context: context)
+        await syncRecentCommits(for: project, context: context)
         await syncProjectStats(for: project, context: context)
 
         do {
@@ -814,6 +815,105 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    private func syncRecentCommits(for project: Project, context: ModelContext) async {
+        let gitDir = project.path.appendingPathComponent(".git")
+        guard FileManager.default.fileExists(atPath: gitDir.path) else { return }
+
+        let format = "%H%x1f%h%x1f%s%x1f%an%x1f%ae%x1f%aI"
+        let command = "cd '\(project.path.path)' && git log --pretty=format:'\(format)' --numstat -50"
+        let result = Shell.runResult(command)
+        guard result.exitCode == 0, !result.output.isEmpty else { return }
+
+        let commits = parseGitLogOutput(result.output, projectPath: project.path.path)
+        if commits.isEmpty { return }
+
+        do {
+            let existingDescriptor = FetchDescriptor<CachedCommit>(
+                predicate: #Predicate { $0.projectPath == project.path.path }
+            )
+            let existing = try context.fetch(existingDescriptor)
+            let existingHashes = Set(existing.map { $0.hash })
+
+            for commit in commits where !existingHashes.contains(commit.hash) {
+                context.insert(commit)
+            }
+        } catch {
+            print("[Dashboard] Error syncing recent commits: \(error)")
+        }
+    }
+
+    private func parseGitLogOutput(_ output: String, projectPath: String) -> [CachedCommit] {
+        var commits: [CachedCommit] = []
+        var current: (hash: String, shortHash: String, message: String, author: String, email: String, date: Date)?
+        var linesAdded = 0
+        var linesDeleted = 0
+        var filesChanged = 0
+
+        let lines = output.components(separatedBy: .newlines)
+        let dateFormatter = ISO8601DateFormatter()
+
+        for line in lines {
+            if line.contains("\u{1f}") {
+                if let current = current {
+                    commits.append(CachedCommit(
+                        projectPath: projectPath,
+                        hash: current.hash,
+                        shortHash: current.shortHash,
+                        message: current.message,
+                        author: current.author,
+                        authorEmail: current.email,
+                        date: current.date,
+                        linesAdded: linesAdded,
+                        linesDeleted: linesDeleted,
+                        filesChanged: filesChanged
+                    ))
+                }
+
+                let parts = line.components(separatedBy: "\u{1f}")
+                if parts.count >= 6 {
+                    current = (
+                        hash: parts[0],
+                        shortHash: parts[1],
+                        message: parts[2],
+                        author: parts[3],
+                        email: parts[4],
+                        date: dateFormatter.date(from: parts[5]) ?? Date()
+                    )
+                } else {
+                    current = nil
+                }
+
+                linesAdded = 0
+                linesDeleted = 0
+                filesChanged = 0
+            } else if !line.isEmpty {
+                let parts = line.components(separatedBy: "\t")
+                if parts.count >= 2 {
+                    linesAdded += Int(parts[0]) ?? 0
+                    linesDeleted += Int(parts[1]) ?? 0
+                    filesChanged += 1
+                }
+            }
+        }
+
+        if let current = current {
+            commits.append(CachedCommit(
+                projectPath: projectPath,
+                hash: current.hash,
+                shortHash: current.shortHash,
+                message: current.message,
+                author: current.author,
+                authorEmail: current.email,
+                date: current.date,
+                linesAdded: linesAdded,
+                linesDeleted: linesDeleted,
+                filesChanged: filesChanged
+            ))
+        }
+
+        return commits
+    }
+
     private func syncWorkLogFiles(
         in directory: URL,
         projectPath: String,
@@ -965,6 +1065,17 @@ class DashboardViewModel: ObservableObject {
                 predicate: #Predicate { $0.projectPath == project.path.path && $0.isStatsFile == false }
             )
             cached.workLogCount = (try? context.fetchCount(workLogDescriptor)) ?? 0
+
+            let commitDescriptor = FetchDescriptor<CachedCommit>(
+                predicate: #Predicate { $0.projectPath == project.path.path },
+                sortBy: [SortDescriptor(\.date, order: .reverse)]
+            )
+            if let latestCommit = try? context.fetch(commitDescriptor).first {
+                cached.lastCommitHash = latestCommit.shortHash
+                cached.lastCommitMessage = latestCommit.message
+                cached.lastCommitAuthor = latestCommit.author
+                cached.lastCommitDate = latestCommit.date
+            }
 
             cached.lastScanned = Date()
         } catch {
