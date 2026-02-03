@@ -83,6 +83,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
     func sendCommand(_ command: String) {
         guard let terminalView else {
+            print("[Terminal] ⏳ No terminal view yet, queuing command")
             pendingCommands.append(command)
             return
         }
@@ -93,7 +94,9 @@ final class TerminalTabItem: ObservableObject, Identifiable {
         ghostCloseDeadline = nil
 
         recordCommand(command)
-        terminalView.getTerminal().sendResponse(text: command + "\n")
+        let textWithNewline = command + "\n"
+        terminalView.send(textWithNewline.data(using: .utf8) ?? Data())
+        print("[Terminal] ✅ Sent \(textWithNewline.count) chars to terminal")
 
         if kind == .devServer {
             startTime = Date()
@@ -102,7 +105,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
     func sendControlC() {
         guard let terminalView else { return }
-        terminalView.getTerminal().sendResponse(text: "\u{3}")
+        terminalView.send(Data([0x03]))  // ETX (Ctrl+C)
     }
 
     func markViewed() {
