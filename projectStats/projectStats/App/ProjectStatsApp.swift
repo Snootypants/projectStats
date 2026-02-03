@@ -9,7 +9,8 @@ enum AppModelContainer {
             CachedProject.self,
             CachedDailyActivity.self,
             CachedPrompt.self,
-            CachedWorkLog.self
+            CachedWorkLog.self,
+            CachedCommit.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

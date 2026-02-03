@@ -338,3 +338,41 @@ class CachedWorkLog {
         self.summary = summary
     }
 }
+
+@Model
+class CachedCommit {
+    var projectPath: String
+    var hash: String
+    var shortHash: String
+    var message: String
+    var author: String
+    var authorEmail: String?
+    var date: Date
+    var linesAdded: Int
+    var linesDeleted: Int
+    var filesChanged: Int
+
+    init(
+        projectPath: String,
+        hash: String,
+        shortHash: String,
+        message: String,
+        author: String,
+        authorEmail: String? = nil,
+        date: Date,
+        linesAdded: Int = 0,
+        linesDeleted: Int = 0,
+        filesChanged: Int = 0
+    ) {
+        self.projectPath = projectPath
+        self.hash = hash
+        self.shortHash = shortHash
+        self.message = message
+        self.author = author
+        self.authorEmail = authorEmail
+        self.date = date
+        self.linesAdded = linesAdded
+        self.linesDeleted = linesDeleted
+        self.filesChanged = filesChanged
+    }
+}
