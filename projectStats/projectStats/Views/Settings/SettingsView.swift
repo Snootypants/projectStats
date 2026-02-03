@@ -316,6 +316,10 @@ struct GeneralSettingsView: View {
 struct AppearanceSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
     @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
+    @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
+    @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
+    @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
 
     private let colorPresets: [(name: String, hex: String)] = [
         ("Orange", "#FF9500"),
@@ -326,6 +330,10 @@ struct AppearanceSettingsView: View {
         ("Teal", "#5AC8FA"),
         ("Indigo", "#5856D6")
     ]
+
+    private var glowColor: Color {
+        Color.fromHex(accentColorHex) ?? .orange
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -387,28 +395,101 @@ struct AppearanceSettingsView: View {
                     .labelsHidden()
                     .frame(width: 30, height: 30)
                 }
+            }
 
-                // Preview
-                HStack(spacing: 12) {
+            Divider()
+
+            // Divider Glow Section
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Divider Glow")
+                    .font(.headline)
+
+                Text("Customize how panel dividers look when hovered")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                // Preview Toggle
+                Toggle("Preview Glow", isOn: $previewGlow)
+                    .toggleStyle(.switch)
+
+                // Thickness Slider
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Thickness: \(lineThickness, specifier: "%.1f")px")
+                        .font(.subheadline)
+                    HStack {
+                        Text("Thin")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Slider(value: $lineThickness, in: 1.0...6.0, step: 0.5)
+                        Text("Thick")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Opacity/Intensity Slider
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Glow Intensity: \(Int(glowOpacity * 100))%")
+                        .font(.subheadline)
+                    HStack {
+                        Text("Subtle")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Slider(value: $glowOpacity, in: 0.1...1.0, step: 0.1)
+                        Text("Bold")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Glow Radius/Spread Slider
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Glow Spread: \(glowRadius, specifier: "%.1f")px")
+                        .font(.subheadline)
+                    HStack {
+                        Text("Tight")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Slider(value: $glowRadius, in: 1.0...10.0, step: 0.5)
+                        Text("Wide")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Live Preview Bar
+                HStack {
                     Text("Preview:")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    // Divider preview
-                    Rectangle()
-                        .fill(Color.fromHex(accentColorHex) ?? .orange)
-                        .frame(width: 80, height: 3)
-                        .shadow(color: (Color.fromHex(accentColorHex) ?? .orange).opacity(0.6), radius: 4)
+                    ZStack {
+                        // Glow layer
+                        Rectangle()
+                            .fill(glowColor.opacity(glowOpacity * 0.6))
+                            .frame(width: 100, height: lineThickness * 3)
+                            .blur(radius: glowRadius)
 
-                    // Button preview
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.fromHex(accentColorHex) ?? .orange)
-                        .frame(width: 60, height: 24)
-                        .overlay(
-                            Text("Button")
-                                .font(.caption2)
-                                .foregroundColor(.white)
-                        )
+                        // Main line
+                        Rectangle()
+                            .fill(glowColor)
+                            .frame(width: 100, height: lineThickness)
+                            .shadow(color: glowColor.opacity(glowOpacity), radius: glowRadius)
+                    }
+                    .frame(height: 30)
+
+                    Spacer()
+
+                    // Reset to Defaults Button
+                    Button("Reset to Defaults") {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            lineThickness = 2.0
+                            glowOpacity = 0.5
+                            glowRadius = 3.0
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
                 .padding(.top, 8)
             }
