@@ -6,85 +6,127 @@ struct IDEModeView: View {
     @State private var selectedFile: URL?
     @State private var openFiles: [OpenFile] = []
     @State private var activeFileID: UUID?
-    @State private var showPromptManager: Bool = true
+    @State private var activeTab: IDETab = .prompts
     @State private var sidebarWidth: CGFloat = 250
 
+    private enum IDETab {
+        case files
+        case prompts
+        case environment
+    }
+
     var body: some View {
-        HSplitView {
-            // Left sidebar - File Browser
-            VStack(spacing: 0) {
-                // Project header
-                HStack {
-                    Image(systemName: "folder.fill")
-                        .foregroundStyle(.blue)
-                    Text(project.name)
-                        .font(.headline)
-                        .lineLimit(1)
-                    Spacer()
+        GeometryReader { proxy in
+            let idealTerminalWidth = max(320, proxy.size.width * 0.33)
+            let maxTerminalWidth = max(420, proxy.size.width * 0.5)
+
+            HSplitView {
+                // Left sidebar - File Browser
+                VStack(spacing: 0) {
+                    // Project header
+                    HStack {
+                        Image(systemName: "folder.fill")
+                            .foregroundStyle(.blue)
+                        Text(project.name)
+                            .font(.headline)
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.primary.opacity(0.03))
+
+                    Divider()
+
+                    // File tree
+                    FileBrowserView(
+                        rootPath: project.path,
+                        selectedFile: $selectedFile
+                    )
                 }
-                .padding()
-                .background(Color.primary.opacity(0.03))
+                .frame(minWidth: 200, idealWidth: 250, maxWidth: 350)
 
-                Divider()
-
-                // File tree
-                FileBrowserView(
-                    rootPath: project.path,
-                    selectedFile: $selectedFile
-                )
-            }
-            .frame(minWidth: 200, idealWidth: 250, maxWidth: 350)
-
-            // Right side - Content
-            VStack(spacing: 0) {
+                // Middle - Content
+                VStack(spacing: 0) {
                 // Toggle between File Viewer and Prompt Manager
                 HStack(spacing: 0) {
                     Button {
-                        showPromptManager = false
+                        activeTab = .files
                     } label: {
                         Label("Files", systemImage: "doc.text")
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(showPromptManager ? Color.clear : Color.accentColor.opacity(0.2))
+                            .background(activeTab == .files ? Color.accentColor.opacity(0.2) : Color.clear)
                     }
                     .buttonStyle(.plain)
 
                     Button {
-                        showPromptManager = true
+                        activeTab = .prompts
                     } label: {
                         Label("Prompts", systemImage: "text.badge.plus")
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(showPromptManager ? Color.accentColor.opacity(0.2) : Color.clear)
+                            .background(activeTab == .prompts ? Color.accentColor.opacity(0.2) : Color.clear)
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        activeTab = .environment
+                    } label: {
+                        Label("Environment", systemImage: "key")
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(activeTab == .environment ? Color.accentColor.opacity(0.2) : Color.clear)
                     }
                     .buttonStyle(.plain)
 
                     Spacer()
 
-                    // Quick actions
-                    quickActions
-                }
-                .background(Color.primary.opacity(0.03))
+                        // Quick actions
+                        quickActions
+                    }
+                    .background(Color.primary.opacity(0.03))
 
-                Divider()
+                    Divider()
 
-                // Content
-                if showPromptManager {
+                    // Content
+                switch activeTab {
+                case .prompts:
                     PromptManagerView(projectPath: project.path)
-                } else {
+                case .files:
                     FileViewerView(
                         openFiles: $openFiles,
                         activeFileID: $activeFileID
                     )
+                case .environment:
+                    EnvironmentManagerView(projectPath: project.path)
                 }
             }
+            .overlay(alignment: .leading) {
+                panelDivider
+            }
+
+                // Right - Terminal Panel
+                TerminalPanelView(projectPath: project.path)
+                    .id(project.path)
+                    .frame(minWidth: 280, idealWidth: idealTerminalWidth, maxWidth: maxTerminalWidth)
+                    .overlay(alignment: .leading) {
+                        panelDivider
+                    }
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .onChange(of: selectedFile) { _, newValue in
             if let path = newValue {
                 openFile(at: path)
-                showPromptManager = false
+                activeTab = .files
             }
         }
+    }
+
+    private var panelDivider: some View {
+        Rectangle()
+            .fill(Color.primary.opacity(0.2))
+            .frame(width: 1)
     }
 
     private var quickActions: some View {

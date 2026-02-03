@@ -53,6 +53,14 @@
 		010000000000000000000044 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000044 /* HomeView.swift */; };
 		010000000000000000000045 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000045 /* WorkspaceView.swift */; };
 		010000000000000000000046 /* TabShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* TabShellView.swift */; };
+		010000000000000000000047 /* TerminalPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000047 /* TerminalPanelView.swift */; };
+		010000000000000000000049 /* EnvironmentVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000049 /* EnvironmentVariable.swift */; };
+		010000000000000000000050 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* KeychainService.swift */; };
+		010000000000000000000051 /* EnvFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000051 /* EnvFileService.swift */; };
+		010000000000000000000052 /* EnvironmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000052 /* EnvironmentViewModel.swift */; };
+		010000000000000000000053 /* EnvironmentManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000053 /* EnvironmentManagerView.swift */; };
+		010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000054 /* EnvironmentVariableRow.swift */; };
+		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +110,13 @@
 		020000000000000000000044 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		020000000000000000000045 /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
 		020000000000000000000046 /* TabShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabShellView.swift; sourceTree = "<group>"; };
+		020000000000000000000047 /* TerminalPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalPanelView.swift; sourceTree = "<group>"; };
+		020000000000000000000049 /* EnvironmentVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariable.swift; sourceTree = "<group>"; };
+		020000000000000000000050 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		020000000000000000000051 /* EnvFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFileService.swift; sourceTree = "<group>"; };
+		020000000000000000000052 /* EnvironmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000053 /* EnvironmentManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManagerView.swift; sourceTree = "<group>"; };
+		020000000000000000000054 /* EnvironmentVariableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariableRow.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				010000000000000000000048 /* SwiftTerm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +191,7 @@
 				020000000000000000000014 /* DashboardViewModel.swift */,
 				020000000000000000000015 /* ProjectListViewModel.swift */,
 				020000000000000000000016 /* SettingsViewModel.swift */,
+				020000000000000000000052 /* EnvironmentViewModel.swift */,
 				020000000000000000000041 /* TabManagerViewModel.swift */,
 			);
 			path = ViewModels;
@@ -185,6 +202,7 @@
 			children = (
 				020000000000000000000034 /* GitRepoInfo.swift */,
 				020000000000000000000006 /* Project.swift */,
+				020000000000000000000049 /* EnvironmentVariable.swift */,
 				020000000000000000000007 /* Commit.swift */,
 				020000000000000000000008 /* ActivityStats.swift */,
 				020000000000000000000009 /* CachedModels.swift */,
@@ -198,8 +216,10 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000039 /* DataMigrationService.swift */,
+				020000000000000000000051 /* EnvFileService.swift */,
 				020000000000000000000035 /* GitRepoService.swift */,
 				020000000000000000000010 /* GitService.swift */,
+				020000000000000000000050 /* KeychainService.swift */,
 				020000000000000000000038 /* JSONStatsReader.swift */,
 				020000000000000000000011 /* LineCounter.swift */,
 				020000000000000000000012 /* ProjectScanner.swift */,
@@ -271,10 +291,13 @@
 		050000000000000000000015 /* IDE */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000053 /* EnvironmentManagerView.swift */,
+				020000000000000000000054 /* EnvironmentVariableRow.swift */,
 				020000000000000000000029 /* FileBrowserView.swift */,
 				020000000000000000000030 /* FileViewerView.swift */,
 				020000000000000000000031 /* PromptManagerView.swift */,
 				020000000000000000000032 /* IDEModeView.swift */,
+				020000000000000000000047 /* TerminalPanelView.swift */,
 			);
 			path = IDE;
 			sourceTree = "<group>";
@@ -306,6 +329,9 @@
 			);
 			dependencies = (
 			);
+			packageProductDependencies = (
+				0C0000000000000000000001 /* SwiftTerm */,
+			);
 			name = projectStats;
 			productName = projectStats;
 			productReference = 030000000000000000000001 /* projectStats.app */;
@@ -335,6 +361,9 @@
 				Base,
 			);
 			mainGroup = 050000000000000000000001;
+			packageReferences = (
+				0B0000000000000000000001 /* SwiftTerm */,
+			);
 			productRefGroup = 050000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -405,6 +434,13 @@
 				010000000000000000000044 /* HomeView.swift in Sources */,
 				010000000000000000000045 /* WorkspaceView.swift in Sources */,
 				010000000000000000000046 /* TabShellView.swift in Sources */,
+				010000000000000000000047 /* TerminalPanelView.swift in Sources */,
+				010000000000000000000049 /* EnvironmentVariable.swift in Sources */,
+				010000000000000000000050 /* KeychainService.swift in Sources */,
+				010000000000000000000051 /* EnvFileService.swift in Sources */,
+				010000000000000000000052 /* EnvironmentViewModel.swift in Sources */,
+				010000000000000000000053 /* EnvironmentManagerView.swift in Sources */,
+				010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +632,25 @@
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B0000000000000000000001 /* SwiftTerm */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C0000000000000000000001 /* SwiftTerm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B0000000000000000000001 /* SwiftTerm */;
+			productName = SwiftTerm;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCConfigurationList section */
 		070000000000000000000001 /* Build configuration list for PBXNativeTarget "projectStats" */ = {

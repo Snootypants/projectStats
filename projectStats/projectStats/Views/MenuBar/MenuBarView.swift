@@ -147,7 +147,7 @@ struct MenuBarView: View {
             window.makeKeyAndOrderFront(nil)
         } else {
             // Open a new window
-            NSApp.sendAction(Selector(("newWindowForTab:")), to: nil, from: nil)
+            NSApp.sendAction(#selector(NSResponder.newWindowForTab(_:)), to: nil, from: nil)
         }
     }
 }
