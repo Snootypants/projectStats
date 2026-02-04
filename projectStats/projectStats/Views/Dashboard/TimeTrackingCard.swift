@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TimeTrackingCard: View {
-    @StateObject private var service = TimeTrackingService.shared
+    @ObservedObject var timeService = TimeTrackingService.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -14,33 +14,63 @@ struct TimeTrackingCard: View {
                     .foregroundStyle(.secondary)
             }
 
-            Text(formatDuration(service.todayTotal))
-                .font(.title2)
+            // Total time (big number)
+            Text(totalTimeFormatted)
+                .font(.system(size: 32, weight: .medium, design: .rounded))
 
-            if let project = service.currentProject {
-                Text("Tracking: \(project)")
+            // Breakdown
+            HStack(spacing: 16) {
+                HStack(spacing: 4) {
+                    Circle().fill(.green).frame(width: 8, height: 8)
+                    Text("You: \(timeService.todayHumanFormatted)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack(spacing: 4) {
+                    Circle().fill(.purple).frame(width: 8, height: 8)
+                    Text("Claude: \(timeService.todayAIFormatted)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            // Status
+            if timeService.isPaused {
+                Text("Paused (idle)")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.orange)
+            } else if let project = timeService.currentProject {
+                HStack(spacing: 4) {
+                    Circle().fill(.green).frame(width: 6, height: 6)
+                    Text("Tracking: \(URL(fileURLWithPath: project).lastPathComponent)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             } else {
                 Text("Not tracking")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-
-            Spacer(minLength: 0)
         }
         .padding()
-        .frame(minHeight: 140, alignment: .topLeading)
-        .background(.background)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.secondary.opacity(0.1))
-        )
+        .background(Color.primary.opacity(0.03))
+        .cornerRadius(12)
     }
 
-    private func formatDuration(_ interval: TimeInterval) -> String {
-        let hours = Int(interval) / 3600
-        let minutes = (Int(interval) % 3600) / 60
+    private var totalTimeFormatted: String {
+        let total = timeService.todayHumanTotal + timeService.todayAITotal
+        // Add current session if active
+        if let start = timeService.humanSessionStart {
+            let current = Date().timeIntervalSince(start)
+            return formatDuration(total + current)
+        }
+        return formatDuration(total)
+    }
+
+    private func formatDuration(_ duration: TimeInterval) -> String {
+        let hours = Int(duration) / 3600
+        let minutes = (Int(duration) % 3600) / 60
         return "\(hours)h \(minutes)m"
     }
 }
