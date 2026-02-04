@@ -149,6 +149,7 @@
 		010000000000000000000140 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* AIProvider.swift */; };
 		010000000000000000000141 /* AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* AIProviderRegistry.swift */; };
 		010000000000000000000142 /* CodexService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000142 /* CodexService.swift */; };
+		010000000000000000000143 /* ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000143 /* ModelSelectorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -295,6 +296,7 @@
 		020000000000000000000140 /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
 		020000000000000000000141 /* AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
 		020000000000000000000142 /* CodexService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodexService.swift; sourceTree = "<group>"; };
+		020000000000000000000143 /* ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ModelSelectorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -710,6 +712,7 @@
 				010000000000000000000140 /* AIProvider.swift in Sources */,
 				010000000000000000000141 /* AIProviderRegistry.swift in Sources */,
 				010000000000000000000142 /* CodexService.swift in Sources */,
+				010000000000000000000143 /* ModelSelectorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
