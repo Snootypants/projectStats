@@ -153,6 +153,7 @@
 		010000000000000000000144 /* ThinkingLevelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000144 /* ThinkingLevelService.swift */; };
 		010000000000000000000145 /* ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* ProviderMetricsService.swift */; };
 		010000000000000000000146 /* ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* ProviderComparisonCard.swift */; };
+		010000000000000000000147 /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* AIProviderSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -303,6 +304,7 @@
 		020000000000000000000144 /* ThinkingLevelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ThinkingLevelService.swift; sourceTree = "<group>"; };
 		020000000000000000000145 /* ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
 		020000000000000000000146 /* ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
+		020000000000000000000147 /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -722,6 +724,7 @@
 				010000000000000000000144 /* ThinkingLevelService.swift in Sources */,
 				010000000000000000000145 /* ProviderMetricsService.swift in Sources */,
 				010000000000000000000146 /* ProviderComparisonCard.swift in Sources */,
+				010000000000000000000147 /* AIProviderSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
