@@ -6,6 +6,14 @@ enum TTSProvider: String, CaseIterable {
     case openai = "openai"
     case elevenLabs = "elevenlabs"
     case system = "system"
+
+    var displayName: String {
+        switch self {
+        case .openai: return "OpenAI"
+        case .elevenLabs: return "ElevenLabs"
+        case .system: return "System (macOS)"
+        }
+    }
 }
 
 @MainActor

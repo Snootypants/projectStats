@@ -51,6 +51,59 @@ struct DataManagementView: View {
                 .foregroundStyle(.secondary)
             }
 
+            // MARK: - DB v2 Status
+            Section {
+                let status = DBv2MigrationService.shared.getMigrationStatus(context: AppModelContainer.shared.mainContext)
+
+                HStack {
+                    Text("Migration Status")
+                    Spacer()
+                    Text(DBv2MigrationService.shared.hasMigrated ? "Completed" : "Pending")
+                        .foregroundStyle(DBv2MigrationService.shared.hasMigrated ? .green : .orange)
+                }
+
+                HStack {
+                    Text("Sessions")
+                    Spacer()
+                    Text("\(status.sessions)")
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack {
+                    Text("Daily Metrics")
+                    Spacer()
+                    Text("\(status.dailyMetrics)")
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack {
+                    Text("Work Items")
+                    Spacer()
+                    Text("\(status.workItems)")
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack {
+                    Text("Weekly Goals")
+                    Spacer()
+                    Text("\(status.goals)")
+                        .foregroundStyle(.secondary)
+                }
+
+                if !DBv2MigrationService.shared.hasMigrated {
+                    Button("Run Migration") {
+                        Task {
+                            await DBv2MigrationService.shared.migrateIfNeeded(context: AppModelContainer.shared.mainContext)
+                        }
+                    }
+                }
+            } header: {
+                Text("Database v2")
+            } footer: {
+                Text("Enhanced data models for sessions, metrics, work items, and goals.")
+            }
+
+            // MARK: - Danger Zone
             Section {
                 Button(role: .destructive) {
                     Task {
@@ -63,6 +116,8 @@ struct DataManagementView: View {
                 Text("Warning: This will remove all cached data.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+            } header: {
+                Text("Danger Zone")
             }
         }
         .formStyle(.grouped)
