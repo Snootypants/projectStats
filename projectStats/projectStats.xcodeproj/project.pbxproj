@@ -134,6 +134,8 @@
 		010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000125 /* ClaudeTokenUsageCard.swift */; };
 		010000000000000000000126 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000126 /* BackupService.swift */; };
 		010000000000000000000127 /* SecretsWarningSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000127 /* SecretsWarningSheet.swift */; };
+		010000000000000000000128 /* BranchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000128 /* BranchService.swift */; };
+		010000000000000000000129 /* CreateBranchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000129 /* CreateBranchSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -265,6 +267,8 @@
 		020000000000000000000125 /* ClaudeTokenUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift; sourceTree = "<group>"; };
 		020000000000000000000126 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
 		020000000000000000000127 /* SecretsWarningSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/SecretsWarningSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000128 /* BranchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchService.swift; sourceTree = "<group>"; };
+		020000000000000000000129 /* CreateBranchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CreateBranchSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -362,6 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000126 /* BackupService.swift */,
+				020000000000000000000128 /* BranchService.swift */,
 				020000000000000000000039 /* DataMigrationService.swift */,
 				020000000000000000000051 /* EnvFileService.swift */,
 				020000000000000000000035 /* GitRepoService.swift */,
@@ -664,6 +669,8 @@
 				010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */,
 				010000000000000000000126 /* BackupService.swift in Sources */,
 				010000000000000000000127 /* SecretsWarningSheet.swift in Sources */,
+				010000000000000000000128 /* BranchService.swift in Sources */,
+				010000000000000000000129 /* CreateBranchSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

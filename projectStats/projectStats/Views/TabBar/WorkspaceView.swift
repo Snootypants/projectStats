@@ -144,6 +144,15 @@ struct WorkspaceView: View {
             .disabled(isCreatingBackup)
             .help(backupMessage ?? "Create zip backup in Downloads")
 
+            // Branch button
+            Button {
+                showCreateBranchSheet = true
+            } label: {
+                Image(systemName: "arrow.triangle.branch")
+            }
+            .buttonStyle(.plain)
+            .help("Create local branch copy")
+
             GitControlsView(projectPath: project.path)
 
             Button {
@@ -164,6 +173,17 @@ struct WorkspaceView: View {
         .background(Color.primary.opacity(0.02))
         .sheet(isPresented: $showClaudeConfig) {
             ClaudeConfigSheet(projectPath: project.path)
+        }
+        .sheet(isPresented: $showCreateBranchSheet) {
+            CreateBranchSheet(
+                projectPath: project.path,
+                onCreated: { branchPath in
+                    showCreateBranchSheet = false
+                    // Open the new branch folder as a project
+                    tabManager.openProject(path: branchPath.path)
+                },
+                onCancel: { showCreateBranchSheet = false }
+            )
         }
     }
 
