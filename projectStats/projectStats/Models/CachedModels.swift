@@ -299,6 +299,7 @@ class CachedWorkLog {
     var fileModified: Date            // File modification date from filesystem
     var cachedAt: Date                // When this was last synced
     var isStatsFile: Bool             // true if from /work/stats/, false if from /work/
+    var sourceFile: String?           // Original filename for imported files
 
     // Parsed fields (from stats files only — nil for regular work logs)
     var started: Date?
@@ -312,8 +313,8 @@ class CachedWorkLog {
         projectPath: String,
         filename: String,
         content: String,
-        contentHash: String,
-        fileModified: Date,
+        contentHash: String = "",
+        fileModified: Date = Date(),
         cachedAt: Date = Date(),
         isStatsFile: Bool = false,
         started: Date? = nil,
@@ -321,7 +322,8 @@ class CachedWorkLog {
         linesAdded: Int? = nil,
         linesDeleted: Int? = nil,
         commitHash: String? = nil,
-        summary: String? = nil
+        summary: String? = nil,
+        sourceFile: String? = nil
     ) {
         self.projectPath = projectPath
         self.filename = filename
@@ -336,6 +338,7 @@ class CachedWorkLog {
         self.linesDeleted = linesDeleted
         self.commitHash = commitHash
         self.summary = summary
+        self.sourceFile = sourceFile
     }
 }
 
