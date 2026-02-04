@@ -40,7 +40,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .claudeCode,
             isEnabled: true,
             isDefault: true,
-            defaultModel: .claudeSonnet3_5,
+            defaultModel: .claudeSonnet4,
             defaultThinkingLevel: .none
         )
 
@@ -49,7 +49,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .codex,
             isEnabled: true,
             isDefault: false,
-            defaultModel: .claudeSonnet3_5
+            defaultModel: .claudeSonnet4
         )
 
         // Anthropic API
@@ -57,7 +57,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .anthropicAPI,
             isEnabled: false,
             isDefault: false,
-            defaultModel: .claudeSonnet3_5,
+            defaultModel: .claudeSonnet4,
             defaultThinkingLevel: .none
         )
 
@@ -282,7 +282,7 @@ final class AIProviderRegistry: ObservableObject {
         request.timeoutInterval = 10
 
         let payload: [String: Any] = [
-            "model": "claude-3-haiku-20240307",
+            "model": "claude-haiku-4-20250514",
             "max_tokens": 10,
             "messages": [["role": "user", "content": "Hi"]]
         ]

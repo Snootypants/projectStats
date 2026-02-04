@@ -90,7 +90,7 @@ class SettingsViewModel: ObservableObject {
     }
 
     @AppStorage("ai.provider") private var aiProviderRaw: String = AIProvider.anthropic.rawValue
-    @AppStorage("ai.model") var aiModel: String = "claude-3-5-sonnet-latest"
+    @AppStorage("ai.model") var aiModel: String = "claude-sonnet-4-20250514"
 
     var aiApiKey: String {
         get { KeychainService.shared.get(key: "ai.apiKey") ?? "" }
@@ -106,7 +106,7 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
 
     // AI Model & Thinking Settings
-    @AppStorage("ai.defaultModel") var defaultModelRaw: String = "claude-3-5-sonnet-latest"
+    @AppStorage("ai.defaultModel") var defaultModelRaw: String = "claude-sonnet-4-20250514"
     @AppStorage("ai.defaultThinkingLevel") var defaultThinkingLevelRaw: String = "none"
     @AppStorage("ai.showModelInToolbar") var showModelInToolbar: Bool = true
 
@@ -205,7 +205,7 @@ class SettingsViewModel: ObservableObject {
     }
 
     var defaultModel: AIModel {
-        get { AIModel(rawValue: defaultModelRaw) ?? .claudeSonnet3_5 }
+        get { AIModel(rawValue: defaultModelRaw) ?? .claudeSonnet4 }
         set {
             defaultModelRaw = newValue.rawValue
         }
