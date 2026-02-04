@@ -18,7 +18,12 @@ enum AppModelContainer {
             SavedPrompt.self,
             SavedDiff.self,
             ClaudeUsageSnapshot.self,
-            ClaudePlanUsageSnapshot.self
+            ClaudePlanUsageSnapshot.self,
+            // DB v2 Models
+            ProjectSession.self,
+            DailyMetric.self,
+            WorkItem.self,
+            WeeklyGoal.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

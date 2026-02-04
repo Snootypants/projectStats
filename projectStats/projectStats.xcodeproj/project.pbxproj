@@ -143,6 +143,7 @@
 		010000000000000000000134 /* ProjectArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000134 /* ProjectArchiveService.swift */; };
 		010000000000000000000135 /* SessionSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000135 /* SessionSummaryService.swift */; };
 		010000000000000000000136 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000136 /* SessionSummaryView.swift */; };
+		010000000000000000000137 /* DBv2Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000137 /* DBv2Models.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -283,6 +284,7 @@
 		020000000000000000000134 /* ProjectArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectArchiveService.swift; sourceTree = "<group>"; };
 		020000000000000000000135 /* SessionSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SessionSummaryService.swift; sourceTree = "<group>"; };
 		020000000000000000000136 /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/SessionSummaryView.swift; sourceTree = "<group>"; };
+		020000000000000000000137 /* DBv2Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/DBv2Models.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -692,6 +694,7 @@
 				010000000000000000000134 /* ProjectArchiveService.swift in Sources */,
 				010000000000000000000135 /* SessionSummaryService.swift in Sources */,
 				010000000000000000000136 /* SessionSummaryView.swift in Sources */,
+				010000000000000000000137 /* DBv2Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
