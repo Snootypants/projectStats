@@ -8,6 +8,7 @@ struct TabShellView: View {
     @StateObject private var achievementService = AchievementService.shared
     @State private var previousTabs: [AppTab] = []
     @State private var showCommandPalette = false
+    @State private var showFocusMode = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -53,6 +54,16 @@ struct TabShellView: View {
         }
         .sheet(isPresented: $showCommandPalette) {
             CommandPaletteView(commands: commandPaletteCommands())
+        }
+        .sheet(isPresented: $showFocusMode) {
+            FocusModeView(
+                terminalMonitor: TerminalOutputMonitor.shared,
+                usageMonitor: ClaudePlanUsageService.shared
+            )
+            .frame(minWidth: 800, minHeight: 600)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .enterFocusMode)) { _ in
+            showFocusMode = true
         }
     }
 

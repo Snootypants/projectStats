@@ -113,6 +113,14 @@ struct ProjectStatsApp: App {
         .modelContainer(AppModelContainer.shared)
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1100, height: 750)
+        .commands {
+            CommandGroup(after: .windowArrangement) {
+                Button("Enter Focus Mode") {
+                    NotificationCenter.default.post(name: .enterFocusMode, object: nil)
+                }
+                .keyboardShortcut("f", modifiers: [.command, .shift])
+            }
+        }
 
         // Menu bar
         MenuBarExtra("ProjectStats", systemImage: "chart.bar.xaxis") {
