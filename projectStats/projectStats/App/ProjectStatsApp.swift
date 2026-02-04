@@ -103,6 +103,7 @@ struct ProjectStatsApp: App {
                     hasMigrated = true
                     let context = AppModelContainer.shared.mainContext
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
+                    await DBv2MigrationService.shared.migrateIfNeeded(context: context)
                     await DataCleanupService.shared.cleanupIfNeeded(context: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
                     ClaudePlanUsageService.shared.startHourlyPolling()
