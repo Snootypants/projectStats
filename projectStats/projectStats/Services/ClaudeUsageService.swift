@@ -154,49 +154,52 @@ class ClaudeUsageService: ObservableObject {
 
     private func runCCUsage(args: [String]) async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
-            let process = Process()
-            let pipe = Pipe()
-            let errorPipe = Pipe()
+            // CRITICAL: Run on background queue to avoid blocking main thread
+            DispatchQueue.global(qos: .utility).async {
+                let process = Process()
+                let pipe = Pipe()
+                let errorPipe = Pipe()
 
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-            process.arguments = ["npx", "ccusage@latest"] + args
-            process.standardOutput = pipe
-            process.standardError = errorPipe
+                process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+                process.arguments = ["npx", "ccusage@latest"] + args
+                process.standardOutput = pipe
+                process.standardError = errorPipe
 
-            // Set PATH to include common Node locations
-            var env = ProcessInfo.processInfo.environment
-            let nodePaths = [
-                "/usr/local/bin",
-                "/opt/homebrew/bin",
-                (env["HOME"] ?? "") + "/.nvm/versions/node",
-                (env["HOME"] ?? "") + "/.volta/bin",
-                (env["HOME"] ?? "") + "/.fnm/aliases/default/bin"
-            ]
-            env["PATH"] = (env["PATH"] ?? "") + ":" + nodePaths.joined(separator: ":")
-            process.environment = env
+                // Set PATH to include common Node locations
+                var env = ProcessInfo.processInfo.environment
+                let nodePaths = [
+                    "/usr/local/bin",
+                    "/opt/homebrew/bin",
+                    (env["HOME"] ?? "") + "/.nvm/versions/node",
+                    (env["HOME"] ?? "") + "/.volta/bin",
+                    (env["HOME"] ?? "") + "/.fnm/aliases/default/bin"
+                ]
+                env["PATH"] = (env["PATH"] ?? "") + ":" + nodePaths.joined(separator: ":")
+                process.environment = env
 
-            do {
-                try process.run()
-                process.waitUntilExit()
+                do {
+                    try process.run()
+                    process.waitUntilExit()  // Safe now - we're on background thread
 
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                if let output = String(data: data, encoding: .utf8), !output.isEmpty {
-                    // Filter to just the JSON (ccusage might print other stuff)
-                    if let jsonStart = output.firstIndex(of: "["),
-                       let jsonEnd = output.lastIndex(of: "]") {
-                        let jsonStr = String(output[jsonStart...jsonEnd])
-                        continuation.resume(returning: jsonStr)
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    if let output = String(data: data, encoding: .utf8), !output.isEmpty {
+                        // Filter to just the JSON (ccusage might print other stuff)
+                        if let jsonStart = output.firstIndex(of: "["),
+                           let jsonEnd = output.lastIndex(of: "]") {
+                            let jsonStr = String(output[jsonStart...jsonEnd])
+                            continuation.resume(returning: jsonStr)
+                        } else {
+                            continuation.resume(returning: output)
+                        }
                     } else {
-                        continuation.resume(returning: output)
+                        // Check stderr
+                        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                        let errorStr = String(data: errorData, encoding: .utf8) ?? "Unknown error"
+                        continuation.resume(throwing: NSError(domain: "ClaudeUsage", code: 1, userInfo: [NSLocalizedDescriptionKey: errorStr]))
                     }
-                } else {
-                    // Check stderr
-                    let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                    let errorStr = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                    continuation.resume(throwing: NSError(domain: "ClaudeUsage", code: 1, userInfo: [NSLocalizedDescriptionKey: errorStr]))
+                } catch {
+                    continuation.resume(throwing: error)
                 }
-            } catch {
-                continuation.resume(throwing: error)
             }
         }
     }
