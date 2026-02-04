@@ -82,6 +82,11 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("ai.model") var aiModel: String = "claude-3-5-sonnet-latest"
     @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
 
+    // AI Model & Thinking Settings
+    @AppStorage("ai.defaultModel") var defaultModelRaw: String = "claude-sonnet-4-5-20250514"
+    @AppStorage("ai.defaultThinkingLevel") var defaultThinkingLevelRaw: String = "none"
+    @AppStorage("ai.showModelInToolbar") var showModelInToolbar: Bool = true
+
     // IDE Tab visibility
     @AppStorage("showPromptsTab") var showPromptsTab: Bool = true
     @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
@@ -151,6 +156,20 @@ class SettingsViewModel: ObservableObject {
         get { AIProvider(rawValue: aiProviderRaw) ?? .anthropic }
         set {
             aiProviderRaw = newValue.rawValue
+        }
+    }
+
+    var defaultModel: AIModel {
+        get { AIModel(rawValue: defaultModelRaw) ?? .claudeSonnet4_5 }
+        set {
+            defaultModelRaw = newValue.rawValue
+        }
+    }
+
+    var defaultThinkingLevel: ThinkingLevel {
+        get { ThinkingLevel(rawValue: defaultThinkingLevelRaw) ?? .none }
+        set {
+            defaultThinkingLevelRaw = newValue.rawValue
         }
     }
 
