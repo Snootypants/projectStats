@@ -39,11 +39,14 @@ struct ProjectListView: View {
 struct CompactProjectCard: View {
     let project: Project
     @EnvironmentObject var dashboardVM: DashboardViewModel
+    @Environment(\.modelContext) private var modelContext
     @State private var isHovering = false
 
     private var isArchived: Bool {
         !project.countsTowardTotals
     }
+
+    private var archiveService: ProjectArchiveService { .shared }
 
     private var isFavorite: Bool {
         dashboardVM.isFavorite(project)
@@ -158,6 +161,43 @@ struct CompactProjectCard: View {
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovering = hovering
             }
+        }
+        .contextMenu {
+            projectContextMenu
+        }
+    }
+
+    @ViewBuilder
+    private var projectContextMenu: some View {
+        Button(isArchived ? "Restore from Archive" : "Archive Project") {
+            toggleArchiveStatus()
+        }
+
+        Divider()
+
+        Button("Open in Finder") {
+            openInFinder()
+        }
+
+        Button("Open in Editor") {
+            openInEditor()
+        }
+
+        if project.githubURL != nil {
+            Button("Open on GitHub") {
+                openGitHub()
+            }
+        }
+    }
+
+    private func toggleArchiveStatus() {
+        if isArchived {
+            archiveService.restoreProject(project.path.path, context: modelContext)
+        } else {
+            archiveService.archiveProject(project.path.path, context: modelContext)
+        }
+        Task {
+            await DashboardViewModel.shared.refresh()
         }
     }
 

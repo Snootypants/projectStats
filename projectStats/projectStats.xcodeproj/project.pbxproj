@@ -140,6 +140,7 @@
 		010000000000000000000131 /* ClaudeUsageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000131 /* ClaudeUsageSettingsView.swift */; };
 		010000000000000000000132 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000132 /* TTSService.swift */; };
 		010000000000000000000133 /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000133 /* ListenButton.swift */; };
+		010000000000000000000134 /* ProjectArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000134 /* ProjectArchiveService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -277,6 +278,7 @@
 		020000000000000000000131 /* ClaudeUsageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/ClaudeUsageSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000132 /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TTSService.swift; sourceTree = "<group>"; };
 		020000000000000000000133 /* ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ListenButton.swift; sourceTree = "<group>"; };
+		020000000000000000000134 /* ProjectArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectArchiveService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -683,6 +685,7 @@
 				010000000000000000000131 /* ClaudeUsageSettingsView.swift in Sources */,
 				010000000000000000000132 /* TTSService.swift in Sources */,
 				010000000000000000000133 /* ListenButton.swift in Sources */,
+				010000000000000000000134 /* ProjectArchiveService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

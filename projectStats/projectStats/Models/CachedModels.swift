@@ -32,6 +32,8 @@ class CachedProject {
     var currentBranch: String?
     var statsGeneratedAt: Date?
     var statsSource: String?             // "json" or "scanner"
+    var isArchived: Bool = false         // User-set archive status
+    var archivedAt: Date?
 
     // Computed properties for array access
     var techStack: [String] {
