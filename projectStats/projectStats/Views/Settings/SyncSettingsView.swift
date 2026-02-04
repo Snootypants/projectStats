@@ -1,3 +1,4 @@
+#if false // DISABLED: Requires paid Apple Developer account
 import SwiftUI
 
 /// Settings view for iCloud sync configuration
@@ -125,4 +126,68 @@ struct SyncSettingsView: View {
 #Preview {
     SyncSettingsView()
         .frame(width: 500, height: 700)
+}
+#endif
+
+import SwiftUI
+
+struct SyncSettingsView: View {
+    @ObservedObject private var subscription = SubscriptionManager.shared
+
+    var body: some View {
+        Form {
+            // Subscription check first
+            if !subscription.hasCloudSyncAccess {
+                Section {
+                    VStack(spacing: 12) {
+                        Image(systemName: "lock.icloud")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+
+                        Text("Cloud Sync is a Pro Feature")
+                            .font(.headline)
+
+                        Text("Upgrade to sync your projects, prompts, and progress across all your devices.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+
+                        NavigationLink("Unlock Pro") {
+                            SubscriptionView()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                }
+            } else {
+                // Show sync settings when Pro is active
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundStyle(.green)
+                            Text("Pro Active")
+                                .font(.headline)
+                        }
+
+                        Text("iCloud Sync")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+
+                        Text("CloudKit sync is currently disabled because it requires a paid Apple Developer account. Once the account is active, sync will be enabled automatically.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .formStyle(.grouped)
+    }
+}
+
+#Preview {
+    SyncSettingsView()
+        .frame(width: 500, height: 400)
 }
