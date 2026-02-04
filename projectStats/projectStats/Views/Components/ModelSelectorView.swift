@@ -182,12 +182,10 @@ extension AIModel {
     /// Short display name for compact UI
     var shortName: String {
         switch self {
-        case .claudeOpus4_5: return "Opus 4.5"
-        case .claudeSonnet4_5: return "Sonnet 4.5"
-        case .claudeHaiku4_5: return "Haiku 4.5"
-        case .claudeOpus4: return "Opus 4"
-        case .claudeSonnet4: return "Sonnet 4"
         case .claudeSonnet3_5: return "Sonnet 3.5"
+        case .claudeHaiku3_5: return "Haiku 3.5"
+        case .claudeOpus3: return "Opus 3"
+        case .claudeSonnet3: return "Sonnet 3"
         case .claudeHaiku3: return "Haiku 3"
         case .gpt4o: return "GPT-4o"
         case .gpt4oMini: return "4o Mini"
@@ -214,7 +212,7 @@ extension AIModel {
 
 #Preview("Full Selector") {
     struct Preview: View {
-        @State var model: AIModel = .claudeSonnet4_5
+        @State var model: AIModel = .claudeSonnet3_5
         @State var thinking: ThinkingLevel = .none
 
         var body: some View {
@@ -231,7 +229,7 @@ extension AIModel {
 
 #Preview("Compact Selector") {
     struct Preview: View {
-        @State var model: AIModel = .claudeSonnet4_5
+        @State var model: AIModel = .claudeSonnet3_5
         @State var thinking: ThinkingLevel = .medium
 
         var body: some View {

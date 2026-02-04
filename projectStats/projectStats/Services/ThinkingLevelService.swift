@@ -5,7 +5,7 @@ import Foundation
 final class ThinkingLevelService: ObservableObject {
     static let shared = ThinkingLevelService()
 
-    @Published var defaultModel: AIModel = .claudeSonnet4_5
+    @Published var defaultModel: AIModel = .claudeSonnet3_5
     @Published var defaultThinkingLevel: ThinkingLevel = .none
     @Published var showModelInToolbar: Bool = true
 

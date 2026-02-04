@@ -40,7 +40,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .claudeCode,
             isEnabled: true,
             isDefault: true,
-            defaultModel: .claudeSonnet4_5,
+            defaultModel: .claudeSonnet3_5,
             defaultThinkingLevel: .none
         )
 
@@ -49,7 +49,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .codex,
             isEnabled: true,
             isDefault: false,
-            defaultModel: .claudeSonnet4_5
+            defaultModel: .claudeSonnet3_5
         )
 
         // Anthropic API
@@ -57,7 +57,7 @@ final class AIProviderRegistry: ObservableObject {
             providerType: .anthropicAPI,
             isEnabled: false,
             isDefault: false,
-            defaultModel: .claudeSonnet4_5,
+            defaultModel: .claudeSonnet3_5,
             defaultThinkingLevel: .none
         )
 

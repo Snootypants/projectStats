@@ -62,17 +62,13 @@ enum AIProviderType: String, CaseIterable, Codable {
 
 /// All available AI models with their pricing
 enum AIModel: String, CaseIterable, Codable {
-    // Claude 4.5 Series (Latest)
-    case claudeOpus4_5 = "claude-opus-4-5-20251101"
-    case claudeSonnet4_5 = "claude-sonnet-4-5-20250514"
-    case claudeHaiku4_5 = "claude-haiku-4-5-20250514"
-
-    // Claude 4 Series
-    case claudeOpus4 = "claude-opus-4-20250514"
-    case claudeSonnet4 = "claude-sonnet-4-20250514"
-
-    // Legacy Claude Models
+    // Claude 3.5 Series (Current)
     case claudeSonnet3_5 = "claude-3-5-sonnet-latest"
+    case claudeHaiku3_5 = "claude-3-5-haiku-latest"
+
+    // Claude 3 Series
+    case claudeOpus3 = "claude-3-opus-latest"
+    case claudeSonnet3 = "claude-3-sonnet-20240229"
     case claudeHaiku3 = "claude-3-haiku-20240307"
 
     // OpenAI Models
@@ -90,13 +86,11 @@ enum AIModel: String, CaseIterable, Codable {
 
     var displayName: String {
         switch self {
-        case .claudeOpus4_5: return "Claude Opus 4.5"
-        case .claudeSonnet4_5: return "Claude Sonnet 4.5"
-        case .claudeHaiku4_5: return "Claude Haiku 4.5"
-        case .claudeOpus4: return "Claude Opus 4"
-        case .claudeSonnet4: return "Claude Sonnet 4"
-        case .claudeSonnet3_5: return "Claude Sonnet 3.5"
-        case .claudeHaiku3: return "Claude Haiku 3"
+        case .claudeSonnet3_5: return "Claude 3.5 Sonnet"
+        case .claudeHaiku3_5: return "Claude 3.5 Haiku"
+        case .claudeOpus3: return "Claude 3 Opus"
+        case .claudeSonnet3: return "Claude 3 Sonnet"
+        case .claudeHaiku3: return "Claude 3 Haiku"
         case .gpt4o: return "GPT-4o"
         case .gpt4oMini: return "GPT-4o Mini"
         case .gpt4_1: return "GPT-4.1"
@@ -111,8 +105,7 @@ enum AIModel: String, CaseIterable, Codable {
 
     var provider: AIProviderType {
         switch self {
-        case .claudeOpus4_5, .claudeSonnet4_5, .claudeHaiku4_5,
-             .claudeOpus4, .claudeSonnet4, .claudeSonnet3_5, .claudeHaiku3:
+        case .claudeSonnet3_5, .claudeHaiku3_5, .claudeOpus3, .claudeSonnet3, .claudeHaiku3:
             return .anthropicAPI
         case .gpt4o, .gpt4oMini, .gpt4_1, .o3, .o4Mini:
             return .openaiAPI
@@ -124,15 +117,12 @@ enum AIModel: String, CaseIterable, Codable {
     /// Input cost per 1 million tokens (USD)
     var inputCostPer1M: Double {
         switch self {
-        // Claude 4.5 Series
-        case .claudeOpus4_5: return 5.00
-        case .claudeSonnet4_5: return 3.00
-        case .claudeHaiku4_5: return 1.00
-        // Claude 4 Series
-        case .claudeOpus4: return 15.00
-        case .claudeSonnet4: return 3.00
-        // Legacy Claude
+        // Claude 3.5 Series
         case .claudeSonnet3_5: return 3.00
+        case .claudeHaiku3_5: return 0.80
+        // Claude 3 Series
+        case .claudeOpus3: return 15.00
+        case .claudeSonnet3: return 3.00
         case .claudeHaiku3: return 0.25
         // OpenAI
         case .gpt4o: return 2.50
@@ -149,15 +139,12 @@ enum AIModel: String, CaseIterable, Codable {
     /// Output cost per 1 million tokens (USD)
     var outputCostPer1M: Double {
         switch self {
-        // Claude 4.5 Series
-        case .claudeOpus4_5: return 25.00
-        case .claudeSonnet4_5: return 15.00
-        case .claudeHaiku4_5: return 5.00
-        // Claude 4 Series
-        case .claudeOpus4: return 75.00
-        case .claudeSonnet4: return 15.00
-        // Legacy Claude
+        // Claude 3.5 Series
         case .claudeSonnet3_5: return 15.00
+        case .claudeHaiku3_5: return 4.00
+        // Claude 3 Series
+        case .claudeOpus3: return 75.00
+        case .claudeSonnet3: return 15.00
         case .claudeHaiku3: return 1.25
         // OpenAI
         case .gpt4o: return 10.00
@@ -186,10 +173,9 @@ enum AIModel: String, CaseIterable, Codable {
     static func models(for provider: AIProviderType) -> [AIModel] {
         switch provider {
         case .claudeCode, .anthropicAPI:
-            return [.claudeOpus4_5, .claudeSonnet4_5, .claudeHaiku4_5,
-                    .claudeOpus4, .claudeSonnet4, .claudeSonnet3_5, .claudeHaiku3]
+            return [.claudeSonnet3_5, .claudeHaiku3_5, .claudeOpus3, .claudeSonnet3, .claudeHaiku3]
         case .codex:
-            return [.claudeSonnet4_5, .claudeOpus4_5]  // Codex uses Claude models
+            return [.claudeSonnet3_5, .claudeOpus3]  // Codex uses Claude models
         case .openaiAPI:
             return [.gpt4o, .gpt4oMini, .gpt4_1, .o3, .o4Mini]
         case .ollama:

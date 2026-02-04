@@ -33,7 +33,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
     // AI Provider settings for this tab
     @Published var aiProvider: AIProviderType = .claudeCode
-    @Published var aiModel: AIModel = .claudeSonnet4_5
+    @Published var aiModel: AIModel = .claudeSonnet3_5
     @Published var thinkingLevel: ThinkingLevel = .none
 
     // Strong reference to keep terminal view alive across tab switches
@@ -51,7 +51,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     private var hasNotifiedServerStart = false
 
     init(id: UUID = UUID(), kind: TerminalTabKind, title: String, isGhost: Bool = false,
-         aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet4_5, thinkingLevel: ThinkingLevel = .none) {
+         aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet3_5, thinkingLevel: ThinkingLevel = .none) {
         self.id = id
         self.kind = kind
         self.title = title
@@ -424,7 +424,7 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     private func addTab(kind: TerminalTabKind, title: String, command: String?,
-                        aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet4_5, thinkingLevel: ThinkingLevel = .none) {
+                        aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet3_5, thinkingLevel: ThinkingLevel = .none) {
         let tab = TerminalTabItem(kind: kind, title: title,
                                   aiProvider: aiProvider, aiModel: aiModel, thinkingLevel: thinkingLevel)
         tab.devCommand = command

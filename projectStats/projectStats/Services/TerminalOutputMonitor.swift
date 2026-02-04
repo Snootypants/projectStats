@@ -12,7 +12,7 @@ final class TerminalOutputMonitor: ObservableObject {
 
     // Current session tracking
     private var currentProvider: AIProviderType = .claudeCode
-    private var currentModel: AIModel = .claudeSonnet4_5
+    private var currentModel: AIModel = .claudeSonnet3_5
     private var currentThinkingLevel: ThinkingLevel = .none
 
     private var syncDebounceTask: Task<Void, Never>?
