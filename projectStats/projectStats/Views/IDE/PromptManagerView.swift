@@ -11,7 +11,17 @@ struct PromptManagerView: View {
     private var savedPrompts: [SavedPrompt] {
         allSavedPrompts
             .filter { $0.projectPath == projectPath.path }
-            .sorted { $0.createdAt > $1.createdAt }
+            .sorted {
+                // Sort by prompt number if sourceFile exists, otherwise by date
+                if let sf1 = $0.sourceFile, let sf2 = $1.sourceFile {
+                    return extractNumber(from: sf1) < extractNumber(from: sf2)
+                }
+                // If only one has sourceFile, prioritize it
+                if $0.sourceFile != nil && $1.sourceFile == nil { return true }
+                if $0.sourceFile == nil && $1.sourceFile != nil { return false }
+                // Both have no sourceFile, sort by date
+                return $0.createdAt < $1.createdAt
+            }
     }
 
     private var selectedPrompt: SavedPrompt? {
@@ -21,46 +31,101 @@ struct PromptManagerView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Content area
             if savedPrompts.isEmpty {
                 emptyState
             } else {
-                promptList
+                // Horizontal prompt tabs
+                promptTabBar
+
+                Divider()
+
+                // Full prompt content
+                promptContent
+
+                Divider()
+
+                // Action buttons
+                actionBar
             }
-
-            Divider()
-
-            // Bottom action bar
-            actionBar
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            // Select the most recent prompt by default
+            // Select first prompt by default
             if selectedPromptID == nil, let first = savedPrompts.first {
                 selectedPromptID = first.id
             }
         }
     }
 
-    // MARK: - Prompt List
+    // MARK: - Prompt Tab Bar
 
-    private var promptList: some View {
-        List(savedPrompts, selection: $selectedPromptID) { prompt in
-            PromptRow(prompt: prompt, isSelected: selectedPromptID == prompt.id)
-                .tag(prompt.id)
-                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+    private var promptTabBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 4) {
+                ForEach(savedPrompts) { prompt in
+                    promptTab(for: prompt)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
         }
-        .listStyle(.inset)
+        .background(Color.primary.opacity(0.03))
     }
 
-    // MARK: - Empty State
+    private func promptTab(for prompt: SavedPrompt) -> some View {
+        let isSelected = selectedPromptID == prompt.id
+        let label = promptLabel(for: prompt)
 
-    private var emptyState: some View {
-        ContentUnavailableView(
-            "No prompts yet",
-            systemImage: "text.bubble",
-            description: Text("Send a prompt using the field below the terminal")
-        )
+        return Button {
+            selectedPromptID = prompt.id
+        } label: {
+            Text(label)
+                .font(.system(size: 12, weight: isSelected ? .semibold : .regular))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isSelected ? Color.accentColor.opacity(0.2) : Color.clear)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .strokeBorder(isSelected ? Color.accentColor.opacity(0.4) : Color.clear, lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func promptLabel(for prompt: SavedPrompt) -> String {
+        if let sourceFile = prompt.sourceFile {
+            // Extract number from filename like "1.md", "2c.md", "10.md"
+            let name = sourceFile.replacingOccurrences(of: ".md", with: "")
+            return name
+        } else {
+            // For prompts sent via terminal, use index
+            if let index = savedPrompts.firstIndex(where: { $0.id == prompt.id }) {
+                return "S\(index + 1)"  // S for "Sent"
+            }
+            return "?"
+        }
+    }
+
+    // MARK: - Prompt Content
+
+    private var promptContent: some View {
+        ScrollView {
+            if let prompt = selectedPrompt {
+                Text(prompt.text)
+                    .font(.system(size: 13, design: .monospaced))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+            } else {
+                Text("Select a prompt")
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Action Bar
@@ -94,9 +159,27 @@ struct PromptManagerView: View {
                 Label("Open Claude Code", systemImage: "terminal")
             }
             .buttonStyle(.bordered)
+            .disabled(selectedPrompt == nil)
         }
-        .padding()
-        .background(Color.primary.opacity(0.03))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+    }
+
+    // MARK: - Empty State
+
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "text.bubble")
+                .font(.system(size: 40))
+                .foregroundStyle(.tertiary)
+            Text("No prompts yet")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            Text("Send a prompt using the field below the terminal")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Actions
@@ -126,39 +209,20 @@ struct PromptManagerView: View {
             appleScript.executeAndReturnError(&error)
         }
     }
-}
 
-// MARK: - Prompt Row
+    // MARK: - Helpers
 
-struct PromptRow: View {
-    let prompt: SavedPrompt
-    let isSelected: Bool
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(prompt.text)
-                .lineLimit(3)
-                .font(.system(size: 13, design: .monospaced))
-
-            HStack(spacing: 8) {
-                Text(prompt.createdAt, style: .relative)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                if prompt.wasExecuted {
-                    Label("Sent", systemImage: "checkmark.circle.fill")
-                        .font(.caption)
-                        .foregroundStyle(.green)
-                }
-
-                Spacer()
-
-                Text("\(prompt.text.count) chars")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+    private func extractNumber(from filename: String) -> Int {
+        let name = filename.replacingOccurrences(of: ".md", with: "")
+        // Extract leading digits: "2c" -> 2, "10" -> 10
+        var numStr = ""
+        for char in name {
+            if char.isNumber {
+                numStr.append(char)
+            } else {
+                break
             }
         }
-        .padding(.vertical, 4)
-        .contentShape(Rectangle())
+        return Int(numStr) ?? 999
     }
 }
