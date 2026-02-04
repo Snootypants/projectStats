@@ -1,14 +1,28 @@
 import Foundation
+import AppKit
 
 @MainActor
 final class TerminalOutputMonitor: ObservableObject {
     static let shared = TerminalOutputMonitor()
 
     @Published var lastDetectedError: DetectedError?
+    @Published var isClaudeRunning: Bool = false
     var activeProjectPath: String?
 
     private var syncDebounceTask: Task<Void, Never>?
     private let errorDetector = ErrorDetector()
+
+    // Claude Code detection patterns
+    private let claudeStartPatterns: [String] = [
+        "╭─",           // Claude Code prompt box start
+        "⏺ ",           // Claude action indicator
+        "Claude: ",     // Direct output
+    ]
+
+    private let claudeEndPatterns: [String] = [
+        "✻ Cooked for",     // Session complete
+        "✻ Crunched for",   // Alternative phrasing
+    ]
 
     private let gitTriggerPatterns: [String] = [
         "[main ",
@@ -46,6 +60,29 @@ final class TerminalOutputMonitor: ObservableObject {
 
         if isGitEvent {
             scheduleSyncDebounced()
+        }
+
+        // Detect Claude session start
+        if claudeStartPatterns.contains(where: { cleanLine.contains($0) }) {
+            if !isClaudeRunning {
+                isClaudeRunning = true
+                if let projectPath = activeProjectPath {
+                    TimeTrackingService.shared.startAITracking(project: projectPath, aiType: "claude_code")
+                }
+            }
+        }
+
+        // Detect Claude session end
+        if let _ = parseClaudeFinished(cleanLine) {
+            if isClaudeRunning {
+                isClaudeRunning = false
+                TimeTrackingService.shared.stopAITracking()
+
+                // Trigger notification if tab not active
+                if SettingsViewModel.shared.notifyClaudeFinished {
+                    checkAndNotifyClaudeFinished()
+                }
+            }
         }
 
         // Detect git push and trigger notifications + achievements
@@ -107,5 +144,55 @@ final class TerminalOutputMonitor: ObservableObject {
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return string }
         let range = NSRange(string.startIndex..., in: string)
         return regex.stringByReplacingMatches(in: string, range: range, withTemplate: "")
+    }
+
+    // MARK: - Claude Detection
+
+    private func parseClaudeFinished(_ line: String) -> TimeInterval? {
+        // Parse "✻ Cooked for 4m 2s" or "✻ Crunched for 30s"
+        let patterns = [
+            "✻ Cooked for ([0-9]+)m ([0-9]+)s",
+            "✻ Cooked for ([0-9]+)s",
+            "✻ Crunched for ([0-9]+)m ([0-9]+)s",
+            "✻ Crunched for ([0-9]+)s"
+        ]
+
+        for pattern in patterns {
+            if let regex = try? NSRegularExpression(pattern: pattern),
+               let match = regex.firstMatch(in: line, range: NSRange(line.startIndex..., in: line)) {
+                // Parse duration
+                if match.numberOfRanges == 3 {
+                    let minutesRange = Range(match.range(at: 1), in: line)!
+                    let secondsRange = Range(match.range(at: 2), in: line)!
+                    let minutes = Int(line[minutesRange]) ?? 0
+                    let seconds = Int(line[secondsRange]) ?? 0
+                    return TimeInterval(minutes * 60 + seconds)
+                } else if match.numberOfRanges == 2 {
+                    let secondsRange = Range(match.range(at: 1), in: line)!
+                    let seconds = Int(line[secondsRange]) ?? 0
+                    return TimeInterval(seconds)
+                }
+            }
+        }
+        return nil
+    }
+
+    private func checkAndNotifyClaudeFinished() {
+        // Check if the app is not frontmost OR the project tab is not active
+        let isAppActive = NSApp.isActive
+        let activeContent = TabManagerViewModel.shared.activeTab?.content
+        var isTabActive = false
+
+        if case .projectWorkspace(let path) = activeContent {
+            isTabActive = path == activeProjectPath
+        }
+
+        if !isAppActive || !isTabActive {
+            let projectName = URL(fileURLWithPath: activeProjectPath ?? "").lastPathComponent
+            NotificationService.shared.sendNotification(
+                title: "Claude finished",
+                message: "Ready for review in \(projectName)"
+            )
+        }
     }
 }
