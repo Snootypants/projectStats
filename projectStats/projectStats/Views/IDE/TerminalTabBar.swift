@@ -253,6 +253,7 @@ private struct TerminalTabButton: View {
         case .shell: return "T"
         case .claude: return "C"
         case .ccYolo: return "Y"
+        case .codex: return "X"
         case .devServer: return "D"
         case .ghost: return "G"
         }

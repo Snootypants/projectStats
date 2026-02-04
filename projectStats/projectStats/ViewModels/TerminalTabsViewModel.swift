@@ -6,6 +6,7 @@ enum TerminalTabKind: String, Codable {
     case shell
     case claude
     case ccYolo
+    case codex
     case devServer
     case ghost
 }
@@ -327,6 +328,14 @@ final class TerminalTabsViewModel: ObservableObject {
         addTab(kind: .ccYolo, title: "ccYOLO", command: "claude --dangerously-skip-permissions")
     }
 
+    func addCodexTab() {
+        addTab(kind: .codex, title: "Codex", command: "codex")
+    }
+
+    func addCodexFullAutoTab() {
+        addTab(kind: .codex, title: "Codex Auto", command: "codex --full-auto")
+    }
+
     func addDevServerTab(command: String) {
         addTab(kind: .devServer, title: "Dev Server", command: command)
     }
@@ -404,7 +413,7 @@ final class TerminalTabsViewModel: ObservableObject {
         // Iterate over ALL projects' tabs to keep background terminals updated
         for (projectPath, projectTabs) in tabsByProject {
             for tab in projectTabs {
-                tab.updateStatus(now: now, notifyOnAttention: notifyOnAttention && (tab.kind == .claude || tab.kind == .ccYolo || tab.kind == .ghost))
+                tab.updateStatus(now: now, notifyOnAttention: notifyOnAttention && (tab.kind == .claude || tab.kind == .ccYolo || tab.kind == .codex || tab.kind == .ghost))
             }
 
             let ghostsToClose = projectTabs.filter { $0.shouldCloseGhost(now: now) }

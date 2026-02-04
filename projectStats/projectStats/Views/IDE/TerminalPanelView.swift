@@ -131,6 +131,12 @@ struct TerminalPanelView: View {
             .buttonStyle(.bordered)
             .controlSize(.small)
 
+            Button("Codex") {
+                viewModel.addCodexTab()
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
             Button {
                 showHistory.toggle()
             } label: {
