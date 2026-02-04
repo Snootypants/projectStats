@@ -155,6 +155,7 @@
 		010000000000000000000146 /* ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* ProviderComparisonCard.swift */; };
 		010000000000000000000147 /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* AIProviderSettingsView.swift */; };
 		010000000000000000000148 /* CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* CloudKitContainer.swift */; };
+		010000000000000000000149 /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000149 /* Syncable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -307,6 +308,7 @@
 		020000000000000000000146 /* ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
 		020000000000000000000147 /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000148 /* CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
+		020000000000000000000149 /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/Syncable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -728,6 +730,7 @@
 				010000000000000000000146 /* ProviderComparisonCard.swift in Sources */,
 				010000000000000000000147 /* AIProviderSettingsView.swift in Sources */,
 				010000000000000000000148 /* CloudKitContainer.swift in Sources */,
+				010000000000000000000149 /* Syncable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
