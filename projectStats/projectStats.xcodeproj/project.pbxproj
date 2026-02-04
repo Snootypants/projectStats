@@ -54,6 +54,7 @@
 		010000000000000000000045 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000045 /* WorkspaceView.swift */; };
 		010000000000000000000046 /* TabShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* TabShellView.swift */; };
 		010000000000000000000047 /* TerminalPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000047 /* TerminalPanelView.swift */; };
+		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 		010000000000000000000049 /* EnvironmentVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000049 /* EnvironmentVariable.swift */; };
 		010000000000000000000050 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* KeychainService.swift */; };
 		010000000000000000000051 /* EnvFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000051 /* EnvFileService.swift */; };
@@ -62,108 +63,107 @@
 		010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000054 /* EnvironmentVariableRow.swift */; };
 		010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000055 /* TerminalOutputMonitor.swift */; };
 		010000000000000000000056 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000056 /* StringExtensions.swift */; };
-		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
-		010000000000000000000057 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000057 /* Achievement.swift */; };
-		010000000000000000000058 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000058 /* ChatMessage.swift */; };
-		010000000000000000000059 /* ProjectNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000059 /* ProjectNote.swift */; };
-		010000000000000000000060 /* ProjectTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000060 /* ProjectTemplate.swift */; };
-		010000000000000000000061 /* SecretMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000061 /* SecretMatch.swift */; };
-		010000000000000000000062 /* TimeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000062 /* TimeEntry.swift */; };
-		010000000000000000000063 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000063 /* AIService.swift */; };
-		010000000000000000000064 /* AchievementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000064 /* AchievementService.swift */; };
-		010000000000000000000065 /* ClaudeContextMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000065 /* ClaudeContextMonitor.swift */; };
-		010000000000000000000066 /* ClaudePlanUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000066 /* ClaudePlanUsageService.swift */; };
-		010000000000000000000067 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000067 /* CloudSyncService.swift */; };
-		010000000000000000000068 /* CodeVectorDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000068 /* CodeVectorDB.swift */; };
-		010000000000000000000069 /* DiscordProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000069 /* DiscordProvider.swift */; };
-		010000000000000000000070 /* ErrorDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000070 /* ErrorDetector.swift */; };
-		010000000000000000000071 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000071 /* FeatureFlags.swift */; };
-		010000000000000000000072 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000072 /* GitHubService.swift */; };
-		010000000000000000000073 /* MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000073 /* MessagingService.swift */; };
-		010000000000000000000074 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000074 /* NotificationService.swift */; };
-		010000000000000000000075 /* NtfyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000075 /* NtfyProvider.swift */; };
-		010000000000000000000076 /* ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000076 /* ReportGenerator.swift */; };
-		010000000000000000000077 /* SecretsScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000077 /* SecretsScanner.swift */; };
-		010000000000000000000078 /* SlackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000078 /* SlackProvider.swift */; };
-		010000000000000000000079 /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000079 /* StoreKitManager.swift */; };
-		010000000000000000000080 /* TelegramProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000080 /* TelegramProvider.swift */; };
-		010000000000000000000081 /* TimeTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000081 /* TimeTrackingService.swift */; };
-		010000000000000000000082 /* VoiceNoteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000082 /* VoiceNoteRecorder.swift */; };
-		010000000000000000000083 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000083 /* NotificationNames.swift */; };
-		010000000000000000000084 /* GitControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000084 /* GitControlsViewModel.swift */; };
-		010000000000000000000085 /* TerminalTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000085 /* TerminalTabsViewModel.swift */; };
-		010000000000000000000086 /* AchievementBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000086 /* AchievementBanner.swift */; };
-		010000000000000000000087 /* AchievementsDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000087 /* AchievementsDashboard.swift */; };
-		010000000000000000000088 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000088 /* ShareCardView.swift */; };
-		010000000000000000000089 /* ClaudeConfigSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000089 /* ClaudeConfigSheet.swift */; };
-		010000000000000000000090 /* CommandPaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000090 /* CommandPaletteView.swift */; };
-		010000000000000000000091 /* ProBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000091 /* ProBadge.swift */; };
-		010000000000000000000092 /* ClaudeUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000092 /* ClaudeUsageCard.swift */; };
-		010000000000000000000093 /* GitHubNotificationsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000093 /* GitHubNotificationsCard.swift */; };
-		010000000000000000000094 /* TimeTrackingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000094 /* TimeTrackingCard.swift */; };
-		010000000000000000000095 /* FocusModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000095 /* FocusModeView.swift */; };
-		010000000000000000000096 /* CommitDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000096 /* CommitDialog.swift */; };
-		010000000000000000000097 /* GitControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000097 /* GitControlsView.swift */; };
-		010000000000000000000098 /* ContextUsageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000098 /* ContextUsageBar.swift */; };
-		010000000000000000000099 /* DevServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000099 /* DevServerTab.swift */; };
-		010000000000000000000100 /* RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* RunningServersPopover.swift */; };
-		010000000000000000000101 /* TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* TerminalTabBar.swift */; };
-		010000000000000000000102 /* TerminalTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000102 /* TerminalTabView.swift */; };
-		010000000000000000000103 /* ScratchPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000103 /* ScratchPadView.swift */; };
-		010000000000000000000104 /* VoiceNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000104 /* VoiceNoteView.swift */; };
-		010000000000000000000105 /* ReportGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000105 /* ReportGeneratorView.swift */; };
-		010000000000000000000106 /* ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000106 /* ReportPreviewView.swift */; };
-		010000000000000000000107 /* HygieneReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000107 /* HygieneReportView.swift */; };
-		010000000000000000000108 /* SecretsWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000108 /* SecretsWarningView.swift */; };
-		010000000000000000000109 /* AISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000109 /* AISettings.swift */; };
-		010000000000000000000110 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000110 /* AccountView.swift */; };
-		010000000000000000000111 /* CloudSyncSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000111 /* CloudSyncSettings.swift */; };
-		010000000000000000000112 /* DataManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000112 /* DataManagementView.swift */; };
-		010000000000000000000113 /* MessagingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000113 /* MessagingSettings.swift */; };
-		010000000000000000000114 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000114 /* NotificationSettings.swift */; };
-		010000000000000000000115 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000115 /* SubscriptionView.swift */; };
-		010000000000000000000116 /* NewProjectWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000116 /* NewProjectWizard.swift */; };
-		010000000000000000000117 /* AchievementsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000117 /* AchievementsSheet.swift */; };
-		010000000000000000000118 /* SavedPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000118 /* SavedPrompt.swift */; };
+		010000000000000000000057 /* projectStats/Models/Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000057 /* projectStats/Models/Achievement.swift */; };
+		010000000000000000000058 /* projectStats/Models/ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000058 /* projectStats/Models/ChatMessage.swift */; };
+		010000000000000000000059 /* projectStats/Models/ProjectNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000059 /* projectStats/Models/ProjectNote.swift */; };
+		010000000000000000000060 /* projectStats/Models/ProjectTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000060 /* projectStats/Models/ProjectTemplate.swift */; };
+		010000000000000000000061 /* projectStats/Models/SecretMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000061 /* projectStats/Models/SecretMatch.swift */; };
+		010000000000000000000062 /* projectStats/Models/TimeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000062 /* projectStats/Models/TimeEntry.swift */; };
+		010000000000000000000063 /* projectStats/Services/AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000063 /* projectStats/Services/AIService.swift */; };
+		010000000000000000000064 /* projectStats/Services/AchievementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000064 /* projectStats/Services/AchievementService.swift */; };
+		010000000000000000000065 /* projectStats/Services/ClaudeContextMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000065 /* projectStats/Services/ClaudeContextMonitor.swift */; };
+		010000000000000000000066 /* projectStats/Services/ClaudePlanUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000066 /* projectStats/Services/ClaudePlanUsageService.swift */; };
+		010000000000000000000067 /* projectStats/Services/CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000067 /* projectStats/Services/CloudSyncService.swift */; };
+		010000000000000000000068 /* projectStats/Services/CodeVectorDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000068 /* projectStats/Services/CodeVectorDB.swift */; };
+		010000000000000000000069 /* projectStats/Services/DiscordProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000069 /* projectStats/Services/DiscordProvider.swift */; };
+		010000000000000000000070 /* projectStats/Services/ErrorDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000070 /* projectStats/Services/ErrorDetector.swift */; };
+		010000000000000000000071 /* projectStats/Services/FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000071 /* projectStats/Services/FeatureFlags.swift */; };
+		010000000000000000000072 /* projectStats/Services/GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000072 /* projectStats/Services/GitHubService.swift */; };
+		010000000000000000000073 /* projectStats/Services/MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000073 /* projectStats/Services/MessagingService.swift */; };
+		010000000000000000000074 /* projectStats/Services/NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000074 /* projectStats/Services/NotificationService.swift */; };
+		010000000000000000000075 /* projectStats/Services/NtfyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */; };
+		010000000000000000000076 /* projectStats/Services/ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */; };
+		010000000000000000000077 /* projectStats/Services/SecretsScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */; };
+		010000000000000000000078 /* projectStats/Services/SlackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000078 /* projectStats/Services/SlackProvider.swift */; };
+		010000000000000000000079 /* projectStats/Services/StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */; };
+		010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */; };
+		010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */; };
+		010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */; };
+		010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */; };
+		010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */; };
+		010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */; };
+		010000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */; };
+		010000000000000000000087 /* projectStats/Views/Achievements/AchievementsDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000087 /* projectStats/Views/Achievements/AchievementsDashboard.swift */; };
+		010000000000000000000088 /* projectStats/Views/Achievements/ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000088 /* projectStats/Views/Achievements/ShareCardView.swift */; };
+		010000000000000000000089 /* projectStats/Views/Claude/ClaudeConfigSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000089 /* projectStats/Views/Claude/ClaudeConfigSheet.swift */; };
+		010000000000000000000090 /* projectStats/Views/CommandPalette/CommandPaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000090 /* projectStats/Views/CommandPalette/CommandPaletteView.swift */; };
+		010000000000000000000091 /* projectStats/Views/Components/ProBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000091 /* projectStats/Views/Components/ProBadge.swift */; };
+		010000000000000000000092 /* projectStats/Views/Dashboard/ClaudeUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000092 /* projectStats/Views/Dashboard/ClaudeUsageCard.swift */; };
+		010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */; };
+		010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */; };
+		010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */; };
+		010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */; };
+		010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */; };
+		010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */; };
+		010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */; };
+		010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */; };
+		010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */; };
+		010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */; };
+		010000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */; };
+		010000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */; };
+		010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */; };
+		010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */; };
+		010000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */; };
+		010000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */; };
+		010000000000000000000109 /* projectStats/Views/Settings/AISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */; };
+		010000000000000000000110 /* projectStats/Views/Settings/AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */; };
+		010000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */; };
+		010000000000000000000112 /* projectStats/Views/Settings/DataManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000112 /* projectStats/Views/Settings/DataManagementView.swift */; };
+		010000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift */; };
+		010000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift */; };
+		010000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift */; };
+		010000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift */; };
+		010000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift */; };
+		010000000000000000000118 /* projectStats/Models/SavedPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000118 /* projectStats/Models/SavedPrompt.swift */; };
 		010000000000000000000119 /* PromptImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000119 /* PromptImportService.swift */; };
-		010000000000000000000120 /* SavedDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000120 /* SavedDiff.swift */; };
-		010000000000000000000121 /* DiffManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000121 /* DiffManagerView.swift */; };
-		010000000000000000000122 /* DataCleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000122 /* DataCleanupService.swift */; };
-		010000000000000000000123 /* ClaudeUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000123 /* ClaudeUsageSnapshot.swift */; };
-		010000000000000000000124 /* ClaudeUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000124 /* ClaudeUsageService.swift */; };
-		010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000125 /* ClaudeTokenUsageCard.swift */; };
+		010000000000000000000120 /* projectStats/Models/SavedDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000120 /* projectStats/Models/SavedDiff.swift */; };
+		010000000000000000000121 /* projectStats/Views/IDE/DiffManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000121 /* projectStats/Views/IDE/DiffManagerView.swift */; };
+		010000000000000000000122 /* projectStats/Services/DataCleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000122 /* projectStats/Services/DataCleanupService.swift */; };
+		010000000000000000000123 /* projectStats/Models/ClaudeUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000123 /* projectStats/Models/ClaudeUsageSnapshot.swift */; };
+		010000000000000000000124 /* projectStats/Services/ClaudeUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000124 /* projectStats/Services/ClaudeUsageService.swift */; };
+		010000000000000000000125 /* projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000125 /* projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift */; };
 		010000000000000000000126 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000126 /* BackupService.swift */; };
-		010000000000000000000127 /* SecretsWarningSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000127 /* SecretsWarningSheet.swift */; };
+		010000000000000000000127 /* projectStats/Views/Git/SecretsWarningSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000127 /* projectStats/Views/Git/SecretsWarningSheet.swift */; };
 		010000000000000000000128 /* BranchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000128 /* BranchService.swift */; };
-		010000000000000000000129 /* CreateBranchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000129 /* CreateBranchSheet.swift */; };
-		010000000000000000000130 /* ClaudePlanUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000130 /* ClaudePlanUsageSnapshot.swift */; };
-		010000000000000000000131 /* ClaudeUsageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000131 /* ClaudeUsageSettingsView.swift */; };
-		010000000000000000000132 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000132 /* TTSService.swift */; };
-		010000000000000000000133 /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000133 /* ListenButton.swift */; };
-		010000000000000000000134 /* ProjectArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000134 /* ProjectArchiveService.swift */; };
-		010000000000000000000135 /* SessionSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000135 /* SessionSummaryService.swift */; };
-		010000000000000000000136 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000136 /* SessionSummaryView.swift */; };
-		010000000000000000000137 /* DBv2Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000137 /* DBv2Models.swift */; };
-		010000000000000000000138 /* DBv2MigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000138 /* DBv2MigrationService.swift */; };
-		010000000000000000000139 /* WorkItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000139 /* WorkItemsView.swift */; };
-		010000000000000000000140 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* AIProvider.swift */; };
-		010000000000000000000141 /* AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* AIProviderRegistry.swift */; };
-		010000000000000000000142 /* CodexService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000142 /* CodexService.swift */; };
-		010000000000000000000143 /* ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000143 /* ModelSelectorView.swift */; };
-		010000000000000000000144 /* ThinkingLevelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000144 /* ThinkingLevelService.swift */; };
-		010000000000000000000145 /* ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* ProviderMetricsService.swift */; };
-		010000000000000000000146 /* ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* ProviderComparisonCard.swift */; };
-		010000000000000000000147 /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* AIProviderSettingsView.swift */; };
-		010000000000000000000148 /* CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* CloudKitContainer.swift */; };
-		010000000000000000000149 /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000149 /* Syncable.swift */; };
-		010000000000000000000150 /* SyncableExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000150 /* SyncableExtensions.swift */; };
-		010000000000000000000151 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000151 /* SyncEngine.swift */; };
-		010000000000000000000152 /* ConflictResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000152 /* ConflictResolver.swift */; };
-		010000000000000000000153 /* OfflineQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000153 /* OfflineQueueManager.swift */; };
-		010000000000000000000154 /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000154 /* SyncStatusView.swift */; };
-		010000000000000000000155 /* SyncSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000155 /* SyncSettingsView.swift */; };
-		010000000000000000000156 /* SyncScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000156 /* SyncScheduler.swift */; };
-		010000000000000000000157 /* WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000157 /* WebAPIClient.swift */; };
+		010000000000000000000129 /* projectStats/Views/Git/CreateBranchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000129 /* projectStats/Views/Git/CreateBranchSheet.swift */; };
+		010000000000000000000130 /* projectStats/Models/ClaudePlanUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000130 /* projectStats/Models/ClaudePlanUsageSnapshot.swift */; };
+		010000000000000000000131 /* projectStats/Views/Settings/ClaudeUsageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000131 /* projectStats/Views/Settings/ClaudeUsageSettingsView.swift */; };
+		010000000000000000000132 /* projectStats/Services/TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000132 /* projectStats/Services/TTSService.swift */; };
+		010000000000000000000133 /* projectStats/Views/Components/ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */; };
+		010000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */; };
+		010000000000000000000135 /* projectStats/Services/SessionSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */; };
+		010000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */; };
+		010000000000000000000137 /* projectStats/Models/DBv2Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000137 /* projectStats/Models/DBv2Models.swift */; };
+		010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */; };
+		010000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */; };
+		010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* projectStats/Models/AIProvider.swift */; };
+		010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */; };
+		010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000142 /* projectStats/Services/CodexService.swift */; };
+		010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */; };
+		010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */; };
+		010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */; };
+		010000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */; };
+		010000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */; };
+		010000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */; };
+		010000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */; };
+		010000000000000000000150 /* projectStats/Services/CloudKit/SyncableExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000150 /* projectStats/Services/CloudKit/SyncableExtensions.swift */; };
+		010000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift */; };
+		010000000000000000000152 /* projectStats/Services/CloudKit/ConflictResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000152 /* projectStats/Services/CloudKit/ConflictResolver.swift */; };
+		010000000000000000000153 /* projectStats/Services/CloudKit/OfflineQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000153 /* projectStats/Services/CloudKit/OfflineQueueManager.swift */; };
+		010000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift */; };
+		010000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */; };
+		010000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift */; };
+		010000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -222,109 +222,109 @@
 		020000000000000000000054 /* EnvironmentVariableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariableRow.swift; sourceTree = "<group>"; };
 		020000000000000000000055 /* TerminalOutputMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalOutputMonitor.swift; sourceTree = "<group>"; };
 		020000000000000000000056 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000057 /* projectStats/Models/Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Achievement.swift; sourceTree = "<group>"; };
+		020000000000000000000058 /* projectStats/Models/ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ChatMessage.swift; sourceTree = "<group>"; };
+		020000000000000000000059 /* projectStats/Models/ProjectNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectNote.swift; sourceTree = "<group>"; };
+		020000000000000000000060 /* projectStats/Models/ProjectTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectTemplate.swift; sourceTree = "<group>"; };
+		020000000000000000000061 /* projectStats/Models/SecretMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SecretMatch.swift; sourceTree = "<group>"; };
+		020000000000000000000062 /* projectStats/Models/TimeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/TimeEntry.swift; sourceTree = "<group>"; };
+		020000000000000000000063 /* projectStats/Services/AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIService.swift; sourceTree = "<group>"; };
+		020000000000000000000064 /* projectStats/Services/AchievementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AchievementService.swift; sourceTree = "<group>"; };
+		020000000000000000000065 /* projectStats/Services/ClaudeContextMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeContextMonitor.swift; sourceTree = "<group>"; };
+		020000000000000000000066 /* projectStats/Services/ClaudePlanUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudePlanUsageService.swift; sourceTree = "<group>"; };
+		020000000000000000000067 /* projectStats/Services/CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudSyncService.swift; sourceTree = "<group>"; };
+		020000000000000000000068 /* projectStats/Services/CodeVectorDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodeVectorDB.swift; sourceTree = "<group>"; };
+		020000000000000000000069 /* projectStats/Services/DiscordProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DiscordProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000070 /* projectStats/Services/ErrorDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ErrorDetector.swift; sourceTree = "<group>"; };
+		020000000000000000000071 /* projectStats/Services/FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/FeatureFlags.swift; sourceTree = "<group>"; };
+		020000000000000000000072 /* projectStats/Services/GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/GitHubService.swift; sourceTree = "<group>"; };
+		020000000000000000000073 /* projectStats/Services/MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/MessagingService.swift; sourceTree = "<group>"; };
+		020000000000000000000074 /* projectStats/Services/NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NotificationService.swift; sourceTree = "<group>"; };
+		020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NtfyProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ReportGenerator.swift; sourceTree = "<group>"; };
+		020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SecretsScanner.swift; sourceTree = "<group>"; };
+		020000000000000000000078 /* projectStats/Services/SlackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SlackProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/StoreKitManager.swift; sourceTree = "<group>"; };
+		020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TelegramProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TimeTrackingService.swift; sourceTree = "<group>"; };
+		020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VoiceNoteRecorder.swift; sourceTree = "<group>"; };
+		020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/NotificationNames.swift; sourceTree = "<group>"; };
+		020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/GitControlsViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/TerminalTabsViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementBanner.swift; sourceTree = "<group>"; };
+		020000000000000000000087 /* projectStats/Views/Achievements/AchievementsDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsDashboard.swift; sourceTree = "<group>"; };
+		020000000000000000000088 /* projectStats/Views/Achievements/ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/ShareCardView.swift; sourceTree = "<group>"; };
+		020000000000000000000089 /* projectStats/Views/Claude/ClaudeConfigSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Claude/ClaudeConfigSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000090 /* projectStats/Views/CommandPalette/CommandPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/CommandPalette/CommandPaletteView.swift; sourceTree = "<group>"; };
+		020000000000000000000091 /* projectStats/Views/Components/ProBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ProBadge.swift; sourceTree = "<group>"; };
+		020000000000000000000092 /* projectStats/Views/Dashboard/ClaudeUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeUsageCard.swift; sourceTree = "<group>"; };
+		020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/GitHubNotificationsCard.swift; sourceTree = "<group>"; };
+		020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/TimeTrackingCard.swift; sourceTree = "<group>"; };
+		020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/FocusModeView.swift; sourceTree = "<group>"; };
+		020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
+		020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
+		020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/ContextUsageBar.swift; sourceTree = "<group>"; };
+		020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
+		020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
+		020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
+		020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabView.swift; sourceTree = "<group>"; };
+		020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/ScratchPadView.swift; sourceTree = "<group>"; };
+		020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/VoiceNoteView.swift; sourceTree = "<group>"; };
+		020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportGeneratorView.swift; sourceTree = "<group>"; };
+		020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportPreviewView.swift; sourceTree = "<group>"; };
+		020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/HygieneReportView.swift; sourceTree = "<group>"; };
+		020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/SecretsWarningView.swift; sourceTree = "<group>"; };
+		020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AISettings.swift; sourceTree = "<group>"; };
+		020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AccountView.swift; sourceTree = "<group>"; };
+		020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/CloudSyncSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000112 /* projectStats/Views/Settings/DataManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/DataManagementView.swift; sourceTree = "<group>"; };
+		020000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/MessagingSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/NotificationSettings.swift; sourceTree = "<group>"; };
+		020000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SubscriptionView.swift; sourceTree = "<group>"; };
+		020000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Templates/NewProjectWizard.swift; sourceTree = "<group>"; };
+		020000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000118 /* projectStats/Models/SavedPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedPrompt.swift; sourceTree = "<group>"; };
+		020000000000000000000119 /* PromptImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptImportService.swift; sourceTree = "<group>"; };
+		020000000000000000000120 /* projectStats/Models/SavedDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedDiff.swift; sourceTree = "<group>"; };
+		020000000000000000000121 /* projectStats/Views/IDE/DiffManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DiffManagerView.swift; sourceTree = "<group>"; };
+		020000000000000000000122 /* projectStats/Services/DataCleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DataCleanupService.swift; sourceTree = "<group>"; };
+		020000000000000000000123 /* projectStats/Models/ClaudeUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudeUsageSnapshot.swift; sourceTree = "<group>"; };
+		020000000000000000000124 /* projectStats/Services/ClaudeUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeUsageService.swift; sourceTree = "<group>"; };
+		020000000000000000000125 /* projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift; sourceTree = "<group>"; };
+		020000000000000000000126 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
+		020000000000000000000127 /* projectStats/Views/Git/SecretsWarningSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/SecretsWarningSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000128 /* BranchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchService.swift; sourceTree = "<group>"; };
+		020000000000000000000129 /* projectStats/Views/Git/CreateBranchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CreateBranchSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000130 /* projectStats/Models/ClaudePlanUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudePlanUsageSnapshot.swift; sourceTree = "<group>"; };
+		020000000000000000000131 /* projectStats/Views/Settings/ClaudeUsageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/ClaudeUsageSettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000132 /* projectStats/Services/TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TTSService.swift; sourceTree = "<group>"; };
+		020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ListenButton.swift; sourceTree = "<group>"; };
+		020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectArchiveService.swift; sourceTree = "<group>"; };
+		020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SessionSummaryService.swift; sourceTree = "<group>"; };
+		020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/SessionSummaryView.swift; sourceTree = "<group>"; };
+		020000000000000000000137 /* projectStats/Models/DBv2Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/DBv2Models.swift; sourceTree = "<group>"; };
+		020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DBv2MigrationService.swift; sourceTree = "<group>"; };
+		020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/WorkItems/WorkItemsView.swift; sourceTree = "<group>"; };
+		020000000000000000000140 /* projectStats/Models/AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
+		020000000000000000000142 /* projectStats/Services/CodexService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodexService.swift; sourceTree = "<group>"; };
+		020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ModelSelectorView.swift; sourceTree = "<group>"; };
+		020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ThinkingLevelService.swift; sourceTree = "<group>"; };
+		020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
+		020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
+		020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
+		020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/Syncable.swift; sourceTree = "<group>"; };
+		020000000000000000000150 /* projectStats/Services/CloudKit/SyncableExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncableExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncEngine.swift; sourceTree = "<group>"; };
+		020000000000000000000152 /* projectStats/Services/CloudKit/ConflictResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/ConflictResolver.swift; sourceTree = "<group>"; };
+		020000000000000000000153 /* projectStats/Services/CloudKit/OfflineQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/OfflineQueueManager.swift; sourceTree = "<group>"; };
+		020000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/SyncStatusView.swift; sourceTree = "<group>"; };
+		020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SyncSettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncScheduler.swift; sourceTree = "<group>"; };
+		020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/WebAPI/WebAPIClient.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
-		020000000000000000000057 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Achievement.swift; sourceTree = "<group>"; };
-		020000000000000000000058 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ChatMessage.swift; sourceTree = "<group>"; };
-		020000000000000000000059 /* ProjectNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectNote.swift; sourceTree = "<group>"; };
-		020000000000000000000060 /* ProjectTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ProjectTemplate.swift; sourceTree = "<group>"; };
-		020000000000000000000061 /* SecretMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SecretMatch.swift; sourceTree = "<group>"; };
-		020000000000000000000062 /* TimeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/TimeEntry.swift; sourceTree = "<group>"; };
-		020000000000000000000063 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIService.swift; sourceTree = "<group>"; };
-		020000000000000000000064 /* AchievementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AchievementService.swift; sourceTree = "<group>"; };
-		020000000000000000000065 /* ClaudeContextMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeContextMonitor.swift; sourceTree = "<group>"; };
-		020000000000000000000066 /* ClaudePlanUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudePlanUsageService.swift; sourceTree = "<group>"; };
-		020000000000000000000067 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudSyncService.swift; sourceTree = "<group>"; };
-		020000000000000000000068 /* CodeVectorDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodeVectorDB.swift; sourceTree = "<group>"; };
-		020000000000000000000069 /* DiscordProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DiscordProvider.swift; sourceTree = "<group>"; };
-		020000000000000000000070 /* ErrorDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ErrorDetector.swift; sourceTree = "<group>"; };
-		020000000000000000000071 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/FeatureFlags.swift; sourceTree = "<group>"; };
-		020000000000000000000072 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/GitHubService.swift; sourceTree = "<group>"; };
-		020000000000000000000073 /* MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/MessagingService.swift; sourceTree = "<group>"; };
-		020000000000000000000074 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NotificationService.swift; sourceTree = "<group>"; };
-		020000000000000000000075 /* NtfyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NtfyProvider.swift; sourceTree = "<group>"; };
-		020000000000000000000076 /* ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ReportGenerator.swift; sourceTree = "<group>"; };
-		020000000000000000000077 /* SecretsScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SecretsScanner.swift; sourceTree = "<group>"; };
-		020000000000000000000078 /* SlackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SlackProvider.swift; sourceTree = "<group>"; };
-		020000000000000000000079 /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/StoreKitManager.swift; sourceTree = "<group>"; };
-		020000000000000000000080 /* TelegramProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TelegramProvider.swift; sourceTree = "<group>"; };
-		020000000000000000000081 /* TimeTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TimeTrackingService.swift; sourceTree = "<group>"; };
-		020000000000000000000082 /* VoiceNoteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VoiceNoteRecorder.swift; sourceTree = "<group>"; };
-		020000000000000000000083 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/NotificationNames.swift; sourceTree = "<group>"; };
-		020000000000000000000084 /* GitControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/GitControlsViewModel.swift; sourceTree = "<group>"; };
-		020000000000000000000085 /* TerminalTabsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/TerminalTabsViewModel.swift; sourceTree = "<group>"; };
-		020000000000000000000086 /* AchievementBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementBanner.swift; sourceTree = "<group>"; };
-		020000000000000000000087 /* AchievementsDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsDashboard.swift; sourceTree = "<group>"; };
-		020000000000000000000088 /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/ShareCardView.swift; sourceTree = "<group>"; };
-		020000000000000000000089 /* ClaudeConfigSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Claude/ClaudeConfigSheet.swift; sourceTree = "<group>"; };
-		020000000000000000000090 /* CommandPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/CommandPalette/CommandPaletteView.swift; sourceTree = "<group>"; };
-		020000000000000000000091 /* ProBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ProBadge.swift; sourceTree = "<group>"; };
-		020000000000000000000092 /* ClaudeUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeUsageCard.swift; sourceTree = "<group>"; };
-		020000000000000000000093 /* GitHubNotificationsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/GitHubNotificationsCard.swift; sourceTree = "<group>"; };
-		020000000000000000000094 /* TimeTrackingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/TimeTrackingCard.swift; sourceTree = "<group>"; };
-		020000000000000000000095 /* FocusModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/FocusModeView.swift; sourceTree = "<group>"; };
-		020000000000000000000096 /* CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
-		020000000000000000000097 /* GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
-		020000000000000000000098 /* ContextUsageBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/ContextUsageBar.swift; sourceTree = "<group>"; };
-		020000000000000000000099 /* DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
-		020000000000000000000100 /* RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
-		020000000000000000000101 /* TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
-		020000000000000000000102 /* TerminalTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabView.swift; sourceTree = "<group>"; };
-		020000000000000000000103 /* ScratchPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/ScratchPadView.swift; sourceTree = "<group>"; };
-		020000000000000000000104 /* VoiceNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/VoiceNoteView.swift; sourceTree = "<group>"; };
-		020000000000000000000105 /* ReportGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportGeneratorView.swift; sourceTree = "<group>"; };
-		020000000000000000000106 /* ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportPreviewView.swift; sourceTree = "<group>"; };
-		020000000000000000000107 /* HygieneReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/HygieneReportView.swift; sourceTree = "<group>"; };
-		020000000000000000000108 /* SecretsWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/SecretsWarningView.swift; sourceTree = "<group>"; };
-		020000000000000000000109 /* AISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AISettings.swift; sourceTree = "<group>"; };
-		020000000000000000000110 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AccountView.swift; sourceTree = "<group>"; };
-		020000000000000000000111 /* CloudSyncSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/CloudSyncSettings.swift; sourceTree = "<group>"; };
-		020000000000000000000112 /* DataManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/DataManagementView.swift; sourceTree = "<group>"; };
-		020000000000000000000113 /* MessagingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/MessagingSettings.swift; sourceTree = "<group>"; };
-		020000000000000000000114 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/NotificationSettings.swift; sourceTree = "<group>"; };
-		020000000000000000000115 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SubscriptionView.swift; sourceTree = "<group>"; };
-		020000000000000000000116 /* NewProjectWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Templates/NewProjectWizard.swift; sourceTree = "<group>"; };
-		020000000000000000000117 /* AchievementsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsSheet.swift; sourceTree = "<group>"; };
-		020000000000000000000118 /* SavedPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedPrompt.swift; sourceTree = "<group>"; };
-		020000000000000000000119 /* PromptImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptImportService.swift; sourceTree = "<group>"; };
-		020000000000000000000120 /* SavedDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedDiff.swift; sourceTree = "<group>"; };
-		020000000000000000000121 /* DiffManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DiffManagerView.swift; sourceTree = "<group>"; };
-		020000000000000000000122 /* DataCleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DataCleanupService.swift; sourceTree = "<group>"; };
-		020000000000000000000123 /* ClaudeUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudeUsageSnapshot.swift; sourceTree = "<group>"; };
-		020000000000000000000124 /* ClaudeUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeUsageService.swift; sourceTree = "<group>"; };
-		020000000000000000000125 /* ClaudeTokenUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift; sourceTree = "<group>"; };
-		020000000000000000000126 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
-		020000000000000000000127 /* SecretsWarningSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/SecretsWarningSheet.swift; sourceTree = "<group>"; };
-		020000000000000000000128 /* BranchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchService.swift; sourceTree = "<group>"; };
-		020000000000000000000129 /* CreateBranchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CreateBranchSheet.swift; sourceTree = "<group>"; };
-		020000000000000000000130 /* ClaudePlanUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudePlanUsageSnapshot.swift; sourceTree = "<group>"; };
-		020000000000000000000131 /* ClaudeUsageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/ClaudeUsageSettingsView.swift; sourceTree = "<group>"; };
-		020000000000000000000132 /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TTSService.swift; sourceTree = "<group>"; };
-		020000000000000000000133 /* ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ListenButton.swift; sourceTree = "<group>"; };
-		020000000000000000000134 /* ProjectArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectArchiveService.swift; sourceTree = "<group>"; };
-		020000000000000000000135 /* SessionSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SessionSummaryService.swift; sourceTree = "<group>"; };
-		020000000000000000000136 /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/SessionSummaryView.swift; sourceTree = "<group>"; };
-		020000000000000000000137 /* DBv2Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/DBv2Models.swift; sourceTree = "<group>"; };
-		020000000000000000000138 /* DBv2MigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DBv2MigrationService.swift; sourceTree = "<group>"; };
-		020000000000000000000139 /* WorkItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/WorkItems/WorkItemsView.swift; sourceTree = "<group>"; };
-		020000000000000000000140 /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
-		020000000000000000000141 /* AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
-		020000000000000000000142 /* CodexService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodexService.swift; sourceTree = "<group>"; };
-		020000000000000000000143 /* ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ModelSelectorView.swift; sourceTree = "<group>"; };
-		020000000000000000000144 /* ThinkingLevelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ThinkingLevelService.swift; sourceTree = "<group>"; };
-		020000000000000000000145 /* ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
-		020000000000000000000146 /* ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
-		020000000000000000000147 /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
-		020000000000000000000148 /* CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
-		020000000000000000000149 /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/Syncable.swift; sourceTree = "<group>"; };
-		020000000000000000000150 /* SyncableExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncableExtensions.swift; sourceTree = "<group>"; };
-		020000000000000000000151 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncEngine.swift; sourceTree = "<group>"; };
-		020000000000000000000152 /* ConflictResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/ConflictResolver.swift; sourceTree = "<group>"; };
-		020000000000000000000153 /* OfflineQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/OfflineQueueManager.swift; sourceTree = "<group>"; };
-		020000000000000000000154 /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/SyncStatusView.swift; sourceTree = "<group>"; };
-		020000000000000000000155 /* SyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SyncSettingsView.swift; sourceTree = "<group>"; };
-		020000000000000000000156 /* SyncScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncScheduler.swift; sourceTree = "<group>"; };
-		020000000000000000000157 /* WebAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/WebAPI/WebAPIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +344,7 @@
 			children = (
 				050000000000000000000002 /* projectStats */,
 				050000000000000000000003 /* Products */,
+				85103ED92F33834800B06DCB /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -525,6 +526,111 @@
 			path = TabBar;
 			sourceTree = "<group>";
 		};
+		85103ED92F33834800B06DCB /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000057 /* projectStats/Models/Achievement.swift */,
+				020000000000000000000058 /* projectStats/Models/ChatMessage.swift */,
+				020000000000000000000059 /* projectStats/Models/ProjectNote.swift */,
+				020000000000000000000060 /* projectStats/Models/ProjectTemplate.swift */,
+				020000000000000000000061 /* projectStats/Models/SecretMatch.swift */,
+				020000000000000000000062 /* projectStats/Models/TimeEntry.swift */,
+				020000000000000000000063 /* projectStats/Services/AIService.swift */,
+				020000000000000000000064 /* projectStats/Services/AchievementService.swift */,
+				020000000000000000000065 /* projectStats/Services/ClaudeContextMonitor.swift */,
+				020000000000000000000066 /* projectStats/Services/ClaudePlanUsageService.swift */,
+				020000000000000000000067 /* projectStats/Services/CloudSyncService.swift */,
+				020000000000000000000068 /* projectStats/Services/CodeVectorDB.swift */,
+				020000000000000000000069 /* projectStats/Services/DiscordProvider.swift */,
+				020000000000000000000070 /* projectStats/Services/ErrorDetector.swift */,
+				020000000000000000000071 /* projectStats/Services/FeatureFlags.swift */,
+				020000000000000000000072 /* projectStats/Services/GitHubService.swift */,
+				020000000000000000000073 /* projectStats/Services/MessagingService.swift */,
+				020000000000000000000074 /* projectStats/Services/NotificationService.swift */,
+				020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */,
+				020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */,
+				020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */,
+				020000000000000000000078 /* projectStats/Services/SlackProvider.swift */,
+				020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */,
+				020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */,
+				020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */,
+				020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */,
+				020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */,
+				020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */,
+				020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */,
+				020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */,
+				020000000000000000000087 /* projectStats/Views/Achievements/AchievementsDashboard.swift */,
+				020000000000000000000088 /* projectStats/Views/Achievements/ShareCardView.swift */,
+				020000000000000000000089 /* projectStats/Views/Claude/ClaudeConfigSheet.swift */,
+				020000000000000000000090 /* projectStats/Views/CommandPalette/CommandPaletteView.swift */,
+				020000000000000000000091 /* projectStats/Views/Components/ProBadge.swift */,
+				020000000000000000000092 /* projectStats/Views/Dashboard/ClaudeUsageCard.swift */,
+				020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */,
+				020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */,
+				020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */,
+				020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */,
+				020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */,
+				020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */,
+				020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */,
+				020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */,
+				020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */,
+				020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */,
+				020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */,
+				020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */,
+				020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */,
+				020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */,
+				020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */,
+				020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */,
+				020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */,
+				020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */,
+				020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */,
+				020000000000000000000112 /* projectStats/Views/Settings/DataManagementView.swift */,
+				020000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift */,
+				020000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift */,
+				020000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift */,
+				020000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift */,
+				020000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift */,
+				020000000000000000000118 /* projectStats/Models/SavedPrompt.swift */,
+				020000000000000000000120 /* projectStats/Models/SavedDiff.swift */,
+				020000000000000000000121 /* projectStats/Views/IDE/DiffManagerView.swift */,
+				020000000000000000000122 /* projectStats/Services/DataCleanupService.swift */,
+				020000000000000000000123 /* projectStats/Models/ClaudeUsageSnapshot.swift */,
+				020000000000000000000124 /* projectStats/Services/ClaudeUsageService.swift */,
+				020000000000000000000125 /* projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift */,
+				020000000000000000000127 /* projectStats/Views/Git/SecretsWarningSheet.swift */,
+				020000000000000000000129 /* projectStats/Views/Git/CreateBranchSheet.swift */,
+				020000000000000000000130 /* projectStats/Models/ClaudePlanUsageSnapshot.swift */,
+				020000000000000000000131 /* projectStats/Views/Settings/ClaudeUsageSettingsView.swift */,
+				020000000000000000000132 /* projectStats/Services/TTSService.swift */,
+				020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */,
+				020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */,
+				020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */,
+				020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */,
+				020000000000000000000137 /* projectStats/Models/DBv2Models.swift */,
+				020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */,
+				020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */,
+				020000000000000000000140 /* projectStats/Models/AIProvider.swift */,
+				020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */,
+				020000000000000000000142 /* projectStats/Services/CodexService.swift */,
+				020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */,
+				020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */,
+				020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */,
+				020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */,
+				020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */,
+				020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */,
+				020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */,
+				020000000000000000000150 /* projectStats/Services/CloudKit/SyncableExtensions.swift */,
+				020000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift */,
+				020000000000000000000152 /* projectStats/Services/CloudKit/ConflictResolver.swift */,
+				020000000000000000000153 /* projectStats/Services/CloudKit/OfflineQueueManager.swift */,
+				020000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift */,
+				020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */,
+				020000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift */,
+				020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -540,10 +646,10 @@
 			);
 			dependencies = (
 			);
+			name = projectStats;
 			packageProductDependencies = (
 				0C0000000000000000000001 /* SwiftTerm */,
 			);
-			name = projectStats;
 			productName = projectStats;
 			productReference = 030000000000000000000001 /* projectStats.app */;
 			productType = "com.apple.product-type.application";
@@ -573,7 +679,7 @@
 			);
 			mainGroup = 050000000000000000000001;
 			packageReferences = (
-				0B0000000000000000000001 /* SwiftTerm */,
+				0B0000000000000000000001 /* XCRemoteSwiftPackageReference "SwiftTerm" */,
 			);
 			productRefGroup = 050000000000000000000003 /* Products */;
 			projectDirPath = "";
@@ -654,107 +760,107 @@
 				010000000000000000000054 /* EnvironmentVariableRow.swift in Sources */,
 				010000000000000000000055 /* TerminalOutputMonitor.swift in Sources */,
 				010000000000000000000056 /* StringExtensions.swift in Sources */,
-				010000000000000000000057 /* Achievement.swift in Sources */,
-				010000000000000000000058 /* ChatMessage.swift in Sources */,
-				010000000000000000000059 /* ProjectNote.swift in Sources */,
-				010000000000000000000060 /* ProjectTemplate.swift in Sources */,
-				010000000000000000000061 /* SecretMatch.swift in Sources */,
-				010000000000000000000062 /* TimeEntry.swift in Sources */,
-				010000000000000000000063 /* AIService.swift in Sources */,
-				010000000000000000000064 /* AchievementService.swift in Sources */,
-				010000000000000000000065 /* ClaudeContextMonitor.swift in Sources */,
-				010000000000000000000066 /* ClaudePlanUsageService.swift in Sources */,
-				010000000000000000000067 /* CloudSyncService.swift in Sources */,
-				010000000000000000000068 /* CodeVectorDB.swift in Sources */,
-				010000000000000000000069 /* DiscordProvider.swift in Sources */,
-				010000000000000000000070 /* ErrorDetector.swift in Sources */,
-				010000000000000000000071 /* FeatureFlags.swift in Sources */,
-				010000000000000000000072 /* GitHubService.swift in Sources */,
-				010000000000000000000073 /* MessagingService.swift in Sources */,
-				010000000000000000000074 /* NotificationService.swift in Sources */,
-				010000000000000000000075 /* NtfyProvider.swift in Sources */,
-				010000000000000000000076 /* ReportGenerator.swift in Sources */,
-				010000000000000000000077 /* SecretsScanner.swift in Sources */,
-				010000000000000000000078 /* SlackProvider.swift in Sources */,
-				010000000000000000000079 /* StoreKitManager.swift in Sources */,
-				010000000000000000000080 /* TelegramProvider.swift in Sources */,
-				010000000000000000000081 /* TimeTrackingService.swift in Sources */,
-				010000000000000000000082 /* VoiceNoteRecorder.swift in Sources */,
-				010000000000000000000083 /* NotificationNames.swift in Sources */,
-				010000000000000000000084 /* GitControlsViewModel.swift in Sources */,
-				010000000000000000000085 /* TerminalTabsViewModel.swift in Sources */,
-				010000000000000000000086 /* AchievementBanner.swift in Sources */,
-				010000000000000000000087 /* AchievementsDashboard.swift in Sources */,
-				010000000000000000000088 /* ShareCardView.swift in Sources */,
-				010000000000000000000089 /* ClaudeConfigSheet.swift in Sources */,
-				010000000000000000000090 /* CommandPaletteView.swift in Sources */,
-				010000000000000000000091 /* ProBadge.swift in Sources */,
-				010000000000000000000092 /* ClaudeUsageCard.swift in Sources */,
-				010000000000000000000093 /* GitHubNotificationsCard.swift in Sources */,
-				010000000000000000000094 /* TimeTrackingCard.swift in Sources */,
-				010000000000000000000095 /* FocusModeView.swift in Sources */,
-				010000000000000000000096 /* CommitDialog.swift in Sources */,
-				010000000000000000000097 /* GitControlsView.swift in Sources */,
-				010000000000000000000098 /* ContextUsageBar.swift in Sources */,
-				010000000000000000000099 /* DevServerTab.swift in Sources */,
-				010000000000000000000100 /* RunningServersPopover.swift in Sources */,
-				010000000000000000000101 /* TerminalTabBar.swift in Sources */,
-				010000000000000000000102 /* TerminalTabView.swift in Sources */,
-				010000000000000000000103 /* ScratchPadView.swift in Sources */,
-				010000000000000000000104 /* VoiceNoteView.swift in Sources */,
-				010000000000000000000105 /* ReportGeneratorView.swift in Sources */,
-				010000000000000000000106 /* ReportPreviewView.swift in Sources */,
-				010000000000000000000107 /* HygieneReportView.swift in Sources */,
-				010000000000000000000108 /* SecretsWarningView.swift in Sources */,
-				010000000000000000000109 /* AISettings.swift in Sources */,
-				010000000000000000000110 /* AccountView.swift in Sources */,
-				010000000000000000000111 /* CloudSyncSettings.swift in Sources */,
-				010000000000000000000112 /* DataManagementView.swift in Sources */,
-				010000000000000000000113 /* MessagingSettings.swift in Sources */,
-				010000000000000000000114 /* NotificationSettings.swift in Sources */,
-				010000000000000000000115 /* SubscriptionView.swift in Sources */,
-				010000000000000000000116 /* NewProjectWizard.swift in Sources */,
-				010000000000000000000117 /* AchievementsSheet.swift in Sources */,
-				010000000000000000000118 /* SavedPrompt.swift in Sources */,
+				010000000000000000000057 /* projectStats/Models/Achievement.swift in Sources */,
+				010000000000000000000058 /* projectStats/Models/ChatMessage.swift in Sources */,
+				010000000000000000000059 /* projectStats/Models/ProjectNote.swift in Sources */,
+				010000000000000000000060 /* projectStats/Models/ProjectTemplate.swift in Sources */,
+				010000000000000000000061 /* projectStats/Models/SecretMatch.swift in Sources */,
+				010000000000000000000062 /* projectStats/Models/TimeEntry.swift in Sources */,
+				010000000000000000000063 /* projectStats/Services/AIService.swift in Sources */,
+				010000000000000000000064 /* projectStats/Services/AchievementService.swift in Sources */,
+				010000000000000000000065 /* projectStats/Services/ClaudeContextMonitor.swift in Sources */,
+				010000000000000000000066 /* projectStats/Services/ClaudePlanUsageService.swift in Sources */,
+				010000000000000000000067 /* projectStats/Services/CloudSyncService.swift in Sources */,
+				010000000000000000000068 /* projectStats/Services/CodeVectorDB.swift in Sources */,
+				010000000000000000000069 /* projectStats/Services/DiscordProvider.swift in Sources */,
+				010000000000000000000070 /* projectStats/Services/ErrorDetector.swift in Sources */,
+				010000000000000000000071 /* projectStats/Services/FeatureFlags.swift in Sources */,
+				010000000000000000000072 /* projectStats/Services/GitHubService.swift in Sources */,
+				010000000000000000000073 /* projectStats/Services/MessagingService.swift in Sources */,
+				010000000000000000000074 /* projectStats/Services/NotificationService.swift in Sources */,
+				010000000000000000000075 /* projectStats/Services/NtfyProvider.swift in Sources */,
+				010000000000000000000076 /* projectStats/Services/ReportGenerator.swift in Sources */,
+				010000000000000000000077 /* projectStats/Services/SecretsScanner.swift in Sources */,
+				010000000000000000000078 /* projectStats/Services/SlackProvider.swift in Sources */,
+				010000000000000000000079 /* projectStats/Services/StoreKitManager.swift in Sources */,
+				010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */,
+				010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */,
+				010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */,
+				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
+				010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */,
+				010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */,
+				010000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift in Sources */,
+				010000000000000000000087 /* projectStats/Views/Achievements/AchievementsDashboard.swift in Sources */,
+				010000000000000000000088 /* projectStats/Views/Achievements/ShareCardView.swift in Sources */,
+				010000000000000000000089 /* projectStats/Views/Claude/ClaudeConfigSheet.swift in Sources */,
+				010000000000000000000090 /* projectStats/Views/CommandPalette/CommandPaletteView.swift in Sources */,
+				010000000000000000000091 /* projectStats/Views/Components/ProBadge.swift in Sources */,
+				010000000000000000000092 /* projectStats/Views/Dashboard/ClaudeUsageCard.swift in Sources */,
+				010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */,
+				010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */,
+				010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */,
+				010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */,
+				010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */,
+				010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */,
+				010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */,
+				010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */,
+				010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */,
+				010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */,
+				010000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift in Sources */,
+				010000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift in Sources */,
+				010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */,
+				010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */,
+				010000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift in Sources */,
+				010000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift in Sources */,
+				010000000000000000000109 /* projectStats/Views/Settings/AISettings.swift in Sources */,
+				010000000000000000000110 /* projectStats/Views/Settings/AccountView.swift in Sources */,
+				010000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift in Sources */,
+				010000000000000000000112 /* projectStats/Views/Settings/DataManagementView.swift in Sources */,
+				010000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift in Sources */,
+				010000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift in Sources */,
+				010000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift in Sources */,
+				010000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift in Sources */,
+				010000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift in Sources */,
+				010000000000000000000118 /* projectStats/Models/SavedPrompt.swift in Sources */,
 				010000000000000000000119 /* PromptImportService.swift in Sources */,
-				010000000000000000000120 /* SavedDiff.swift in Sources */,
-				010000000000000000000121 /* DiffManagerView.swift in Sources */,
-				010000000000000000000122 /* DataCleanupService.swift in Sources */,
-				010000000000000000000123 /* ClaudeUsageSnapshot.swift in Sources */,
-				010000000000000000000124 /* ClaudeUsageService.swift in Sources */,
-				010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */,
+				010000000000000000000120 /* projectStats/Models/SavedDiff.swift in Sources */,
+				010000000000000000000121 /* projectStats/Views/IDE/DiffManagerView.swift in Sources */,
+				010000000000000000000122 /* projectStats/Services/DataCleanupService.swift in Sources */,
+				010000000000000000000123 /* projectStats/Models/ClaudeUsageSnapshot.swift in Sources */,
+				010000000000000000000124 /* projectStats/Services/ClaudeUsageService.swift in Sources */,
+				010000000000000000000125 /* projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift in Sources */,
 				010000000000000000000126 /* BackupService.swift in Sources */,
-				010000000000000000000127 /* SecretsWarningSheet.swift in Sources */,
+				010000000000000000000127 /* projectStats/Views/Git/SecretsWarningSheet.swift in Sources */,
 				010000000000000000000128 /* BranchService.swift in Sources */,
-				010000000000000000000129 /* CreateBranchSheet.swift in Sources */,
-				010000000000000000000130 /* ClaudePlanUsageSnapshot.swift in Sources */,
-				010000000000000000000131 /* ClaudeUsageSettingsView.swift in Sources */,
-				010000000000000000000132 /* TTSService.swift in Sources */,
-				010000000000000000000133 /* ListenButton.swift in Sources */,
-				010000000000000000000134 /* ProjectArchiveService.swift in Sources */,
-				010000000000000000000135 /* SessionSummaryService.swift in Sources */,
-				010000000000000000000136 /* SessionSummaryView.swift in Sources */,
-				010000000000000000000137 /* DBv2Models.swift in Sources */,
-				010000000000000000000138 /* DBv2MigrationService.swift in Sources */,
-				010000000000000000000139 /* WorkItemsView.swift in Sources */,
-				010000000000000000000140 /* AIProvider.swift in Sources */,
-				010000000000000000000141 /* AIProviderRegistry.swift in Sources */,
-				010000000000000000000142 /* CodexService.swift in Sources */,
-				010000000000000000000143 /* ModelSelectorView.swift in Sources */,
-				010000000000000000000144 /* ThinkingLevelService.swift in Sources */,
-				010000000000000000000145 /* ProviderMetricsService.swift in Sources */,
-				010000000000000000000146 /* ProviderComparisonCard.swift in Sources */,
-				010000000000000000000147 /* AIProviderSettingsView.swift in Sources */,
-				010000000000000000000148 /* CloudKitContainer.swift in Sources */,
-				010000000000000000000149 /* Syncable.swift in Sources */,
-				010000000000000000000150 /* SyncableExtensions.swift in Sources */,
-				010000000000000000000151 /* SyncEngine.swift in Sources */,
-				010000000000000000000152 /* ConflictResolver.swift in Sources */,
-				010000000000000000000153 /* OfflineQueueManager.swift in Sources */,
-				010000000000000000000154 /* SyncStatusView.swift in Sources */,
-				010000000000000000000155 /* SyncSettingsView.swift in Sources */,
-				010000000000000000000156 /* SyncScheduler.swift in Sources */,
-				010000000000000000000157 /* WebAPIClient.swift in Sources */,
+				010000000000000000000129 /* projectStats/Views/Git/CreateBranchSheet.swift in Sources */,
+				010000000000000000000130 /* projectStats/Models/ClaudePlanUsageSnapshot.swift in Sources */,
+				010000000000000000000131 /* projectStats/Views/Settings/ClaudeUsageSettingsView.swift in Sources */,
+				010000000000000000000132 /* projectStats/Services/TTSService.swift in Sources */,
+				010000000000000000000133 /* projectStats/Views/Components/ListenButton.swift in Sources */,
+				010000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift in Sources */,
+				010000000000000000000135 /* projectStats/Services/SessionSummaryService.swift in Sources */,
+				010000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift in Sources */,
+				010000000000000000000137 /* projectStats/Models/DBv2Models.swift in Sources */,
+				010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */,
+				010000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift in Sources */,
+				010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */,
+				010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */,
+				010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */,
+				010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */,
+				010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */,
+				010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */,
+				010000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift in Sources */,
+				010000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift in Sources */,
+				010000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift in Sources */,
+				010000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift in Sources */,
+				010000000000000000000150 /* projectStats/Services/CloudKit/SyncableExtensions.swift in Sources */,
+				010000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift in Sources */,
+				010000000000000000000152 /* projectStats/Services/CloudKit/ConflictResolver.swift in Sources */,
+				010000000000000000000153 /* projectStats/Services/CloudKit/OfflineQueueManager.swift in Sources */,
+				010000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift in Sources */,
+				010000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift in Sources */,
+				010000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift in Sources */,
+				010000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -894,6 +1000,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = BX5MA67879;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -925,6 +1032,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = BX5MA67879;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -947,25 +1055,6 @@
 		};
 /* End XCBuildConfiguration section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		0B0000000000000000000001 /* SwiftTerm */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.9.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		0C0000000000000000000001 /* SwiftTerm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0B0000000000000000000001 /* SwiftTerm */;
-			productName = SwiftTerm;
-		};
-/* End XCSwiftPackageProductDependency section */
-
 /* Begin XCConfigurationList section */
 		070000000000000000000001 /* Build configuration list for PBXNativeTarget "projectStats" */ = {
 			isa = XCConfigurationList;
@@ -986,6 +1075,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B0000000000000000000001 /* XCRemoteSwiftPackageReference "SwiftTerm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0C0000000000000000000001 /* SwiftTerm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B0000000000000000000001 /* XCRemoteSwiftPackageReference "SwiftTerm" */;
+			productName = SwiftTerm;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 100000000000000000000001 /* Project object */;
 }

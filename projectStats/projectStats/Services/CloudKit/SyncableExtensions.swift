@@ -1,3 +1,4 @@
+#if false // DISABLED: Requires paid Apple Developer account
 import CloudKit
 import Foundation
 import SwiftData
@@ -219,3 +220,4 @@ extension TimeEntry {
         self.tokensUsed = record.int(for: "tokensUsed")
     }
 }
+#endif

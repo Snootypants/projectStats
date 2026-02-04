@@ -1,3 +1,8 @@
+import AppKit
+import Combine
+import Foundation
+
+#if false // DISABLED: Requires paid Apple Developer account
 import Foundation
 import AppKit
 
@@ -183,4 +188,36 @@ private extension Int {
     func clamped(to range: ClosedRange<Int>) -> Int {
         return Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
     }
+}
+#endif
+
+// MARK: - Disabled CloudKit Stub
+
+@MainActor
+final class SyncScheduler: ObservableObject {
+    static let shared = SyncScheduler()
+
+    @Published var isScheduled = false
+    @Published var nextSyncDate: Date?
+
+    private init() {}
+
+    func startScheduledSync() {
+        print("[SyncScheduler] CloudKit disabled - requires paid dev account")
+    }
+
+    func stopScheduledSync() {
+        isScheduled = false
+        nextSyncDate = nil
+    }
+
+    func scheduleChangeSync() {
+        print("[SyncScheduler] CloudKit disabled - requires paid dev account")
+    }
+
+    func onAppBecameActive() {}
+
+    func onAppWillResignActive() async {}
+
+    func onAppWillTerminate() async {}
 }

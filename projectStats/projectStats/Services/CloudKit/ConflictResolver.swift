@@ -1,3 +1,7 @@
+import Combine
+import Foundation
+
+#if false // DISABLED: Requires paid Apple Developer account
 import CloudKit
 import Foundation
 
@@ -159,5 +163,57 @@ final class ConflictResolver: ObservableObject {
         // Consider it a conflict if both modified within 1 second of each other
         // and the server record is older
         return serverModified < localModified && localModified.timeIntervalSince(serverModified) < 60
+    }
+}
+#endif
+
+// MARK: - Disabled CloudKit Stubs
+
+/// Resolution strategies for sync conflicts
+enum ConflictResolution: String, CaseIterable, Codable {
+    case useLocal = "use_local"
+    case useRemote = "use_remote"
+    case merge = "merge"
+    case manual = "manual"
+
+    var displayName: String {
+        switch self {
+        case .useLocal: return "Keep Local"
+        case .useRemote: return "Keep Remote"
+        case .merge: return "Merge (Last Write Wins)"
+        case .manual: return "Ask Each Time"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .useLocal: return "Always prefer your local changes"
+        case .useRemote: return "Always prefer changes from other devices"
+        case .merge: return "Automatically merge based on timestamps"
+        case .manual: return "Show a dialog to choose for each conflict"
+        }
+    }
+}
+
+/// Service for resolving sync conflicts
+@MainActor
+final class ConflictResolver: ObservableObject {
+    static let shared = ConflictResolver()
+
+    @Published var defaultResolution: ConflictResolution = .merge
+
+    private init() {
+        loadSettings()
+    }
+
+    private func loadSettings() {
+        if let raw = UserDefaults.standard.string(forKey: "sync.conflictResolution"),
+           let resolution = ConflictResolution(rawValue: raw) {
+            defaultResolution = resolution
+        }
+    }
+
+    func saveSettings() {
+        UserDefaults.standard.set(defaultResolution.rawValue, forKey: "sync.conflictResolution")
     }
 }

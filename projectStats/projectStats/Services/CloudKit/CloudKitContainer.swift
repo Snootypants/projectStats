@@ -1,3 +1,7 @@
+import Combine
+import Foundation
+
+#if false // DISABLED: Requires paid Apple Developer account
 import CloudKit
 import Foundation
 
@@ -199,7 +203,26 @@ enum CloudKitErrorAction {
     case recreateZone
     case fullSync
 }
+#endif
 
+// MARK: - Disabled CloudKit Stub
+
+@MainActor
+final class CloudKitContainer: ObservableObject {
+    static let shared = CloudKitContainer()
+
+    @Published var isSignedIn = false
+    @Published var lastError: Error?
+
+    private init() {}
+
+    func checkAccountStatus() async {
+        isSignedIn = false
+        print("[CloudKit] Disabled - requires paid dev account")
+    }
+}
+
+#if false // DISABLED: Requires paid Apple Developer account
 // MARK: - CKError Extension
 
 extension CKError {
@@ -207,3 +230,4 @@ extension CKError {
         return userInfo[CKErrorRetryAfterKey] as? TimeInterval
     }
 }
+#endif

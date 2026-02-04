@@ -1,3 +1,6 @@
+import Foundation
+
+#if false // DISABLED: Requires paid Apple Developer account
 import CloudKit
 import Foundation
 
@@ -222,4 +225,47 @@ struct SyncConflict {
     let serverModifiedAt: Date
     let localRecord: CKRecord?
     let serverRecord: CKRecord
+}
+#endif
+
+// MARK: - Disabled CloudKit Stubs
+
+/// Types of sync changes
+enum SyncChangeType {
+    case created
+    case updated
+    case deleted
+}
+
+/// Represents a pending sync operation
+struct PendingSyncOperation: Identifiable, Codable {
+    let id: UUID
+    let recordType: String
+    let recordID: String
+    let changeType: String
+    let timestamp: Date
+    var retryCount: Int
+
+    init(recordType: String, recordID: String, changeType: SyncChangeType) {
+        self.id = UUID()
+        self.recordType = recordType
+        self.recordID = recordID
+        self.timestamp = Date()
+        self.retryCount = 0
+
+        switch changeType {
+        case .created: self.changeType = "created"
+        case .updated: self.changeType = "updated"
+        case .deleted: self.changeType = "deleted"
+        }
+    }
+
+    var syncChangeType: SyncChangeType {
+        switch changeType {
+        case "created": return .created
+        case "updated": return .updated
+        case "deleted": return .deleted
+        default: return .updated
+        }
+    }
 }

@@ -1,3 +1,7 @@
+import Combine
+import Foundation
+
+#if false // DISABLED: Requires paid Apple Developer account
 import Foundation
 import Network
 
@@ -134,5 +138,40 @@ final class OfflineQueueManager: ObservableObject {
     private func saveQueue() {
         let data = try? JSONEncoder().encode(queuedOperations)
         UserDefaults.standard.set(data, forKey: queueKey)
+    }
+}
+#endif
+
+// MARK: - Disabled CloudKit Stub
+
+@MainActor
+final class OfflineQueueManager: ObservableObject {
+    static let shared = OfflineQueueManager()
+
+    @Published var isOnline = false
+    @Published var queuedOperations: [PendingSyncOperation] = []
+    @Published var isProcessingQueue = false
+
+    private init() {}
+
+    func queueOperation(_ operation: PendingSyncOperation) {
+        queuedOperations.append(operation)
+    }
+
+    func queueSyncOperation(recordType: String, recordID: String, changeType: SyncChangeType) {
+        let operation = PendingSyncOperation(recordType: recordType, recordID: recordID, changeType: changeType)
+        queueOperation(operation)
+    }
+
+    func processQueue() async {
+        print("[OfflineQueue] CloudKit disabled - requires paid dev account")
+    }
+
+    func clearQueue() {
+        queuedOperations.removeAll()
+    }
+
+    func removeOperation(_ operation: PendingSyncOperation) {
+        queuedOperations.removeAll { $0.id == operation.id }
     }
 }

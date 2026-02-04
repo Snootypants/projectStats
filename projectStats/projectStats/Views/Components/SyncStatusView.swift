@@ -1,3 +1,4 @@
+#if false // DISABLED: Requires paid Apple Developer account
 import SwiftUI
 
 /// Compact sync status view for toolbar
@@ -162,6 +163,49 @@ struct SyncStatusView: View {
         .buttonStyle(.bordered)
         .controlSize(.small)
         .disabled(syncEngine.isSyncing || !offlineQueue.isOnline)
+    }
+}
+
+#Preview("Compact") {
+    CompactSyncStatusView()
+        .padding()
+}
+
+#Preview("Full") {
+    SyncStatusView()
+        .frame(width: 300)
+        .padding()
+}
+#endif
+
+import SwiftUI
+
+/// Compact sync status view for toolbar (disabled)
+struct CompactSyncStatusView: View {
+    var body: some View {
+        Label("Sync Off", systemImage: "icloud.slash")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(Color.primary.opacity(0.05))
+            .cornerRadius(4)
+    }
+}
+
+/// Full sync status view for settings (disabled)
+struct SyncStatusView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Cloud Sync")
+                .font(.headline)
+            Text("Coming Soon. CloudKit sync is disabled because it requires a paid Apple Developer account.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .background(Color.primary.opacity(0.03))
+        .cornerRadius(8)
     }
 }
 
