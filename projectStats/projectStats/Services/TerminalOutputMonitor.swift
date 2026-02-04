@@ -7,7 +7,13 @@ final class TerminalOutputMonitor: ObservableObject {
 
     @Published var lastDetectedError: DetectedError?
     @Published var isClaudeRunning: Bool = false
+    @Published var activeSession: AISessionV2?
     var activeProjectPath: String?
+
+    // Current session tracking
+    private var currentProvider: AIProviderType = .claudeCode
+    private var currentModel: AIModel = .claudeSonnet4_5
+    private var currentThinkingLevel: ThinkingLevel = .none
 
     private var syncDebounceTask: Task<Void, Never>?
     private let errorDetector = ErrorDetector()
@@ -68,15 +74,26 @@ final class TerminalOutputMonitor: ObservableObject {
                 isClaudeRunning = true
                 if let projectPath = activeProjectPath {
                     TimeTrackingService.shared.startAITracking(project: projectPath, aiType: "claude_code")
+                    // Start AISessionV2 tracking
+                    startSession(
+                        provider: currentProvider,
+                        model: currentModel,
+                        thinkingLevel: currentThinkingLevel,
+                        projectPath: projectPath
+                    )
                 }
             }
         }
 
         // Detect Claude session end
-        if let _ = parseClaudeFinished(cleanLine) {
+        if let duration = parseClaudeFinished(cleanLine) {
             if isClaudeRunning {
                 isClaudeRunning = false
                 TimeTrackingService.shared.stopAITracking()
+
+                // End AISessionV2 tracking (estimate tokens from duration)
+                let estimatedTokens = Int(duration * 50) // Rough estimate: ~50 tokens/second
+                endSession(inputTokens: estimatedTokens / 2, outputTokens: estimatedTokens / 2)
 
                 // Trigger notification if tab not active
                 if SettingsViewModel.shared.notifyClaudeFinished {
@@ -198,6 +215,79 @@ final class TerminalOutputMonitor: ObservableObject {
                 title: "Claude finished",
                 message: "Ready for review in \(projectName)"
             )
+        }
+    }
+
+    // MARK: - Session Tracking
+
+    /// Start a new AI session with provider info
+    func startSession(provider: AIProviderType, model: AIModel, thinkingLevel: ThinkingLevel = .none, projectPath: String?) {
+        currentProvider = provider
+        currentModel = model
+        currentThinkingLevel = thinkingLevel
+
+        let session = AISessionV2(
+            providerType: provider,
+            model: model,
+            thinkingLevel: thinkingLevel,
+            projectPath: projectPath
+        )
+
+        activeSession = session
+
+        // Insert into SwiftData
+        let context = AppModelContainer.shared.mainContext
+        context.insert(session)
+
+        print("[TerminalMonitor] Started \(provider.displayName) session with \(model.displayName)")
+    }
+
+    /// End the current session with token usage
+    func endSession(inputTokens: Int, outputTokens: Int, thinkingTokens: Int = 0,
+                    cacheReadTokens: Int = 0, cacheWriteTokens: Int = 0,
+                    wasSuccessful: Bool = true, errorMessage: String? = nil) {
+        guard let session = activeSession else { return }
+
+        session.end(
+            inputTokens: inputTokens,
+            outputTokens: outputTokens,
+            thinkingTokens: thinkingTokens,
+            cacheReadTokens: cacheReadTokens,
+            cacheWriteTokens: cacheWriteTokens,
+            wasSuccessful: wasSuccessful,
+            errorMessage: errorMessage
+        )
+
+        // Save to SwiftData
+        do {
+            try AppModelContainer.shared.mainContext.save()
+            print("[TerminalMonitor] Ended session: \(session.totalTokens) tokens, $\(String(format: "%.4f", session.costUSD))")
+        } catch {
+            print("[TerminalMonitor] Failed to save session: \(error)")
+        }
+
+        activeSession = nil
+    }
+
+    /// Update session settings from terminal tab
+    func updateSessionSettings(provider: AIProviderType, model: AIModel, thinkingLevel: ThinkingLevel) {
+        currentProvider = provider
+        currentModel = model
+        currentThinkingLevel = thinkingLevel
+    }
+
+    /// Parse token usage from terminal output and end session
+    func parseAndEndSession(_ output: String) {
+        // Try to parse token usage from output
+        if let usage = ThinkingLevelService.shared.parseThinkingUsage(output) {
+            endSession(
+                inputTokens: usage.input,
+                outputTokens: usage.output,
+                thinkingTokens: usage.thinking
+            )
+        } else {
+            // No token info available, just end the session
+            endSession(inputTokens: 0, outputTokens: 0)
         }
     }
 }
