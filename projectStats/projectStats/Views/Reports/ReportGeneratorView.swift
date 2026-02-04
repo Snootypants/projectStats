@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct ReportGeneratorView: View {
     let project: Project
@@ -6,6 +7,7 @@ struct ReportGeneratorView: View {
     @State private var previewMarkdown: String = ""
     @State private var showPreview = false
     @State private var isGenerating = false
+    @State private var exportMessage: String?
 
     private let generator = ReportGenerator()
 
@@ -46,7 +48,27 @@ struct ReportGeneratorView: View {
                 HStack {
                     Button("Preview") { generatePreview() }
                     Button("Generate") { generateReport() }
+
+                    Button {
+                        exportMarkdown()
+                    } label: {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                            Text("Export Markdown")
+                        }
+                    }
+                    .buttonStyle(.bordered)
+
                     if isGenerating { ProgressView().controlSize(.small) }
+                }
+
+                if let message = exportMessage {
+                    HStack {
+                        Image(systemName: message.contains("Saved") ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundStyle(message.contains("Saved") ? .green : .red)
+                        Text(message)
+                            .font(.caption)
+                    }
                 }
             }
         }
@@ -70,6 +92,28 @@ struct ReportGeneratorView: View {
             }
             _ = generator.generatePDF(for: project, options: options)
             isGenerating = false
+        }
+    }
+
+    private func exportMarkdown() {
+        let markdown = generator.generateMarkdown(for: project, options: options)
+
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = "\(project.name.replacingOccurrences(of: " ", with: "-"))-report.md"
+        panel.allowedContentTypes = [.text]
+        panel.canCreateDirectories = true
+        panel.title = "Export Report as Markdown"
+
+        if panel.runModal() == .OK, let url = panel.url {
+            do {
+                try markdown.write(to: url, atomically: true, encoding: .utf8)
+                exportMessage = "Saved to \(url.lastPathComponent)"
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    exportMessage = nil
+                }
+            } catch {
+                exportMessage = "Export failed: \(error.localizedDescription)"
+            }
         }
     }
 }
