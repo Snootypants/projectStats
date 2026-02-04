@@ -94,11 +94,12 @@ final class TerminalTabItem: ObservableObject, Identifiable {
         ghostCloseDeadline = nil
 
         recordCommand(command)
-        let textWithNewline = command + "\n"
-        if let data = textWithNewline.data(using: .utf8) {
+        // Use carriage return (\r) which is what Enter key sends in terminals
+        let textWithReturn = command + "\r"
+        if let data = textWithReturn.data(using: .utf8) {
             terminalView.send([UInt8](data))
         }
-        print("[Terminal] ✅ Sent \(textWithNewline.count) chars to terminal")
+        print("[Terminal] ✅ Sent \(textWithReturn.count) chars to terminal")
 
         if kind == .devServer {
             startTime = Date()

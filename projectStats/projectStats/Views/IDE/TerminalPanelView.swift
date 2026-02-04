@@ -82,26 +82,27 @@ struct TerminalPanelView: View {
         let textToSend = promptText
         promptText = ""
 
-        // Save to database
-        Task { @MainActor in
-            do {
-                let context = AppModelContainer.shared.mainContext
-                let saved = SavedPrompt(
-                    text: textToSend,
-                    projectPath: TerminalOutputMonitor.shared.activeProjectPath
-                )
-                context.insert(saved)
-                try context.save()
-                print("[Prompts] ✅ Saved prompt: \(textToSend.prefix(50))...")
-            } catch {
-                print("[Prompts] ❌ Failed to save: \(error)")
-            }
-        }
-
-        // Send to terminal (sendCommand adds newline)
+        // First, send to terminal immediately (sendCommand adds carriage return to execute)
         if let activeTab = viewModel.activeTab {
             activeTab.sendCommand(textToSend)
             print("[Prompts] ✅ Sent to terminal: \(textToSend.prefix(50))...")
+
+            // Then save to database asynchronously
+            Task { @MainActor in
+                do {
+                    let context = AppModelContainer.shared.mainContext
+                    let saved = SavedPrompt(
+                        text: textToSend,
+                        projectPath: TerminalOutputMonitor.shared.activeProjectPath,
+                        wasExecuted: true
+                    )
+                    context.insert(saved)
+                    try context.save()
+                    print("[Prompts] ✅ Saved prompt: \(textToSend.prefix(50))...")
+                } catch {
+                    print("[Prompts] ❌ Failed to save: \(error)")
+                }
+            }
         } else {
             print("[Prompts] ❌ No active terminal tab!")
         }
