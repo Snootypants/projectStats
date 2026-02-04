@@ -2,14 +2,19 @@ import SwiftUI
 
 struct CommitDialog: View {
     let status: GitStatusSummary
+    let projectPath: URL?
     let onCommit: (String, [String], Bool) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var message: String = ""
     @State private var selectedPaths: Set<String>
+    @State private var detectedSecrets: [SecretMatch] = []
+    @State private var showSecretsWarning = false
+    @State private var pendingPush = false
 
-    init(status: GitStatusSummary, onCommit: @escaping (String, [String], Bool) -> Void) {
+    init(status: GitStatusSummary, projectPath: URL? = nil, onCommit: @escaping (String, [String], Bool) -> Void) {
         self.status = status
+        self.projectPath = projectPath
         self.onCommit = onCommit
         _selectedPaths = State(initialValue: Set(status.changes.map { $0.path }))
     }
@@ -73,20 +78,51 @@ struct CommitDialog: View {
                 Button("Cancel") { dismiss() }
                 Spacer()
                 Button("Commit") {
-                    onCommit(message, Array(selectedPaths), false)
-                    dismiss()
+                    performCommit(pushAfter: false)
                 }
                 .buttonStyle(.bordered)
 
                 Button("Commit & Push") {
-                    onCommit(message, Array(selectedPaths), true)
-                    dismiss()
+                    performCommit(pushAfter: true)
                 }
                 .buttonStyle(.borderedProminent)
             }
         }
         .padding(20)
         .frame(width: 420, height: 420)
+        .sheet(isPresented: $showSecretsWarning) {
+            SecretsWarningSheet(
+                secrets: detectedSecrets,
+                onCancel: {
+                    showSecretsWarning = false
+                },
+                onCommitAnyway: {
+                    showSecretsWarning = false
+                    executeCommit(pushAfter: pendingPush)
+                }
+            )
+        }
+    }
+
+    private func performCommit(pushAfter: Bool) {
+        // Scan for secrets if we have a project path
+        if let path = projectPath {
+            let secrets = SecretsScanner.shared.scanStagedFiles(in: path)
+            if !secrets.isEmpty {
+                detectedSecrets = secrets
+                pendingPush = pushAfter
+                showSecretsWarning = true
+                return
+            }
+        }
+
+        // No secrets found, proceed with commit
+        executeCommit(pushAfter: pushAfter)
+    }
+
+    private func executeCommit(pushAfter: Bool) {
+        onCommit(message, Array(selectedPaths), pushAfter)
+        dismiss()
     }
 }
 

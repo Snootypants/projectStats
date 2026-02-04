@@ -75,7 +75,7 @@ struct GitControlsView: View {
             Text(viewModel.errorMessage ?? "")
         })
         .sheet(isPresented: $showCommitDialog) {
-            CommitDialog(status: viewModel.status) { message, files, pushAfter in
+            CommitDialog(status: viewModel.status, projectPath: viewModel.projectPath) { message, files, pushAfter in
                 Task {
                     await viewModel.commit(message: message, files: files, pushAfter: pushAfter)
                     if viewModel.errorMessage != nil {

@@ -1,6 +1,8 @@
 import Foundation
 
 final class SecretsScanner {
+    static let shared = SecretsScanner()
+
     let patterns: [(name: String, regex: String)] = [
         ("AWS Key", "AKIA[0-9A-Z]{16}"),
         ("GitHub Token", "ghp_[a-zA-Z0-9]{36}"),
@@ -11,6 +13,42 @@ final class SecretsScanner {
         ("Stripe Key", "sk_(live|test)_[a-zA-Z0-9]{24,}"),
         ("Generic Secret", "(password|secret|token|api_key)\\s*[=:]\\s*['\"][^'\"]+['\"]")
     ]
+
+    /// Scans only git staged files for secrets
+    func scanStagedFiles(in projectPath: URL) -> [SecretMatch] {
+        // Get list of staged files
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+        process.arguments = ["-C", projectPath.path, "diff", "--cached", "--name-only"]
+        process.currentDirectoryURL = projectPath
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = FileHandle.nullDevice
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            return []
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else { return [] }
+
+        let stagedFiles = output.components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+            .map { projectPath.appendingPathComponent($0) }
+
+        var allMatches: [SecretMatch] = []
+        for file in stagedFiles {
+            let matches = scan(file: file)
+            allMatches.append(contentsOf: matches)
+        }
+
+        return allMatches
+    }
 
     func scan(file: URL) -> [SecretMatch] {
         guard let content = try? String(contentsOf: file, encoding: .utf8) else { return [] }
