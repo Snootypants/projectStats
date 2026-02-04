@@ -1,3 +1,8 @@
+import Combine
+import Foundation
+import SwiftData
+
+#if false // DISABLED: Requires paid Apple Developer account
 import CloudKit
 import Foundation
 import SwiftData
@@ -269,4 +274,72 @@ enum SyncError: Error {
     case quotaExceeded
     case conflictDetected
     case unknown(Error)
+}
+#endif
+
+// MARK: - Disabled CloudKit Stub
+
+@MainActor
+final class SyncEngine: ObservableObject {
+    static let shared = SyncEngine()
+
+    @Published var isSyncing = false
+    @Published var lastSyncDate: Date?
+    @Published var syncError: Error?
+    @Published var pendingChangesCount = 0
+
+    private init() {}
+
+    func performFullSync(context: ModelContext) async throws {
+        // Check subscription status first
+        guard SubscriptionManager.shared.hasCloudSyncAccess else {
+            print("[Sync] Cloud sync requires Pro subscription")
+            throw SyncError.subscriptionRequired
+        }
+
+        // DISABLED: CloudKit requires paid Apple Developer account
+        print("[Sync] CloudKit disabled - requires paid dev account")
+        throw SyncError.disabled
+    }
+
+    func pushLocalChanges(context: ModelContext) async throws {
+        // Check subscription status first
+        guard SubscriptionManager.shared.hasCloudSyncAccess else {
+            print("[Sync] Cloud sync requires Pro subscription")
+            throw SyncError.subscriptionRequired
+        }
+
+        // DISABLED: CloudKit requires paid Apple Developer account
+        print("[Sync] CloudKit disabled - requires paid dev account")
+        throw SyncError.disabled
+    }
+}
+
+enum SyncError: LocalizedError {
+    case disabled
+    case notSignedIn
+    case subscriptionRequired
+    case networkUnavailable
+    case quotaExceeded
+    case conflictDetected
+    case unknown(Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .disabled:
+            return "CloudKit sync is currently disabled"
+        case .notSignedIn:
+            return "Not signed into iCloud"
+        case .subscriptionRequired:
+            return "Cloud sync requires a Pro subscription"
+        case .networkUnavailable:
+            return "Network unavailable"
+        case .quotaExceeded:
+            return "iCloud storage quota exceeded"
+        case .conflictDetected:
+            return "Sync conflict detected"
+        case .unknown(let error):
+            return error.localizedDescription
+        }
+    }
 }
