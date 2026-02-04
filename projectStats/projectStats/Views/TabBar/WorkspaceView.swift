@@ -1,4 +1,5 @@
 import AppKit
+import SwiftData
 import SwiftUI
 
 struct WorkspaceView: View {
@@ -26,6 +27,20 @@ struct WorkspaceView: View {
             .onAppear {
                 TerminalOutputMonitor.shared.activeProjectPath = project.path.path
                 TimeTrackingService.shared.startTracking(project: project.path.path)
+
+                // Import prompts and work logs from /prompts and /work folders
+                Task {
+                    let context = AppModelContainer.shared.mainContext
+                    await PromptImportService.shared.importPromptsIfNeeded(
+                        for: project.path,
+                        context: context
+                    )
+                    await PromptImportService.shared.importWorkLogsIfNeeded(
+                        for: project.path,
+                        context: context
+                    )
+                }
+
                 Task {
                     await ClaudePlanUsageService.shared.fetchUsage()
                     await ClaudeContextMonitor.shared.refresh()

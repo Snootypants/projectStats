@@ -125,6 +125,7 @@
 		010000000000000000000116 /* NewProjectWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000116 /* NewProjectWizard.swift */; };
 		010000000000000000000117 /* AchievementsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000117 /* AchievementsSheet.swift */; };
 		010000000000000000000118 /* SavedPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000118 /* SavedPrompt.swift */; };
+		010000000000000000000119 /* PromptImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000119 /* PromptImportService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -247,6 +248,7 @@
 		020000000000000000000116 /* NewProjectWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Templates/NewProjectWizard.swift; sourceTree = "<group>"; };
 		020000000000000000000117 /* AchievementsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000118 /* SavedPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedPrompt.swift; sourceTree = "<group>"; };
+		020000000000000000000119 /* PromptImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptImportService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -351,6 +353,7 @@
 				020000000000000000000038 /* JSONStatsReader.swift */,
 				020000000000000000000011 /* LineCounter.swift */,
 				020000000000000000000012 /* ProjectScanner.swift */,
+				020000000000000000000119 /* PromptImportService.swift */,
 				020000000000000000000055 /* TerminalOutputMonitor.swift */,
 				020000000000000000000013 /* GitHubClient.swift */,
 			);
@@ -635,6 +638,7 @@
 				010000000000000000000116 /* NewProjectWizard.swift in Sources */,
 				010000000000000000000117 /* AchievementsSheet.swift in Sources */,
 				010000000000000000000118 /* SavedPrompt.swift in Sources */,
+				010000000000000000000119 /* PromptImportService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

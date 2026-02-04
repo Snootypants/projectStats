@@ -8,6 +8,7 @@ final class SavedPrompt {
     var projectPath: String?
     var createdAt: Date
     var wasExecuted: Bool
+    var sourceFile: String?  // e.g. "1.md", "10.md" - tracks imported file origin
 
     init(text: String, projectPath: String? = nil, wasExecuted: Bool = true) {
         self.id = UUID()
@@ -15,5 +16,6 @@ final class SavedPrompt {
         self.projectPath = projectPath
         self.createdAt = Date()
         self.wasExecuted = wasExecuted
+        self.sourceFile = nil
     }
 }
