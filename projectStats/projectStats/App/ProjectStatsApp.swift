@@ -23,7 +23,10 @@ enum AppModelContainer {
             ProjectSession.self,
             DailyMetric.self,
             WorkItem.self,
-            WeeklyGoal.self
+            WeeklyGoal.self,
+            // AI Provider Models
+            AIProviderConfig.self,
+            AISessionV2.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
