@@ -136,6 +136,7 @@
 		010000000000000000000127 /* SecretsWarningSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000127 /* SecretsWarningSheet.swift */; };
 		010000000000000000000128 /* BranchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000128 /* BranchService.swift */; };
 		010000000000000000000129 /* CreateBranchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000129 /* CreateBranchSheet.swift */; };
+		010000000000000000000130 /* ClaudePlanUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000130 /* ClaudePlanUsageSnapshot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -269,6 +270,7 @@
 		020000000000000000000127 /* SecretsWarningSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/SecretsWarningSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000128 /* BranchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchService.swift; sourceTree = "<group>"; };
 		020000000000000000000129 /* CreateBranchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CreateBranchSheet.swift; sourceTree = "<group>"; };
+		020000000000000000000130 /* ClaudePlanUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudePlanUsageSnapshot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -671,6 +673,7 @@
 				010000000000000000000127 /* SecretsWarningSheet.swift in Sources */,
 				010000000000000000000128 /* BranchService.swift in Sources */,
 				010000000000000000000129 /* CreateBranchSheet.swift in Sources */,
+				010000000000000000000130 /* ClaudePlanUsageSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

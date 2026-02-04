@@ -17,7 +17,8 @@ enum AppModelContainer {
             ProjectNote.self,
             SavedPrompt.self,
             SavedDiff.self,
-            ClaudeUsageSnapshot.self
+            ClaudeUsageSnapshot.self,
+            ClaudePlanUsageSnapshot.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -99,7 +100,7 @@ struct ProjectStatsApp: App {
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DataCleanupService.shared.cleanupIfNeeded(context: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
-                    await ClaudePlanUsageService.shared.fetchUsage()
+                    ClaudePlanUsageService.shared.startHourlyPolling()
                     await ClaudeContextMonitor.shared.refresh()
                     tabManager.restoreState()
                 }

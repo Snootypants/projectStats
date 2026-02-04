@@ -1,5 +1,6 @@
 import Foundation
 import Security
+import SwiftData
 
 @MainActor
 final class ClaudePlanUsageService: ObservableObject {
@@ -18,6 +19,8 @@ final class ClaudePlanUsageService: ObservableObject {
     @Published var error: String?
 
     private var hasNotifiedHighUsage = false
+    private var pollingTimer: Timer?
+    private var lastSnapshotHour: Int = -1
 
     private lazy var dateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
@@ -169,5 +172,88 @@ final class ClaudePlanUsageService: ObservableObject {
         }
 
         return token
+    }
+
+    // MARK: - Hourly Polling
+
+    func startHourlyPolling() {
+        // Initial fetch
+        Task {
+            await fetchUsage()
+            await saveSnapshotIfNewHour()
+        }
+
+        // Poll every 10 minutes
+        pollingTimer?.invalidate()
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                await self?.fetchUsage()
+                await self?.saveSnapshotIfNewHour()
+            }
+        }
+    }
+
+    func stopPolling() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
+    }
+
+    private func saveSnapshotIfNewHour() async {
+        let currentHour = Calendar.current.component(.hour, from: Date())
+
+        guard currentHour != lastSnapshotHour else { return }
+        guard lastUpdated != nil else { return }
+
+        lastSnapshotHour = currentHour
+
+        let snapshot = ClaudePlanUsageSnapshot(
+            fiveHourUtilization: fiveHourUtilization,
+            fiveHourResetsAt: fiveHourResetsAt,
+            sevenDayUtilization: sevenDayUtilization,
+            sevenDayResetsAt: sevenDayResetsAt,
+            opusUtilization: opusUtilization,
+            opusResetsAt: opusResetsAt,
+            sonnetUtilization: sonnetUtilization,
+            sonnetResetsAt: sonnetResetsAt
+        )
+
+        let context = AppModelContainer.shared.mainContext
+        context.insert(snapshot)
+        try? context.save()
+
+        print("[ClaudePlanUsage] Hourly snapshot saved: 5h=\(Int(fiveHourUtilization * 100))%")
+    }
+
+    func saveSnapshotNow() async {
+        guard lastUpdated != nil else { return }
+
+        let snapshot = ClaudePlanUsageSnapshot(
+            fiveHourUtilization: fiveHourUtilization,
+            fiveHourResetsAt: fiveHourResetsAt,
+            sevenDayUtilization: sevenDayUtilization,
+            sevenDayResetsAt: sevenDayResetsAt,
+            opusUtilization: opusUtilization,
+            opusResetsAt: opusResetsAt,
+            sonnetUtilization: sonnetUtilization,
+            sonnetResetsAt: sonnetResetsAt
+        )
+
+        let context = AppModelContainer.shared.mainContext
+        context.insert(snapshot)
+        try? context.save()
+    }
+
+    func getSnapshots(since date: Date) -> [ClaudePlanUsageSnapshot] {
+        let context = AppModelContainer.shared.mainContext
+        let descriptor = FetchDescriptor<ClaudePlanUsageSnapshot>(
+            predicate: #Predicate { $0.capturedAt >= date },
+            sortBy: [SortDescriptor(\.capturedAt, order: .forward)]
+        )
+        return (try? context.fetch(descriptor)) ?? []
+    }
+
+    func getTodaySnapshots() -> [ClaudePlanUsageSnapshot] {
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        return getSnapshots(since: startOfDay)
     }
 }
