@@ -6,6 +6,7 @@ struct WorkspaceView: View {
     let projectPath: String
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
+    @ObservedObject private var timeTrackingService = TimeTrackingService.shared
     @State private var showClaudeConfig = false
 
     /// Resolve the Project from the path
@@ -99,6 +100,15 @@ struct WorkspaceView: View {
                     .frame(width: 8, height: 8)
                 Text(project.name)
                     .font(.system(size: 13, weight: .semibold))
+
+                // Project time counter
+                Text(timeTrackingService.projectTimeFormatted)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.primary.opacity(0.05))
+                    .cornerRadius(4)
             }
 
             Spacer()
