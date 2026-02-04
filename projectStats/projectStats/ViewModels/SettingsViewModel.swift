@@ -87,6 +87,25 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
     @AppStorage("showEnvironmentTab") var showEnvironmentTab: Bool = true
 
+    // MARK: - Claude Usage Display Settings
+    @AppStorage("ccusage_showCost") var ccusageShowCost: Bool = true
+    @AppStorage("ccusage_showChart") var ccusageShowChart: Bool = true
+    @AppStorage("ccusage_showInputTokens") var ccusageShowInputTokens: Bool = false
+    @AppStorage("ccusage_showOutputTokens") var ccusageShowOutputTokens: Bool = false
+    @AppStorage("ccusage_showCacheTokens") var ccusageShowCacheTokens: Bool = false
+    @AppStorage("ccusage_showModelBreakdown") var ccusageShowModelBreakdown: Bool = false
+    @AppStorage("ccusage_daysToShow") var ccusageDaysToShow: Int = 7
+
+    // MARK: - API Keys
+    @AppStorage("openai_apiKey") var openAIApiKey: String = ""
+    @AppStorage("elevenLabs_apiKey") var elevenLabsApiKey: String = ""
+    @AppStorage("elevenLabs_voiceId") var elevenLabsVoiceId: String = ""
+
+    // MARK: - Voice
+    @AppStorage("tts_enabled") var ttsEnabled: Bool = false
+    @AppStorage("tts_provider") var ttsProvider: String = "openai"
+    @AppStorage("voice_autoTranscribe") var voiceAutoTranscribe: Bool = true
+
     var codeDirectory: URL {
         get {
             if codeDirectoryPath.isEmpty {

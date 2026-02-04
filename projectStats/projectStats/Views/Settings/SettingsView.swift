@@ -42,6 +42,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     case messaging
     case cloudSync
     case ai
+    case claudeUsage
     case data
     case notifications
     case subscription
@@ -58,6 +59,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
         case .messaging: return "message"
         case .cloudSync: return "icloud"
         case .ai: return "sparkles"
+        case .claudeUsage: return "chart.bar"
         case .data: return "tray.full"
         case .notifications: return "bell"
         case .subscription: return "creditcard"
@@ -74,6 +76,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
         case .messaging: return "Messaging"
         case .cloudSync: return "Cloud"
         case .ai: return "AI"
+        case .claudeUsage: return "Usage"
         case .data: return "Data"
         case .notifications: return "Alerts"
         case .subscription: return "Subscribe"
@@ -148,6 +151,8 @@ struct SettingsView: View {
             CloudSyncSettingsView()
         case .ai:
             AISettingsView()
+        case .claudeUsage:
+            ClaudeUsageSettingsView()
         case .data:
             DataManagementView()
         case .notifications:
