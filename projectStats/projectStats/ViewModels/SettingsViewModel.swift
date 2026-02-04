@@ -82,6 +82,11 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("ai.model") var aiModel: String = "claude-3-5-sonnet-latest"
     @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
 
+    // IDE Tab visibility
+    @AppStorage("showPromptsTab") var showPromptsTab: Bool = true
+    @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
+    @AppStorage("showEnvironmentTab") var showEnvironmentTab: Bool = true
+
     var codeDirectory: URL {
         get {
             if codeDirectoryPath.isEmpty {

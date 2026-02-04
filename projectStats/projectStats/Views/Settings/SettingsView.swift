@@ -512,6 +512,27 @@ struct AppearanceSettingsView: View {
                 .padding(.top, 8)
             }
 
+            Divider()
+
+            // IDE Tabs Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text("IDE Tabs")
+                    .font(.headline)
+
+                Text("Choose which tabs to show in the workspace viewer.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Show Prompts Tab", isOn: $viewModel.showPromptsTab)
+                    .toggleStyle(.switch)
+
+                Toggle("Show Diffs Tab", isOn: $viewModel.showDiffsTab)
+                    .toggleStyle(.switch)
+
+                Toggle("Show Environment Tab", isOn: $viewModel.showEnvironmentTab)
+                    .toggleStyle(.switch)
+            }
+
             Spacer()
         }
     }

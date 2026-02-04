@@ -39,6 +39,11 @@ struct IDEModeView: View {
     @AppStorage("workspace.showExplorer") private var showExplorer: Bool = true
     @AppStorage("workspace.showViewer") private var showViewer: Bool = true
 
+    // IDE Tab visibility settings
+    @AppStorage("showPromptsTab") private var showPromptsTab: Bool = true
+    @AppStorage("showDiffsTab") private var showDiffsTab: Bool = true
+    @AppStorage("showEnvironmentTab") private var showEnvironmentTab: Bool = true
+
     @State private var dragStartTerminal: (CGFloat, CGFloat, CGFloat)?
     @State private var dragStartExplorer: (CGFloat, CGFloat, CGFloat)?
 
@@ -137,23 +142,29 @@ struct IDEModeView: View {
                     tab: .files
                 )
 
-                ideTabButton(
-                    title: "Prompts",
-                    icon: "text.badge.plus",
-                    tab: .prompts
-                )
+                if showPromptsTab {
+                    ideTabButton(
+                        title: "Prompts",
+                        icon: "text.badge.plus",
+                        tab: .prompts
+                    )
+                }
 
-                ideTabButton(
-                    title: "Diffs",
-                    icon: "arrow.left.arrow.right",
-                    tab: .diffs
-                )
+                if showDiffsTab {
+                    ideTabButton(
+                        title: "Diffs",
+                        icon: "arrow.left.arrow.right",
+                        tab: .diffs
+                    )
+                }
 
-                ideTabButton(
-                    title: "Environment",
-                    icon: "key",
-                    tab: .environment
-                )
+                if showEnvironmentTab {
+                    ideTabButton(
+                        title: "Environment",
+                        icon: "key",
+                        tab: .environment
+                    )
+                }
 
                 Spacer()
             }
@@ -165,13 +176,25 @@ struct IDEModeView: View {
 
             switch activeTab {
             case .prompts:
-                PromptManagerView(projectPath: project.path)
+                if showPromptsTab {
+                    PromptManagerView(projectPath: project.path)
+                } else {
+                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                }
             case .diffs:
-                DiffManagerView(projectPath: project.path)
+                if showDiffsTab {
+                    DiffManagerView(projectPath: project.path)
+                } else {
+                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                }
             case .files:
                 FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
             case .environment:
-                EnvironmentManagerView(viewModel: environmentViewModel)
+                if showEnvironmentTab {
+                    EnvironmentManagerView(viewModel: environmentViewModel)
+                } else {
+                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                }
             }
         }
     }
