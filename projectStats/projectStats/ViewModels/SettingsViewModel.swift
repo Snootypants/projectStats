@@ -69,7 +69,7 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("notifyGitPushCompleted") var notifyGitPushCompleted: Bool = false
     @AppStorage("notifyAchievementUnlocked") var notifyAchievementUnlocked: Bool = false
     @AppStorage("pushNotificationsEnabled") var pushNotificationsEnabled: Bool = false
-    @AppStorage("ntfyTopic") var ntfyTopic: String = "projectstats-caleb"
+    @AppStorage("ntfyTopic") var ntfyTopic: String = ""
 
     @AppStorage("messaging.service") private var messagingServiceRaw: String = MessagingServiceType.telegram.rawValue
     @AppStorage("messaging.telegram.token") var telegramBotToken: String = ""
