@@ -45,6 +45,7 @@ struct WorkspaceView: View {
                 Task {
                     await ClaudePlanUsageService.shared.fetchUsage()
                     await ClaudeContextMonitor.shared.refresh()
+                    await ClaudeUsageService.shared.refreshProjectIfNeeded(project.path.path)
                 }
             }
             .onDisappear {

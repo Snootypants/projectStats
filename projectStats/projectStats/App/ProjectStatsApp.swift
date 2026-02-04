@@ -16,7 +16,8 @@ enum AppModelContainer {
             AchievementUnlock.self,
             ProjectNote.self,
             SavedPrompt.self,
-            SavedDiff.self
+            SavedDiff.self,
+            ClaudeUsageSnapshot.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

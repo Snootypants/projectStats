@@ -82,6 +82,11 @@ final class TerminalOutputMonitor: ObservableObject {
                 if SettingsViewModel.shared.notifyClaudeFinished {
                     checkAndNotifyClaudeFinished()
                 }
+
+                // Refresh Claude usage stats (with delay for JSONL write)
+                Task {
+                    await ClaudeUsageService.shared.onClaudeFinished(projectPath: activeProjectPath)
+                }
             }
         }
 

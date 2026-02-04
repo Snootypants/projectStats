@@ -75,6 +75,15 @@ class TabManagerViewModel: ObservableObject {
     func selectTab(_ id: UUID) {
         if tabs.contains(where: { $0.id == id }) {
             activeTabID = id
+
+            // Trigger Claude usage refresh
+            let projectPath: String? = tabs.first { $0.id == id }.flatMap {
+                if case .projectWorkspace(let path) = $0.content { return path }
+                return nil
+            }
+            Task {
+                await ClaudeUsageService.shared.onTabSwitch(projectPath: projectPath)
+            }
         }
     }
 

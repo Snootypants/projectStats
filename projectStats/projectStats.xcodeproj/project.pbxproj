@@ -129,6 +129,9 @@
 		010000000000000000000120 /* SavedDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000120 /* SavedDiff.swift */; };
 		010000000000000000000121 /* DiffManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000121 /* DiffManagerView.swift */; };
 		010000000000000000000122 /* DataCleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000122 /* DataCleanupService.swift */; };
+		010000000000000000000123 /* ClaudeUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000123 /* ClaudeUsageSnapshot.swift */; };
+		010000000000000000000124 /* ClaudeUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000124 /* ClaudeUsageService.swift */; };
+		010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000125 /* ClaudeTokenUsageCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -255,6 +258,9 @@
 		020000000000000000000120 /* SavedDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedDiff.swift; sourceTree = "<group>"; };
 		020000000000000000000121 /* DiffManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DiffManagerView.swift; sourceTree = "<group>"; };
 		020000000000000000000122 /* DataCleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DataCleanupService.swift; sourceTree = "<group>"; };
+		020000000000000000000123 /* ClaudeUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/ClaudeUsageSnapshot.swift; sourceTree = "<group>"; };
+		020000000000000000000124 /* ClaudeUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ClaudeUsageService.swift; sourceTree = "<group>"; };
+		020000000000000000000125 /* ClaudeTokenUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ClaudeTokenUsageCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -648,6 +654,9 @@
 				010000000000000000000120 /* SavedDiff.swift in Sources */,
 				010000000000000000000121 /* DiffManagerView.swift in Sources */,
 				010000000000000000000122 /* DataCleanupService.swift in Sources */,
+				010000000000000000000123 /* ClaudeUsageSnapshot.swift in Sources */,
+				010000000000000000000124 /* ClaudeUsageService.swift in Sources */,
+				010000000000000000000125 /* ClaudeTokenUsageCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
