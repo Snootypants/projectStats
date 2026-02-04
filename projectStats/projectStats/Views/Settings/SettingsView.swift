@@ -320,6 +320,7 @@ struct AppearanceSettingsView: View {
     @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
     @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
     @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
+    @AppStorage("dividerBarOpacity") private var barOpacity: Double = 1.0
     @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
 
     private let colorPresets: [(name: String, hex: String)] = [
@@ -421,8 +422,23 @@ struct AppearanceSettingsView: View {
                         Text("Thin")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Slider(value: $lineThickness, in: 1.0...6.0, step: 0.5)
+                        Slider(value: $lineThickness, in: 1.0...6.0)
                         Text("Thick")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Bar Opacity Slider
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Bar Opacity: \(Int(barOpacity * 100))%")
+                        .font(.subheadline)
+                    HStack {
+                        Text("Faint")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Slider(value: $barOpacity, in: 0.3...1.0)
+                        Text("Solid")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -436,7 +452,7 @@ struct AppearanceSettingsView: View {
                         Text("Subtle")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Slider(value: $glowOpacity, in: 0.1...1.0, step: 0.1)
+                        Slider(value: $glowOpacity, in: 0.1...1.0)
                         Text("Bold")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -451,7 +467,7 @@ struct AppearanceSettingsView: View {
                         Text("Tight")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Slider(value: $glowRadius, in: 1.0...10.0, step: 0.5)
+                        Slider(value: $glowRadius, in: 1.0...10.0)
                         Text("Wide")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -485,6 +501,7 @@ struct AppearanceSettingsView: View {
                     Button("Reset to Defaults") {
                         withAnimation(.easeInOut(duration: 0.15)) {
                             lineThickness = 2.0
+                            barOpacity = 1.0
                             glowOpacity = 0.5
                             glowRadius = 3.0
                         }

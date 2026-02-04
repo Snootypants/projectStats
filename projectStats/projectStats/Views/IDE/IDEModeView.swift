@@ -332,6 +332,7 @@ private struct ResizableDivider: View {
     @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
     @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
     @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
+    @AppStorage("dividerBarOpacity") private var barOpacity: Double = 1.0
     @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
 
     private var glowColor: Color {
@@ -354,7 +355,7 @@ private struct ResizableDivider: View {
 
             // Full-height line (glows when active)
             Rectangle()
-                .fill(shouldGlow ? glowColor : Color.secondary.opacity(0.2))
+                .fill(shouldGlow ? glowColor.opacity(barOpacity) : Color.secondary.opacity(0.2 * barOpacity))
                 .frame(width: shouldGlow ? lineThickness : 1)
                 .shadow(color: shouldGlow ? glowColor.opacity(glowOpacity) : .clear, radius: glowRadius)
 
