@@ -33,6 +33,7 @@ struct PromptManagerView: View {
             // Bottom action bar
             actionBar
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             // Select the most recent prompt by default
             if selectedPromptID == nil, let first = savedPrompts.first {
