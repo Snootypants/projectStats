@@ -98,9 +98,9 @@ struct CompactProjectCard: View {
 
             // Project name
             Text(project.name)
-                .font(.system(.subheadline, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .lineLimit(2)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .center)
 
             Spacer(minLength: 0)
 
@@ -146,8 +146,8 @@ struct CompactProjectCard: View {
             }
         }
         .padding(12)
-        .frame(minHeight: 110)
-        .background(Color.primary.opacity(0.03))
+        .frame(minHeight: 120)
+        .background(Color.primary.opacity(0.04))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
@@ -237,7 +237,7 @@ struct ProjectCard: View {
                     .frame(width: 10, height: 10)
 
                 Text(project.name)
-                    .font(.headline)
+                    .font(.system(size: 16, weight: .semibold))
                     .lineLimit(1)
 
                 Spacer()
