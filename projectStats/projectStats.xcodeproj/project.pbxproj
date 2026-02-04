@@ -154,6 +154,7 @@
 		010000000000000000000145 /* ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* ProviderMetricsService.swift */; };
 		010000000000000000000146 /* ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* ProviderComparisonCard.swift */; };
 		010000000000000000000147 /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* AIProviderSettingsView.swift */; };
+		010000000000000000000148 /* CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* CloudKitContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -305,6 +306,7 @@
 		020000000000000000000145 /* ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
 		020000000000000000000146 /* ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
 		020000000000000000000147 /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000148 /* CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -725,6 +727,7 @@
 				010000000000000000000145 /* ProviderMetricsService.swift in Sources */,
 				010000000000000000000146 /* ProviderComparisonCard.swift in Sources */,
 				010000000000000000000147 /* AIProviderSettingsView.swift in Sources */,
+				010000000000000000000148 /* CloudKitContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
