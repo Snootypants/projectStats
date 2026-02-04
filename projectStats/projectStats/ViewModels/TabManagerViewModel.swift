@@ -41,19 +41,29 @@ class TabManagerViewModel: ObservableObject {
 
     /// Close a tab by ID (cannot close pinned tabs)
     func closeTab(_ id: UUID) {
-        guard let tab = tabs.first(where: { $0.id == id }), tab.isCloseable else { return }
+        guard let index = tabs.firstIndex(where: { $0.id == id }) else {
+            return
+        }
 
-        // If closing the active tab, switch to adjacent tab
+        let tab = tabs[index]
+
+        // Don't close pinned tabs (like Home)
+        guard tab.isCloseable else {
+            return
+        }
+
+        // If closing the active tab, switch to adjacent tab first
         if id == activeTabID {
-            if let index = tabs.firstIndex(where: { $0.id == id }) {
-                let nextIndex = index > 0 ? index - 1 : min(index + 1, tabs.count - 1)
+            let nextIndex: Int
+            if tabs.count > 1 {
+                nextIndex = index > 0 ? index - 1 : index + 1
                 if nextIndex < tabs.count {
                     activeTabID = tabs[nextIndex].id
                 }
             }
         }
 
-        tabs.removeAll { $0.id == id }
+        tabs.remove(at: index)
     }
 
     func closeOtherTabs(keeping id: UUID) {
