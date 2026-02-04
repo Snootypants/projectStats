@@ -37,8 +37,19 @@ class SettingsViewModel: ObservableObject {
     static let shared = SettingsViewModel()
 
     @AppStorage("codeDirectoryPath") private var codeDirectoryPath: String = ""
-    @AppStorage("githubToken") var githubToken: String = ""
     @AppStorage("defaultEditorRaw") private var defaultEditorRaw: String = Editor.vscode.rawValue
+
+    var githubToken: String {
+        get { KeychainService.shared.get(key: "githubToken") ?? "" }
+        set {
+            if newValue.isEmpty {
+                KeychainService.shared.delete(key: "githubToken")
+            } else {
+                KeychainService.shared.save(key: "githubToken", value: newValue)
+            }
+            objectWillChange.send()
+        }
+    }
     @AppStorage("defaultTerminalRaw") private var defaultTerminalRaw: String = Terminal.terminal.rawValue
     @AppStorage("refreshInterval") var refreshInterval: Int = 15
     @AppStorage("launchAtLogin") var launchAtLogin: Bool = false {
@@ -79,8 +90,19 @@ class SettingsViewModel: ObservableObject {
     }
 
     @AppStorage("ai.provider") private var aiProviderRaw: String = AIProvider.anthropic.rawValue
-    @AppStorage("ai.apiKey") var aiApiKey: String = ""
     @AppStorage("ai.model") var aiModel: String = "claude-3-5-sonnet-latest"
+
+    var aiApiKey: String {
+        get { KeychainService.shared.get(key: "ai.apiKey") ?? "" }
+        set {
+            if newValue.isEmpty {
+                KeychainService.shared.delete(key: "ai.apiKey")
+            } else {
+                KeychainService.shared.save(key: "ai.apiKey", value: newValue)
+            }
+            objectWillChange.send()
+        }
+    }
     @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
 
     // AI Model & Thinking Settings
@@ -102,10 +124,32 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("ccusage_showModelBreakdown") var ccusageShowModelBreakdown: Bool = false
     @AppStorage("ccusage_daysToShow") var ccusageDaysToShow: Int = 7
 
-    // MARK: - API Keys
-    @AppStorage("openai_apiKey") var openAIApiKey: String = ""
-    @AppStorage("elevenLabs_apiKey") var elevenLabsApiKey: String = ""
+    // MARK: - API Keys (stored in Keychain for security)
     @AppStorage("elevenLabs_voiceId") var elevenLabsVoiceId: String = ""
+
+    var openAIApiKey: String {
+        get { KeychainService.shared.get(key: "openai_apiKey") ?? "" }
+        set {
+            if newValue.isEmpty {
+                KeychainService.shared.delete(key: "openai_apiKey")
+            } else {
+                KeychainService.shared.save(key: "openai_apiKey", value: newValue)
+            }
+            objectWillChange.send()
+        }
+    }
+
+    var elevenLabsApiKey: String {
+        get { KeychainService.shared.get(key: "elevenLabs_apiKey") ?? "" }
+        set {
+            if newValue.isEmpty {
+                KeychainService.shared.delete(key: "elevenLabs_apiKey")
+            } else {
+                KeychainService.shared.save(key: "elevenLabs_apiKey", value: newValue)
+            }
+            objectWillChange.send()
+        }
+    }
 
     // MARK: - Voice
     @AppStorage("tts_enabled") var ttsEnabled: Bool = false
