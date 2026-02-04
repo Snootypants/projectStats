@@ -113,6 +113,7 @@ struct SettingsView: View {
             }
             .frame(width: 90)
             .padding(.vertical, 12)
+            .padding(.top, 8)  // Extra top padding to prevent clipping
             .padding(.horizontal, 4)
             .background(Color(NSColor.windowBackgroundColor).opacity(0.5))
 
@@ -184,7 +185,7 @@ private struct SettingsSidebarItem: View {
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(backgroundColor)
-                    .shadow(color: isSelected ? accentColor.opacity(0.3) : .clear, radius: 4)
+                    .shadow(color: isSelected ? accentColor.opacity(0.15) : .clear, radius: 4)
             )
             .foregroundColor(foregroundColor)
             .scaleEffect(isHovering && !isSelected ? 1.03 : 1.0)
@@ -199,9 +200,9 @@ private struct SettingsSidebarItem: View {
 
     private var backgroundColor: Color {
         if isSelected {
-            return accentColor
+            return accentColor.opacity(0.6)  // Softer accent color
         } else if isHovering {
-            return Color.gray.opacity(0.15)
+            return Color.gray.opacity(0.1)
         }
         return Color.clear
     }
@@ -234,7 +235,7 @@ struct GeneralSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("General")
-                .font(.title2.bold())
+                .font(.title.bold())
 
             Divider()
 
@@ -338,7 +339,7 @@ struct AppearanceSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("Appearance")
-                .font(.title2.bold())
+                .font(.title.bold())
 
             Divider()
 
@@ -547,7 +548,7 @@ struct GitHubSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("GitHub")
-                .font(.title2.bold())
+                .font(.title.bold())
 
             Divider()
 
