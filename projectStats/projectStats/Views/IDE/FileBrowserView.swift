@@ -62,11 +62,14 @@ struct FileNode: Identifiable, Hashable {
 struct FileBrowserView: View {
     let rootPath: URL
     @Binding var selectedFile: URL?
+    var project: Project?
     var onImportEnvFile: ((URL) -> Void)?
     var onRequestDocUpdate: (() -> Void)?
     var onRefreshStats: (() -> Void)?
 
     @State private var rootNode: FileNode?
+    @State private var showReportGenerator = false
+    @State private var selectedReportType: ReportOptions.ReportType = .quick
     @State private var expandedPaths: Set<URL> = []
     @State private var selectedFolder: URL?
     @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = false
@@ -131,6 +134,12 @@ struct FileBrowserView: View {
                 }
                 .padding(.vertical, 8)
             }
+
+            // Generate Report button at bottom
+            if project != nil {
+                Divider()
+                reportButtonBar
+            }
         }
         .onAppear { loadFileTree() }
         .onChange(of: rootPath) { _, _ in loadFileTree() }
@@ -145,6 +154,63 @@ struct FileBrowserView: View {
         } message: {
             Text("This will move the item to Trash.")
         }
+        .sheet(isPresented: $showReportGenerator) {
+            if let project = project {
+                ReportGeneratorView(project: project)
+                    .frame(minWidth: 500, minHeight: 400)
+            }
+        }
+    }
+
+    private var reportButtonBar: some View {
+        HStack(spacing: 10) {
+            Menu {
+                Button {
+                    selectedReportType = .quick
+                    showReportGenerator = true
+                } label: {
+                    Label("Quick Status", systemImage: "bolt")
+                }
+
+                Button {
+                    selectedReportType = .detailed
+                    showReportGenerator = true
+                } label: {
+                    Label("Detailed Report", systemImage: "doc.text.magnifyingglass")
+                }
+
+                Button {
+                    selectedReportType = .handoff
+                    showReportGenerator = true
+                } label: {
+                    Label("Technical Handoff", systemImage: "arrow.right.doc.on.clipboard")
+                }
+
+                Divider()
+
+                Button {
+                    showReportGenerator = true
+                } label: {
+                    Label("Custom Report...", systemImage: "slider.horizontal.3")
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "doc.text")
+                    Text("Generate Report")
+                }
+                .font(.system(size: 12, weight: .medium))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.accentColor.opacity(0.1))
+                .cornerRadius(6)
+            }
+            .menuStyle(.borderlessButton)
+
+            Spacer()
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .background(Color.primary.opacity(0.03))
     }
 
     private var toolbar: some View {

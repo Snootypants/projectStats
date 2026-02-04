@@ -31,6 +31,11 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     var isGhost: Bool
     var startTime: Date?
 
+    // AI Provider settings for this tab
+    @Published var aiProvider: AIProviderType = .claudeCode
+    @Published var aiModel: AIModel = .claudeSonnet4_5
+    @Published var thinkingLevel: ThinkingLevel = .none
+
     // Strong reference to keep terminal view alive across tab switches
     fileprivate var terminalView: LocalProcessTerminalView?
     fileprivate var pendingCommands: [String] = []
@@ -45,11 +50,15 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     private var hasNotifiedAttention = false
     private var hasNotifiedServerStart = false
 
-    init(id: UUID = UUID(), kind: TerminalTabKind, title: String, isGhost: Bool = false) {
+    init(id: UUID = UUID(), kind: TerminalTabKind, title: String, isGhost: Bool = false,
+         aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet4_5, thinkingLevel: ThinkingLevel = .none) {
         self.id = id
         self.kind = kind
         self.title = title
         self.isGhost = isGhost
+        self.aiProvider = aiProvider
+        self.aiModel = aiModel
+        self.thinkingLevel = thinkingLevel
     }
 
     /// Returns existing terminal view if already attached, nil otherwise
@@ -321,19 +330,33 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     func addClaudeTab() {
-        addTab(kind: .claude, title: "Claude", command: "claude")
+        let model = SettingsViewModel.shared.defaultModel
+        let thinking = SettingsViewModel.shared.defaultThinkingLevel
+        let command = ThinkingLevelService.shared.generateClaudeCommand(
+            model: model,
+            thinkingLevel: thinking,
+            dangerouslySkipPermissions: false
+        )
+        addTab(kind: .claude, title: "Claude", command: command, aiModel: model, thinkingLevel: thinking)
     }
 
     func addCcYoloTab() {
-        addTab(kind: .ccYolo, title: "ccYOLO", command: "claude --dangerously-skip-permissions")
+        let model = SettingsViewModel.shared.defaultModel
+        let thinking = SettingsViewModel.shared.defaultThinkingLevel
+        let command = ThinkingLevelService.shared.generateClaudeCommand(
+            model: model,
+            thinkingLevel: thinking,
+            dangerouslySkipPermissions: true
+        )
+        addTab(kind: .ccYolo, title: "ccYOLO", command: command, aiModel: model, thinkingLevel: thinking)
     }
 
     func addCodexTab() {
-        addTab(kind: .codex, title: "Codex", command: "codex")
+        addTab(kind: .codex, title: "Codex", command: "codex", aiProvider: .codex)
     }
 
     func addCodexFullAutoTab() {
-        addTab(kind: .codex, title: "Codex Auto", command: "codex --full-auto")
+        addTab(kind: .codex, title: "Codex Auto", command: "codex --full-auto", aiProvider: .codex)
     }
 
     func addDevServerTab(command: String) {
@@ -341,11 +364,23 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     func addGhostDocUpdateTab() {
-        let command = "claude \"Read the current README.md, CHANGELOG.md, and codebase structure. Update the documentation to accurately reflect the current state. Be concise and accurate.\""
-        let tab = TerminalTabItem(kind: .ghost, title: "Doc Update", isGhost: true)
+        let model = SettingsViewModel.shared.defaultModel
+        let command = "claude --model \(model.rawValue) \"Read the current README.md, CHANGELOG.md, and codebase structure. Update the documentation to accurately reflect the current state. Be concise and accurate.\""
+        let tab = TerminalTabItem(kind: .ghost, title: "Doc Update", isGhost: true, aiModel: model)
         tab.devCommand = command
         tabs.append(tab)
         tab.enqueueCommand(command)
+    }
+
+    /// Add a Claude tab with specific model and thinking level
+    func addClaudeTabWithSettings(model: AIModel, thinkingLevel: ThinkingLevel) {
+        let command = ThinkingLevelService.shared.generateClaudeCommand(
+            model: model,
+            thinkingLevel: thinkingLevel,
+            dangerouslySkipPermissions: false
+        )
+        let titleSuffix = thinkingLevel != .none ? " (\(thinkingLevel.displayName))" : ""
+        addTab(kind: .claude, title: "Claude\(titleSuffix)", command: command, aiModel: model, thinkingLevel: thinkingLevel)
     }
 
     func closeTab(_ tab: TerminalTabItem) {
@@ -374,7 +409,8 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     func duplicateTab(_ tab: TerminalTabItem) {
-        let newTab = TerminalTabItem(kind: tab.kind, title: tab.title)
+        let newTab = TerminalTabItem(kind: tab.kind, title: tab.title,
+                                     aiProvider: tab.aiProvider, aiModel: tab.aiModel, thinkingLevel: tab.thinkingLevel)
         newTab.devCommand = tab.devCommand
         tabs.append(newTab)
         activeTabID = newTab.id
@@ -387,8 +423,10 @@ final class TerminalTabsViewModel: ObservableObject {
         tab.title = title
     }
 
-    private func addTab(kind: TerminalTabKind, title: String, command: String?) {
-        let tab = TerminalTabItem(kind: kind, title: title)
+    private func addTab(kind: TerminalTabKind, title: String, command: String?,
+                        aiProvider: AIProviderType = .claudeCode, aiModel: AIModel = .claudeSonnet4_5, thinkingLevel: ThinkingLevel = .none) {
+        let tab = TerminalTabItem(kind: kind, title: title,
+                                  aiProvider: aiProvider, aiModel: aiModel, thinkingLevel: thinkingLevel)
         tab.devCommand = command
         tabs.append(tab)
         activeTabID = tab.id

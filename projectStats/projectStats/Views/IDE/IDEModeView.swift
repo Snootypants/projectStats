@@ -83,6 +83,7 @@ struct IDEModeView: View {
                     FileBrowserView(
                         rootPath: project.path,
                         selectedFile: $selectedFile,
+                        project: project,
                         onImportEnvFile: { url in
                             environmentViewModel.importEnvFile(at: url)
                             activeTab = .environment
