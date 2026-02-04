@@ -1,19 +1,51 @@
 import Foundation
+import UserNotifications
 import AppKit
 
-final class NotificationService {
+final class NotificationService: NSObject, ObservableObject {
     static let shared = NotificationService()
 
-    private init() {}
+    private override init() {
+        super.init()
+        requestAuthorization()
+    }
 
-    func sendNotification(title: String, message: String) {
+    private func requestAuthorization() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                print("[Notifications] Authorization granted")
+            } else if let error = error {
+                print("[Notifications] Authorization error: \(error)")
+            }
+        }
+
+        UNUserNotificationCenter.current().delegate = self
+    }
+
+    func sendNotification(title: String, message: String, sound: Bool = true) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = message
+
         let settings = SettingsViewModel.shared
-        let notification = NSUserNotification()
-        notification.title = title
-        notification.informativeText = message
-        notification.soundName = settings.playSoundOnClaudeFinished ? settings.notificationSound : nil
-        NSUserNotificationCenter.default.deliver(notification)
+        if sound, settings.playSoundOnClaudeFinished {
+            // Use the configured sound name
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(settings.notificationSound))
+        }
 
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil  // Deliver immediately
+        )
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("[Notifications] Error: \(error)")
+            }
+        }
+
+        // Also send to external services if enabled
         if settings.pushNotificationsEnabled {
             Task {
                 await sendPushNotification(title: title, message: message)
@@ -41,5 +73,20 @@ final class NotificationService {
         request.httpBody = message.data(using: .utf8)
 
         _ = try? await URLSession.shared.data(for: request)
+    }
+}
+
+// MARK: - UNUserNotificationCenterDelegate
+
+extension NotificationService: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show notification even when app is in foreground (but tab not active)
+        completionHandler([.banner, .sound])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        // User tapped notification - bring app to front
+        NSApp.activate(ignoringOtherApps: true)
+        completionHandler()
     }
 }
