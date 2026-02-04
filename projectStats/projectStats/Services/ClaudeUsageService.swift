@@ -29,18 +29,8 @@ class ClaudeUsageService: ObservableObject {
         let cacheReadTokens: Int?
         let totalTokens: Int
         let totalCost: Double
-        let models: [String]?
-
-        enum CodingKeys: String, CodingKey {
-            case date
-            case inputTokens = "input_tokens"
-            case outputTokens = "output_tokens"
-            case cacheCreationTokens = "cache_creation_tokens"
-            case cacheReadTokens = "cache_read_tokens"
-            case totalTokens = "total_tokens"
-            case totalCost = "total_cost"
-            case models
-        }
+        let modelsUsed: [String]?
+        // Note: ccusage returns camelCase JSON, so no CodingKeys needed
     }
 
     struct ProjectUsageStats {
