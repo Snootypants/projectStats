@@ -156,6 +156,14 @@
 		010000000000000000000147 /* AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* AIProviderSettingsView.swift */; };
 		010000000000000000000148 /* CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* CloudKitContainer.swift */; };
 		010000000000000000000149 /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000149 /* Syncable.swift */; };
+		010000000000000000000150 /* SyncableExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000150 /* SyncableExtensions.swift */; };
+		010000000000000000000151 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000151 /* SyncEngine.swift */; };
+		010000000000000000000152 /* ConflictResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000152 /* ConflictResolver.swift */; };
+		010000000000000000000153 /* OfflineQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000153 /* OfflineQueueManager.swift */; };
+		010000000000000000000154 /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000154 /* SyncStatusView.swift */; };
+		010000000000000000000155 /* SyncSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000155 /* SyncSettingsView.swift */; };
+		010000000000000000000156 /* SyncScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000156 /* SyncScheduler.swift */; };
+		010000000000000000000157 /* WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000157 /* WebAPIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -309,6 +317,14 @@
 		020000000000000000000147 /* AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000148 /* CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
 		020000000000000000000149 /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/Syncable.swift; sourceTree = "<group>"; };
+		020000000000000000000150 /* SyncableExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncableExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000151 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncEngine.swift; sourceTree = "<group>"; };
+		020000000000000000000152 /* ConflictResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/ConflictResolver.swift; sourceTree = "<group>"; };
+		020000000000000000000153 /* OfflineQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/OfflineQueueManager.swift; sourceTree = "<group>"; };
+		020000000000000000000154 /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/SyncStatusView.swift; sourceTree = "<group>"; };
+		020000000000000000000155 /* SyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SyncSettingsView.swift; sourceTree = "<group>"; };
+		020000000000000000000156 /* SyncScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncScheduler.swift; sourceTree = "<group>"; };
+		020000000000000000000157 /* WebAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/WebAPI/WebAPIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -731,6 +747,14 @@
 				010000000000000000000147 /* AIProviderSettingsView.swift in Sources */,
 				010000000000000000000148 /* CloudKitContainer.swift in Sources */,
 				010000000000000000000149 /* Syncable.swift in Sources */,
+				010000000000000000000150 /* SyncableExtensions.swift in Sources */,
+				010000000000000000000151 /* SyncEngine.swift in Sources */,
+				010000000000000000000152 /* ConflictResolver.swift in Sources */,
+				010000000000000000000153 /* OfflineQueueManager.swift in Sources */,
+				010000000000000000000154 /* SyncStatusView.swift in Sources */,
+				010000000000000000000155 /* SyncSettingsView.swift in Sources */,
+				010000000000000000000156 /* SyncScheduler.swift in Sources */,
+				010000000000000000000157 /* WebAPIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
