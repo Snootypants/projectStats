@@ -45,6 +45,7 @@ struct IDEModeView: View {
     private enum IDETab {
         case files
         case prompts
+        case diffs
         case environment
     }
 
@@ -143,6 +144,12 @@ struct IDEModeView: View {
                 )
 
                 ideTabButton(
+                    title: "Diffs",
+                    icon: "arrow.left.arrow.right",
+                    tab: .diffs
+                )
+
+                ideTabButton(
                     title: "Environment",
                     icon: "key",
                     tab: .environment
@@ -159,6 +166,8 @@ struct IDEModeView: View {
             switch activeTab {
             case .prompts:
                 PromptManagerView(projectPath: project.path)
+            case .diffs:
+                DiffManagerView(projectPath: project.path)
             case .files:
                 FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
             case .environment:

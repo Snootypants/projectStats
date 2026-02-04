@@ -126,6 +126,8 @@
 		010000000000000000000117 /* AchievementsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000117 /* AchievementsSheet.swift */; };
 		010000000000000000000118 /* SavedPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000118 /* SavedPrompt.swift */; };
 		010000000000000000000119 /* PromptImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000119 /* PromptImportService.swift */; };
+		010000000000000000000120 /* SavedDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000120 /* SavedDiff.swift */; };
+		010000000000000000000121 /* DiffManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000121 /* DiffManagerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -249,6 +251,8 @@
 		020000000000000000000117 /* AchievementsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Achievements/AchievementsSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000118 /* SavedPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedPrompt.swift; sourceTree = "<group>"; };
 		020000000000000000000119 /* PromptImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptImportService.swift; sourceTree = "<group>"; };
+		020000000000000000000120 /* SavedDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/SavedDiff.swift; sourceTree = "<group>"; };
+		020000000000000000000121 /* DiffManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DiffManagerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -639,6 +643,8 @@
 				010000000000000000000117 /* AchievementsSheet.swift in Sources */,
 				010000000000000000000118 /* SavedPrompt.swift in Sources */,
 				010000000000000000000119 /* PromptImportService.swift in Sources */,
+				010000000000000000000120 /* SavedDiff.swift in Sources */,
+				010000000000000000000121 /* DiffManagerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
