@@ -147,6 +147,7 @@
 		010000000000000000000138 /* DBv2MigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000138 /* DBv2MigrationService.swift */; };
 		010000000000000000000139 /* WorkItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000139 /* WorkItemsView.swift */; };
 		010000000000000000000140 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* AIProvider.swift */; };
+		010000000000000000000141 /* AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* AIProviderRegistry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -291,6 +292,7 @@
 		020000000000000000000138 /* DBv2MigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DBv2MigrationService.swift; sourceTree = "<group>"; };
 		020000000000000000000139 /* WorkItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/WorkItems/WorkItemsView.swift; sourceTree = "<group>"; };
 		020000000000000000000140 /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000141 /* AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -704,6 +706,7 @@
 				010000000000000000000138 /* DBv2MigrationService.swift in Sources */,
 				010000000000000000000139 /* WorkItemsView.swift in Sources */,
 				010000000000000000000140 /* AIProvider.swift in Sources */,
+				010000000000000000000141 /* AIProviderRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
