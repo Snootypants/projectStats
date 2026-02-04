@@ -129,39 +129,29 @@ struct IDEModeView: View {
 
     private var viewerColumn: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Button {
-                    activeTab = .files
-                } label: {
-                    Label("Files", systemImage: "doc.text")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(activeTab == .files ? Color.accentColor.opacity(0.2) : Color.clear)
-                }
-                .buttonStyle(.plain)
+            HStack(spacing: 4) {
+                ideTabButton(
+                    title: "Files",
+                    icon: "doc.text",
+                    tab: .files
+                )
 
-                Button {
-                    activeTab = .prompts
-                } label: {
-                    Label("Prompts", systemImage: "text.badge.plus")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(activeTab == .prompts ? Color.accentColor.opacity(0.2) : Color.clear)
-                }
-                .buttonStyle(.plain)
+                ideTabButton(
+                    title: "Prompts",
+                    icon: "text.badge.plus",
+                    tab: .prompts
+                )
 
-                Button {
-                    activeTab = .environment
-                } label: {
-                    Label("Environment", systemImage: "key")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(activeTab == .environment ? Color.accentColor.opacity(0.2) : Color.clear)
-                }
-                .buttonStyle(.plain)
+                ideTabButton(
+                    title: "Environment",
+                    icon: "key",
+                    tab: .environment
+                )
 
                 Spacer()
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
             .background(Color.primary.opacity(0.03))
 
             Divider()
@@ -175,6 +165,35 @@ struct IDEModeView: View {
                 EnvironmentManagerView(viewModel: environmentViewModel)
             }
         }
+    }
+
+    @ViewBuilder
+    private func ideTabButton(title: String, icon: String, tab: IDETab) -> some View {
+        let isActive = activeTab == tab
+
+        Button {
+            activeTab = tab
+        } label: {
+            Label(title, systemImage: icon)
+                .font(.system(size: 12))
+                .fontWeight(isActive ? .semibold : .regular)
+                .foregroundStyle(isActive ? Color.accentColor : .primary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    Group {
+                        if isActive {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.accentColor.opacity(0.15))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                    }
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     private var keyboardShortcuts: some View {
