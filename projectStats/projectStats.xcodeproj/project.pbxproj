@@ -164,6 +164,8 @@
 		010000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */; };
 		010000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift */; };
 		010000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */; };
+		010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */; };
+		010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000159 /* projectStats/Utilities/Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -323,6 +325,8 @@
 		020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SyncSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000156 /* projectStats/Services/CloudKit/SyncScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/SyncScheduler.swift; sourceTree = "<group>"; };
 		020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/WebAPI/WebAPIClient.swift; sourceTree = "<group>"; };
+		020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SubscriptionManager.swift; sourceTree = "<group>"; };
+		020000000000000000000159 /* projectStats/Utilities/Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/Logger.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -552,10 +556,12 @@
 				020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */,
 				020000000000000000000078 /* projectStats/Services/SlackProvider.swift */,
 				020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */,
+				020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */,
 				020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */,
 				020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */,
 				020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */,
 				020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */,
+				020000000000000000000159 /* projectStats/Utilities/Logger.swift */,
 				020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */,
 				020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */,
 				020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */,
@@ -783,10 +789,12 @@
 				010000000000000000000077 /* projectStats/Services/SecretsScanner.swift in Sources */,
 				010000000000000000000078 /* projectStats/Services/SlackProvider.swift in Sources */,
 				010000000000000000000079 /* projectStats/Services/StoreKitManager.swift in Sources */,
+				010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */,
 				010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */,
 				010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */,
 				010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */,
 				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
+				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
 				010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */,
 				010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */,
 				010000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift in Sources */,
