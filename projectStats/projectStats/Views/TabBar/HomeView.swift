@@ -16,7 +16,7 @@ struct HomeView: View {
                 HStack(alignment: .top, spacing: 16) {
                     TimeTrackingCard()
                         .frame(maxWidth: .infinity, minHeight: 140)
-                    ClaudeTokenUsageCard()
+                    ClaudeUsageCard()
                         .frame(maxWidth: .infinity, minHeight: 140)
                     GitHubNotificationsCard()
                         .frame(maxWidth: .infinity, minHeight: 140)

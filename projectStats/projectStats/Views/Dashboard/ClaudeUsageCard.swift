@@ -2,12 +2,14 @@ import SwiftUI
 
 struct ClaudeUsageCard: View {
     @StateObject private var planUsage = ClaudePlanUsageService.shared
-    @State private var refreshTimer = Timer.publish(every: 300, on: .main, in: .common).autoconnect()
+    @State private var refreshTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var now = Date()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // Header
             HStack {
-                Text("Plan Usage Limits")
+                Text("Plan Usage")
                     .font(.headline)
                 Spacer()
                 Button {
@@ -27,49 +29,71 @@ struct ClaudeUsageCard: View {
                 .controlSize(.small)
             }
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Current Session")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                UsageRow(
-                    label: "",
-                    progress: planUsage.fiveHourUtilization,
-                    percentLabel: percentString(planUsage.fiveHourUtilization),
-                    detail: "Resets in \(planUsage.fiveHourTimeRemaining)"
-                )
+            // Current Session
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Current Session \(percentStringSimple(planUsage.fiveHourUtilization))")
+                        .font(.system(size: 12, weight: .semibold))
+                    Spacer()
+                    Text(countdownString(to: planUsage.fiveHourResetsAt))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                }
+                UsageBar(progress: planUsage.fiveHourUtilization)
+                    .frame(height: 10)
             }
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Weekly Limits")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                UsageRow(
-                    label: "All models",
-                    progress: planUsage.sevenDayUtilization,
-                    percentLabel: percentString(planUsage.sevenDayUtilization),
-                    detail: resetLabel(planUsage.sevenDayResetsAt)
-                )
-
-                UsageRow(
-                    label: "Sonnet only",
-                    progress: planUsage.sonnetUtilization ?? 0,
-                    percentLabel: percentString(planUsage.sonnetUtilization ?? 0),
-                    detail: resetLabel(planUsage.sonnetResetsAt)
-                )
+            // Weekly
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Weekly \(percentStringSimple(planUsage.sevenDayUtilization))")
+                        .font(.system(size: 12, weight: .semibold))
+                    Spacer()
+                    Text(countdownStringWithDays(to: planUsage.sevenDayResetsAt))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                }
+                UsageBar(progress: planUsage.sevenDayUtilization)
+                    .frame(height: 10)
             }
 
+            // Sonnet & Opus percentages side by side
             HStack {
-                Text("Last updated: \(lastUpdatedLabel)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
+                VStack(spacing: 4) {
+                    Text("Sonnet")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                    Text(percentString(planUsage.sonnetUtilization))
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                }
+                .frame(maxWidth: .infinity)
+
+                Divider()
+                    .frame(height: 30)
+
+                VStack(spacing: 4) {
+                    Text("Opus")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                    Text(percentString(planUsage.opusUtilization))
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                }
+                .frame(maxWidth: .infinity)
+            }
+
+            // Error or Last Updated
+            HStack {
                 if let error = planUsage.error {
                     Text(error)
                         .font(.caption)
                         .foregroundStyle(.red)
+                        .lineLimit(1)
+                } else {
+                    Text("Last updated: \(lastUpdatedLabel)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
+                Spacer()
             }
         }
         .padding(16)
@@ -83,57 +107,46 @@ struct ClaudeUsageCard: View {
             await planUsage.fetchUsage()
         }
         .onReceive(refreshTimer) { _ in
-            Task { await planUsage.fetchUsage() }
+            now = Date()
         }
     }
 
-    private func percentString(_ value: Double) -> String {
-        String(format: "%.0f%% used", value * 100)
+    private func countdownString(to date: Date?) -> String {
+        guard let date else { return "--:--:--" }
+        let interval = max(0, date.timeIntervalSince(now))
+        let hours = Int(interval) / 3600
+        let minutes = (Int(interval) % 3600) / 60
+        let seconds = Int(interval) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 
-    private func resetLabel(_ date: Date?) -> String {
-        guard let date else { return "Resets --" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE h:mm a"
-        return "Resets \(formatter.string(from: date))"
+    private func countdownStringWithDays(to date: Date?) -> String {
+        guard let date else { return "-:--:--:--" }
+        let interval = max(0, date.timeIntervalSince(now))
+        let days = Int(interval) / 86400
+        let hours = (Int(interval) % 86400) / 3600
+        let minutes = (Int(interval) % 3600) / 60
+        let seconds = Int(interval) % 60
+        return String(format: "%d:%02d:%02d:%02d", days, hours, minutes, seconds)
+    }
+
+    private func percentString(_ value: Double?) -> String {
+        guard let value else { return "N/A" }
+        return String(format: "%.0f%%", value * 100)
+    }
+
+    private func percentStringSimple(_ value: Double) -> String {
+        return String(format: "%.0f%%", value * 100)
     }
 
     private var lastUpdatedLabel: String {
         guard let lastUpdated = planUsage.lastUpdated else { return "--" }
-        let interval = Int(Date().timeIntervalSince(lastUpdated))
+        let interval = Int(now.timeIntervalSince(lastUpdated))
         if interval < 60 { return "just now" }
         let minutes = interval / 60
         if minutes < 60 { return "\(minutes)m ago" }
         let hours = minutes / 60
         return "\(hours)h ago"
-    }
-}
-
-private struct UsageRow: View {
-    let label: String
-    let progress: Double
-    let percentLabel: String
-    let detail: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if !label.isEmpty {
-                Text(label)
-                    .font(.system(size: 12, weight: .semibold))
-            }
-
-            HStack(spacing: 12) {
-                UsageBar(progress: progress)
-                    .frame(height: 8)
-                Text(percentLabel)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.secondary)
-            }
-
-            Text(detail)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
     }
 }
 
@@ -156,7 +169,7 @@ private struct UsageBar: View {
     private func colorForProgress(_ value: Double) -> Color {
         switch value {
         case 0..<0.5:
-            return .green
+            return .blue
         case 0.5..<0.75:
             return .yellow
         case 0.75..<0.9:

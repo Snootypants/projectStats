@@ -8,6 +8,9 @@ struct WorkspaceView: View {
     @EnvironmentObject var tabManager: TabManagerViewModel
     @ObservedObject private var timeTrackingService = TimeTrackingService.shared
     @State private var showClaudeConfig = false
+    @State private var isCreatingBackup = false
+    @State private var backupMessage: String?
+    @State private var showCreateBranchSheet = false
 
     /// Resolve the Project from the path
     private var project: Project? {
@@ -125,6 +128,22 @@ struct WorkspaceView: View {
             }
             .menuStyle(.borderlessButton)
 
+            // Backup button
+            Button {
+                createBackup(for: project)
+            } label: {
+                if isCreatingBackup {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .frame(width: 16, height: 16)
+                } else {
+                    Image(systemName: "archivebox")
+                }
+            }
+            .buttonStyle(.plain)
+            .disabled(isCreatingBackup)
+            .help(backupMessage ?? "Create zip backup in Downloads")
+
             GitControlsView(projectPath: project.path)
 
             Button {
@@ -189,5 +208,20 @@ struct WorkspaceView: View {
             lines.append("Last commit: \(commit.message)")
         }
         return lines.joined(separator: "\n")
+    }
+
+    private func createBackup(for project: Project) {
+        isCreatingBackup = true
+        backupMessage = "Creating backup..."
+        Task {
+            do {
+                let result = try await BackupService.shared.createBackup(for: project.path)
+                BackupService.shared.revealInFinder(result.url)
+                backupMessage = "Backup created: \(ByteCountFormatter.string(fromByteCount: result.size, countStyle: .file))"
+            } catch {
+                backupMessage = error.localizedDescription
+            }
+            isCreatingBackup = false
+        }
     }
 }

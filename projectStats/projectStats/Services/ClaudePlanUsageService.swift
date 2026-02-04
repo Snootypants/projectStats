@@ -9,6 +9,8 @@ final class ClaudePlanUsageService: ObservableObject {
     @Published var fiveHourResetsAt: Date?
     @Published var sevenDayUtilization: Double = 0
     @Published var sevenDayResetsAt: Date?
+    @Published var opusUtilization: Double?
+    @Published var opusResetsAt: Date?
     @Published var sonnetUtilization: Double?
     @Published var sonnetResetsAt: Date?
     @Published var lastUpdated: Date?
@@ -16,6 +18,12 @@ final class ClaudePlanUsageService: ObservableObject {
     @Published var error: String?
 
     private var hasNotifiedHighUsage = false
+
+    private lazy var dateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
 
     private init() {}
 
@@ -39,37 +47,58 @@ final class ClaudePlanUsageService: ObservableObject {
         var request = URLRequest(url: URL(string: "https://api.anthropic.com/api/oauth/usage")!)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("oauth-2025-04-20", forHTTPHeaderField: "anthropic-beta")
-        request.setValue("claude-code/2.0.31", forHTTPHeaderField: "User-Agent")
+        request.setValue("claude-code/2.0.32", forHTTPHeaderField: "User-Agent")
+        request.setValue("gzip, compress, deflate, br", forHTTPHeaderField: "Accept-Encoding")
 
         do {
-            let (data, _) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            // Check HTTP status
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                let body = String(data: data, encoding: .utf8) ?? "Unknown error"
+                self.error = "HTTP \(httpResponse.statusCode): \(body)"
+                return
+            }
+
             let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
 
+            // API returns utilization as percentage (0-100), convert to decimal (0-1)
             if let fiveHour = json?["five_hour"] as? [String: Any] {
-                fiveHourUtilization = fiveHour["utilization"] as? Double ?? 0
+                let rawUtilization = fiveHour["utilization"] as? Double ?? 0
+                fiveHourUtilization = rawUtilization / 100.0
                 if let resetStr = fiveHour["resets_at"] as? String {
-                    fiveHourResetsAt = ISO8601DateFormatter().date(from: resetStr)
+                    fiveHourResetsAt = parseDate(resetStr)
                 }
             }
 
             if let sevenDay = json?["seven_day"] as? [String: Any] {
-                sevenDayUtilization = sevenDay["utilization"] as? Double ?? 0
+                let rawUtilization = sevenDay["utilization"] as? Double ?? 0
+                sevenDayUtilization = rawUtilization / 100.0
                 if let resetStr = sevenDay["resets_at"] as? String {
-                    sevenDayResetsAt = ISO8601DateFormatter().date(from: resetStr)
+                    sevenDayResetsAt = parseDate(resetStr)
                 }
             }
 
-            if let sonnet = json?["seven_day_sonnet"] as? [String: Any] {
-                sonnetUtilization = sonnet["utilization"] as? Double
-                if let resetStr = sonnet["resets_at"] as? String {
-                    sonnetResetsAt = ISO8601DateFormatter().date(from: resetStr)
+            if let opus = json?["seven_day_opus"] as? [String: Any] {
+                let rawUtilization = opus["utilization"] as? Double
+                opusUtilization = rawUtilization.map { $0 / 100.0 }
+                if let resetStr = opus["resets_at"] as? String {
+                    opusResetsAt = parseDate(resetStr)
                 }
-            } else if let sonnet = json?["sonnet_only"] as? [String: Any] {
-                sonnetUtilization = sonnet["utilization"] as? Double
+            } else {
+                opusUtilization = nil
+                opusResetsAt = nil
+            }
+
+            // Check for sonnet-specific limits
+            if let sonnet = json?["seven_day_sonnet"] as? [String: Any] {
+                let rawUtilization = sonnet["utilization"] as? Double
+                sonnetUtilization = rawUtilization.map { $0 / 100.0 }
                 if let resetStr = sonnet["resets_at"] as? String {
-                    sonnetResetsAt = ISO8601DateFormatter().date(from: resetStr)
+                    sonnetResetsAt = parseDate(resetStr)
                 }
             } else {
                 sonnetUtilization = nil
@@ -96,6 +125,16 @@ final class ClaudePlanUsageService: ObservableObject {
         } catch {
             self.error = error.localizedDescription
         }
+    }
+
+    private func parseDate(_ string: String) -> Date? {
+        // Try with fractional seconds first
+        if let date = dateFormatter.date(from: string) {
+            return date
+        }
+        // Fallback to standard ISO8601 without fractional seconds
+        let fallback = ISO8601DateFormatter()
+        return fallback.date(from: string)
     }
 
     private func timeRemaining(until resetDate: Date?) -> String {
