@@ -78,11 +78,12 @@ class ClaudeUsageService: ObservableObject {
 
             lastGlobalRefresh = Date()
         } catch {
-            lastError = error.localizedDescription
+            // Set friendly error message
+            lastError = "Unable to load usage data"
             print("[ClaudeUsage] Global error: \(error)")
         }
 
-        isLoading = false
+        isLoading = false  // ALWAYS set to false, even on error
     }
 
     // MARK: - Per-Project Stats
@@ -153,8 +154,25 @@ class ClaudeUsageService: ObservableObject {
     }
 
     private func runCCUsage(args: [String]) async throws -> String {
+        return try await withThrowingTaskGroup(of: String.self) { group in
+            group.addTask {
+                try await self.executeProcess(args: args)
+            }
+
+            group.addTask {
+                try await Task.sleep(nanoseconds: 10_000_000_000)  // 10 second timeout
+                throw NSError(domain: "ClaudeUsage", code: 2, userInfo: [NSLocalizedDescriptionKey: "Timeout waiting for ccusage"])
+            }
+
+            // Return first result (success or timeout)
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
+    }
+
+    private nonisolated func executeProcess(args: [String]) async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
-            // CRITICAL: Run on background queue to avoid blocking main thread
             DispatchQueue.global(qos: .utility).async {
                 let process = Process()
                 let pipe = Pipe()
@@ -167,19 +185,21 @@ class ClaudeUsageService: ObservableObject {
 
                 // Set PATH to include common Node locations
                 var env = ProcessInfo.processInfo.environment
+                let home = env["HOME"] ?? NSHomeDirectory()
                 let nodePaths = [
                     "/usr/local/bin",
                     "/opt/homebrew/bin",
-                    (env["HOME"] ?? "") + "/.nvm/versions/node",
-                    (env["HOME"] ?? "") + "/.volta/bin",
-                    (env["HOME"] ?? "") + "/.fnm/aliases/default/bin"
+                    "\(home)/.nvm/versions/node",
+                    "\(home)/.volta/bin",
+                    "\(home)/.fnm/aliases/default/bin",
+                    "\(home)/.local/bin"
                 ]
                 env["PATH"] = (env["PATH"] ?? "") + ":" + nodePaths.joined(separator: ":")
                 process.environment = env
 
                 do {
                     try process.run()
-                    process.waitUntilExit()  // Safe now - we're on background thread
+                    process.waitUntilExit()  // Safe - we're on background thread
 
                     let data = pipe.fileHandleForReading.readDataToEndOfFile()
                     if let output = String(data: data, encoding: .utf8), !output.isEmpty {
@@ -194,7 +214,7 @@ class ClaudeUsageService: ObservableObject {
                     } else {
                         // Check stderr
                         let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                        let errorStr = String(data: errorData, encoding: .utf8) ?? "Unknown error"
+                        let errorStr = String(data: errorData, encoding: .utf8) ?? "ccusage not found or returned no data"
                         continuation.resume(throwing: NSError(domain: "ClaudeUsage", code: 1, userInfo: [NSLocalizedDescriptionKey: errorStr]))
                     }
                 } catch {
