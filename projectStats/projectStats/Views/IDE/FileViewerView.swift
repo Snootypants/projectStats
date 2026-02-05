@@ -13,47 +13,72 @@ struct LineNumberedTextView: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> NSScrollView {
+        // Create scroll view
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = true
         scrollView.autohidesScrollers = true
         scrollView.borderType = .noBorder
+        scrollView.drawsBackground = true
 
-        // Create text view with proper initial frame
-        let contentSize = scrollView.contentSize
-        let textView = LineNumberTextView(frame: NSRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height))
-        textView.isEditable = true
-        textView.isSelectable = true
-        textView.allowsUndo = true
-        textView.font = font
-        textView.backgroundColor = .textBackgroundColor
-        textView.textColor = .textColor
-        textView.isRichText = false
-        textView.isAutomaticQuoteSubstitutionEnabled = false
-        textView.isAutomaticDashSubstitutionEnabled = false
-        textView.isAutomaticTextReplacementEnabled = false
-        textView.isAutomaticSpellingCorrectionEnabled = false
-        textView.delegate = context.coordinator
-        textView.string = text
+        // Create text system components properly
+        let textStorage = NSTextStorage()
+        let layoutManager = NSLayoutManager()
+        textStorage.addLayoutManager(layoutManager)
+
+        let textContainer = NSTextContainer()
+        textContainer.widthTracksTextView = false
+        textContainer.heightTracksTextView = false
+        textContainer.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        layoutManager.addTextContainer(textContainer)
+
+        // Create our custom text view with proper frame
+        let customTextView = LineNumberTextView(frame: .zero, textContainer: textContainer)
+        customTextView.isEditable = true
+        customTextView.isSelectable = true
+        customTextView.allowsUndo = true
+        customTextView.font = font
+        customTextView.backgroundColor = .textBackgroundColor
+        customTextView.textColor = .textColor
+        customTextView.isRichText = false
+        customTextView.isAutomaticQuoteSubstitutionEnabled = false
+        customTextView.isAutomaticDashSubstitutionEnabled = false
+        customTextView.isAutomaticTextReplacementEnabled = false
+        customTextView.isAutomaticSpellingCorrectionEnabled = false
+        customTextView.delegate = context.coordinator
+        customTextView.textContainerInset = NSSize(width: 4, height: 4)
+
+        // Set default typing attributes for new text
+        customTextView.typingAttributes = [
+            .font: font,
+            .foregroundColor: NSColor.textColor
+        ]
+
+        // Set the text and apply font
+        customTextView.string = text
+        if !text.isEmpty {
+            textStorage.addAttributes([
+                .font: font,
+                .foregroundColor: NSColor.textColor
+            ], range: NSRange(location: 0, length: textStorage.length))
+        }
 
         // Configure for horizontal scrolling (no word wrap)
-        textView.minSize = NSSize(width: 0, height: 0)
-        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        textView.isVerticallyResizable = true
-        textView.isHorizontallyResizable = true
-        textView.autoresizingMask = [.width, .height]
-        textView.textContainer?.widthTracksTextView = false
-        textView.textContainer?.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        customTextView.minSize = NSSize(width: 0, height: 0)
+        customTextView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        customTextView.isVerticallyResizable = true
+        customTextView.isHorizontallyResizable = true
+        customTextView.autoresizingMask = [.width, .height]
 
-        scrollView.documentView = textView
+        scrollView.documentView = customTextView
 
         // Add line number ruler
-        let rulerView = LineNumberRulerView(textView: textView)
+        let rulerView = LineNumberRulerView(textView: customTextView)
         scrollView.verticalRulerView = rulerView
         scrollView.hasVerticalRuler = true
         scrollView.rulersVisible = true
 
-        context.coordinator.textView = textView
+        context.coordinator.textView = customTextView
         context.coordinator.rulerView = rulerView
 
         return scrollView
