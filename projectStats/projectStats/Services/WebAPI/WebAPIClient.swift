@@ -37,10 +37,16 @@ final class WebAPIClient: ObservableObject {
 
     /// Perform a GET request with query parameters
     func get<T: Decodable>(_ path: String, query: [String: String], as type: T.Type) async throws -> T {
-        var urlComponents = URLComponents(string: "\(baseURL)\(path)")!
+        guard var urlComponents = URLComponents(string: "\(baseURL)\(path)") else {
+            throw WebAPIError.invalidURL
+        }
         urlComponents.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value) }
 
-        var request = URLRequest(url: urlComponents.url!)
+        guard let url = urlComponents.url else {
+            throw WebAPIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
         request.httpMethod = "GET"
         addHeaders(to: &request)
 

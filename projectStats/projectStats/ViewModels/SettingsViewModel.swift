@@ -57,7 +57,7 @@ class SettingsViewModel: ObservableObject {
     }
     @AppStorage("showInDock") var showInDock: Bool = false
     @AppStorage("themeRaw") private var themeRaw: String = AppTheme.system.rawValue
-    @AppStorage("sync_enabled") var syncEnabled: Bool = false  // Disabled by default
+    @AppStorage("sync.enabled") var syncEnabled: Bool = false  // Disabled by default
 
     @AppStorage("notifyClaudeFinished") var notifyClaudeFinished: Bool = true
     @AppStorage("playSoundOnClaudeFinished") var playSoundOnClaudeFinished: Bool = true
