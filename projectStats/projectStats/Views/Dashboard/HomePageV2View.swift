@@ -5,6 +5,7 @@ import SwiftUI
 struct HomePageV2View: View {
     @EnvironmentObject var viewModel: DashboardViewModel
     @EnvironmentObject var settingsVM: SettingsViewModel
+    @EnvironmentObject var tabManager: TabManagerViewModel
 
     var body: some View {
         ScrollView {
@@ -18,13 +19,76 @@ struct HomePageV2View: View {
                 // Activity Chart with time range and data toggles
                 V2ChartView()
 
-                // Placeholder for remaining V2 components
-                Text("Coming soon: Project cards")
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
+                // Recent Projects - Cards with accent glow
+                recentProjectsSection
+
+                // Refresh button at bottom
+                HStack {
+                    Spacer()
+                    Button {
+                        Task {
+                            await viewModel.refresh()
+                        }
+                    } label: {
+                        HStack(spacing: 6) {
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .controlSize(.small)
+                            } else {
+                                Image(systemName: "arrow.clockwise")
+                            }
+                            Text("Refresh")
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(viewModel.isLoading)
+                }
             }
             .padding(24)
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    // MARK: - Recent Projects Section
+
+    private var recentProjectsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Recent Projects")
+                    .font(.headline)
+                Spacer()
+                if viewModel.archivedProjectCount > 0 {
+                    Text("\(viewModel.countableProjectCount) active (\(viewModel.projects.count) total)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            LazyVGrid(columns: [
+                GridItem(.flexible()),
+                GridItem(.flexible()),
+                GridItem(.flexible())
+            ], spacing: 12) {
+                ForEach(viewModel.homeProjects) { project in
+                    CompactProjectCard(project: project)
+                        .onTapGesture {
+                            openProjectInNewTab(project)
+                        }
+                }
+            }
+        }
+    }
+
+    private func openProjectInNewTab(_ project: Project) {
+        let path = project.path.path
+        if let existingTab = tabManager.tabs.first(where: {
+            if case .projectWorkspace(let p) = $0.content { return p == path }
+            return false
+        }) {
+            tabManager.selectTab(existingTab.id)
+        } else {
+            tabManager.newTab()
+            tabManager.openProject(path: path)
         }
     }
 }

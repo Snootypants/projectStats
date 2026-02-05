@@ -35,12 +35,37 @@ struct ProjectListView: View {
     }
 }
 
+// MARK: - Color Hex Extension for Project Cards
+
+private extension Color {
+    static func fromHex(_ hex: String) -> Color? {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.hasPrefix("#") ? String(hexSanitized.dropFirst()) : hexSanitized
+
+        guard hexSanitized.count == 6,
+              let hexNumber = UInt64(hexSanitized, radix: 16) else {
+            return nil
+        }
+
+        let r = Double((hexNumber & 0xFF0000) >> 16) / 255
+        let g = Double((hexNumber & 0x00FF00) >> 8) / 255
+        let b = Double(hexNumber & 0x0000FF) / 255
+
+        return Color(red: r, green: g, blue: b)
+    }
+}
+
 // MARK: - Compact Project Card (Square for Overview Grid)
 struct CompactProjectCard: View {
     let project: Project
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @Environment(\.modelContext) private var modelContext
+    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
     @State private var isHovering = false
+
+    private var accentColor: Color {
+        Color.fromHex(accentColorHex) ?? .orange
+    }
 
     private var isArchived: Bool {
         !project.countsTowardTotals
@@ -154,8 +179,9 @@ struct CompactProjectCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .strokeBorder(isHovering ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 1)
+                .strokeBorder(isHovering ? accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
         )
+        .shadow(color: accentColor.opacity(0.2), radius: 6, x: 0, y: 2)
         .opacity(isArchived ? 0.6 : 1.0)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
