@@ -146,6 +146,7 @@ struct FeatureRow: View {
             VStack(alignment: .leading) {
                 Text(title)
                     .font(.subheadline)
+                    .foregroundStyle(isUnlocked ? .primary : .secondary)
                 Text(description)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -153,9 +154,26 @@ struct FeatureRow: View {
 
             Spacer()
 
-            Image(systemName: isUnlocked ? "checkmark.circle.fill" : "lock.fill")
-                .foregroundStyle(isUnlocked ? .green : .secondary)
+            if isUnlocked {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+            } else {
+                // Lock badge with "Pro" label for locked features
+                HStack(spacing: 4) {
+                    Image(systemName: "lock.fill")
+                        .font(.caption)
+                    Text("Pro")
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                }
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.secondary.opacity(0.15))
+                .cornerRadius(6)
+            }
         }
+        .opacity(isUnlocked ? 1.0 : 0.7)
     }
 }
 
