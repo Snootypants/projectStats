@@ -181,7 +181,7 @@ struct CompactProjectCard: View {
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(isHovering ? accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
         )
-        .shadow(color: accentColor.opacity(0.2), radius: 6, x: 0, y: 2)
+        .shadow(color: accentColor.opacity(0.25), radius: 12, x: 0, y: 4)
         .opacity(isArchived ? 0.6 : 1.0)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
