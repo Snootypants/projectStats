@@ -200,6 +200,8 @@ final class TerminalOutputMonitor: ObservableObject {
     }
 
     private func checkAndNotifyClaudeFinished() {
+        print("[Monitor] Claude session ended, checking notification conditions")
+
         // Check if the app is not frontmost OR the project tab is not active
         let isAppActive = NSApp.isActive
         let activeContent = TabManagerViewModel.shared.activeTab?.content
@@ -209,12 +211,17 @@ final class TerminalOutputMonitor: ObservableObject {
             isTabActive = path == activeProjectPath
         }
 
+        print("[Monitor] App active: \(isAppActive), Tab active: \(isTabActive)")
+
         if !isAppActive || !isTabActive {
             let projectName = URL(fileURLWithPath: activeProjectPath ?? "").lastPathComponent
+            print("[Monitor] Sending notification for project: \(projectName)")
             NotificationService.shared.sendNotification(
                 title: "Claude finished",
                 message: "Ready for review in \(projectName)"
             )
+        } else {
+            print("[Monitor] Notification skipped - app and tab are active")
         }
     }
 

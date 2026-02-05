@@ -23,6 +23,8 @@ final class NotificationService: NSObject, ObservableObject {
     }
 
     func sendNotification(title: String, message: String, sound: Bool = true) {
+        print("[Notifications] Attempting to send: \(title) - \(message)")
+
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = message
@@ -41,7 +43,9 @@ final class NotificationService: NSObject, ObservableObject {
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("[Notifications] Error: \(error)")
+                print("[Notifications] Error sending: \(error)")
+            } else {
+                print("[Notifications] Sent successfully: \(title)")
             }
         }
 

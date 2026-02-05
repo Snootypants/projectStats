@@ -157,6 +157,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.setActivationPolicy(.regular)
         }
         SettingsViewModel.shared.applyThemeIfNeeded()
+
+        // Initialize NotificationService to request permissions at launch
+        _ = NotificationService.shared
+        print("[App] NotificationService initialized, requesting permissions")
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
