@@ -119,23 +119,29 @@ struct TerminalPanelView: View {
 
             Spacer()
 
-            Button("Claude") {
-                viewModel.addClaudeTab()
+            if SettingsViewModel.shared.showClaudeButton {
+                Button("Claude") {
+                    viewModel.addClaudeTab()
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
 
-            Button("ccYOLO") {
-                viewModel.addCcYoloTab()
+            if SettingsViewModel.shared.showCcyoloButton {
+                Button("ccYOLO") {
+                    viewModel.addCcYoloTab()
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
 
-            Button("Codex") {
-                viewModel.addCodexTab()
+            if SettingsViewModel.shared.showCodexButton {
+                Button("Codex") {
+                    viewModel.addCodexTab()
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
 
             Button {
                 showHistory.toggle()

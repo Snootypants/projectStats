@@ -115,6 +115,25 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
     @AppStorage("showEnvironmentTab") var showEnvironmentTab: Bool = true
 
+    // MARK: - Terminal Button Settings
+    @AppStorage("terminal.claudeModel") var terminalClaudeModelRaw: String = "claude-opus-4-20250514"
+    @AppStorage("terminal.claudeFlags") var terminalClaudeFlags: String = ""
+    @AppStorage("terminal.ccyoloModel") var terminalCcyoloModelRaw: String = "claude-opus-4-20250514"
+    @AppStorage("terminal.codexModel") var terminalCodexModel: String = "codex"
+    @AppStorage("terminal.showClaudeButton") var showClaudeButton: Bool = true
+    @AppStorage("terminal.showCcyoloButton") var showCcyoloButton: Bool = true
+    @AppStorage("terminal.showCodexButton") var showCodexButton: Bool = true
+
+    var terminalClaudeModel: AIModel {
+        get { AIModel(rawValue: terminalClaudeModelRaw) ?? .claudeOpus4 }
+        set { terminalClaudeModelRaw = newValue.rawValue }
+    }
+
+    var terminalCcyoloModel: AIModel {
+        get { AIModel(rawValue: terminalCcyoloModelRaw) ?? .claudeOpus4 }
+        set { terminalCcyoloModelRaw = newValue.rawValue }
+    }
+
     // MARK: - Claude Usage Display Settings
     @AppStorage("ccusage_showCost") var ccusageShowCost: Bool = true
     @AppStorage("ccusage_showChart") var ccusageShowChart: Bool = true

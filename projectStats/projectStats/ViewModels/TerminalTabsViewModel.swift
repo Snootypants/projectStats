@@ -330,19 +330,26 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     func addClaudeTab() {
-        let model = SettingsViewModel.shared.defaultModel
-        let thinking = SettingsViewModel.shared.defaultThinkingLevel
-        let command = ThinkingLevelService.shared.generateClaudeCommand(
+        let settings = SettingsViewModel.shared
+        let model = settings.terminalClaudeModel
+        let thinking = settings.defaultThinkingLevel
+        var command = ThinkingLevelService.shared.generateClaudeCommand(
             model: model,
             thinkingLevel: thinking,
             dangerouslySkipPermissions: false
         )
+        // Append extra flags if configured
+        let extraFlags = settings.terminalClaudeFlags.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !extraFlags.isEmpty {
+            command += " \(extraFlags)"
+        }
         addTab(kind: .claude, title: "Claude", command: command, aiModel: model, thinkingLevel: thinking)
     }
 
     func addCcYoloTab() {
-        let model = SettingsViewModel.shared.defaultModel
-        let thinking = SettingsViewModel.shared.defaultThinkingLevel
+        let settings = SettingsViewModel.shared
+        let model = settings.terminalCcyoloModel
+        let thinking = settings.defaultThinkingLevel
         let command = ThinkingLevelService.shared.generateClaudeCommand(
             model: model,
             thinkingLevel: thinking,
@@ -352,11 +359,15 @@ final class TerminalTabsViewModel: ObservableObject {
     }
 
     func addCodexTab() {
-        addTab(kind: .codex, title: "Codex", command: "codex", aiProvider: .codex)
+        let codexModel = SettingsViewModel.shared.terminalCodexModel
+        let command = codexModel.isEmpty ? "codex" : "codex --model \(codexModel)"
+        addTab(kind: .codex, title: "Codex", command: command, aiProvider: .codex)
     }
 
     func addCodexFullAutoTab() {
-        addTab(kind: .codex, title: "Codex Auto", command: "codex --full-auto", aiProvider: .codex)
+        let codexModel = SettingsViewModel.shared.terminalCodexModel
+        let command = codexModel.isEmpty ? "codex --full-auto" : "codex --model \(codexModel) --full-auto"
+        addTab(kind: .codex, title: "Codex Auto", command: command, aiProvider: .codex)
     }
 
     func addDevServerTab(command: String) {

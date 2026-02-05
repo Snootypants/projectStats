@@ -166,6 +166,7 @@
 		010000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */; };
 		010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */; };
 		010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000159 /* projectStats/Utilities/Logger.swift */; };
+		010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -327,6 +328,7 @@
 		020000000000000000000157 /* projectStats/Services/WebAPI/WebAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/WebAPI/WebAPIClient.swift; sourceTree = "<group>"; };
 		020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SubscriptionManager.swift; sourceTree = "<group>"; };
 		020000000000000000000159 /* projectStats/Utilities/Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/Logger.swift; sourceTree = "<group>"; };
+		020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/TerminalSettings.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -594,6 +596,7 @@
 				020000000000000000000113 /* projectStats/Views/Settings/MessagingSettings.swift */,
 				020000000000000000000114 /* projectStats/Views/Settings/NotificationSettings.swift */,
 				020000000000000000000115 /* projectStats/Views/Settings/SubscriptionView.swift */,
+				020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */,
 				020000000000000000000116 /* projectStats/Views/Templates/NewProjectWizard.swift */,
 				020000000000000000000117 /* projectStats/Views/Achievements/AchievementsSheet.swift */,
 				020000000000000000000118 /* projectStats/Models/SavedPrompt.swift */,
@@ -795,6 +798,7 @@
 				010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */,
 				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
 				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
+				010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */,
 				010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */,
 				010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */,
 				010000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift in Sources */,
