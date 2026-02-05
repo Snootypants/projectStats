@@ -9,12 +9,11 @@ struct HomePageV2View: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Placeholder - V2 components will be added in subsequent parts
-                Text("Home Page V2")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.secondary)
+                // Stats Pills Row - Grouped by type
+                V2StatsRow()
 
-                Text("Coming soon: Grouped stats, galaxy layout, enhanced charts")
+                // Placeholder for remaining V2 components
+                Text("Coming soon: Galaxy layout, enhanced charts, project cards")
                     .font(.subheadline)
                     .foregroundStyle(.tertiary)
             }
