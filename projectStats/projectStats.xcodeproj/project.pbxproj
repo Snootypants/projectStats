@@ -170,6 +170,7 @@
 		010000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */; };
 		010000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */; };
 		010000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */; };
+		010000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -335,6 +336,7 @@
 		020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/HomePageV2View.swift; sourceTree = "<group>"; };
 		020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2StatsRow.swift; sourceTree = "<group>"; };
 		020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift; sourceTree = "<group>"; };
+		020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2ChartView.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -645,6 +647,7 @@
 				020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */,
 				020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */,
 				020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */,
+				020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -885,6 +888,7 @@
 				010000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift in Sources */,
 				010000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift in Sources */,
 				010000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift in Sources */,
+				010000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

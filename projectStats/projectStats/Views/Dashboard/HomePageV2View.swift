@@ -15,8 +15,11 @@ struct HomePageV2View: View {
                 // Galaxy Layout - Time center, usage bars flanking
                 V2GalaxyLayout()
 
+                // Activity Chart with time range and data toggles
+                V2ChartView()
+
                 // Placeholder for remaining V2 components
-                Text("Coming soon: Enhanced charts, project cards")
+                Text("Coming soon: Project cards")
                     .font(.subheadline)
                     .foregroundStyle(.tertiary)
             }
