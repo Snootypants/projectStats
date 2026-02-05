@@ -695,6 +695,38 @@ struct GitHubSettingsView: View {
 struct HomePageSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
 
+    // Data Display checkboxes - all disabled for now (stored for future use)
+    @AppStorage("homeDataShow_linesPerDay") private var showLinesPerDay = false
+    @AppStorage("homeDataShow_commitsPerDay") private var showCommitsPerDay = false
+    @AppStorage("homeDataShow_netLines") private var showNetLines = false
+    @AppStorage("homeDataShow_codeChurnRate") private var showCodeChurnRate = false
+    @AppStorage("homeDataShow_linesPerCommit") private var showLinesPerCommit = false
+    @AppStorage("homeDataShow_totalTimeToday") private var showTotalTimeToday = false
+    @AppStorage("homeDataShow_humanAiTimeSplit") private var showHumanAiTimeSplit = false
+    @AppStorage("homeDataShow_avgSessionLength") private var showAvgSessionLength = false
+    @AppStorage("homeDataShow_mostProductiveHour") private var showMostProductiveHour = false
+    @AppStorage("homeDataShow_inputOutputTokens") private var showInputOutputTokens = false
+    @AppStorage("homeDataShow_cacheTokens") private var showCacheTokens = false
+    @AppStorage("homeDataShow_costUsd") private var showCostUsd = false
+    @AppStorage("homeDataShow_modelBreakdown") private var showModelBreakdown = false
+    @AppStorage("homeDataShow_costPerLine") private var showCostPerLine = false
+    @AppStorage("homeDataShow_costPerCommit") private var showCostPerCommit = false
+    @AppStorage("homeDataShow_sessionBlockUsage") private var showSessionBlockUsage = false
+    @AppStorage("homeDataShow_weeklyUsage") private var showWeeklyUsage = false
+    @AppStorage("homeDataShow_usageRate") private var showUsageRate = false
+    @AppStorage("homeDataShow_predictedTimeToLimit") private var showPredictedTimeToLimit = false
+    @AppStorage("homeDataShow_languageDistribution") private var showLanguageDistribution = false
+    @AppStorage("homeDataShow_mostActiveProject") private var showMostActiveProject = false
+    @AppStorage("homeDataShow_projectHealth") private var showProjectHealth = false
+    @AppStorage("homeDataShow_linesPerDayRolling") private var showLinesPerDayRolling = false
+    @AppStorage("homeDataShow_commitsPerDayRolling") private var showCommitsPerDayRolling = false
+    @AppStorage("homeDataShow_velocityTrend") private var showVelocityTrend = false
+    @AppStorage("homeDataShow_weekOverWeek") private var showWeekOverWeek = false
+    @AppStorage("homeDataShow_xpProgress") private var showXpProgress = false
+    @AppStorage("homeDataShow_achievementProgress") private var showAchievementProgress = false
+    @AppStorage("homeDataShow_currentStreak") private var showCurrentStreak = false
+    @AppStorage("homeDataShow_longestStreak") private var showLongestStreak = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("Home Page")
@@ -702,6 +734,7 @@ struct HomePageSettingsView: View {
 
             Divider()
 
+            // Layout Section
             VStack(alignment: .leading, spacing: 16) {
                 Text("Layout")
                     .font(.headline)
@@ -713,7 +746,6 @@ struct HomePageSettingsView: View {
                 .pickerStyle(.segmented)
                 .frame(maxWidth: 300)
 
-                // Layout description
                 Group {
                     if viewModel.homePageLayout == "v1" {
                         Text("Original dashboard layout with traditional stat cards and activity sections.")
@@ -726,8 +758,105 @@ struct HomePageSettingsView: View {
                 .animation(.easeInOut(duration: 0.15), value: viewModel.homePageLayout)
             }
 
-            Spacer()
+            Divider()
+
+            // Data Display Section (Coming Soon)
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Data Display")
+                        .font(.headline)
+                    Text("(Coming Soon)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                // Activity & Code
+                DataDisplayGroup(title: "Activity & Code") {
+                    DisabledCheckbox(label: "Lines of Code per Day", isOn: $showLinesPerDay)
+                    DisabledCheckbox(label: "Commits per Day", isOn: $showCommitsPerDay)
+                    DisabledCheckbox(label: "Net Lines (Added - Removed)", isOn: $showNetLines)
+                    DisabledCheckbox(label: "Code Churn Rate", isOn: $showCodeChurnRate)
+                    DisabledCheckbox(label: "Lines per Commit", isOn: $showLinesPerCommit)
+                }
+
+                // Time Tracking
+                DataDisplayGroup(title: "Time Tracking") {
+                    DisabledCheckbox(label: "Total Time Today", isOn: $showTotalTimeToday)
+                    DisabledCheckbox(label: "Human vs AI Time Split", isOn: $showHumanAiTimeSplit)
+                    DisabledCheckbox(label: "Average Session Length", isOn: $showAvgSessionLength)
+                    DisabledCheckbox(label: "Most Productive Hour", isOn: $showMostProductiveHour)
+                }
+
+                // AI Usage
+                DataDisplayGroup(title: "AI Usage") {
+                    DisabledCheckbox(label: "Input / Output Tokens", isOn: $showInputOutputTokens)
+                    DisabledCheckbox(label: "Cache Tokens", isOn: $showCacheTokens)
+                    DisabledCheckbox(label: "Cost (USD)", isOn: $showCostUsd)
+                    DisabledCheckbox(label: "Model Breakdown", isOn: $showModelBreakdown)
+                    DisabledCheckbox(label: "Cost per Line of Code", isOn: $showCostPerLine)
+                    DisabledCheckbox(label: "Cost per Commit", isOn: $showCostPerCommit)
+                }
+
+                // Plan Limits
+                DataDisplayGroup(title: "Plan Limits") {
+                    DisabledCheckbox(label: "Session Block Usage %", isOn: $showSessionBlockUsage)
+                    DisabledCheckbox(label: "Weekly Usage %", isOn: $showWeeklyUsage)
+                    DisabledCheckbox(label: "Usage Rate (% per hour)", isOn: $showUsageRate)
+                    DisabledCheckbox(label: "Predicted Time to Limit", isOn: $showPredictedTimeToLimit)
+                }
+
+                // Projects
+                DataDisplayGroup(title: "Projects") {
+                    DisabledCheckbox(label: "Language Distribution", isOn: $showLanguageDistribution)
+                    DisabledCheckbox(label: "Most Active Project Today", isOn: $showMostActiveProject)
+                    DisabledCheckbox(label: "Project Health / Staleness", isOn: $showProjectHealth)
+                }
+
+                // Velocity & Trends
+                DataDisplayGroup(title: "Velocity & Trends") {
+                    DisabledCheckbox(label: "Lines per Day (Rolling Avg)", isOn: $showLinesPerDayRolling)
+                    DisabledCheckbox(label: "Commits per Day (Rolling Avg)", isOn: $showCommitsPerDayRolling)
+                    DisabledCheckbox(label: "Velocity Trend", isOn: $showVelocityTrend)
+                    DisabledCheckbox(label: "Week-over-Week Comparison", isOn: $showWeekOverWeek)
+                }
+
+                // Gamification
+                DataDisplayGroup(title: "Gamification") {
+                    DisabledCheckbox(label: "XP Progress", isOn: $showXpProgress)
+                    DisabledCheckbox(label: "Achievement Progress", isOn: $showAchievementProgress)
+                    DisabledCheckbox(label: "Current Streak", isOn: $showCurrentStreak)
+                    DisabledCheckbox(label: "Longest Streak", isOn: $showLongestStreak)
+                }
+            }
+            .opacity(0.4)
         }
+    }
+}
+
+// MARK: - Data Display Helpers
+
+private struct DataDisplayGroup<Content: View>: View {
+    let title: String
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline.bold())
+            content
+        }
+        .padding(.leading, 8)
+    }
+}
+
+private struct DisabledCheckbox: View {
+    let label: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(label, isOn: $isOn)
+            .toggleStyle(.checkbox)
+            .disabled(true)
     }
 }
 
