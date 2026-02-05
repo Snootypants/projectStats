@@ -178,6 +178,10 @@
 		010000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */; };
 		010000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */; };
 		010000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */; };
+		010000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */; };
+		010000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */; };
+		010000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */; };
+		010000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -351,6 +355,10 @@
 		020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3HeroStrip.swift; sourceTree = "<group>"; };
 		020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift; sourceTree = "<group>"; };
 		020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3ProjectRail.swift; sourceTree = "<group>"; };
+		020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift; sourceTree = "<group>"; };
+		020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift; sourceTree = "<group>"; };
+		020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4TimeCards.swift; sourceTree = "<group>"; };
+		020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4ProjectFooter.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -669,6 +677,10 @@
 				020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */,
 				020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */,
 				020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */,
+				020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */,
+				020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */,
+				020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */,
+				020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -917,6 +929,10 @@
 				010000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift in Sources */,
 				010000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift in Sources */,
 				010000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift in Sources */,
+				010000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift in Sources */,
+				010000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift in Sources */,
+				010000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift in Sources */,
+				010000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

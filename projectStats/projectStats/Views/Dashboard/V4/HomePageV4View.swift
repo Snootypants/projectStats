@@ -9,16 +9,32 @@ struct HomePageV4View: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("V4 Timeline")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.secondary)
-                Text("Coming soon - Week-as-story with vertical heatmap")
-                    .foregroundStyle(.tertiary)
+            VStack(spacing: 0) {
+                // Main content: Vertical heatmap + Annotated Chart
+                HStack(alignment: .top, spacing: 0) {
+                    // LEFT - Vertical Heatmap
+                    V4VerticalHeatmap()
+                        .frame(width: 100)
+
+                    // CENTER/RIGHT - Main Chart with annotations
+                    V4AnnotatedChart()
+                        .padding(24)
+                }
+
+                Divider()
+
+                // Time period cards
+                V4TimeCards()
+                    .padding(24)
+
+                Divider()
+
+                // Project footer
+                V4ProjectFooter()
+                    .padding(24)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(24)
         }
+        .background(Color.primary.opacity(0.02))
     }
 }
 
