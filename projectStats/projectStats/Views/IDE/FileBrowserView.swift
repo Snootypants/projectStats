@@ -1,6 +1,57 @@
 import AppKit
 import SwiftUI
 
+// MARK: - File System Watcher
+
+/// Watches a directory for changes using DispatchSource
+final class FileWatcher {
+    private var source: DispatchSourceFileSystemObject?
+    private var fileDescriptor: Int32 = -1
+    private let path: String
+    private let onChange: () -> Void
+
+    init(path: String, onChange: @escaping () -> Void) {
+        self.path = path
+        self.onChange = onChange
+    }
+
+    func start() {
+        fileDescriptor = open(path, O_EVTONLY)
+        guard fileDescriptor >= 0 else {
+            print("[FileWatcher] Failed to open: \(path)")
+            return
+        }
+
+        source = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: fileDescriptor,
+            eventMask: [.write, .rename, .delete, .extend],
+            queue: .main
+        )
+
+        source?.setEventHandler { [weak self] in
+            self?.onChange()
+        }
+
+        source?.setCancelHandler { [weak self] in
+            guard let self else { return }
+            close(self.fileDescriptor)
+            self.fileDescriptor = -1
+        }
+
+        source?.resume()
+        print("[FileWatcher] Started watching: \(path)")
+    }
+
+    func stop() {
+        source?.cancel()
+        source = nil
+    }
+
+    deinit {
+        stop()
+    }
+}
+
 struct FileNode: Identifiable, Hashable {
     let id = UUID()
     let name: String
@@ -87,6 +138,10 @@ struct FileBrowserView: View {
     @State private var showDeleteConfirm = false
     @State private var deleteTarget: URL?
 
+    // File system watching for auto-refresh
+    @State private var fileWatcher: FileWatcher?
+    @State private var refreshDebounceTask: Task<Void, Never>?
+
     // Folders to skip
     private let excludedFolders: Set<String> = [
         "node_modules", ".git", ".next", "dist", "build",
@@ -141,8 +196,19 @@ struct FileBrowserView: View {
                 reportButtonBar
             }
         }
-        .onAppear { loadFileTree() }
-        .onChange(of: rootPath) { _, _ in loadFileTree() }
+        .onAppear {
+            loadFileTree()
+            setupFileWatcher()
+        }
+        .onDisappear {
+            fileWatcher?.stop()
+            fileWatcher = nil
+            refreshDebounceTask?.cancel()
+        }
+        .onChange(of: rootPath) { _, _ in
+            loadFileTree()
+            setupFileWatcher()
+        }
         .alert("Rename", isPresented: $showRenamePrompt) {
             TextField("Name", text: $renameText)
             Button("Cancel", role: .cancel) {}
@@ -318,6 +384,28 @@ struct FileBrowserView: View {
     private func refreshTree() {
         loadFileTree()
         onRefreshStats?()
+    }
+
+    private func setupFileWatcher() {
+        fileWatcher?.stop()
+        fileWatcher = FileWatcher(path: rootPath.path) { [self] in
+            // Debounce - wait for batch changes to complete
+            scheduleRefresh()
+        }
+        fileWatcher?.start()
+    }
+
+    private func scheduleRefresh() {
+        refreshDebounceTask?.cancel()
+        refreshDebounceTask = Task {
+            // Wait 1.5 seconds for batch changes to settle
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            if !Task.isCancelled {
+                await MainActor.run {
+                    loadFileTree()
+                }
+            }
+        }
     }
 
     private func loadFileTree() {
