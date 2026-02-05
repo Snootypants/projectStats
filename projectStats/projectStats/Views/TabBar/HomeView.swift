@@ -3,11 +3,29 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var viewModel: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @State private var showActivityDetails = false
     @State private var showAchievements = false
     @StateObject private var achievementService = AchievementService.shared
 
     var body: some View {
+        Group {
+            switch settingsVM.homePageLayout {
+            case "v2":
+                HomePageV2View()
+            default:
+                // V1: Original layout - DO NOT MODIFY
+                homePageV1Content
+            }
+        }
+        .sheet(isPresented: $showAchievements) {
+            AchievementsSheet()
+        }
+    }
+
+    // MARK: - V1 Layout (Original - Preserved as-is)
+
+    private var homePageV1Content: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 // Quick Stats row (moved from sidebar)
@@ -108,9 +126,6 @@ struct HomeView: View {
                 }
             }
             .padding(24)
-        }
-        .sheet(isPresented: $showAchievements) {
-            AchievementsSheet()
         }
     }
 

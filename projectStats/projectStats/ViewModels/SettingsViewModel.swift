@@ -134,6 +134,14 @@ class SettingsViewModel: ObservableObject {
         set { terminalCcyoloModelRaw = newValue.rawValue }
     }
 
+    // MARK: - Home Page Layout
+    @AppStorage("homePageLayout") var homePageLayout: String = "v1"
+    // Available: "v1" (classic), "v2" (refined)
+    @AppStorage("chartTimeRange") var chartTimeRange: String = "week"
+    // Available: "week", "month", "quarter", "year"
+    @AppStorage("chartDataType") var chartDataType: String = "lines"
+    // Available: "lines", "commits"
+
     // MARK: - Claude Usage Display Settings
     @AppStorage("ccusage_showCost") var ccusageShowCost: Bool = true
     @AppStorage("ccusage_showChart") var ccusageShowChart: Bool = true

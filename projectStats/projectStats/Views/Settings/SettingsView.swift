@@ -37,6 +37,7 @@ private extension Color {
 
 enum SettingsTab: String, CaseIterable, Identifiable {
     case general
+    case homePage
     case appearance
     case github
     case messaging
@@ -55,6 +56,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .general: return "gear"
+        case .homePage: return "house"
         case .appearance: return "paintbrush"
         case .github: return "link"
         case .messaging: return "message"
@@ -73,6 +75,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     var label: String {
         switch self {
         case .general: return "General"
+        case .homePage: return "Home"
         case .appearance: return "Appearance"
         case .github: return "GitHub"
         case .messaging: return "Messaging"
@@ -145,6 +148,8 @@ struct SettingsView: View {
         switch tab {
         case .general:
             GeneralSettingsView()
+        case .homePage:
+            HomePageSettingsView()
         case .appearance:
             AppearanceSettingsView()
         case .github:
@@ -681,6 +686,47 @@ struct GitHubSettingsView: View {
             }
 
             isTesting = false
+        }
+    }
+}
+
+// MARK: - Home Page Settings
+
+struct HomePageSettingsView: View {
+    @EnvironmentObject var viewModel: SettingsViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Home Page")
+                .font(.title.bold())
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Layout")
+                    .font(.headline)
+
+                Picker("", selection: $viewModel.homePageLayout) {
+                    Text("V1 (Classic)").tag("v1")
+                    Text("V2 (Refined)").tag("v2")
+                }
+                .pickerStyle(.segmented)
+                .frame(maxWidth: 300)
+
+                // Layout description
+                Group {
+                    if viewModel.homePageLayout == "v1" {
+                        Text("Original dashboard layout with traditional stat cards and activity sections.")
+                    } else {
+                        Text("Refined layout with grouped stats, centered time display, and enhanced chart controls.")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .animation(.easeInOut(duration: 0.15), value: viewModel.homePageLayout)
+            }
+
+            Spacer()
         }
     }
 }
