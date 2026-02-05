@@ -13,6 +13,12 @@ struct HomeView: View {
             switch settingsVM.homePageLayout {
             case "v2":
                 HomePageV2View()
+            case "v3":
+                HomePageV3View()
+            case "v4":
+                HomePageV4View()
+            case "v5":
+                HomePageV5View()
             default:
                 // V1: Original layout - DO NOT MODIFY
                 homePageV1Content

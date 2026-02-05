@@ -739,23 +739,33 @@ struct HomePageSettingsView: View {
                 Text("Layout")
                     .font(.headline)
 
-                Picker("", selection: $viewModel.homePageLayout) {
-                    Text("V1 (Classic)").tag("v1")
-                    Text("V2 (Refined)").tag("v2")
+                VStack(alignment: .leading, spacing: 8) {
+                    layoutOption(
+                        value: "v1",
+                        title: "V1 (Classic)",
+                        description: "Original dashboard layout"
+                    )
+                    layoutOption(
+                        value: "v2",
+                        title: "V2 (Refined)",
+                        description: "Galaxy layout with centered time display"
+                    )
+                    layoutOption(
+                        value: "v3",
+                        title: "V3 (Command Center)",
+                        description: "Dense 3-column systems dashboard"
+                    )
+                    layoutOption(
+                        value: "v4",
+                        title: "V4 (Timeline)",
+                        description: "Week-as-story with vertical heatmap"
+                    )
+                    layoutOption(
+                        value: "v5",
+                        title: "V5 (Arcade HUD)",
+                        description: "Gamified stats with XP front-and-center"
+                    )
                 }
-                .pickerStyle(.segmented)
-                .frame(maxWidth: 300)
-
-                Group {
-                    if viewModel.homePageLayout == "v1" {
-                        Text("Original dashboard layout with traditional stat cards and activity sections.")
-                    } else {
-                        Text("Refined layout with grouped stats, centered time display, and enhanced chart controls.")
-                    }
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .animation(.easeInOut(duration: 0.15), value: viewModel.homePageLayout)
             }
 
             Divider()
@@ -830,6 +840,40 @@ struct HomePageSettingsView: View {
             }
             .opacity(0.4)
         }
+    }
+
+    // MARK: - Layout Option Row
+
+    @ViewBuilder
+    private func layoutOption(value: String, title: String, description: String) -> some View {
+        Button {
+            viewModel.homePageLayout = value
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: viewModel.homePageLayout == value ? "largecircle.fill.circle" : "circle")
+                    .foregroundStyle(viewModel.homePageLayout == value ? .blue : .secondary)
+                    .font(.system(size: 14))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    Text(description)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(viewModel.homePageLayout == value ? Color.blue.opacity(0.1) : Color.clear)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
