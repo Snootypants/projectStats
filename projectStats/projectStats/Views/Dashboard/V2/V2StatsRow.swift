@@ -9,9 +9,9 @@ struct V2StatsRow: View {
     @State private var showAchievements = false
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Left group: Activity Metrics
-            HStack(spacing: 12) {
+        HStack {
+            // Left group: Activity Metrics (left-aligned)
+            HStack(spacing: 8) {
                 V2StatPill(label: "Active", value: "\(viewModel.activeProjectCount)", color: .green)
                 V2StatPill(
                     label: "Total",
@@ -23,11 +23,11 @@ struct V2StatsRow: View {
                 V2StatPill(label: "Lines", value: viewModel.formattedTotalLineCount, color: .purple)
             }
 
-            // Wider gap between groups
-            Spacer(minLength: 40)
+            // Push groups to opposite edges
+            Spacer()
 
-            // Right group: Progress Metrics
-            HStack(spacing: 12) {
+            // Right group: Progress Metrics (right-aligned)
+            HStack(spacing: 8) {
                 if viewModel.aggregatedStats.currentStreak > 0 {
                     V2StatPill(
                         label: "Streak",
@@ -57,8 +57,6 @@ struct V2StatsRow: View {
                     ? "Last: \(achievementService.mostRecentAchievement!.title) — \(achievementService.mostRecentAchievement!.description)"
                     : "View Achievements")
             }
-
-            Spacer()
         }
         .sheet(isPresented: $showAchievements) {
             AchievementsSheet()
