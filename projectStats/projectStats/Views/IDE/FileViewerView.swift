@@ -19,7 +19,9 @@ struct LineNumberedTextView: NSViewRepresentable {
         scrollView.autohidesScrollers = true
         scrollView.borderType = .noBorder
 
-        let textView = LineNumberTextView()
+        // Create text view with proper initial frame
+        let contentSize = scrollView.contentSize
+        let textView = LineNumberTextView(frame: NSRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height))
         textView.isEditable = true
         textView.isSelectable = true
         textView.allowsUndo = true
@@ -35,10 +37,13 @@ struct LineNumberedTextView: NSViewRepresentable {
         textView.string = text
 
         // Configure for horizontal scrolling (no word wrap)
+        textView.minSize = NSSize(width: 0, height: 0)
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = true
+        textView.autoresizingMask = [.width, .height]
         textView.textContainer?.widthTracksTextView = false
         textView.textContainer?.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
 
         scrollView.documentView = textView
 
