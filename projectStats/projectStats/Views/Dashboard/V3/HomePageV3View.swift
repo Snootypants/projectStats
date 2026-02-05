@@ -9,16 +9,24 @@ struct HomePageV3View: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("V3 Command Center")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.secondary)
-                Text("Coming soon - Dense 3-column systems dashboard")
-                    .foregroundStyle(.tertiary)
+            VStack(spacing: 0) {
+                // TOP BAR - XP, Streak, Session Active
+                V3TopBar()
+
+                // HERO STRIP - Today's time, You/Claude split, API spend
+                V3HeroStrip()
+
+                // 3-COLUMN CORE
+                V3ThreeColumnCore()
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 16)
+
+                // BOTTOM RAIL - Horizontal scrolling project cards
+                V3ProjectRail()
+                    .padding(.bottom, 24)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(24)
         }
+        .background(Color.primary.opacity(0.02))
     }
 }
 
