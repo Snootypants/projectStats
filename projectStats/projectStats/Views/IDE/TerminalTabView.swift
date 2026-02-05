@@ -31,9 +31,11 @@ private struct TerminalSessionView: NSViewRepresentable {
         let terminalView = MonitoringTerminalView(frame: .zero)
         terminalView.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         terminalView.configureNativeColors()
-        terminalView.onOutput = { [weak tab] text in
+        terminalView.onOutput = { [weak tab, projectPath] text in
             Task { @MainActor in
                 tab?.recordOutput(text)
+                // Set the active project path so Claude time tracking knows which project is active
+                TerminalOutputMonitor.shared.activeProjectPath = projectPath.path
                 TerminalOutputMonitor.shared.processTerminalChunk(text)
                 TimeTrackingService.shared.recordActivity()
             }

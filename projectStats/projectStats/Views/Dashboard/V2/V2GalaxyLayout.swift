@@ -73,14 +73,14 @@ struct V2GalaxyLayout: View {
             HStack(spacing: 16) {
                 HStack(spacing: 4) {
                     Circle().fill(.green).frame(width: 6, height: 6)
-                    Text("You: \(timeService.todayHumanFormatted)")
+                    Text("You: \(humanTimeFormatted)")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
 
                 HStack(spacing: 4) {
                     Circle().fill(.pink).frame(width: 6, height: 6)
-                    Text("Claude: \(timeService.todayAIFormatted)")
+                    Text("Claude: \(aiTimeFormatted)")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -110,13 +110,24 @@ struct V2GalaxyLayout: View {
 
     // MARK: - Helpers
 
+    /// Total time today (Human + AI), using `now` to trigger timer updates
     private var totalTimeFormatted: String {
-        let total = timeService.todayHumanTotal + timeService.todayAITotal
-        if let start = timeService.humanSessionStart {
-            let current = Date().timeIntervalSince(start)
-            return formatDuration(total + current)
-        }
+        let humanCurrent = timeService.humanSessionStart.map { now.timeIntervalSince($0) } ?? 0
+        let aiCurrent = timeService.aiSessionStart.map { now.timeIntervalSince($0) } ?? 0
+        let total = timeService.todayHumanTotal + timeService.todayAITotal + humanCurrent + aiCurrent
         return formatDuration(total)
+    }
+
+    /// Human time today, using `now` to trigger timer updates
+    private var humanTimeFormatted: String {
+        let current = timeService.humanSessionStart.map { now.timeIntervalSince($0) } ?? 0
+        return formatDuration(timeService.todayHumanTotal + current)
+    }
+
+    /// AI (Claude) time today, using `now` to trigger timer updates
+    private var aiTimeFormatted: String {
+        let current = timeService.aiSessionStart.map { now.timeIntervalSince($0) } ?? 0
+        return formatDuration(timeService.todayAITotal + current)
     }
 
     private func formatDuration(_ duration: TimeInterval) -> String {
