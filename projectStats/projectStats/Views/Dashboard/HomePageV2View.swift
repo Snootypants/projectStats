@@ -12,8 +12,11 @@ struct HomePageV2View: View {
                 // Stats Pills Row - Grouped by type
                 V2StatsRow()
 
+                // Galaxy Layout - Time center, usage bars flanking
+                V2GalaxyLayout()
+
                 // Placeholder for remaining V2 components
-                Text("Coming soon: Galaxy layout, enhanced charts, project cards")
+                Text("Coming soon: Enhanced charts, project cards")
                     .font(.subheadline)
                     .foregroundStyle(.tertiary)
             }
