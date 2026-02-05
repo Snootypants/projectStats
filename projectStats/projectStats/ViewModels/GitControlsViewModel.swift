@@ -29,15 +29,29 @@ final class GitControlsViewModel: ObservableObject {
     @Published var aheadCount: Int = 0
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isGitRepository: Bool = false
 
     let projectPath: URL
 
     init(projectPath: URL) {
         self.projectPath = projectPath
-        Task { await refresh() }
+        // Check if this is a git repository before running git commands
+        self.isGitRepository = GitService.shared.isGitRepository(at: projectPath)
+        if isGitRepository {
+            Task { await refresh() }
+        }
     }
 
     func refresh() async {
+        // Skip git operations for non-git projects
+        guard isGitRepository else {
+            status = .empty
+            branches = []
+            currentBranch = ""
+            aheadCount = 0
+            return
+        }
+
         isLoading = true
         defer { isLoading = false }
 

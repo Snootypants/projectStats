@@ -12,6 +12,12 @@ struct GitControlsView: View {
     }
 
     var body: some View {
+        // Hide controls for non-git projects
+        if !viewModel.isGitRepository {
+            Text("Not a git repo")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        } else {
         HStack(spacing: 8) {
             HStack(spacing: 4) {
                 Image(systemName: "arrow.triangle.branch")
@@ -95,6 +101,7 @@ struct GitControlsView: View {
         .onAppear {
             Task { await viewModel.refresh() }
         }
+        } // else isGitRepository
     }
 }
 
