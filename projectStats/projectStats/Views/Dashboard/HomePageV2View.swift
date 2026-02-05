@@ -19,30 +19,8 @@ struct HomePageV2View: View {
                 // Activity Chart with time range and data toggles
                 V2ChartView()
 
-                // Recent Projects - Cards with accent glow
+                // Recent Projects - Cards with accent glow (refresh in header)
                 recentProjectsSection
-
-                // Refresh button at bottom
-                HStack {
-                    Spacer()
-                    Button {
-                        Task {
-                            await viewModel.refresh()
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            if viewModel.isLoading {
-                                ProgressView()
-                                    .controlSize(.small)
-                            } else {
-                                Image(systemName: "arrow.clockwise")
-                            }
-                            Text("Refresh")
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(viewModel.isLoading)
-                }
             }
             .padding(24)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -50,6 +28,9 @@ struct HomePageV2View: View {
     }
 
     // MARK: - Recent Projects Section
+
+    @State private var isRefreshing = false
+    @State private var refreshRotation: Double = 0
 
     private var recentProjectsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -62,6 +43,18 @@ struct HomePageV2View: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                // Refresh button
+                Button {
+                    refreshData()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.caption)
+                        .foregroundStyle(isRefreshing ? Color.accentColor : Color.secondary)
+                        .rotationEffect(.degrees(refreshRotation))
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.isLoading)
+                .help("Refresh data")
             }
 
             LazyVGrid(columns: [
@@ -89,6 +82,20 @@ struct HomePageV2View: View {
         } else {
             tabManager.newTab()
             tabManager.openProject(path: path)
+        }
+    }
+
+    private func refreshData() {
+        isRefreshing = true
+        // Spin animation
+        withAnimation(.linear(duration: 0.6)) {
+            refreshRotation += 360
+        }
+        Task {
+            await viewModel.refresh()
+            await MainActor.run {
+                isRefreshing = false
+            }
         }
     }
 }
