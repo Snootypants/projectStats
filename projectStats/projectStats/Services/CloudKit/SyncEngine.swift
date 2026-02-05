@@ -288,30 +288,61 @@ final class SyncEngine: ObservableObject {
     @Published var syncError: Error?
     @Published var pendingChangesCount = 0
 
-    private init() {}
+    private init() {
+        print("[SyncEngine] Initialized (CloudKit disabled - requires paid dev account)")
+    }
 
     func performFullSync(context: ModelContext) async throws {
+        print("[SyncEngine] performFullSync() called")
+
         // Check subscription status first
         guard SubscriptionManager.shared.hasCloudSyncAccess else {
-            print("[Sync] Cloud sync requires Pro subscription")
+            print("[SyncEngine] ❌ Cloud sync requires Pro subscription")
+            print("[SyncEngine] hasCloudSyncAccess = false")
             throw SyncError.subscriptionRequired
         }
 
-        // DISABLED: CloudKit requires paid Apple Developer account
-        print("[Sync] CloudKit disabled - requires paid dev account")
+        print("[SyncEngine] ✓ Subscription check passed")
+        print("[SyncEngine] ⚠️ CloudKit disabled - requires paid Apple Developer account")
+        print("[SyncEngine] To enable: Set #if true at top of SyncEngine.swift and configure CloudKit entitlements")
         throw SyncError.disabled
     }
 
     func pushLocalChanges(context: ModelContext) async throws {
+        print("[SyncEngine] pushLocalChanges() called")
+
         // Check subscription status first
         guard SubscriptionManager.shared.hasCloudSyncAccess else {
-            print("[Sync] Cloud sync requires Pro subscription")
+            print("[SyncEngine] ❌ Cloud sync requires Pro subscription")
             throw SyncError.subscriptionRequired
         }
 
-        // DISABLED: CloudKit requires paid Apple Developer account
-        print("[Sync] CloudKit disabled - requires paid dev account")
+        print("[SyncEngine] ✓ Subscription check passed")
+        print("[SyncEngine] ⚠️ CloudKit disabled - requires paid Apple Developer account")
         throw SyncError.disabled
+    }
+
+    func pullRemoteChanges(context: ModelContext) async throws {
+        print("[SyncEngine] pullRemoteChanges() called")
+
+        guard SubscriptionManager.shared.hasCloudSyncAccess else {
+            print("[SyncEngine] ❌ Cloud sync requires Pro subscription")
+            throw SyncError.subscriptionRequired
+        }
+
+        print("[SyncEngine] ⚠️ CloudKit disabled - requires paid Apple Developer account")
+        throw SyncError.disabled
+    }
+
+    /// Debug helper to log sync state
+    func logSyncState() {
+        print("[SyncEngine] === Sync State ===")
+        print("[SyncEngine] isSyncing: \(isSyncing)")
+        print("[SyncEngine] lastSyncDate: \(lastSyncDate?.description ?? "never")")
+        print("[SyncEngine] syncError: \(syncError?.localizedDescription ?? "none")")
+        print("[SyncEngine] pendingChangesCount: \(pendingChangesCount)")
+        print("[SyncEngine] hasCloudSyncAccess: \(SubscriptionManager.shared.hasCloudSyncAccess)")
+        print("[SyncEngine] =====================")
     }
 }
 
