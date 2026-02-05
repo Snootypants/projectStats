@@ -659,6 +659,9 @@ struct FileNodeView: View {
                     }
                 } else {
                     selectedFile = node.path
+                    // Also update selectedFolder to the file's parent directory
+                    // This ensures determineCreationParent() works correctly
+                    selectedFolder = node.path.deletingLastPathComponent()
                 }
             }
             .contextMenu { contextMenu }
