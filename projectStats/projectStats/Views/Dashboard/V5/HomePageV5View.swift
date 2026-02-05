@@ -9,16 +9,30 @@ struct HomePageV5View: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("V5 Arcade HUD")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.secondary)
-                Text("Coming soon - Gamified stats with XP front-and-center")
-                    .foregroundStyle(.tertiary)
+            VStack(spacing: 24) {
+                // TOP - XP Header with level and streak
+                V5XPHeader()
+
+                // MIDDLE - Two panel layout
+                HStack(alignment: .top, spacing: 20) {
+                    // LEFT - Active Session
+                    V5SessionPanel()
+                        .frame(maxWidth: .infinity)
+
+                    // RIGHT - Money Burn
+                    V5MoneyPanel()
+                        .frame(maxWidth: .infinity)
+                }
+
+                // CENTER - Project Activity
+                V5ProjectActivity()
+
+                // BOTTOM - Game-like project cards
+                V5GameCards()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(24)
         }
+        .background(Color.primary.opacity(0.02))
     }
 }
 
