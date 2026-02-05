@@ -99,25 +99,26 @@ struct SettingsView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // Sidebar
-            VStack(spacing: 2) {
-                ForEach(SettingsTab.allCases) { tab in
-                    SettingsSidebarItem(
-                        tab: tab,
-                        isSelected: selectedTab == tab,
-                        accentColor: accentColor
-                    ) {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            selectedTab = tab
+            // Sidebar - scrollable to fit all items
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 2) {
+                    ForEach(SettingsTab.allCases) { tab in
+                        SettingsSidebarItem(
+                            tab: tab,
+                            isSelected: selectedTab == tab,
+                            accentColor: accentColor
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                selectedTab = tab
+                            }
                         }
                     }
                 }
-                Spacer()
+                .padding(.top, 12)
+                .padding(.bottom, 12)
+                .padding(.horizontal, 4)
             }
             .frame(width: 90)
-            .padding(.vertical, 12)
-            .padding(.top, 8)  // Extra top padding to prevent clipping
-            .padding(.horizontal, 4)
             .background(Color(NSColor.windowBackgroundColor).opacity(0.5))
 
             // Divider with subtle glow when hovered
