@@ -9,6 +9,9 @@ struct TabShellView: View {
     @State private var previousTabs: [AppTab] = []
     @State private var showCommandPalette = false
     @State private var showFocusMode = false
+    @State private var showCommitDialogFromPalette = false
+    @State private var commitDialogStatus: GitStatusSummary = .empty
+    @State private var commitDialogProjectPath: URL?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -62,8 +65,32 @@ struct TabShellView: View {
             )
             .frame(minWidth: 800, minHeight: 600)
         }
+        .sheet(isPresented: $showCommitDialogFromPalette) {
+            if let path = commitDialogProjectPath {
+                CommitDialog(status: commitDialogStatus, projectPath: path) { message, files, pushAfter in
+                    Task {
+                        await performCommit(message: message, files: files, pushAfter: pushAfter, projectPath: path)
+                    }
+                }
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .enterFocusMode)) { _ in
             showFocusMode = true
+        }
+    }
+
+    private func performCommit(message: String, files: [String], pushAfter: Bool, projectPath: URL) async {
+        let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !files.isEmpty else { return }
+
+        let addCommand = "git add -- \(files.map { "'\($0)'" }.joined(separator: " "))"
+        let commitCommand = "git commit -m \"\(trimmed.replacingOccurrences(of: "\"", with: "\\\""))\""
+
+        _ = Shell.runResult(addCommand, at: projectPath)
+        let commitResult = Shell.runResult(commitCommand, at: projectPath)
+
+        if commitResult.exitCode == 0, pushAfter {
+            _ = Shell.runResult("git push", at: projectPath)
         }
     }
 
@@ -129,11 +156,85 @@ struct TabShellView: View {
 
     private func commandPaletteCommands() -> [Command] {
         [
-            Command(name: "New Terminal Tab", icon: "terminal", shortcut: "⌘T", action: { /* TODO */ }),
-            Command(name: "Commit Changes", icon: "arrow.up.circle", shortcut: "⌘⇧C", action: { /* TODO */ }),
+            Command(name: "New Terminal Tab", icon: "terminal", shortcut: "⌘T", action: {
+                // Add a new shell tab to the active project's terminal
+                if let activeTab = tabManager.activeTab,
+                   case .projectWorkspace(let pathString) = activeTab.content {
+                    let path = URL(fileURLWithPath: pathString)
+                    let terminalVM = TerminalTabsViewModel.shared
+                    terminalVM.setProject(path)
+                    let newTab = TerminalTabItem(kind: .shell, title: "Terminal \(terminalVM.tabs.count + 1)")
+                    terminalVM.tabs.append(newTab)
+                    terminalVM.activeTabID = newTab.id
+                }
+                showCommandPalette = false
+            }),
+            Command(name: "Commit Changes", icon: "arrow.up.circle", shortcut: "⌘⇧C", action: {
+                // Show commit dialog for active project
+                if let activeTab = tabManager.activeTab,
+                   case .projectWorkspace(let pathString) = activeTab.content {
+                    let path = URL(fileURLWithPath: pathString)
+                    Task {
+                        let status = await fetchGitStatus(for: path)
+                        await MainActor.run {
+                            commitDialogStatus = status
+                            commitDialogProjectPath = path
+                            showCommandPalette = false
+                            showCommitDialogFromPalette = true
+                        }
+                    }
+                } else {
+                    showCommandPalette = false
+                }
+            }),
             Command(name: "Refresh Project Stats", icon: "arrow.clockwise", shortcut: "⌘R", action: { Task { await dashboardVM.refresh() } }),
             Command(name: "Open Settings", icon: "gear", shortcut: "⌘,", action: { NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil) })
         ]
+    }
+
+    private func fetchGitStatus(for path: URL) async -> GitStatusSummary {
+        let result = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let output = Shell.runResult("git status --porcelain", at: path)
+                continuation.resume(returning: output)
+            }
+        }
+        guard result.exitCode == 0 else { return .empty }
+        return parseGitStatus(result.output)
+    }
+
+    private func parseGitStatus(_ output: String) -> GitStatusSummary {
+        if output.isEmpty { return .empty }
+
+        var changes: [GitFileChange] = []
+        var staged = 0
+        var unstaged = 0
+        var untracked = 0
+
+        for line in output.components(separatedBy: .newlines) {
+            guard line.count >= 2 else { continue }
+            let statusIndex = line.index(line.startIndex, offsetBy: 0)
+            let worktreeIndex = line.index(line.startIndex, offsetBy: 1)
+            let statusChar = line[statusIndex]
+            let worktreeChar = line[worktreeIndex]
+
+            let pathStart = line.index(line.startIndex, offsetBy: 3)
+            let rawPath = String(line[pathStart...]).trimmingCharacters(in: .whitespaces)
+            let path = rawPath.components(separatedBy: " -> ").last ?? rawPath
+
+            let isUntracked = statusChar == "?"
+            let isStaged = statusChar != " " && !isUntracked
+            let isUnstaged = worktreeChar != " " && !isUntracked
+
+            if isUntracked { untracked += 1 }
+            if isStaged { staged += 1 }
+            if isUnstaged { unstaged += 1 }
+
+            let statusLabel = isUntracked ? "?" : String(statusChar != " " ? statusChar : worktreeChar)
+            changes.append(GitFileChange(path: path, status: statusLabel, isStaged: isStaged, isUntracked: isUntracked))
+        }
+
+        return GitStatusSummary(changes: changes, stagedCount: staged, unstagedCount: unstaged, untrackedCount: untracked)
     }
 }
 
