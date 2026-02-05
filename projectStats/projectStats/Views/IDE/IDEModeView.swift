@@ -28,8 +28,6 @@ struct IDEModeView: View {
     @StateObject private var environmentViewModel: EnvironmentViewModel
 
     @State private var selectedFile: URL?
-    @State private var openFiles: [OpenFile] = []
-    @State private var activeFileID: UUID?
     @State private var activeTab: IDETab = .prompts
 
     @AppStorage("workspace.terminalWidth") private var terminalWidth: Double = 450
@@ -80,21 +78,7 @@ struct IDEModeView: View {
                 }
 
                 if showExplorer {
-                    FileBrowserView(
-                        rootPath: project.path,
-                        selectedFile: $selectedFile,
-                        project: project,
-                        onImportEnvFile: { url in
-                            environmentViewModel.importEnvFile(at: url)
-                            activeTab = .environment
-                        },
-                        onRequestDocUpdate: {
-                            terminalTabs.addGhostDocUpdateTab()
-                        },
-                        onRefreshStats: {
-                            Task { await DashboardViewModel.shared.syncSingleProject(path: project.path.path) }
-                        }
-                    )
+                    SimpleFileBrowserView(rootPath: project.path, selectedFile: $selectedFile)
                     .frame(width: layout.explorer)
                 }
 
@@ -116,8 +100,7 @@ struct IDEModeView: View {
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .onChange(of: selectedFile) { _, newValue in
-            if let path = newValue {
-                openFile(at: path)
+            if newValue != nil {
                 activeTab = .files
             }
         }
@@ -180,21 +163,21 @@ struct IDEModeView: View {
                 if showPromptsTab {
                     PromptManagerView(projectPath: project.path)
                 } else {
-                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                    SimpleFileViewerView(fileURL: $selectedFile)
                 }
             case .diffs:
                 if showDiffsTab {
                     DiffManagerView(projectPath: project.path)
                 } else {
-                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                    SimpleFileViewerView(fileURL: $selectedFile)
                 }
             case .files:
-                FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                SimpleFileViewerView(fileURL: $selectedFile)
             case .environment:
                 if showEnvironmentTab {
                     EnvironmentManagerView(viewModel: environmentViewModel)
                 } else {
-                    FileViewerView(openFiles: $openFiles, activeFileID: $activeFileID)
+                    SimpleFileViewerView(fileURL: $selectedFile)
                 }
             }
         }
@@ -338,18 +321,6 @@ struct IDEModeView: View {
         viewerWidth = Double(newViewer)
     }
 
-    private func openFile(at path: URL) {
-        if let existing = openFiles.first(where: { $0.path == path }) {
-            activeFileID = existing.id
-            return
-        }
-
-        guard let content = try? String(contentsOf: path, encoding: .utf8) else { return }
-
-        let newFile = OpenFile(path: path, content: content)
-        openFiles.append(newFile)
-        activeFileID = newFile.id
-    }
 }
 
 private struct ResizableDivider: View {

@@ -247,6 +247,7 @@ private struct SettingsDivider: View {
 
 struct GeneralSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
+    @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -320,6 +321,16 @@ struct GeneralSettingsView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Toggle("Launch at Login", isOn: $viewModel.launchAtLogin)
                     Toggle("Show in Dock", isOn: $viewModel.showInDock)
+                }
+
+                Divider()
+
+                // File Browser
+                VStack(alignment: .leading, spacing: 12) {
+                    Toggle("Show Hidden Files in File Browser", isOn: $showHiddenFiles)
+                    Text("Show dotfiles like .env and .gitignore in the Files panel.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
