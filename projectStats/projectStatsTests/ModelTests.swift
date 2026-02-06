@@ -340,6 +340,66 @@ final class ModelTests: XCTestCase {
         // Visual rendering tested in UI
     }
 
+    // MARK: - EdgeFXOverlay Tests
+
+    func testEdgeFXOverlayInitializesWithoutCrash() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        XCTAssertNotNil(overlay)
+    }
+
+    func testEdgeFXOverlaySetFireMode() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        overlay.set(mode: .fire)
+        // Should not crash; emitter cells configured
+        XCTAssertNotNil(overlay.layer)
+    }
+
+    func testEdgeFXOverlaySetSmokeMode() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        overlay.set(mode: .smoke)
+        XCTAssertNotNil(overlay.layer)
+    }
+
+    func testEdgeFXOverlaySetCubesMode() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        overlay.set(mode: .cubes)
+        XCTAssertNotNil(overlay.layer)
+    }
+
+    func testEdgeFXOverlayStopAll() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        overlay.set(mode: .fire)
+        overlay.stopAll()
+        // Should not crash
+        XCTAssertNotNil(overlay.layer)
+    }
+
+    func testEdgeFXOverlayHitTestReturnsNil() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        let result = overlay.hitTest(NSPoint(x: 400, y: 300))
+        XCTAssertNil(result, "EdgeFXOverlay should pass through all hit tests")
+    }
+
+    func testEdgeFXOverlayIntensityClamped() {
+        let overlay = EdgeFXOverlay(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        overlay.set(mode: .fire, intensity: 10.0)
+        XCTAssertEqual(overlay.intensity, 5.0, "Intensity should be clamped to 5.0 max")
+        overlay.set(mode: .fire, intensity: -2.0)
+        XCTAssertEqual(overlay.intensity, 0.0, "Intensity should be clamped to 0.0 min")
+    }
+
+    func testSpriteFactoryCircleSpriteReturnsValidImage() {
+        let img = SpriteFactory.circleSprite(diameter: 18, softEdge: true, alpha: 1.0)
+        XCTAssertGreaterThan(img.width, 0)
+        XCTAssertGreaterThan(img.height, 0)
+    }
+
+    func testSpriteFactorySquareSpriteReturnsValidImage() {
+        let img = SpriteFactory.squareSprite(size: 14, alpha: 1.0)
+        XCTAssertGreaterThan(img.width, 0)
+        XCTAssertGreaterThan(img.height, 0)
+    }
+
     // MARK: - LineNumberTextEditor Tests
 
     func testLineNumberTextEditorReadOnlyDefault() {

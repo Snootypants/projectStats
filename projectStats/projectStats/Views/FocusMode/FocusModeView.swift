@@ -51,8 +51,9 @@ struct FocusModeView: View {
                 .padding(.bottom, 40)
             }
 
-            // Sparkle edge overlay
-            SparkleEdgeEffect()
+            // Edge FX overlay (CAEmitterLayer particles)
+            EdgeFXOverlayView(mode: .fire, intensity: 1.0)
+                .allowsHitTesting(false)
         }
         .ignoresSafeArea()
         .onAppear { pulseAnimation = true }
