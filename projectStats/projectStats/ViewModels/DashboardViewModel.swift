@@ -289,6 +289,17 @@ class DashboardViewModel: ObservableObject {
         // Scan projects - pass empty array to get a clean scan (only JSON-sourced projects)
         projects = await scanner.scan(directory: codeDirectory, maxDepth: 10, existingProjects: [])
 
+        // Also scan custom project paths
+        for customPath in SettingsViewModel.shared.customProjectPaths {
+            let url = URL(fileURLWithPath: customPath)
+            if FileManager.default.fileExists(atPath: customPath) {
+                let customProjects = await scanner.scan(directory: url, maxDepth: 1, existingProjects: projects)
+                for cp in customProjects where !projects.contains(where: { $0.path == cp.path }) {
+                    projects.append(cp)
+                }
+            }
+        }
+
         for project in projects {
             if let url = project.githubURL {
                 logSync("project: \(project.name) remote=\(url)")

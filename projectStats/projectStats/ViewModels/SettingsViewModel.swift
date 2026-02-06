@@ -189,6 +189,22 @@ class SettingsViewModel: ObservableObject {
     // Focus Mode
     @AppStorage("focusMode.edgeFXMode") var focusModeEdgeFXRaw: String = "fire"
 
+    // Custom Project Paths
+    @AppStorage("customProjectPaths") var customProjectPathsJSON: String = "[]"
+
+    var customProjectPaths: [String] {
+        get { (try? JSONDecoder().decode([String].self, from: Data(customProjectPathsJSON.utf8))) ?? [] }
+        set { customProjectPathsJSON = (try? String(data: JSONEncoder().encode(newValue), encoding: .utf8)) ?? "[]" }
+    }
+
+    func addCustomProjectPath(_ path: String) {
+        var paths = customProjectPaths
+        if !paths.contains(path) {
+            paths.append(path)
+            customProjectPaths = paths
+        }
+    }
+
     // Lockout Bar Colors
     @AppStorage("lockoutBar.sessionColor") var sessionBarColorHex: String = "#3B82F6"
     @AppStorage("lockoutBar.weeklyColor") var weeklyBarColorHex: String = "#3B82F6"

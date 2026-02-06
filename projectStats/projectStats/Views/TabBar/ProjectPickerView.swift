@@ -73,6 +73,14 @@ struct ProjectPickerView: View {
                 .buttonStyle(.bordered)
                 .help("Refresh project list")
 
+                Button {
+                    addProjectFromFolder()
+                } label: {
+                    Image(systemName: "folder.badge.plus")
+                }
+                .buttonStyle(.bordered)
+                .help("Add project from another location")
+
                 Spacer()
 
                 Button {
@@ -104,6 +112,18 @@ struct ProjectPickerView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             }
+        }
+    }
+
+    private func addProjectFromFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.message = "Select a project folder"
+        if panel.runModal() == .OK, let url = panel.url {
+            settingsVM.addCustomProjectPath(url.path)
+            Task { await dashboardVM.refresh() }
         }
     }
 }
