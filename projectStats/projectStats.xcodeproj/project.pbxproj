@@ -187,6 +187,7 @@
 		010000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */; };
 		010000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */; };
 		010000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */; };
+		010000000000000000000181 /* projectStats/Models/PromptTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -369,6 +370,7 @@
 		020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5MoneyPanel.swift; sourceTree = "<group>"; };
 		020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5ProjectActivity.swift; sourceTree = "<group>"; };
 		020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5GameCards.swift; sourceTree = "<group>"; };
+		020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/PromptTemplate.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -696,6 +698,7 @@
 				020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */,
 				020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */,
 				020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */,
+				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -953,6 +956,7 @@
 				010000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift in Sources */,
 				010000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift in Sources */,
 				010000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift in Sources */,
+				010000000000000000000181 /* projectStats/Models/PromptTemplate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

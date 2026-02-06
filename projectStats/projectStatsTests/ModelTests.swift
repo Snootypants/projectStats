@@ -222,4 +222,101 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(goal.title, "Complete feature")
         XCTAssertFalse(goal.isCompleted)
     }
+
+    // MARK: - PromptTemplate Model Tests
+
+    func testPromptTemplateInitialization() {
+        let template = PromptTemplate(name: "Default", content: "Template content", isDefault: true)
+
+        XCTAssertEqual(template.name, "Default")
+        XCTAssertEqual(template.content, "Template content")
+        XCTAssertTrue(template.isDefault)
+        XCTAssertEqual(template.currentVersionNumber, 1)
+        XCTAssertEqual(template.oneShotSuccessCount, 0)
+        XCTAssertEqual(template.totalPromptsFromVersion, 0)
+        XCTAssertTrue(template.versions.isEmpty)
+    }
+
+    func testPromptTemplateEditCreatesVersion() {
+        let template = PromptTemplate(name: "Test", content: "Version 1 content")
+        template.oneShotSuccessCount = 5
+        template.totalPromptsFromVersion = 10
+
+        template.edit(newContent: "Version 2 content", editNote: "Updated format")
+
+        // Template should have new content
+        XCTAssertEqual(template.content, "Version 2 content")
+        XCTAssertEqual(template.currentVersionNumber, 2)
+
+        // Stats should be reset
+        XCTAssertEqual(template.oneShotSuccessCount, 0)
+        XCTAssertEqual(template.totalPromptsFromVersion, 0)
+
+        // Version should be created with old stats
+        XCTAssertEqual(template.versions.count, 1)
+        let version = template.versions[0]
+        XCTAssertEqual(version.versionNumber, 1)
+        XCTAssertEqual(version.content, "Version 1 content")
+        XCTAssertEqual(version.editNote, "Updated format")
+        XCTAssertEqual(version.oneShotSuccessCount, 5)
+        XCTAssertEqual(version.totalPromptsFromVersion, 10)
+    }
+
+    func testPromptTemplateOneShotCounter() {
+        let template = PromptTemplate(name: "Test", content: "Content")
+
+        template.recordOneShotSuccess()
+        template.recordOneShotSuccess()
+        template.recordPromptUse()
+
+        XCTAssertEqual(template.oneShotSuccessCount, 2)
+        XCTAssertEqual(template.totalPromptsFromVersion, 3)
+    }
+
+    func testPromptTemplateEditResetsCounter() {
+        let template = PromptTemplate(name: "Test", content: "V1")
+        template.recordOneShotSuccess()
+        template.recordOneShotSuccess()
+        template.recordPromptUse()
+
+        template.edit(newContent: "V2")
+
+        XCTAssertEqual(template.oneShotSuccessCount, 0)
+        XCTAssertEqual(template.totalPromptsFromVersion, 0)
+
+        // Old stats preserved in version
+        XCTAssertEqual(template.versions[0].oneShotSuccessCount, 2)
+        XCTAssertEqual(template.versions[0].totalPromptsFromVersion, 3)
+    }
+
+    func testPromptTemplateVersionHistoryOrdered() {
+        let template = PromptTemplate(name: "Test", content: "V1")
+        template.edit(newContent: "V2", editNote: "First edit")
+        // Small delay to ensure different timestamps
+        template.edit(newContent: "V3", editNote: "Second edit")
+
+        let ordered = template.orderedVersions
+        XCTAssertEqual(ordered.count, 2)
+        // Newest first
+        XCTAssertEqual(ordered[0].versionNumber, 2)
+        XCTAssertEqual(ordered[1].versionNumber, 1)
+    }
+
+    func testPromptTemplateVersionInitialization() {
+        let version = PromptTemplateVersion(
+            versionNumber: 3,
+            content: "Old content",
+            editNote: "Refactored",
+            oneShotSuccessCount: 7,
+            totalPromptsFromVersion: 12
+        )
+
+        XCTAssertEqual(version.versionNumber, 3)
+        XCTAssertEqual(version.content, "Old content")
+        XCTAssertEqual(version.editNote, "Refactored")
+        XCTAssertEqual(version.oneShotSuccessCount, 7)
+        XCTAssertEqual(version.totalPromptsFromVersion, 12)
+        XCTAssertNotNil(version.id)
+        XCTAssertNotNil(version.createdAt)
+    }
 }

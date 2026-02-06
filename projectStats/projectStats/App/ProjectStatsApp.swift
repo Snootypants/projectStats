@@ -26,7 +26,10 @@ enum AppModelContainer {
             WeeklyGoal.self,
             // AI Provider Models
             AIProviderConfig.self,
-            AISessionV2.self
+            AISessionV2.self,
+            // Prompt Template Models
+            PromptTemplate.self,
+            PromptTemplateVersion.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
