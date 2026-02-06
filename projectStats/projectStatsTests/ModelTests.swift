@@ -302,6 +302,16 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(ordered[1].versionNumber, 1)
     }
 
+    // MARK: - CompactLockoutBar Tests
+
+    @MainActor
+    func testCompactLockoutBarPercentages() {
+        let service = ClaudePlanUsageService.shared
+        // Service defaults to 0
+        XCTAssertEqual(Int(service.fiveHourUtilization * 100), 0)
+        XCTAssertEqual(Int(service.sevenDayUtilization * 100), 0)
+    }
+
     // MARK: - Projects Tab Tooltip Tests
 
     func testProjectsTabTooltipWithProjects() {

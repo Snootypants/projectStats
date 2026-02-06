@@ -20,6 +20,11 @@ struct WorkspaceView: View {
     var body: some View {
         if let project = project {
             VStack(spacing: 0) {
+                // Lockout bar — shows Claude plan usage at top of every workspace
+                CompactLockoutBar()
+                    .padding(.horizontal, 8)
+                    .padding(.top, 4)
+
                 // Workspace toolbar — back button + project info + actions
                 workspaceToolbar(project: project)
 

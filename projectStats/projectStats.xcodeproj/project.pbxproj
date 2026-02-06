@@ -105,6 +105,7 @@
 		010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */; };
 		010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */; };
 		010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */; };
+		010000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift */; };
 		010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */; };
 		010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */; };
 		010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */; };
@@ -288,6 +289,7 @@
 		020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
 		020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
 		020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/ContextUsageBar.swift; sourceTree = "<group>"; };
+		020000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/CompactLockoutBar.swift; sourceTree = "<group>"; };
 		020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
 		020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
 		020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
@@ -621,6 +623,7 @@
 				020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */,
 				020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */,
 				020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */,
+				020000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift */,
 				020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */,
 				020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */,
 				020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */,
@@ -877,6 +880,7 @@
 				010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */,
 				010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */,
 				010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */,
+				010000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift in Sources */,
 				010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */,
 				010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */,
 				010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */,
