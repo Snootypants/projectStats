@@ -4,16 +4,34 @@ import AppKit
 struct ProjectListView: View {
     @ObservedObject var viewModel: ProjectListViewModel
     @State private var selectedProjectID: UUID?
+    @State private var showNewProjectWizard = false
 
     var body: some View {
         HSplitView {
             // Project list
-            List(viewModel.filteredProjects, selection: $selectedProjectID) { project in
-                ProjectRowView(project: project)
-                    .tag(project.id)
+            VStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    Button {
+                        showNewProjectWizard = true
+                    } label: {
+                        Label("New Project", systemImage: "plus")
+                            .font(.system(size: 12))
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .padding(8)
+                }
+                List(viewModel.filteredProjects, selection: $selectedProjectID) { project in
+                    ProjectRowView(project: project)
+                        .tag(project.id)
+                }
+                .listStyle(.inset)
             }
-            .listStyle(.inset)
             .frame(minWidth: 350)
+            .sheet(isPresented: $showNewProjectWizard) {
+                NewProjectWizard()
+            }
 
             // Detail view
             if let selectedID = selectedProjectID,
