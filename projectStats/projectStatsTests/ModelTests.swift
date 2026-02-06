@@ -456,6 +456,25 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(composed, "Fix the bug")
     }
 
+    // MARK: - Send to Claude Code Tests
+
+    @MainActor
+    func testThinkingLevelServiceGeneratesPromptCommand() {
+        let service = ThinkingLevelService.shared
+        let command = service.generatePromptCommand(prompt: "Hello world")
+        XCTAssertTrue(command.contains("claude"))
+        XCTAssertTrue(command.contains("Hello world"))
+    }
+
+    @MainActor
+    func testThinkingLevelServiceEscapesSpecialChars() {
+        let service = ThinkingLevelService.shared
+        let command = service.generatePromptCommand(prompt: "Fix the \"bug\" in $PATH")
+        XCTAssertTrue(command.contains("claude"))
+        // Should have escaped quotes and dollar sign
+        XCTAssertFalse(command.contains("\"bug\""))
+    }
+
     // MARK: - Agent Teams Settings Tests
 
     @MainActor

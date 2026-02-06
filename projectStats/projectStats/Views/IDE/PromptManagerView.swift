@@ -154,9 +154,9 @@ struct PromptManagerView: View {
             .disabled(selectedPrompt == nil)
 
             Button {
-                openInClaudeCode()
+                sendToClaudeCode()
             } label: {
-                Label("Open Claude Code", systemImage: "terminal")
+                Label("Send to Claude Code", systemImage: "paperplane.fill")
             }
             .buttonStyle(.bordered)
             .disabled(selectedPrompt == nil)
@@ -196,18 +196,28 @@ struct PromptManagerView: View {
         }
     }
 
-    private func openInClaudeCode() {
-        let script = """
-        tell application "Terminal"
-            activate
-            do script "cd '\(projectPath.path)' && claude"
-        end tell
-        """
+    private func sendToClaudeCode() {
+        guard let prompt = selectedPrompt else { return }
 
-        if let appleScript = NSAppleScript(source: script) {
-            var error: NSDictionary?
-            appleScript.executeAndReturnError(&error)
-        }
+        let terminalVM = TerminalTabsViewModel.shared
+        terminalVM.setProject(projectPath)
+
+        let command = ThinkingLevelService.shared.generatePromptCommand(
+            prompt: prompt.text,
+            model: SettingsViewModel.shared.terminalClaudeModel,
+            thinkingLevel: SettingsViewModel.shared.defaultThinkingLevel
+        )
+
+        let tab = TerminalTabItem(
+            kind: .claude,
+            title: "Prompt",
+            aiModel: SettingsViewModel.shared.terminalClaudeModel,
+            thinkingLevel: SettingsViewModel.shared.defaultThinkingLevel
+        )
+        tab.devCommand = command
+        terminalVM.tabs.append(tab)
+        terminalVM.activeTabID = tab.id
+        tab.enqueueCommand(command)
     }
 
     // MARK: - Helpers
