@@ -79,6 +79,9 @@ final class ProjectCreationService {
         // Type-specific scaffolding
         try scaffoldProject(type: type, at: projectURL)
 
+        // Generate projectstats.json for scanner discovery
+        try generateProjectStatsJSON(at: projectURL, name: folderName, language: languageForType(type))
+
         // Git init + initial commit (after scaffold so files are included)
         Shell.run("cd '\(projectURL.path)' && git init && git add . && git commit -m 'Initial scaffold'")
 
@@ -107,6 +110,7 @@ final class ProjectCreationService {
     /// For Xcode: user picks existing Xcode project folder, we add docs + DB entry
     func adoptXcodeProject(at url: URL, context: ModelContext) throws {
         try createDefaultDocs(at: url, projectName: url.lastPathComponent)
+        try generateProjectStatsJSON(at: url, name: url.lastPathComponent, language: "Swift")
         let cached = CachedProject(
             path: url.path,
             name: url.lastPathComponent,
@@ -208,6 +212,31 @@ final class ProjectCreationService {
 
     private func createGitignore(at url: URL, content: String) throws {
         try content.write(to: url.appendingPathComponent(".gitignore"), atomically: true, encoding: .utf8)
+    }
+
+    /// Generate a minimal projectstats.json for scanner discovery
+    private func generateProjectStatsJSON(at projectURL: URL, name: String, language: String?) throws {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime]
+
+        let stats: [String: Any] = [
+            "name": name,
+            "description": "",
+            "status": "active",
+            "language": language ?? "Unknown",
+            "languages": [:] as [String: Int],
+            "lineCount": 0,
+            "fileCount": 0,
+            "structure": "flat",
+            "sourceDirectories": ["."],
+            "excludedDirectories": ["node_modules", ".git", ".build"],
+            "techStack": [] as [String],
+            "generatedAt": isoFormatter.string(from: Date()),
+            "generatedBy": "projectStats"
+        ]
+
+        let data = try JSONSerialization.data(withJSONObject: stats, options: [.prettyPrinted, .sortedKeys])
+        try data.write(to: projectURL.appendingPathComponent("projectstats.json"))
     }
 
     private func languageForType(_ type: ProjectType) -> String? {
