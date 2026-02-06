@@ -179,6 +179,20 @@ final class ProjectCreationService {
         }
     }
 
+    // MARK: - ARCHITECTURE.md Refresh
+
+    /// Refresh ARCHITECTURE.md in the project's docs/ folder.
+    /// Creates docs/ directory if it doesn't exist.
+    /// Always overwrites to get the latest template.
+    func refreshArchitectureMd(at projectURL: URL, projectName: String) throws {
+        let docsDir = projectURL.appendingPathComponent("docs")
+        try FileManager.default.createDirectory(at: docsDir, withIntermediateDirectories: true)
+
+        let archURL = docsDir.appendingPathComponent("ARCHITECTURE.md")
+        let content = architectureTemplate(projectName: projectName)
+        try content.write(to: archURL, atomically: true, encoding: .utf8)
+    }
+
     // MARK: - Type-Specific Scaffolding
 
     private func createPythonScaffold(at url: URL) throws {

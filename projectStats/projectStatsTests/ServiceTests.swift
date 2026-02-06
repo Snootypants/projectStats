@@ -418,6 +418,41 @@ final class ServiceTests: XCTestCase {
         XCTAssertFalse(AgentTeamsService.isSwarmEnabled(for: fakePath))
     }
 
+    // MARK: - Refresh ARCHITECTURE.md Tests
+
+    func testRefreshArchitectureMdCreatesFile() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        try ProjectCreationService.shared.refreshArchitectureMd(at: tmp, projectName: "RefreshTest")
+
+        let archPath = tmp.appendingPathComponent("docs/ARCHITECTURE.md")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: archPath.path))
+
+        let content = try String(contentsOf: archPath, encoding: .utf8)
+        XCTAssertTrue(content.contains("RefreshTest"))
+        XCTAssertTrue(content.contains("Agent Teams Context"))
+    }
+
+    func testRefreshArchitectureMdOverwrites() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let docsDir = tmp.appendingPathComponent("docs")
+        try FileManager.default.createDirectory(at: docsDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        // Write old content
+        let archPath = docsDir.appendingPathComponent("ARCHITECTURE.md")
+        try "OLD CONTENT".write(to: archPath, atomically: true, encoding: .utf8)
+
+        // Refresh should overwrite
+        try ProjectCreationService.shared.refreshArchitectureMd(at: tmp, projectName: "Updated")
+
+        let content = try String(contentsOf: archPath, encoding: .utf8)
+        XCTAssertFalse(content.contains("OLD CONTENT"))
+        XCTAssertTrue(content.contains("Updated"))
+    }
+
     func testNextjsCommandGeneration() {
         let cmd = ProjectCreationService.shared.nextjsCommand(projectName: "my-app")
         XCTAssertTrue(cmd.contains("npx create-next-app@latest"))

@@ -135,6 +135,15 @@ struct WorkspaceView: View {
             }
             .menuStyle(.borderlessButton)
 
+            // Update Docs button
+            Button {
+                refreshDocs(for: project)
+            } label: {
+                Image(systemName: "doc.text.magnifyingglass")
+            }
+            .buttonStyle(.plain)
+            .help("Refresh ARCHITECTURE.md in docs/")
+
             // Backup button
             Button {
                 createBackup(for: project)
@@ -251,6 +260,18 @@ struct WorkspaceView: View {
             lines.append("Last commit: \(commit.message)")
         }
         return lines.joined(separator: "\n")
+    }
+
+    private func refreshDocs(for project: Project) {
+        do {
+            try ProjectCreationService.shared.refreshArchitectureMd(
+                at: project.path,
+                projectName: project.name
+            )
+            backupMessage = "ARCHITECTURE.md refreshed"
+        } catch {
+            backupMessage = "Doc refresh failed: \(error.localizedDescription)"
+        }
     }
 
     private func toggleSwarm(for project: Project) {
