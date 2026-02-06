@@ -100,6 +100,12 @@ final class TerminalOutputMonitor: ObservableObject {
                     checkAndNotifyClaudeFinished()
                 }
 
+                // Track prompt execution completion
+                PromptExecutionTracker.shared.completeExecution(
+                    projectPath: activeProjectPath ?? "",
+                    durationSeconds: duration
+                )
+
                 // Refresh Claude usage stats (with delay for JSONL write)
                 Task {
                     await ClaudeUsageService.shared.onClaudeFinished(projectPath: activeProjectPath)

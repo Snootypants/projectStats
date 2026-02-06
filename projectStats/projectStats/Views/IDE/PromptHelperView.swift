@@ -227,7 +227,7 @@ struct PromptHelperView: View {
             template.recordPromptUse()
         }
 
-        // Save to database
+        // Save to database and track execution
         Task { @MainActor in
             do {
                 let context = AppModelContainer.shared.mainContext
@@ -238,6 +238,16 @@ struct PromptHelperView: View {
                 )
                 context.insert(saved)
                 try context.save()
+
+                // Track prompt execution with usage snapshots
+                PromptExecutionTracker.shared.startExecution(
+                    projectPath: projectPath.path,
+                    promptText: finalPrompt,
+                    sendMode: sendMode.rawValue,
+                    model: SettingsViewModel.shared.terminalClaudeModel.rawValue,
+                    isSwarm: isSwarmActive,
+                    promptId: saved.id
+                )
             } catch {
                 print("[PromptHelper] Failed to save prompt: \(error)")
             }

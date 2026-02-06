@@ -486,4 +486,39 @@ final class ServiceTests: XCTestCase {
         XCTAssertTrue(cmd.contains("my-app"))
         XCTAssertTrue(cmd.contains("--typescript"))
     }
+
+    // MARK: - PromptExecutionTracker Tests
+
+    func testParseScopeCountFromPromptText() {
+        let text = """
+        # Prompt
+
+        ## SCOPE A: First
+        Do stuff.
+
+        ## SCOPE B: Second
+        Do more.
+
+        ## SCOPE C: Third
+        Even more.
+        """
+        XCTAssertEqual(PromptExecutionTracker.parseScopeCount(from: text), 3)
+    }
+
+    func testParseScopeCountNoScopes() {
+        let text = "Just fix the bug in auth.swift"
+        XCTAssertEqual(PromptExecutionTracker.parseScopeCount(from: text), 1)
+    }
+
+    func testParseScopeCountSingleScope() {
+        let text = "## SCOPE A: Only One\nDo it."
+        XCTAssertEqual(PromptExecutionTracker.parseScopeCount(from: text), 1)
+    }
+
+    @MainActor
+    func testPromptExecutionTrackerSingleton() {
+        let t1 = PromptExecutionTracker.shared
+        let t2 = PromptExecutionTracker.shared
+        XCTAssertIdentical(t1, t2)
+    }
 }

@@ -85,6 +85,7 @@
 		010000000000000000000073 /* projectStats/Services/MessagingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000073 /* projectStats/Services/MessagingService.swift */; };
 		010000000000000000000074 /* projectStats/Services/NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000074 /* projectStats/Services/NotificationService.swift */; };
 		010000000000000000000075 /* projectStats/Services/NtfyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */; };
+		010000000000000000000192 /* projectStats/Services/PromptExecutionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000192 /* projectStats/Services/PromptExecutionTracker.swift */; };
 		010000000000000000000076 /* projectStats/Services/ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */; };
 		010000000000000000000077 /* projectStats/Services/SecretsScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */; };
 		010000000000000000000078 /* projectStats/Services/SlackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000078 /* projectStats/Services/SlackProvider.swift */; };
@@ -278,6 +279,7 @@
 		020000000000000000000073 /* projectStats/Services/MessagingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/MessagingService.swift; sourceTree = "<group>"; };
 		020000000000000000000074 /* projectStats/Services/NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NotificationService.swift; sourceTree = "<group>"; };
 		020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/NtfyProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000192 /* projectStats/Services/PromptExecutionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/PromptExecutionTracker.swift; sourceTree = "<group>"; };
 		020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ReportGenerator.swift; sourceTree = "<group>"; };
 		020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SecretsScanner.swift; sourceTree = "<group>"; };
 		020000000000000000000078 /* projectStats/Services/SlackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SlackProvider.swift; sourceTree = "<group>"; };
@@ -620,6 +622,7 @@
 				020000000000000000000073 /* projectStats/Services/MessagingService.swift */,
 				020000000000000000000074 /* projectStats/Services/NotificationService.swift */,
 				020000000000000000000075 /* projectStats/Services/NtfyProvider.swift */,
+				020000000000000000000192 /* projectStats/Services/PromptExecutionTracker.swift */,
 				020000000000000000000076 /* projectStats/Services/ReportGenerator.swift */,
 				020000000000000000000077 /* projectStats/Services/SecretsScanner.swift */,
 				020000000000000000000078 /* projectStats/Services/SlackProvider.swift */,
@@ -882,6 +885,7 @@
 				010000000000000000000073 /* projectStats/Services/MessagingService.swift in Sources */,
 				010000000000000000000074 /* projectStats/Services/NotificationService.swift in Sources */,
 				010000000000000000000075 /* projectStats/Services/NtfyProvider.swift in Sources */,
+				010000000000000000000192 /* projectStats/Services/PromptExecutionTracker.swift in Sources */,
 				010000000000000000000076 /* projectStats/Services/ReportGenerator.swift in Sources */,
 				010000000000000000000077 /* projectStats/Services/SecretsScanner.swift in Sources */,
 				010000000000000000000078 /* projectStats/Services/SlackProvider.swift in Sources */,
