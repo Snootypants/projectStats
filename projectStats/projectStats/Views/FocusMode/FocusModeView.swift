@@ -7,6 +7,7 @@ struct FocusModeView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var pulseAnimation = false
+    @State private var showScrollingPrompt = false
 
     var body: some View {
         ZStack {
@@ -40,16 +41,24 @@ struct FocusModeView: View {
                     focusBarView(
                         label: "Session",
                         percent: usageMonitor.fiveHourUtilization,
-                        countdown: usageMonitor.fiveHourTimeRemaining
+                        countdown: usageMonitor.fiveHourTimeRemaining,
+                        isWeekly: false
                     )
                     focusBarView(
                         label: "Weekly",
                         percent: usageMonitor.sevenDayUtilization,
-                        countdown: usageMonitor.sevenDayTimeRemaining
+                        countdown: usageMonitor.sevenDayTimeRemaining,
+                        isWeekly: true
                     )
                 }
                 .padding(.horizontal, 40)
                 .padding(.bottom, 40)
+            }
+
+            // Scrolling prompt overlay
+            if showScrollingPrompt {
+                ScrollingPromptView()
+                    .transition(.opacity)
             }
 
             // Mode picker (bottom-left)
@@ -80,9 +89,12 @@ struct FocusModeView: View {
         .onAppear { pulseAnimation = true }
         .onTapGesture { dismiss() }
         .keyboardShortcut(.escape, modifiers: [])
+        .onReceive(NotificationCenter.default.publisher(for: .toggleScrollingPrompt)) { _ in
+            withAnimation { showScrollingPrompt.toggle() }
+        }
     }
 
-    private func focusBarView(label: String, percent: Double, countdown: String) -> some View {
+    private func focusBarView(label: String, percent: Double, countdown: String, isWeekly: Bool) -> some View {
         VStack(spacing: 4) {
             HStack(spacing: 4) {
                 Text("\(label) (\(Int(percent * 100))%, resets \(countdown))")
@@ -95,18 +107,32 @@ struct FocusModeView: View {
                     RoundedRectangle(cornerRadius: 3)
                         .fill(Color.white.opacity(0.15))
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(progressColor(for: percent))
+                        .fill(barColor(for: percent, isWeekly: isWeekly))
                         .frame(width: geo.size.width * min(percent, 1.0))
+                    ShimmerOverlay()
+                        .frame(width: geo.size.width * min(percent, 1.0))
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
                 }
             }
             .frame(height: 8)
         }
     }
 
-    private func progressColor(for value: Double) -> Color {
-        if value < 0.6 { return .green }
-        if value < 0.85 { return .yellow }
-        return .red
+    private func barColor(for value: Double, isWeekly: Bool) -> Color {
+        if value >= 0.85 { return colorFromHex(settings.warningBarColorHex) ?? .red }
+        let hex = isWeekly ? settings.weeklyBarColorHex : settings.sessionBarColorHex
+        return colorFromHex(hex) ?? .blue
+    }
+
+    private func colorFromHex(_ hex: String) -> Color? {
+        var h = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        h = h.hasPrefix("#") ? String(h.dropFirst()) : h
+        guard h.count == 6, let n = UInt64(h, radix: 16) else { return nil }
+        return Color(
+            red: Double((n & 0xFF0000) >> 16) / 255,
+            green: Double((n & 0x00FF00) >> 8) / 255,
+            blue: Double(n & 0x0000FF) / 255
+        )
     }
 }
 

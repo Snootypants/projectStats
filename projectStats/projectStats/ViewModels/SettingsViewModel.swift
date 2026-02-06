@@ -189,6 +189,11 @@ class SettingsViewModel: ObservableObject {
     // Focus Mode
     @AppStorage("focusMode.edgeFXMode") var focusModeEdgeFXRaw: String = "fire"
 
+    // Lockout Bar Colors
+    @AppStorage("lockoutBar.sessionColor") var sessionBarColorHex: String = "#3B82F6"
+    @AppStorage("lockoutBar.weeklyColor") var weeklyBarColorHex: String = "#3B82F6"
+    @AppStorage("lockoutBar.warningColor") var warningBarColorHex: String = "#EF4444"
+
     var focusModeEdgeFX: EdgeFXOverlay.Mode {
         get {
             switch focusModeEdgeFXRaw {

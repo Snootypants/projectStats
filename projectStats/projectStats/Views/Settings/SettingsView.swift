@@ -541,6 +541,63 @@ struct AppearanceSettingsView: View {
 
             Divider()
 
+            // Lockout Bar Colors
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Lockout Bar Colors")
+                    .font(.headline)
+
+                Text("Customize the colors for session and weekly usage bars.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Session Bar")
+                            .font(.subheadline)
+                        ColorPicker("", selection: Binding(
+                            get: { Color.fromHex(viewModel.sessionBarColorHex) ?? .blue },
+                            set: { viewModel.sessionBarColorHex = $0.toHex() ?? "#3B82F6" }
+                        ))
+                        .labelsHidden()
+                        .frame(width: 30, height: 30)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Weekly Bar")
+                            .font(.subheadline)
+                        ColorPicker("", selection: Binding(
+                            get: { Color.fromHex(viewModel.weeklyBarColorHex) ?? .blue },
+                            set: { viewModel.weeklyBarColorHex = $0.toHex() ?? "#3B82F6" }
+                        ))
+                        .labelsHidden()
+                        .frame(width: 30, height: 30)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Warning (≥85%)")
+                            .font(.subheadline)
+                        ColorPicker("", selection: Binding(
+                            get: { Color.fromHex(viewModel.warningBarColorHex) ?? .red },
+                            set: { viewModel.warningBarColorHex = $0.toHex() ?? "#EF4444" }
+                        ))
+                        .labelsHidden()
+                        .frame(width: 30, height: 30)
+                    }
+
+                    Spacer()
+
+                    Button("Reset") {
+                        viewModel.sessionBarColorHex = "#3B82F6"
+                        viewModel.weeklyBarColorHex = "#3B82F6"
+                        viewModel.warningBarColorHex = "#EF4444"
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+
+            Divider()
+
             // IDE Tabs Section
             VStack(alignment: .leading, spacing: 12) {
                 Text("IDE Tabs")

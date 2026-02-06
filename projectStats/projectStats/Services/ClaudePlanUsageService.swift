@@ -16,6 +16,8 @@ final class ClaudePlanUsageService: ObservableObject {
     @Published var sonnetResetsAt: Date?
     @Published var lastUpdated: Date?
     @Published var isLoading = false
+    @Published var isOffline: Bool = false
+    @Published var lastSuccessfulFetch: Date?
     @Published var error: String?
 
     private var hasNotifiedHighUsage = false
@@ -109,6 +111,8 @@ final class ClaudePlanUsageService: ObservableObject {
             }
 
             lastUpdated = Date()
+            lastSuccessfulFetch = Date()
+            isOffline = false
             error = nil
 
             if SettingsViewModel.shared.notifyPlanUsageHigh {
@@ -126,7 +130,9 @@ final class ClaudePlanUsageService: ObservableObject {
                 }
             }
         } catch {
+            isOffline = true
             self.error = error.localizedDescription
+            print("[Usage] Fetch failed: \(error). Will retry on next cycle.")
         }
     }
 
