@@ -149,20 +149,9 @@ struct FocusModeView: View {
     }
 
     private func barColor(for value: Double, isWeekly: Bool) -> Color {
-        if value >= 0.85 { return colorFromHex(settings.warningBarColorHex) ?? .red }
+        if value >= 0.85 { return Color(hex: settings.warningBarColorHex) ?? .red }
         let hex = isWeekly ? settings.weeklyBarColorHex : settings.sessionBarColorHex
-        return colorFromHex(hex) ?? .blue
-    }
-
-    private func colorFromHex(_ hex: String) -> Color? {
-        var h = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        h = h.hasPrefix("#") ? String(h.dropFirst()) : h
-        guard h.count == 6, let n = UInt64(h, radix: 16) else { return nil }
-        return Color(
-            red: Double((n & 0xFF0000) >> 16) / 255,
-            green: Double((n & 0x00FF00) >> 8) / 255,
-            blue: Double(n & 0x0000FF) / 255
-        )
+        return Color(hex: hex) ?? .blue
     }
 }
 

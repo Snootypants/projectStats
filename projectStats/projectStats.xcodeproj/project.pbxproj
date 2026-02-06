@@ -10,6 +10,7 @@
 		010000000000000000000001 /* ProjectStatsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000001 /* ProjectStatsApp.swift */; };
 		010000000000000000000002 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* Shell.swift */; };
 		010000000000000000000003 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000003 /* DateExtensions.swift */; };
+		010000000000000000000197 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000197 /* ColorExtensions.swift */; };
 		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
 		010000000000000000000005 /* ReadmeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* ReadmeParser.swift */; };
 		010000000000000000000006 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* Project.swift */; };
@@ -194,6 +195,7 @@
 		020000000000000000000001 /* ProjectStatsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStatsApp.swift; sourceTree = "<group>"; };
 		020000000000000000000002 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		020000000000000000000003 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		020000000000000000000197 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000005 /* ReadmeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeParser.swift; sourceTree = "<group>"; };
 		020000000000000000000006 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 			children = (
 				020000000000000000000002 /* Shell.swift */,
 				020000000000000000000003 /* DateExtensions.swift */,
+				020000000000000000000197 /* ColorExtensions.swift */,
 				020000000000000000000056 /* StringExtensions.swift */,
 				020000000000000000000004 /* URLExtensions.swift */,
 				020000000000000000000005 /* ReadmeParser.swift */,
@@ -781,6 +784,7 @@
 				010000000000000000000001 /* ProjectStatsApp.swift in Sources */,
 				010000000000000000000002 /* Shell.swift in Sources */,
 				010000000000000000000003 /* DateExtensions.swift in Sources */,
+				010000000000000000000197 /* ColorExtensions.swift in Sources */,
 				010000000000000000000004 /* URLExtensions.swift in Sources */,
 				010000000000000000000005 /* ReadmeParser.swift in Sources */,
 				010000000000000000000006 /* Project.swift in Sources */,
