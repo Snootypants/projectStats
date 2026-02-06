@@ -410,6 +410,26 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(composed, "")
     }
 
+    // MARK: - Mandatory Chrome Injection Tests
+
+    func testPromptHelperChromeAlwaysAppliedWithDefault() {
+        // Simulates mandatory chrome: even when user doesn't pick a template,
+        // the default template chrome should be applied
+        let defaultChrome = "SYSTEM: Follow best practices.\n\n{PROMPT}\n\nRespond with code only."
+        let userText = "Refactor the parser"
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: defaultChrome)
+        XCTAssertTrue(composed.hasPrefix("SYSTEM: Follow best practices."))
+        XCTAssertTrue(composed.contains("Refactor the parser"))
+        XCTAssertTrue(composed.hasSuffix("Respond with code only."))
+    }
+
+    func testPromptHelperChromeMultiplePlaceholders() {
+        let template = "{PROMPT} --- {PROMPT}"
+        let userText = "hello"
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: template)
+        XCTAssertEqual(composed, "hello --- hello")
+    }
+
     func testPromptTemplateVersionInitialization() {
         let version = PromptTemplateVersion(
             versionNumber: 3,

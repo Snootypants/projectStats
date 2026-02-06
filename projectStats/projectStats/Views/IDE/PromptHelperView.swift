@@ -40,10 +40,17 @@ struct PromptHelperView: View {
         return templates.first { $0.id == id }
     }
 
+    /// The effective template: explicitly selected, or fall back to default (mandatory chrome)
+    private var effectiveTemplate: PromptTemplate? {
+        if let selected = selectedTemplate { return selected }
+        // Mandatory chrome: auto-apply default template when none explicitly selected
+        return templates.first { $0.isDefault }
+    }
+
     private var composedPrompt: String {
         PromptHelperComposer.compose(
             userText: promptText,
-            templateContent: selectedTemplate?.content
+            templateContent: effectiveTemplate?.content
         )
     }
 
@@ -97,10 +104,14 @@ struct PromptHelperView: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            if let template = selectedTemplate {
-                Label(template.name, systemImage: "doc.text")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            if let template = effectiveTemplate {
+                let isAuto = selectedTemplate == nil && template.isDefault
+                Label(
+                    isAuto ? "\(template.name) (auto)" : template.name,
+                    systemImage: isAuto ? "sparkles" : "doc.text"
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Text("\(composedPrompt.count) chars")
@@ -158,8 +169,8 @@ struct PromptHelperView: View {
         terminalVM.activeTabID = tab.id
         tab.enqueueCommand(command)
 
-        // Record template usage
-        if let template = selectedTemplate {
+        // Record template usage (effective template, including auto-applied default)
+        if let template = effectiveTemplate {
             template.recordPromptUse()
         }
 
