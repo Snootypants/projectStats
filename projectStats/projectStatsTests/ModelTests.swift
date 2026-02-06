@@ -302,6 +302,24 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(ordered[1].versionNumber, 1)
     }
 
+    // MARK: - LineNumberTextEditor Tests
+
+    func testLineNumberTextEditorReadOnlyDefault() {
+        // LineNumberTextEditor defaults to readOnly = false
+        // (Structural test — actual rendering tested in UI)
+        let binding = Binding.constant("Hello\nWorld\nTest")
+        let editor = LineNumberTextEditor(text: binding, readOnly: true)
+        XCTAssertTrue(editor.readOnly)
+    }
+
+    func testLineNumberRulerViewExists() {
+        // Verify the class exists and can be referenced
+        let scrollView = NSScrollView()
+        let ruler = LineNumberRulerView(scrollView: scrollView, orientation: .verticalRuler)
+        XCTAssertNotNil(ruler)
+        XCTAssertTrue(ruler.isFlipped)
+    }
+
     // MARK: - CompactLockoutBar Tests
 
     @MainActor

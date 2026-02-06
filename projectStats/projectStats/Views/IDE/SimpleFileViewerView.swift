@@ -90,9 +90,7 @@ struct SimpleFileViewerView: View {
                 message: errorMessage
             )
         } else {
-            TextEditor(text: $content)
-                .font(.system(.body, design: .monospaced))
-                .padding(8)
+            LineNumberTextEditor(text: $content, readOnly: false)
         }
     }
 

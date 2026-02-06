@@ -54,6 +54,7 @@
 		010000000000000000000045 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000045 /* WorkspaceView.swift */; };
 		010000000000000000000046 /* TabShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* TabShellView.swift */; };
 		010000000000000000000047 /* TerminalPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000047 /* TerminalPanelView.swift */; };
+		010000000000000000000185 /* LineNumberTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000185 /* LineNumberTextEditor.swift */; };
 		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 		010000000000000000000049 /* EnvironmentVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000049 /* EnvironmentVariable.swift */; };
 		010000000000000000000050 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* KeychainService.swift */; };
@@ -241,6 +242,7 @@
 		020000000000000000000045 /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
 		020000000000000000000046 /* TabShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabShellView.swift; sourceTree = "<group>"; };
 		020000000000000000000047 /* TerminalPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalPanelView.swift; sourceTree = "<group>"; };
+		020000000000000000000185 /* LineNumberTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberTextEditor.swift; sourceTree = "<group>"; };
 		020000000000000000000049 /* EnvironmentVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariable.swift; sourceTree = "<group>"; };
 		020000000000000000000050 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		020000000000000000000051 /* EnvFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFileService.swift; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				020000000000000000000031 /* PromptManagerView.swift */,
 				020000000000000000000032 /* IDEModeView.swift */,
 				020000000000000000000047 /* TerminalPanelView.swift */,
+				020000000000000000000185 /* LineNumberTextEditor.swift */,
 			);
 			path = IDE;
 			sourceTree = "<group>";
@@ -833,6 +836,7 @@
 				010000000000000000000045 /* WorkspaceView.swift in Sources */,
 				010000000000000000000046 /* TabShellView.swift in Sources */,
 				010000000000000000000047 /* TerminalPanelView.swift in Sources */,
+				010000000000000000000185 /* LineNumberTextEditor.swift in Sources */,
 				010000000000000000000049 /* EnvironmentVariable.swift in Sources */,
 				010000000000000000000050 /* KeychainService.swift in Sources */,
 				010000000000000000000051 /* EnvFileService.swift in Sources */,
