@@ -4,7 +4,7 @@ struct FocusModeView: View {
     @ObservedObject var terminalMonitor: TerminalOutputMonitor
     @ObservedObject var usageMonitor: ClaudePlanUsageService
     @ObservedObject var settings: SettingsViewModel = .shared
-    @Environment(\.dismiss) private var dismiss
+    var onDismiss: (() -> Void)? = nil
 
     @State private var pulseAnimation = false
     @State private var showScrollingPrompt = false
@@ -13,6 +13,7 @@ struct FocusModeView: View {
         ZStack {
             // Background
             Color.black
+                .ignoresSafeArea()
 
             // Main content
             VStack(spacing: 30) {
@@ -84,14 +85,43 @@ struct FocusModeView: View {
             // Edge FX overlay (CAEmitterLayer particles)
             EdgeFXOverlayView(mode: settings.focusModeEdgeFX, intensity: 1.0)
                 .allowsHitTesting(false)
+
+            // Close button — bottom-right, always visible
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        dismissFocusMode()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 28))
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(24)
+                    .help("Close Focus Mode (Esc)")
+                }
+            }
         }
         .ignoresSafeArea()
         .onAppear { pulseAnimation = true }
-        .onTapGesture { dismiss() }
-        .keyboardShortcut(.escape, modifiers: [])
-        .onReceive(NotificationCenter.default.publisher(for: .toggleScrollingPrompt)) { _ in
-            withAnimation { showScrollingPrompt.toggle() }
+        .onTapGesture { dismissFocusMode() }
+        // Hidden buttons for keyboard shortcuts
+        .background {
+            Group {
+                Button("") { dismissFocusMode() }
+                    .keyboardShortcut(.escape, modifiers: [])
+                Button("") { withAnimation { showScrollingPrompt.toggle() } }
+                    .keyboardShortcut("g", modifiers: [.command, .shift])
+            }
+            .opacity(0)
+            .frame(width: 0, height: 0)
         }
+    }
+
+    private func dismissFocusMode() {
+        onDismiss?()
     }
 
     private func focusBarView(label: String, percent: Double, countdown: String, isWeekly: Bool) -> some View {
