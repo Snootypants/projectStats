@@ -253,7 +253,6 @@ class DashboardViewModel: ObservableObject {
         await calculateActivitiesFromGit()
         calculateAggregatedStats()
         await syncToSwiftData()
-        await reloadFromCache(context: AppModelContainer.shared.mainContext)
 
         return ScanResult(projectsFound: projects.count, promptsImported: promptCount, workLogsImported: workCount)
     }
@@ -276,8 +275,14 @@ class DashboardViewModel: ObservableObject {
             print("[Dashboard] Error saving single-project sync: \(error)")
         }
 
-        await reloadFromCache(context: context)
-        print("[Dashboard] Synced project: \(project.name)")
+        // Update just this project in-memory instead of full DB reload
+        if let updatedCached = try? context.fetch(FetchDescriptor<CachedProject>(
+            predicate: #Predicate { $0.path == path }
+        )).first {
+            if let index = projects.firstIndex(where: { $0.path.path == path }) {
+                projects[index] = updatedCached.toProject()
+            }
+        }
     }
 
     /// Load data by scanning the filesystem (fallback/refresh)
