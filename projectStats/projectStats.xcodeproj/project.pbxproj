@@ -199,6 +199,7 @@
 		010000000000000000000183 /* ProjectCreationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000183 /* ProjectCreationService.swift */; };
 		010000000000000000000184 /* NewProjectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000184 /* NewProjectSheet.swift */; };
 		010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000191 /* projectStats/Models/PromptExecution.swift */; };
+		010000000000000000000193 /* SwarmTestPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000193 /* SwarmTestPrompt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -393,6 +394,7 @@
 		020000000000000000000183 /* ProjectCreationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCreationService.swift; sourceTree = "<group>"; };
 		020000000000000000000184 /* NewProjectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProjectSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000191 /* projectStats/Models/PromptExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/PromptExecution.swift; sourceTree = "<group>"; };
+		020000000000000000000193 /* SwarmTestPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwarmTestPrompt.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -526,6 +528,7 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000028 /* Assets.xcassets */,
+				020000000000000000000193 /* SwarmTestPrompt.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1001,6 +1004,7 @@
 				010000000000000000000187 /* PromptHelperView.swift in Sources */,
 				010000000000000000000188 /* projectStats/Services/AgentTeamsService.swift in Sources */,
 				010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */,
+				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

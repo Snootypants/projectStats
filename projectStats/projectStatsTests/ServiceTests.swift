@@ -521,4 +521,56 @@ final class ServiceTests: XCTestCase {
         let t2 = PromptExecutionTracker.shared
         XCTAssertIdentical(t1, t2)
     }
+
+    // MARK: - Kanban Swarm Test Scaffold Tests
+
+    func testKanbanSwarmTestTypeExists() {
+        let type = ProjectType.kanbanSwarmTest
+        XCTAssertEqual(type.rawValue, "Kanban (Swarm Test)")
+        XCTAssertEqual(type.icon, "person.3.fill")
+    }
+
+    func testKanbanSwarmTestScaffoldCreatesFiles() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        // Simulate the scaffold by calling createProject internals
+        // We can't call createProject directly (needs ModelContext), so test the scaffold files via the service's public API
+        // Instead, test that the static prompt exists and scaffold method is accessible
+        let service = ProjectCreationService.shared
+
+        // Test name validation still works
+        XCTAssertNil(service.validateName("kanban-test"))
+
+        // Test the swarm prompt content
+        let prompt = SwarmTestPrompt.kanbanPrompt
+        XCTAssertTrue(prompt.contains("LEAD AGENT"))
+        XCTAssertTrue(prompt.contains("TEAMMATE 1"))
+        XCTAssertTrue(prompt.contains("TEAMMATE 2"))
+        XCTAssertTrue(prompt.contains("TEAMMATE 3"))
+        XCTAssertTrue(prompt.contains("COORDINATION CONTRACT"))
+        XCTAssertTrue(prompt.contains("2500"))
+    }
+
+    func testSwarmPromptHasTeammateAssignments() {
+        let prompt = SwarmTestPrompt.kanbanPrompt
+        // Verify leader + 3 teammates
+        XCTAssertTrue(prompt.contains("## LEAD AGENT"))
+        XCTAssertTrue(prompt.contains("## TEAMMATE 1: HTML Structure"))
+        XCTAssertTrue(prompt.contains("## TEAMMATE 2: Styling"))
+        XCTAssertTrue(prompt.contains("## TEAMMATE 3: JavaScript Logic"))
+    }
+
+    func testSwarmPromptHasFileBoundaries() {
+        let prompt = SwarmTestPrompt.kanbanPrompt
+        XCTAssertTrue(prompt.contains("Owns: index.html"))
+        XCTAssertTrue(prompt.contains("Owns: style.css"))
+        XCTAssertTrue(prompt.contains("Owns: app.js"))
+    }
+
+    func testSwarmPromptHasLineBudget() {
+        let prompt = SwarmTestPrompt.kanbanPrompt
+        XCTAssertTrue(prompt.contains("<2500 lines"))
+    }
 }

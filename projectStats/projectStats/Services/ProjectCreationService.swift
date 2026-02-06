@@ -8,6 +8,7 @@ enum ProjectType: String, CaseIterable, Identifiable {
     case nextjs = "Next.js"
     case python = "Python"
     case xcode = "Xcode"
+    case kanbanSwarmTest = "Kanban (Swarm Test)"
 
     var id: String { rawValue }
 
@@ -18,6 +19,7 @@ enum ProjectType: String, CaseIterable, Identifiable {
         case .nextjs: return "globe"
         case .python: return "chevron.left.forwardslash.chevron.right"
         case .xcode: return "hammer"
+        case .kanbanSwarmTest: return "person.3.fill"
         }
     }
 }
@@ -140,6 +142,8 @@ final class ProjectCreationService {
         case .xcode:
             // Handled separately via launchXcodeForProjectCreation
             break
+        case .kanbanSwarmTest:
+            try createKanbanSwarmScaffold(at: url)
         }
         // All types get default docs
         try createDefaultDocs(at: url, projectName: url.lastPathComponent)
@@ -213,6 +217,7 @@ final class ProjectCreationService {
         case .nextjs: return "TypeScript"
         case .python: return "Python"
         case .xcode: return "Swift"
+        case .kanbanSwarmTest: return "JavaScript"
         }
     }
 
@@ -298,6 +303,126 @@ final class ProjectCreationService {
         ## Documentation
         See the `/docs` folder for detailed documentation.
         """
+    }
+
+    // MARK: - Kanban Swarm Scaffold
+
+    private func createKanbanSwarmScaffold(at url: URL) throws {
+        try createGitignore(at: url, content: gitignoreGeneral)
+
+        // index.html — semantic skeleton
+        let html = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Kanban Board</title>
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body data-theme="light">
+            <header>
+                <h1>Kanban Board</h1>
+                <nav>
+                    <input type="text" id="search-cards" placeholder="Search cards...">
+                    <button id="add-card">+ New Card</button>
+                    <button id="theme-toggle">Toggle Theme</button>
+                </nav>
+            </header>
+            <main class="board">
+                <section class="column" id="todo" data-column="todo">
+                    <h2>To Do</h2>
+                    <div class="card-list"></div>
+                    <p class="empty-state">No cards yet</p>
+                </section>
+                <section class="column" id="in-progress" data-column="in-progress">
+                    <h2>In Progress</h2>
+                    <div class="card-list"></div>
+                    <p class="empty-state">No cards yet</p>
+                </section>
+                <section class="column" id="done" data-column="done">
+                    <h2>Done</h2>
+                    <div class="card-list"></div>
+                    <p class="empty-state">No cards yet</p>
+                </section>
+            </main>
+            <footer>
+                <kbd>N</kbd> New card &middot; <kbd>Ctrl+Z</kbd> Undo &middot; <kbd>Esc</kbd> Cancel
+            </footer>
+            <script src="app.js"></script>
+        </body>
+        </html>
+        """
+        try html.write(to: url.appendingPathComponent("index.html"), atomically: true, encoding: .utf8)
+
+        // style.css — design tokens + layout
+        let css = """
+        /* Design Tokens */
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --accent: #3b82f6;
+            --border: #e5e7eb;
+            --column-bg: #f0f0f0;
+            --shadow: rgba(0,0,0,0.08);
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #e5e5e5;
+            --accent: #60a5fa;
+            --border: #404040;
+            --column-bg: #242424;
+            --shadow: rgba(0,0,0,0.3);
+        }
+
+        /* TODO: Implement responsive layout, card styles, drag states */
+        /* Teammate 2 owns this file */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); transition: background 0.2s ease, color 0.2s ease; }
+        """
+        try css.write(to: url.appendingPathComponent("style.css"), atomically: true, encoding: .utf8)
+
+        // app.js — module skeleton
+        let js = """
+        // Kanban App — State Store Pattern
+        // Teammate 3 owns this file
+
+        const state = {
+            cards: [],
+            undoStack: [],
+            theme: 'light'
+        };
+
+        // TODO: Implement these functions
+        function createCard(title) {}
+        function deleteCard(id) {}
+        function editCard(id, newTitle) {}
+        function dragStart(e) {}
+        function dragDrop(e) {}
+        function saveToLocalStorage() {}
+        function loadFromLocalStorage() {}
+        function toggleTheme() {}
+        function undo() {}
+        function filterCards(query) {}
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+        });
+        """
+        try js.write(to: url.appendingPathComponent("app.js"), atomically: true, encoding: .utf8)
+
+        // Create prompts/1.md with the swarm prompt
+        let promptsDir = url.appendingPathComponent("prompts")
+        try FileManager.default.createDirectory(at: promptsDir, withIntermediateDirectories: true)
+        try SwarmTestPrompt.kanbanPrompt.write(to: promptsDir.appendingPathComponent("1.md"), atomically: true, encoding: .utf8)
     }
 
     // MARK: - Gitignore Templates
