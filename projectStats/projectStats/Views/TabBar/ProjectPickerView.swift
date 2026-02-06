@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct ProjectPickerView: View {
     @EnvironmentObject var dashboardVM: DashboardViewModel
@@ -123,7 +124,32 @@ struct ProjectPickerView: View {
         panel.message = "Select a project folder"
         if panel.runModal() == .OK, let url = panel.url {
             settingsVM.addCustomProjectPath(url.path)
-            Task { await dashboardVM.refresh() }
+
+            // Insert a CachedProject so it appears immediately
+            let context = AppModelContainer.shared.mainContext
+            let existing = (try? context.fetch(FetchDescriptor<CachedProject>(
+                predicate: #Predicate { $0.path == url.path }
+            ))) ?? []
+
+            if existing.isEmpty {
+                let cached = CachedProject(
+                    path: url.path,
+                    name: url.lastPathComponent,
+                    language: nil,
+                    lineCount: 0,
+                    fileCount: 0,
+                    promptCount: 0,
+                    workLogCount: 0,
+                    lastScanned: Date()
+                )
+                context.insert(cached)
+                try? context.save()
+            }
+
+            Task {
+                await dashboardVM.reloadProjectsFromDB()
+                await dashboardVM.refresh()
+            }
         }
     }
 }
