@@ -306,6 +306,19 @@ class DashboardViewModel: ObservableObject {
             }
         }
 
+        // Merge in manually-added projects from DB that scanner missed
+        // (projects without projectstats.json but with valid folders)
+        let mergeContext = AppModelContainer.shared.mainContext
+        if let cachedProjects = try? mergeContext.fetch(FetchDescriptor<CachedProject>()) {
+            let scannedPaths = Set(projects.map { $0.path.path })
+            for cached in cachedProjects {
+                if !scannedPaths.contains(cached.path) &&
+                   FileManager.default.fileExists(atPath: cached.path) {
+                    projects.append(cached.toProject())
+                }
+            }
+        }
+
         for project in projects {
             if let url = project.githubURL {
                 logSync("project: \(project.name) remote=\(url)")
@@ -514,10 +527,11 @@ class DashboardViewModel: ObservableObject {
                 }
             }
 
-            // Delete cached projects that no longer exist
+            // Delete cached projects only if their folder no longer exists on disk
             let currentPaths = Set(projects.map { $0.path.path })
             for cached in existingCached {
-                if !currentPaths.contains(cached.path) {
+                if !currentPaths.contains(cached.path) &&
+                   !FileManager.default.fileExists(atPath: cached.path) {
                     context.delete(cached)
                 }
             }
