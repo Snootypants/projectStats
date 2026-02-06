@@ -120,47 +120,47 @@ struct IDEModeView: View {
 
     private var viewerColumn: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 4) {
-                ideTabButton(
-                    title: "Files",
-                    icon: "doc.text",
-                    tab: .files
-                )
-
-                if showPromptsTab {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 4) {
                     ideTabButton(
-                        title: "Prompts",
-                        icon: "text.badge.plus",
-                        tab: .prompts
+                        title: "Files",
+                        icon: "doc.text",
+                        tab: .files
                     )
-                }
 
-                ideTabButton(
-                    title: "Helper",
-                    icon: "wand.and.stars",
-                    tab: .promptHelper
-                )
+                    if showPromptsTab {
+                        ideTabButton(
+                            title: "Prompts",
+                            icon: "text.badge.plus",
+                            tab: .prompts
+                        )
+                    }
 
-                if showDiffsTab {
                     ideTabButton(
-                        title: "Diffs",
-                        icon: "arrow.left.arrow.right",
-                        tab: .diffs
+                        title: "Helper",
+                        icon: "wand.and.stars",
+                        tab: .promptHelper
                     )
-                }
 
-                if showEnvironmentTab {
-                    ideTabButton(
-                        title: "Environment",
-                        icon: "key",
-                        tab: .environment
-                    )
-                }
+                    if showDiffsTab {
+                        ideTabButton(
+                            title: "Diffs",
+                            icon: "arrow.left.arrow.right",
+                            tab: .diffs
+                        )
+                    }
 
-                Spacer()
+                    if showEnvironmentTab {
+                        ideTabButton(
+                            title: "Env",
+                            icon: "key",
+                            tab: .environment
+                        )
+                    }
+                }
+                .padding(.horizontal, 8)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .frame(height: 32)
             .background(Color.primary.opacity(0.03))
 
             Divider()
@@ -219,6 +219,7 @@ struct IDEModeView: View {
                 )
         }
         .buttonStyle(.plain)
+        .fixedSize()
     }
 
     private var keyboardShortcuts: some View {
