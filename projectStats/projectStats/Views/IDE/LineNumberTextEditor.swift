@@ -14,16 +14,20 @@ final class LineNumberRulerView: NSRulerView {
     override var isFlipped: Bool { true }
 
     override var requiredThickness: CGFloat {
-        guard let textView else { return 40 }
+        guard let textView else { return 36 }
         let lineCount = max(textView.string.components(separatedBy: "\n").count, 1)
-        let digits = max(String(lineCount).count, 3)
-        return CGFloat(digits) * 8 + 16
+        let digits = max(String(lineCount).count, 2)
+        return CGFloat(digits) * 8 + 12
     }
 
     override func drawHashMarksAndLabels(in rect: NSRect) {
         guard let textView,
               let layoutManager = textView.layoutManager,
               let textContainer = textView.textContainer else { return }
+
+        // Clip drawing to bounds to prevent bleeding
+        NSGraphicsContext.current?.saveGraphicsState()
+        NSBezierPath(rect: bounds).addClip()
 
         // Fill background
         backgroundColor.setFill()
@@ -63,6 +67,8 @@ final class LineNumberRulerView: NSRulerView {
             label.draw(at: NSPoint(x: x, y: y), withAttributes: attrs)
             lineNumber += 1
         }
+
+        NSGraphicsContext.current?.restoreGraphicsState()
     }
 }
 
@@ -113,6 +119,8 @@ struct LineNumberTextEditor: NSViewRepresentable {
         context.coordinator.textView = textView
 
         scrollView.documentView = textView
+        scrollView.wantsLayer = true
+        scrollView.layer?.masksToBounds = true
 
         // Set up line number ruler
         scrollView.hasVerticalRuler = true
