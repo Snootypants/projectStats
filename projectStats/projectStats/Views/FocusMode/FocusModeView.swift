@@ -7,13 +7,6 @@ struct FocusModeView: View {
 
     @State private var pulseAnimation = false
 
-    private var progressColor: Color {
-        let value = usageMonitor.fiveHourUtilization
-        if value < 0.6 { return .green }
-        if value < 0.85 { return .yellow }
-        return .red
-    }
-
     var body: some View {
         ZStack {
             // Background
@@ -21,6 +14,8 @@ struct FocusModeView: View {
 
             // Main content
             VStack(spacing: 30) {
+                Spacer()
+
                 HStack {
                     Circle()
                         .fill(Color.green)
@@ -37,24 +32,23 @@ struct FocusModeView: View {
                     .font(.title2)
                     .foregroundColor(.white.opacity(0.7))
 
-                VStack(spacing: 8) {
-                    ProgressView(value: usageMonitor.fiveHourUtilization)
-                        .tint(progressColor)
-                        .frame(width: 300)
+                Spacer()
 
-                    Text("Context: \(Int(usageMonitor.fiveHourUtilization * 100))%")
-                        .foregroundColor(.white.opacity(0.6))
+                // Dual lockout bars at bottom
+                HStack(spacing: 16) {
+                    focusBarView(
+                        label: "Session",
+                        percent: usageMonitor.fiveHourUtilization,
+                        countdown: usageMonitor.fiveHourTimeRemaining
+                    )
+                    focusBarView(
+                        label: "Weekly",
+                        percent: usageMonitor.sevenDayUtilization,
+                        countdown: usageMonitor.sevenDayTimeRemaining
+                    )
                 }
-
-                Divider()
-                    .frame(width: 200)
-                    .background(Color.white.opacity(0.2))
-
-                HStack(spacing: 40) {
-                    StatView(label: "Files", value: "--")
-                    StatView(label: "Lines", value: "--")
-                    StatView(label: "Time", value: "--")
-                }
+                .padding(.horizontal, 40)
+                .padding(.bottom, 40)
             }
 
             // Sparkle edge overlay
@@ -65,21 +59,32 @@ struct FocusModeView: View {
         .onTapGesture { dismiss() }
         .keyboardShortcut(.escape, modifiers: [])
     }
-}
 
-private struct StatView: View {
-    let label: String
-    let value: String
-
-    var body: some View {
+    private func focusBarView(label: String, percent: Double, countdown: String) -> some View {
         VStack(spacing: 4) {
-            Text(value)
-                .font(.title3)
-                .foregroundColor(.white)
-            Text(label)
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.6))
+            HStack(spacing: 4) {
+                Text("\(label) (\(Int(percent * 100))%, resets \(countdown))")
+                    .font(.system(size: 11))
+                    .foregroundColor(.white.opacity(0.6))
+                Spacer()
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.white.opacity(0.15))
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(progressColor(for: percent))
+                        .frame(width: geo.size.width * min(percent, 1.0))
+                }
+            }
+            .frame(height: 8)
         }
+    }
+
+    private func progressColor(for value: Double) -> Color {
+        if value < 0.6 { return .green }
+        if value < 0.85 { return .yellow }
+        return .red
     }
 }
 
