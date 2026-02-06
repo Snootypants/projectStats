@@ -43,6 +43,15 @@ struct ProjectPickerView: View {
                         .foregroundStyle(.secondary)
                     TextField("Search projects...", text: $searchText)
                         .textFieldStyle(.plain)
+                    if !searchText.isEmpty {
+                        Button {
+                            searchText = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
                 .padding(10)
                 .background(Color.primary.opacity(0.05))
@@ -55,6 +64,14 @@ struct ProjectPickerView: View {
                 }
                 .pickerStyle(.menu)
                 .frame(width: 130)
+
+                Button {
+                    Task { await dashboardVM.refresh() }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .buttonStyle(.bordered)
+                .help("Refresh project list")
 
                 Spacer()
 
