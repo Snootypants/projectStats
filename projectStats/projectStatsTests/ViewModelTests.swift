@@ -237,4 +237,36 @@ final class ViewModelTests: XCTestCase {
         XCTAssertEqual(AppTheme.light.rawValue, "Light")
         XCTAssertEqual(AppTheme.dark.rawValue, "Dark")
     }
+
+    // MARK: - Focus Mode EdgeFX Preference Tests
+
+    @MainActor
+    func testFocusModeEdgeFXDefaultIsFire() {
+        let settings = SettingsViewModel.shared
+        // Default should be "fire"
+        XCTAssertEqual(settings.focusModeEdgeFXRaw, "fire")
+    }
+
+    @MainActor
+    func testFocusModeEdgeFXModeConversion() {
+        let settings = SettingsViewModel.shared
+        let original = settings.focusModeEdgeFXRaw
+        defer { settings.focusModeEdgeFXRaw = original }
+
+        settings.focusModeEdgeFXRaw = "smoke"
+        // The computed property should return .smoke
+        if case .smoke = settings.focusModeEdgeFX {} else {
+            XCTFail("Expected .smoke mode")
+        }
+
+        settings.focusModeEdgeFXRaw = "cubes"
+        if case .cubes = settings.focusModeEdgeFX {} else {
+            XCTFail("Expected .cubes mode")
+        }
+
+        settings.focusModeEdgeFXRaw = "fire"
+        if case .fire = settings.focusModeEdgeFX {} else {
+            XCTFail("Expected .fire mode")
+        }
+    }
 }

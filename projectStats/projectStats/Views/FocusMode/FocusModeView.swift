@@ -3,6 +3,7 @@ import SwiftUI
 struct FocusModeView: View {
     @ObservedObject var terminalMonitor: TerminalOutputMonitor
     @ObservedObject var usageMonitor: ClaudePlanUsageService
+    @ObservedObject var settings: SettingsViewModel = .shared
     @Environment(\.dismiss) private var dismiss
 
     @State private var pulseAnimation = false
@@ -51,8 +52,28 @@ struct FocusModeView: View {
                 .padding(.bottom, 40)
             }
 
+            // Mode picker (bottom-left)
+            VStack {
+                Spacer()
+                HStack {
+                    HStack(spacing: 8) {
+                        ForEach(["fire", "smoke", "cubes"], id: \.self) { mode in
+                            Button(mode.capitalized) {
+                                settings.focusModeEdgeFXRaw = mode
+                            }
+                            .buttonStyle(.plain)
+                            .font(.system(size: 10))
+                            .foregroundColor(settings.focusModeEdgeFXRaw == mode ? .white : .white.opacity(0.3))
+                        }
+                    }
+                    .padding(.leading, 20)
+                    .padding(.bottom, 20)
+                    Spacer()
+                }
+            }
+
             // Edge FX overlay (CAEmitterLayer particles)
-            EdgeFXOverlayView(mode: .fire, intensity: 1.0)
+            EdgeFXOverlayView(mode: settings.focusModeEdgeFX, intensity: 1.0)
                 .allowsHitTesting(false)
         }
         .ignoresSafeArea()

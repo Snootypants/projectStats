@@ -186,6 +186,26 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("tts_provider") var ttsProvider: String = "openai"
     @AppStorage("voice_autoTranscribe") var voiceAutoTranscribe: Bool = true
 
+    // Focus Mode
+    @AppStorage("focusMode.edgeFXMode") var focusModeEdgeFXRaw: String = "fire"
+
+    var focusModeEdgeFX: EdgeFXOverlay.Mode {
+        get {
+            switch focusModeEdgeFXRaw {
+            case "smoke": return .smoke
+            case "cubes": return .cubes
+            default: return .fire
+            }
+        }
+        set {
+            switch newValue {
+            case .fire: focusModeEdgeFXRaw = "fire"
+            case .smoke: focusModeEdgeFXRaw = "smoke"
+            case .cubes: focusModeEdgeFXRaw = "cubes"
+            }
+        }
+    }
+
     var codeDirectory: URL {
         get {
             if codeDirectoryPath.isEmpty {
