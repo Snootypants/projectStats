@@ -76,11 +76,11 @@ final class ProjectCreationService {
         // Create directory
         try FileManager.default.createDirectory(at: projectURL, withIntermediateDirectories: true)
 
-        // Git init
-        Shell.run("cd '\(projectURL.path)' && git init")
-
-        // Type-specific scaffolding (expanded in Scope E)
+        // Type-specific scaffolding
         try scaffoldProject(type: type, at: projectURL)
+
+        // Git init + initial commit (after scaffold so files are included)
+        Shell.run("cd '\(projectURL.path)' && git init && git add . && git commit -m 'Initial scaffold'")
 
         // Create DB entry
         let cached = CachedProject(

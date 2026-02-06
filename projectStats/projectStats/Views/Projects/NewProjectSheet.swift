@@ -128,9 +128,11 @@ struct NewProjectSheet: View {
                     baseDirectory: settingsVM.codeDirectory,
                     context: context
                 )
-                dismiss()
-                await DashboardViewModel.shared.loadDataIfNeeded()
+                // Refresh project list so new project appears in grid
+                await DashboardViewModel.shared.refresh()
+                // Open the project tab
                 tabManager.openProject(path: url.path)
+                dismiss()
             } catch {
                 errorMessage = error.localizedDescription
             }
