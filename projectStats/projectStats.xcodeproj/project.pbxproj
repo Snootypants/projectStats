@@ -92,7 +92,6 @@
 		010000000000000000000079 /* projectStats/Services/StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */; };
 		010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */; };
 		010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */; };
-		010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */; };
 		010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */; };
 		010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */; };
 		010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */; };
@@ -153,7 +152,6 @@
 		010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */; };
 		010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* projectStats/Models/AIProvider.swift */; };
 		010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */; };
-		010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000142 /* projectStats/Services/CodexService.swift */; };
 		010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */; };
 		010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */; };
 		010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */; };
@@ -283,7 +281,6 @@
 		020000000000000000000079 /* projectStats/Services/StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/StoreKitManager.swift; sourceTree = "<group>"; };
 		020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TelegramProvider.swift; sourceTree = "<group>"; };
 		020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/TimeTrackingService.swift; sourceTree = "<group>"; };
-		020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VoiceNoteRecorder.swift; sourceTree = "<group>"; };
 		020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/NotificationNames.swift; sourceTree = "<group>"; };
 		020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/GitControlsViewModel.swift; sourceTree = "<group>"; };
 		020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/TerminalTabsViewModel.swift; sourceTree = "<group>"; };
@@ -344,7 +341,6 @@
 		020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DBv2MigrationService.swift; sourceTree = "<group>"; };
 		020000000000000000000140 /* projectStats/Models/AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
 		020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
-		020000000000000000000142 /* projectStats/Services/CodexService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodexService.swift; sourceTree = "<group>"; };
 		020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ModelSelectorView.swift; sourceTree = "<group>"; };
 		020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ThinkingLevelService.swift; sourceTree = "<group>"; };
 		020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
@@ -625,7 +621,6 @@
 				020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */,
 				020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */,
 				020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */,
-				020000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift */,
 				020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */,
 				020000000000000000000159 /* projectStats/Utilities/Logger.swift */,
 				020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */,
@@ -685,7 +680,6 @@
 				020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */,
 				020000000000000000000140 /* projectStats/Models/AIProvider.swift */,
 				020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */,
-				020000000000000000000142 /* projectStats/Services/CodexService.swift */,
 				020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */,
 				020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */,
 				020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */,
@@ -884,7 +878,6 @@
 				010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */,
 				010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */,
 				010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */,
-				010000000000000000000082 /* projectStats/Services/VoiceNoteRecorder.swift in Sources */,
 				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
 				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
 				010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */,
@@ -947,7 +940,6 @@
 				010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */,
 				010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */,
 				010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */,
-				010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */,
 				010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */,
 				010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */,
 				010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */,
