@@ -111,6 +111,7 @@ struct ProjectStatsApp: App {
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DBv2MigrationService.shared.migrateIfNeeded(context: context)
                     await DataCleanupService.shared.cleanupIfNeeded(context: context)
+                    seedDefaultTemplateIfNeeded(context: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
                     ClaudePlanUsageService.shared.startHourlyPolling()
                     await ClaudeContextMonitor.shared.refresh()
@@ -150,6 +151,53 @@ struct ProjectStatsApp: App {
                 .environmentObject(dashboardViewModel)
         }
     }
+}
+
+// MARK: - Template Seeding
+
+private func seedDefaultTemplateIfNeeded(context: ModelContext) {
+    let descriptor = FetchDescriptor<PromptTemplate>(
+        predicate: #Predicate { $0.isDefault == true }
+    )
+    let existing = (try? context.fetch(descriptor)) ?? []
+    guard existing.isEmpty else { return }
+
+    let template = PromptTemplate(
+        name: "Default",
+        content: DefaultPromptTemplate.content,
+        isDefault: true
+    )
+    context.insert(template)
+    try? context.save()
+    print("[App] Seeded default prompt template")
+}
+
+// MARK: - Default Prompt Template
+
+enum DefaultPromptTemplate {
+    static let content = """
+    ## META OUTPUT INSTRUCTIONS (NON-NEGOTIABLE)
+
+    1. **Plan:** Outline moves in order. State what you will NOT touch.
+    2. **Difficulty:** Brief estimate and likely failure points.
+    3. **Execute:** Do the work. Minimal edits. One scope at a time.
+    4. **Report + Self-Grade:** What changed, why, grade yourself (A–F).
+
+    ## ENGINEERING PHILOSOPHY (NON-NEGOTIABLE)
+
+    Simplest, most direct solution. Less code is better code. No over-engineering.
+
+    ## PROCESS RULES
+
+    - TDD: Write or update tests FIRST, then implement.
+    - Sequential execution. Commit after every scope.
+    - Build + tests must pass before moving on.
+    - If stuck >10 minutes: skip, add `// TODO:`, note in report.
+
+    ## TASK
+
+    {PROMPT}
+    """
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {

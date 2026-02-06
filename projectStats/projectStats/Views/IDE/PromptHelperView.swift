@@ -35,6 +35,18 @@ enum PromptHelperComposer {
     }
 }
 
+// MARK: - Send Mode
+
+enum PromptSendMode: String, CaseIterable {
+    case claude = "Claude"
+    case ccYOLO = "ccYOLO"
+    case sonnet5 = "Sonnet 5"
+
+    var isDisabled: Bool {
+        self == .sonnet5
+    }
+}
+
 // MARK: - Prompt Helper View
 
 struct PromptHelperView: View {
@@ -44,6 +56,7 @@ struct PromptHelperView: View {
     @State private var promptText: String = ""
     @State private var selectedTemplateID: UUID?
     @State private var showSentConfirmation = false
+    @State private var sendMode: PromptSendMode = .claude
 
     private var templates: [PromptTemplate] {
         allTemplates.sorted { $0.name < $1.name }
@@ -156,6 +169,15 @@ struct PromptHelperView: View {
                     .foregroundStyle(.green)
             }
 
+            Picker("", selection: $sendMode) {
+                ForEach(PromptSendMode.allCases, id: \.self) { mode in
+                    Text(mode.rawValue)
+                        .tag(mode)
+                }
+            }
+            .pickerStyle(.menu)
+            .frame(width: 100)
+
             Button {
                 sendToClaudeCode()
             } label: {
@@ -163,7 +185,7 @@ struct PromptHelperView: View {
                     .font(.system(size: 12))
             }
             .buttonStyle(.borderedProminent)
-            .disabled(promptText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(promptText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || sendMode.isDisabled)
             .keyboardShortcut(.return, modifiers: .command)
         }
         .padding(.horizontal, 12)
@@ -187,10 +209,11 @@ struct PromptHelperView: View {
             thinkingLevel: SettingsViewModel.shared.defaultThinkingLevel
         )
 
-        // Create a new Claude terminal tab with the command
+        // Create a new terminal tab based on send mode
+        let kind: TerminalTabKind = sendMode == .ccYOLO ? .ccYolo : .claude
         let tab = TerminalTabItem(
-            kind: .claude,
-            title: "Prompt Helper",
+            kind: kind,
+            title: sendMode == .ccYOLO ? "ccYOLO" : "Prompt Helper",
             aiModel: SettingsViewModel.shared.terminalClaudeModel,
             thinkingLevel: SettingsViewModel.shared.defaultThinkingLevel
         )
