@@ -430,6 +430,15 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(composed, "hello --- hello")
     }
 
+    // MARK: - Agent Teams Settings Tests
+
+    @MainActor
+    func testAgentTeamsDefaultDisabled() {
+        let settings = SettingsViewModel.shared
+        // Agent Teams should be disabled by default
+        XCTAssertFalse(settings.agentTeamsEnabled)
+    }
+
     func testPromptTemplateVersionInitialization() {
         let version = PromptTemplateVersion(
             versionNumber: 3,

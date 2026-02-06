@@ -115,6 +115,9 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
     @AppStorage("showEnvironmentTab") var showEnvironmentTab: Bool = true
 
+    // MARK: - Agent Teams (Swarm) Settings
+    @AppStorage("agentTeams.enabled") var agentTeamsEnabled: Bool = false
+
     // MARK: - Terminal Button Settings
     @AppStorage("terminal.claudeModel") var terminalClaudeModelRaw: String = "claude-opus-4-20250514"
     @AppStorage("terminal.claudeFlags") var terminalClaudeFlags: String = ""

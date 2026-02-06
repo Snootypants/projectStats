@@ -69,6 +69,14 @@ struct TerminalSettingsView: View {
                 }
                 .disabled(!viewModel.showCodexButton)
             }
+
+            Section("Agent Teams (Swarm)") {
+                Toggle("Enable Agent Teams", isOn: $viewModel.agentTeamsEnabled)
+
+                Text("When enabled, projects can use multi-agent swarm mode. Each project can independently toggle swarm on/off.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Terminal")
