@@ -333,4 +333,44 @@ final class ServiceTests: XCTestCase {
             XCTAssertFalse(type.id.isEmpty)
         }
     }
+
+    func testCreateDefaultDocsCreatesFiles() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        try ProjectCreationService.shared.createDefaultDocs(at: tmp, projectName: "TestProject")
+
+        let docsDir = tmp.appendingPathComponent("docs")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("ARCHITECTURE.md").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("FILE_STRUCTURE.md").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("MODELS.md").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("TODO.md").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("CHANGELOG.md").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: docsDir.appendingPathComponent("README.md").path))
+        // Root README also created
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tmp.appendingPathComponent("README.md").path))
+    }
+
+    func testArchitectureMdHasAgentTeamsSection() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        try ProjectCreationService.shared.createDefaultDocs(at: tmp, projectName: "TestProject")
+
+        let archContent = try String(contentsOf: tmp.appendingPathComponent("docs/ARCHITECTURE.md"), encoding: .utf8)
+        XCTAssertTrue(archContent.contains("Agent Teams Context"))
+        XCTAssertTrue(archContent.contains("File Ownership Boundaries"))
+        XCTAssertTrue(archContent.contains("Dependency Graph"))
+        XCTAssertTrue(archContent.contains("Shared State Risks"))
+    }
+
+    func testNextjsCommandGeneration() {
+        let cmd = ProjectCreationService.shared.nextjsCommand(projectName: "my-app")
+        XCTAssertTrue(cmd.contains("npx create-next-app@latest"))
+        XCTAssertTrue(cmd.contains("my-app"))
+        XCTAssertTrue(cmd.contains("--typescript"))
+    }
 }
