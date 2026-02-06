@@ -58,12 +58,14 @@ struct TabShellView: View {
         .sheet(isPresented: $showCommandPalette) {
             CommandPaletteView(commands: commandPaletteCommands())
         }
-        .sheet(isPresented: $showFocusMode) {
-            FocusModeView(
-                terminalMonitor: TerminalOutputMonitor.shared,
-                usageMonitor: ClaudePlanUsageService.shared
-            )
-            .frame(minWidth: 800, minHeight: 600)
+        .onChange(of: showFocusMode) { _, show in
+            if show {
+                FocusModeWindowManager.shared.showFullscreen(
+                    terminalMonitor: TerminalOutputMonitor.shared,
+                    usageMonitor: ClaudePlanUsageService.shared
+                )
+                showFocusMode = false
+            }
         }
         .sheet(isPresented: $showCommitDialogFromPalette) {
             if let path = commitDialogProjectPath {
