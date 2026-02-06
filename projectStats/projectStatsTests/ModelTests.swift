@@ -430,6 +430,32 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(composed, "hello --- hello")
     }
 
+    // MARK: - Swarm Mode Compose Tests
+
+    func testPromptHelperComposeWithSwarmPrefix() {
+        let userText = "Fix the login bug"
+        let swarmPrefix = PromptHelperComposer.swarmPrefix
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: nil, swarmEnabled: true)
+        XCTAssertTrue(composed.hasPrefix(swarmPrefix))
+        XCTAssertTrue(composed.contains("Fix the login bug"))
+    }
+
+    func testPromptHelperComposeSwarmWithTemplate() {
+        let userText = "Fix the bug"
+        let template = "You are a developer.\n\n{PROMPT}"
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: template, swarmEnabled: true)
+        XCTAssertTrue(composed.contains(PromptHelperComposer.swarmPrefix))
+        XCTAssertTrue(composed.contains("You are a developer."))
+        XCTAssertTrue(composed.contains("Fix the bug"))
+    }
+
+    func testPromptHelperComposeSwarmDisabledNoPrefix() {
+        let userText = "Fix the bug"
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: nil, swarmEnabled: false)
+        XCTAssertFalse(composed.contains(PromptHelperComposer.swarmPrefix))
+        XCTAssertEqual(composed, "Fix the bug")
+    }
+
     // MARK: - Agent Teams Settings Tests
 
     @MainActor

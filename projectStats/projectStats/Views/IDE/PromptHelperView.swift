@@ -4,20 +4,34 @@ import SwiftUI
 // MARK: - Prompt Composition Logic (testable)
 
 enum PromptHelperComposer {
+    /// Swarm coordination prefix injected when swarm mode is active
+    static let swarmPrefix = "[SWARM MODE] You are operating as part of an agent team. Check SKILL.md for coordination rules. Claim files before editing. Report progress.\n\n"
+
     /// Compose a final prompt from user text and optional template content.
     /// If template contains `{PROMPT}`, replace it with user text.
     /// If template has no placeholder, prepend template + newlines + user text.
     /// If no template, return user text as-is.
     /// Empty user text always returns empty string.
-    static func compose(userText: String, templateContent: String?) -> String {
+    /// When swarmEnabled is true, swarm coordination prefix is prepended.
+    static func compose(userText: String, templateContent: String?, swarmEnabled: Bool = false) -> String {
         guard !userText.isEmpty else { return "" }
-        guard let template = templateContent, !template.isEmpty else { return userText }
 
-        if template.contains("{PROMPT}") {
-            return template.replacingOccurrences(of: "{PROMPT}", with: userText)
+        var result: String
+        if let template = templateContent, !template.isEmpty {
+            if template.contains("{PROMPT}") {
+                result = template.replacingOccurrences(of: "{PROMPT}", with: userText)
+            } else {
+                result = "\(template)\n\n\(userText)"
+            }
         } else {
-            return "\(template)\n\n\(userText)"
+            result = userText
         }
+
+        if swarmEnabled {
+            result = swarmPrefix + result
+        }
+
+        return result
     }
 }
 
@@ -47,10 +61,16 @@ struct PromptHelperView: View {
         return templates.first { $0.isDefault }
     }
 
+    private var isSwarmActive: Bool {
+        SettingsViewModel.shared.agentTeamsEnabled
+            && AgentTeamsService.isSwarmEnabled(for: projectPath.path)
+    }
+
     private var composedPrompt: String {
         PromptHelperComposer.compose(
             userText: promptText,
-            templateContent: effectiveTemplate?.content
+            templateContent: effectiveTemplate?.content,
+            swarmEnabled: isSwarmActive
         )
     }
 
@@ -82,6 +102,16 @@ struct PromptHelperView: View {
 
             Text("Prompt Helper")
                 .font(.system(size: 12, weight: .semibold))
+
+            if isSwarmActive {
+                Label("Swarm", systemImage: "person.3.fill")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.orange)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.orange.opacity(0.15))
+                    .cornerRadius(4)
+            }
 
             Spacer()
 
