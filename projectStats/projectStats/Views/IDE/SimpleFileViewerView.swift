@@ -90,7 +90,17 @@ struct SimpleFileViewerView: View {
                 message: errorMessage
             )
         } else {
-            LineNumberTextEditor(text: $content, readOnly: false)
+            HStack(spacing: 0) {
+                LineNumberTextEditor(text: $content, readOnly: false)
+                if !content.isEmpty {
+                    MinimapView(
+                        text: content,
+                        visibleRange: 0.3,
+                        scrollOffset: 0,
+                        onScroll: { _ in }
+                    )
+                }
+            }
         }
     }
 
