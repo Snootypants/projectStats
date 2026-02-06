@@ -220,8 +220,8 @@ class DashboardViewModel: ObservableObject {
         await fetchGitHubStats()
 
         // Kick off a background refresh to update cache with latest data
-        Task.detached { @MainActor [weak self] in
-            guard let self = self else { return }
+        Task { [weak self] in
+            guard let self else { return }
             print("[Dashboard] Starting background refresh...")
             await self.loadDataFromScanner()
             print("[Dashboard] Background refresh complete")
