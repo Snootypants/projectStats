@@ -29,7 +29,9 @@ enum AppModelContainer {
             AISessionV2.self,
             // Prompt Template Models
             PromptTemplate.self,
-            PromptTemplateVersion.self
+            PromptTemplateVersion.self,
+            // Prompt Execution Tracking
+            PromptExecution.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

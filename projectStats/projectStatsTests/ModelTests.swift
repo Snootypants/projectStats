@@ -590,4 +590,106 @@ final class ModelTests: XCTestCase {
         XCTAssertNotNil(version.id)
         XCTAssertNotNil(version.createdAt)
     }
+
+    // MARK: - PromptExecution Tests
+
+    func testPromptExecutionInitialization() {
+        let exec = PromptExecution(
+            projectPath: "/test/project",
+            sendMode: "claude",
+            model: "claude-opus-4-6",
+            isSwarm: false,
+            promptCharCount: 5000,
+            scopeCount: 3,
+            startSessionPercent: 0.25,
+            startWeeklyPercent: 0.10
+        )
+
+        XCTAssertEqual(exec.projectPath, "/test/project")
+        XCTAssertEqual(exec.sendMode, "claude")
+        XCTAssertEqual(exec.model, "claude-opus-4-6")
+        XCTAssertFalse(exec.isSwarm)
+        XCTAssertEqual(exec.promptCharCount, 5000)
+        XCTAssertEqual(exec.scopeCount, 3)
+        XCTAssertEqual(exec.startSessionPercent, 0.25)
+        XCTAssertEqual(exec.startWeeklyPercent, 0.10)
+        XCTAssertNotNil(exec.id)
+        XCTAssertNotNil(exec.createdAt)
+        XCTAssertNotNil(exec.startTime)
+    }
+
+    func testPromptExecutionIsCompleteBeforeCompletion() {
+        let exec = PromptExecution(
+            projectPath: "/test", sendMode: "claude", model: "opus",
+            isSwarm: false, promptCharCount: 100, scopeCount: 1,
+            startSessionPercent: 0.0, startWeeklyPercent: 0.0
+        )
+        XCTAssertFalse(exec.isComplete)
+    }
+
+    func testPromptExecutionCompleteExecution() {
+        let exec = PromptExecution(
+            projectPath: "/test", sendMode: "claude", model: "opus",
+            isSwarm: false, promptCharCount: 100, scopeCount: 1,
+            startSessionPercent: 0.20, startWeeklyPercent: 0.05
+        )
+
+        exec.completeExecution(
+            endSessionPercent: 0.35,
+            endWeeklyPercent: 0.08,
+            durationSeconds: 242.0,
+            commitCount: 3
+        )
+
+        XCTAssertTrue(exec.isComplete)
+        XCTAssertNotNil(exec.endTime)
+        XCTAssertEqual(exec.endSessionPercent, 0.35)
+        XCTAssertEqual(exec.endWeeklyPercent, 0.08)
+        XCTAssertEqual(exec.durationSeconds, 242.0)
+        XCTAssertEqual(exec.commitCount, 3)
+    }
+
+    func testPromptExecutionSessionDelta() {
+        let exec = PromptExecution(
+            projectPath: "/test", sendMode: "claude", model: "opus",
+            isSwarm: false, promptCharCount: 100, scopeCount: 1,
+            startSessionPercent: 0.20, startWeeklyPercent: 0.05
+        )
+
+        exec.completeExecution(
+            endSessionPercent: 0.35,
+            endWeeklyPercent: 0.08,
+            durationSeconds: nil,
+            commitCount: nil
+        )
+
+        XCTAssertEqual(exec.sessionDelta!, 0.15, accuracy: 0.0001)
+        XCTAssertEqual(exec.weeklyDelta!, 0.03, accuracy: 0.0001)
+        XCTAssertEqual(exec.sessionCostPercent!, 0.15, accuracy: 0.0001)
+        XCTAssertEqual(exec.weeklyCostPercent!, 0.03, accuracy: 0.0001)
+    }
+
+    func testPromptExecutionDeltasNilBeforeCompletion() {
+        let exec = PromptExecution(
+            projectPath: "/test", sendMode: "claude", model: "opus",
+            isSwarm: false, promptCharCount: 100, scopeCount: 1,
+            startSessionPercent: 0.20, startWeeklyPercent: 0.05
+        )
+
+        XCTAssertNil(exec.sessionCostPercent)
+        XCTAssertNil(exec.weeklyCostPercent)
+        XCTAssertNil(exec.sessionDelta)
+        XCTAssertNil(exec.weeklyDelta)
+    }
+
+    func testPromptExecutionLinkToPromptId() {
+        let promptId = UUID()
+        let exec = PromptExecution(
+            projectPath: "/test", sendMode: "claude", model: "opus",
+            isSwarm: false, promptCharCount: 100, scopeCount: 1,
+            startSessionPercent: 0.0, startWeeklyPercent: 0.0
+        )
+        exec.promptId = promptId
+        XCTAssertEqual(exec.promptId, promptId)
+    }
 }
