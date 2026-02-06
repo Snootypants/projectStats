@@ -15,6 +15,7 @@ struct TabBarView: View {
                             isActive: tab.id == tabManager.activeTabID,
                             isFavorite: tabManager.isFavorite(tab),
                             project: projectForTab(tab),
+                            projects: dashboardVM.projects,
                             onSelect: { tabManager.selectTab(tab.id) },
                             onClose: { tabManager.closeTab(tab.id) },
                             onToggleFavorite: { tabManager.toggleFavorite(tab) },
@@ -94,6 +95,7 @@ struct TabBarItem: View {
     let isActive: Bool
     let isFavorite: Bool
     let project: Project?
+    let projects: [Project]
     let onSelect: () -> Void
     let onClose: () -> Void
     let onToggleFavorite: () -> Void
@@ -158,6 +160,7 @@ struct TabBarItem: View {
                     .padding(8)
             }
         }
+        .help(pickerTooltip)
         .contextMenu {
             if case .projectWorkspace = tab.content {
                 Button(isFavorite ? "Unfavorite" : "Favorite") { onToggleFavorite() }
@@ -171,6 +174,17 @@ struct TabBarItem: View {
                 Button("Close Tab") { onClose() }
             }
         }
+    }
+
+    private var pickerTooltip: String {
+        guard case .projectPicker = tab.content else { return "" }
+        let count = projects.count
+        if count == 0 { return "No projects" }
+        let recent = projects
+            .sorted { ($0.lastCommit?.date ?? .distantPast) > ($1.lastCommit?.date ?? .distantPast) }
+            .prefix(3)
+            .map(\.name)
+        return "Projects: \(count)\nRecent: \(recent.joined(separator: ", "))"
     }
 
     private func handleTooltip(hovering: Bool) {

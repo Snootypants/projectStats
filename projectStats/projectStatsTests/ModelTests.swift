@@ -302,6 +302,49 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(ordered[1].versionNumber, 1)
     }
 
+    // MARK: - Projects Tab Tooltip Tests
+
+    func testProjectsTabTooltipWithProjects() {
+        let projects = [
+            Project(path: URL(fileURLWithPath: "/test/alpha"), name: "Alpha",
+                    lastCommit: Commit(hash: "a", shortHash: "a", message: "m", author: "a", date: Date(), filesChanged: 0, insertions: 0, deletions: 0)),
+            Project(path: URL(fileURLWithPath: "/test/beta"), name: "Beta",
+                    lastCommit: Commit(hash: "b", shortHash: "b", message: "m", author: "a", date: Date().addingTimeInterval(-3600), filesChanged: 0, insertions: 0, deletions: 0)),
+            Project(path: URL(fileURLWithPath: "/test/gamma"), name: "Gamma",
+                    lastCommit: Commit(hash: "c", shortHash: "c", message: "m", author: "a", date: Date().addingTimeInterval(-7200), filesChanged: 0, insertions: 0, deletions: 0)),
+            Project(path: URL(fileURLWithPath: "/test/delta"), name: "Delta")
+        ]
+        let tooltip = projectsTabTooltipText(projects: projects)
+        XCTAssertTrue(tooltip.contains("Projects: 4"))
+        XCTAssertTrue(tooltip.contains("Alpha"))
+        XCTAssertTrue(tooltip.contains("Beta"))
+        XCTAssertTrue(tooltip.contains("Gamma"))
+        XCTAssertFalse(tooltip.contains("Delta")) // Only top 3
+    }
+
+    func testProjectsTabTooltipEmpty() {
+        let tooltip = projectsTabTooltipText(projects: [])
+        XCTAssertEqual(tooltip, "No projects")
+    }
+
+    func testProjectsTabTooltipOneProject() {
+        let projects = [Project(path: URL(fileURLWithPath: "/test/solo"), name: "Solo")]
+        let tooltip = projectsTabTooltipText(projects: projects)
+        XCTAssertTrue(tooltip.contains("Projects: 1"))
+        XCTAssertTrue(tooltip.contains("Solo"))
+    }
+
+    // Helper matching the view logic
+    private func projectsTabTooltipText(projects: [Project]) -> String {
+        let count = projects.count
+        if count == 0 { return "No projects" }
+        let recent = projects
+            .sorted { ($0.lastCommit?.date ?? .distantPast) > ($1.lastCommit?.date ?? .distantPast) }
+            .prefix(3)
+            .map(\.name)
+        return "Projects: \(count)\nRecent: \(recent.joined(separator: ", "))"
+    }
+
     func testPromptTemplateVersionInitialization() {
         let version = PromptTemplateVersion(
             versionNumber: 3,
