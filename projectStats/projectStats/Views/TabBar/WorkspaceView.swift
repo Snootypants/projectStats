@@ -11,6 +11,7 @@ struct WorkspaceView: View {
     @State private var isCreatingBackup = false
     @State private var backupMessage: String?
     @State private var showCreateBranchSheet = false
+    @State private var swarmEnabled = false
 
     /// Resolve the Project from the path
     private var project: Project? {
@@ -36,6 +37,7 @@ struct WorkspaceView: View {
             .onAppear {
                 TerminalOutputMonitor.shared.activeProjectPath = project.path.path
                 TimeTrackingService.shared.startTracking(project: project.path.path)
+                swarmEnabled = AgentTeamsService.isSwarmEnabled(for: project.path.path)
 
                 // Import prompts and work logs from /prompts and /work folders
                 Task {
@@ -158,6 +160,22 @@ struct WorkspaceView: View {
             .buttonStyle(.plain)
             .help("Create local branch copy")
 
+            // Swarm toggle (only visible when Agent Teams is globally enabled)
+            if SettingsViewModel.shared.agentTeamsEnabled {
+                Button {
+                    toggleSwarm(for: project)
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: swarmEnabled ? "person.3.fill" : "person.3")
+                        Text(swarmEnabled ? "SWARM" : "Swarm")
+                            .font(.system(size: 11, weight: swarmEnabled ? .bold : .regular))
+                    }
+                    .foregroundStyle(swarmEnabled ? Color.orange : .secondary)
+                }
+                .buttonStyle(.plain)
+                .help(swarmEnabled ? "Swarm mode ON — SKILL.md deployed" : "Enable swarm mode for this project")
+            }
+
             GitControlsView(projectPath: project.path)
 
             Button {
@@ -233,6 +251,18 @@ struct WorkspaceView: View {
             lines.append("Last commit: \(commit.message)")
         }
         return lines.joined(separator: "\n")
+    }
+
+    private func toggleSwarm(for project: Project) {
+        let newState = !swarmEnabled
+        swarmEnabled = newState
+        AgentTeamsService.setSwarmEnabled(newState, for: project.path.path)
+
+        if newState {
+            try? AgentTeamsService.deploySkillMd(to: project.path, projectName: project.name)
+        } else {
+            AgentTeamsService.removeSkillMd(from: project.path)
+        }
     }
 
     private func createBackup(for project: Project) {

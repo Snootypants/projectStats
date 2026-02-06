@@ -56,6 +56,7 @@
 		010000000000000000000047 /* TerminalPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000047 /* TerminalPanelView.swift */; };
 		010000000000000000000185 /* LineNumberTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000185 /* LineNumberTextEditor.swift */; };
 		010000000000000000000187 /* PromptHelperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000187 /* PromptHelperView.swift */; };
+		010000000000000000000188 /* projectStats/Services/AgentTeamsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */; };
 		010000000000000000000048 /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = 0C0000000000000000000001 /* SwiftTerm */; };
 		010000000000000000000049 /* EnvironmentVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000049 /* EnvironmentVariable.swift */; };
 		010000000000000000000050 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* KeychainService.swift */; };
@@ -246,6 +247,7 @@
 		020000000000000000000047 /* TerminalPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalPanelView.swift; sourceTree = "<group>"; };
 		020000000000000000000185 /* LineNumberTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberTextEditor.swift; sourceTree = "<group>"; };
 		020000000000000000000187 /* PromptHelperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptHelperView.swift; sourceTree = "<group>"; };
+		020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "projectStats/Services/AgentTeamsService.swift"; sourceTree = "<group>"; };
 		020000000000000000000049 /* EnvironmentVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariable.swift; sourceTree = "<group>"; };
 		020000000000000000000050 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		020000000000000000000051 /* EnvFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFileService.swift; sourceTree = "<group>"; };
@@ -717,6 +719,7 @@
 				020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */,
 				020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */,
 				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
+				020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -981,6 +984,7 @@
 				010000000000000000000183 /* ProjectCreationService.swift in Sources */,
 				010000000000000000000184 /* NewProjectSheet.swift in Sources */,
 				010000000000000000000187 /* PromptHelperView.swift in Sources */,
+				010000000000000000000188 /* projectStats/Services/AgentTeamsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -367,6 +367,57 @@ final class ServiceTests: XCTestCase {
         XCTAssertTrue(archContent.contains("Shared State Risks"))
     }
 
+    // MARK: - AgentTeamsService Tests
+
+    func testAgentTeamsSkillMdContent() {
+        let content = AgentTeamsService.skillMdContent(projectName: "TestProject")
+        XCTAssertTrue(content.contains("TestProject"))
+        XCTAssertTrue(content.contains("SKILL"))
+        XCTAssertTrue(content.contains("swarm"))
+    }
+
+    func testAgentTeamsDeploySkillMd() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        try AgentTeamsService.deploySkillMd(to: tmp, projectName: "TestProject")
+
+        let skillPath = tmp.appendingPathComponent("SKILL.md")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: skillPath.path))
+
+        let content = try String(contentsOf: skillPath, encoding: .utf8)
+        XCTAssertTrue(content.contains("TestProject"))
+    }
+
+    func testAgentTeamsRemoveSkillMd() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        // Deploy first
+        try AgentTeamsService.deploySkillMd(to: tmp, projectName: "TestProject")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tmp.appendingPathComponent("SKILL.md").path))
+
+        // Remove
+        AgentTeamsService.removeSkillMd(from: tmp)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: tmp.appendingPathComponent("SKILL.md").path))
+    }
+
+    func testAgentTeamsSwarmPerProjectToggle() {
+        // Test per-project state
+        let fakePath = "/tmp/test-project-\(UUID().uuidString)"
+        defer { UserDefaults.standard.removeObject(forKey: "swarm.enabled.\(fakePath)") }
+
+        XCTAssertFalse(AgentTeamsService.isSwarmEnabled(for: fakePath))
+
+        AgentTeamsService.setSwarmEnabled(true, for: fakePath)
+        XCTAssertTrue(AgentTeamsService.isSwarmEnabled(for: fakePath))
+
+        AgentTeamsService.setSwarmEnabled(false, for: fakePath)
+        XCTAssertFalse(AgentTeamsService.isSwarmEnabled(for: fakePath))
+    }
+
     func testNextjsCommandGeneration() {
         let cmd = ProjectCreationService.shared.nextjsCommand(projectName: "my-app")
         XCTAssertTrue(cmd.contains("npx create-next-app@latest"))
