@@ -115,9 +115,9 @@ final class EdgeFXOverlay: NSView {
         let sparks = CAEmitterCell()
         sparks.contents = sparkImg
         sparks.birthRate = Float(30.0 * intensity)
-        sparks.lifetime = 0.35
-        sparks.lifetimeRange = 0.2
-        sparks.velocity = 80.0 * intensity
+        sparks.lifetime = 0.6
+        sparks.lifetimeRange = 0.35
+        sparks.velocity = 160.0 * intensity
         sparks.velocityRange = CGFloat(60)
         sparks.emissionRange = .pi * 2
         sparks.scale = 0.05
@@ -129,9 +129,9 @@ final class EdgeFXOverlay: NSView {
         let embers = CAEmitterCell()
         embers.contents = emberImg
         embers.birthRate = Float(80.0 * intensity)
-        embers.lifetime = 0.7
-        embers.lifetimeRange = 0.3
-        embers.velocity = 35.0 * intensity
+        embers.lifetime = 1.2
+        embers.lifetimeRange = 0.5
+        embers.velocity = 90.0 * intensity
         embers.velocityRange = 25
         embers.emissionRange = .pi * 2
         embers.scale = 0.06
@@ -161,9 +161,9 @@ final class EdgeFXOverlay: NSView {
         let smoke = CAEmitterCell()
         smoke.contents = smokeImg
         smoke.birthRate = Float(18.0 * intensity)
-        smoke.lifetime = 1.8
-        smoke.lifetimeRange = 0.7
-        smoke.velocity = 18.0 * intensity
+        smoke.lifetime = 2.8
+        smoke.lifetimeRange = 1.0
+        smoke.velocity = 40.0 * intensity
         smoke.velocityRange = 15
         smoke.emissionRange = .pi * 2
         smoke.scale = 0.12
@@ -262,14 +262,14 @@ final class EdgeFXOverlay: NSView {
         case (w + h)..<(2*w + h): p = CGPoint(x: x1 - (t - (w + h)), y: y0)
         default: p = CGPoint(x: x0, y: y0 + (t - (2*w + h)))
         }
-        p.x += .random(in: -4...4)
-        p.y += .random(in: -4...4)
+        p.x += .random(in: -15...15)
+        p.y += .random(in: -15...15)
         return p
     }
 
     private func applyCubeJiggle(_ cube: CALayer, burst: Bool = false) {
-        let dx = CGFloat.random(in: burst ? -10...10 : -4...4)
-        let dy = CGFloat.random(in: burst ? -10...10 : -4...4)
+        let dx = CGFloat.random(in: burst ? -25...25 : -10...10)
+        let dy = CGFloat.random(in: burst ? -25...25 : -10...10)
 
         let pos = CASpringAnimation(keyPath: "position")
         pos.damping = burst ? 7 : 10
