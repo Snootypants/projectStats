@@ -189,6 +189,8 @@
 		010000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */; };
 		010000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */; };
 		010000000000000000000181 /* projectStats/Models/PromptTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */; };
+		010000000000000000000183 /* ProjectCreationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000183 /* ProjectCreationService.swift */; };
+		010000000000000000000184 /* NewProjectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000184 /* NewProjectSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -373,6 +375,8 @@
 		020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5ProjectActivity.swift; sourceTree = "<group>"; };
 		020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5GameCards.swift; sourceTree = "<group>"; };
 		020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/PromptTemplate.swift; sourceTree = "<group>"; };
+		020000000000000000000183 /* ProjectCreationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCreationService.swift; sourceTree = "<group>"; };
+		020000000000000000000184 /* NewProjectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProjectSheet.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -481,6 +485,7 @@
 				020000000000000000000050 /* KeychainService.swift */,
 				020000000000000000000038 /* JSONStatsReader.swift */,
 				020000000000000000000011 /* LineCounter.swift */,
+				020000000000000000000183 /* ProjectCreationService.swift */,
 				020000000000000000000012 /* ProjectScanner.swift */,
 				020000000000000000000119 /* PromptImportService.swift */,
 				020000000000000000000055 /* TerminalOutputMonitor.swift */,
@@ -537,6 +542,7 @@
 				020000000000000000000025 /* ProjectDetailView.swift */,
 				020000000000000000000026 /* ReadmePreview.swift */,
 				020000000000000000000037 /* ProjectGroupSheet.swift */,
+				020000000000000000000184 /* NewProjectSheet.swift */,
 			);
 			path = Projects;
 			sourceTree = "<group>";
@@ -961,6 +967,8 @@
 				010000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift in Sources */,
 				010000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift in Sources */,
 				010000000000000000000181 /* projectStats/Models/PromptTemplate.swift in Sources */,
+				010000000000000000000183 /* ProjectCreationService.swift in Sources */,
+				010000000000000000000184 /* NewProjectSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

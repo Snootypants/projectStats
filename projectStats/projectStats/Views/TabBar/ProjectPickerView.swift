@@ -3,8 +3,10 @@ import SwiftUI
 struct ProjectPickerView: View {
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @State private var searchText = ""
     @State private var filterOption: ProjectFilterOption = .all
+    @State private var showNewProjectSheet = false
 
     private var filteredProjects: [Project] {
         var result = dashboardVM.projects
@@ -55,8 +57,18 @@ struct ProjectPickerView: View {
                 .frame(width: 130)
 
                 Spacer()
+
+                Button {
+                    showNewProjectSheet = true
+                } label: {
+                    Label("New Project", systemImage: "plus")
+                }
+                .buttonStyle(.bordered)
             }
             .padding(20)
+            .sheet(isPresented: $showNewProjectSheet) {
+                NewProjectSheet()
+            }
 
             // Project grid
             ScrollView {

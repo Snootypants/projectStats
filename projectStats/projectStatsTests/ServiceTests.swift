@@ -296,4 +296,41 @@ final class ServiceTests: XCTestCase {
             XCTAssertFalse(error.errorDescription!.isEmpty)
         }
     }
+
+    // MARK: - ProjectCreationService Tests
+
+    func testProjectCreationValidateName() {
+        let service = ProjectCreationService.shared
+        XCTAssertNotNil(service.validateName(""))
+        XCTAssertNotNil(service.validateName("   "))
+        XCTAssertNotNil(service.validateName("bad/name"))
+        XCTAssertNotNil(service.validateName("bad:name"))
+        XCTAssertNil(service.validateName("good-name"))
+        XCTAssertNil(service.validateName("good_name"))
+        XCTAssertNil(service.validateName("Good Name 123"))
+    }
+
+    func testProjectCreationEmptyNameRejected() {
+        let error = ProjectCreationService.shared.validateName("")
+        XCTAssertNotNil(error)
+        if case .emptyName = error {} else {
+            XCTFail("Expected emptyName error")
+        }
+    }
+
+    func testProjectCreationInvalidCharsRejected() {
+        let error = ProjectCreationService.shared.validateName("bad/name")
+        XCTAssertNotNil(error)
+        if case .invalidName = error {} else {
+            XCTFail("Expected invalidName error")
+        }
+    }
+
+    func testProjectTypeProperties() {
+        for type in ProjectType.allCases {
+            XCTAssertFalse(type.rawValue.isEmpty)
+            XCTAssertFalse(type.icon.isEmpty)
+            XCTAssertFalse(type.id.isEmpty)
+        }
+    }
 }
