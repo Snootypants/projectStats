@@ -382,6 +382,34 @@ final class ModelTests: XCTestCase {
         return "Projects: \(count)\nRecent: \(recent.joined(separator: ", "))"
     }
 
+    // MARK: - Prompt Helper Compose Tests
+
+    func testPromptHelperComposeWithoutTemplate() {
+        let userText = "Fix the login bug in auth.swift"
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: nil)
+        XCTAssertEqual(composed, userText)
+    }
+
+    func testPromptHelperComposeWithTemplate() {
+        let userText = "Fix the login bug"
+        let template = "You are a senior Swift developer.\n\n{PROMPT}\n\nBe concise."
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: template)
+        XCTAssertEqual(composed, "You are a senior Swift developer.\n\nFix the login bug\n\nBe concise.")
+    }
+
+    func testPromptHelperComposeTemplateWithoutPlaceholder() {
+        let userText = "Fix the bug"
+        let template = "You are a senior developer. Be thorough."
+        let composed = PromptHelperComposer.compose(userText: userText, templateContent: template)
+        // Template without {PROMPT} should prepend template then user text
+        XCTAssertEqual(composed, "You are a senior developer. Be thorough.\n\nFix the bug")
+    }
+
+    func testPromptHelperComposeEmptyUserText() {
+        let composed = PromptHelperComposer.compose(userText: "", templateContent: "Template content")
+        XCTAssertEqual(composed, "")
+    }
+
     func testPromptTemplateVersionInitialization() {
         let version = PromptTemplateVersion(
             versionNumber: 3,

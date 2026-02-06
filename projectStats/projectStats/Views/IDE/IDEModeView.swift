@@ -48,6 +48,7 @@ struct IDEModeView: View {
     private enum IDETab {
         case files
         case prompts
+        case promptHelper
         case diffs
         case environment
     }
@@ -134,6 +135,12 @@ struct IDEModeView: View {
                     )
                 }
 
+                ideTabButton(
+                    title: "Helper",
+                    icon: "wand.and.stars",
+                    tab: .promptHelper
+                )
+
                 if showDiffsTab {
                     ideTabButton(
                         title: "Diffs",
@@ -165,6 +172,8 @@ struct IDEModeView: View {
                 } else {
                     SimpleFileViewerView(fileURL: $selectedFile)
                 }
+            case .promptHelper:
+                PromptHelperView(projectPath: project.path)
             case .diffs:
                 if showDiffsTab {
                     DiffManagerView(projectPath: project.path)
