@@ -453,6 +453,33 @@ final class ServiceTests: XCTestCase {
         XCTAssertTrue(content.contains("Updated"))
     }
 
+    // MARK: - New Project → ARCHITECTURE.md Integration
+
+    func testNewProjectCreatesArchitectureWithAgentTeams() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        // Simulate new project creation (blank type creates docs via createDefaultDocs)
+        try ProjectCreationService.shared.createDefaultDocs(at: tmp, projectName: "NewApp")
+
+        // Verify ARCHITECTURE.md exists and has Agent Teams Context section
+        let archPath = tmp.appendingPathComponent("docs/ARCHITECTURE.md")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: archPath.path))
+
+        let content = try String(contentsOf: archPath, encoding: .utf8)
+        XCTAssertTrue(content.contains("Agent Teams Context"))
+        XCTAssertTrue(content.contains("File Ownership Boundaries"))
+        XCTAssertTrue(content.contains("Dependency Graph"))
+        XCTAssertTrue(content.contains("Shared State Risks"))
+
+        // Now verify refresh also works on the same project
+        try ProjectCreationService.shared.refreshArchitectureMd(at: tmp, projectName: "NewApp")
+        let refreshed = try String(contentsOf: archPath, encoding: .utf8)
+        XCTAssertTrue(refreshed.contains("Agent Teams Context"))
+        XCTAssertTrue(refreshed.contains("NewApp"))
+    }
+
     func testNextjsCommandGeneration() {
         let cmd = ProjectCreationService.shared.nextjsCommand(projectName: "my-app")
         XCTAssertTrue(cmd.contains("npx create-next-app@latest"))
