@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct ScrollingPromptView: View {
     @State private var offset: CGFloat = 0
@@ -23,7 +24,20 @@ struct ScrollingPromptView: View {
     }
 
     private func loadRandomPrompt() {
-        promptText = """
+        let context = AppModelContainer.shared.mainContext
+        let descriptor = FetchDescriptor<CachedPrompt>(
+            sortBy: [SortDescriptor(\.promptNumber, order: .reverse)]
+        )
+        if let prompts = try? context.fetch(descriptor),
+           let random = prompts.randomElement() {
+            promptText = random.content
+        } else {
+            promptText = fallbackText
+        }
+    }
+
+    private var fallbackText: String {
+        """
         # SCOPE A: Initialize Project
 
         Create the foundation for a new application...
