@@ -106,7 +106,6 @@
 		010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */; };
 		010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */; };
 		010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */; };
-		010000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */; };
 		010000000000000000000189 /* projectStats/Views/FocusMode/EdgeFXOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000189 /* projectStats/Views/FocusMode/EdgeFXOverlay.swift */; };
 		010000000000000000000190 /* projectStats/Views/FocusMode/EdgeFXOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000190 /* projectStats/Views/FocusMode/EdgeFXOverlayView.swift */; };
 		010000000000000000000194 /* projectStats/Views/FocusMode/ScrollingPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000194 /* projectStats/Views/FocusMode/ScrollingPromptView.swift */; };
@@ -120,12 +119,9 @@
 		010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */; };
 		010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */; };
 		010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */; };
-		010000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */; };
-		010000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */; };
 		010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */; };
 		010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */; };
 		010000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */; };
-		010000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */; };
 		010000000000000000000109 /* projectStats/Views/Settings/AISettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */; };
 		010000000000000000000110 /* projectStats/Views/Settings/AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */; };
 		010000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */; };
@@ -153,17 +149,14 @@
 		010000000000000000000133 /* projectStats/Views/Components/ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */; };
 		010000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */; };
 		010000000000000000000135 /* projectStats/Services/SessionSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */; };
-		010000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */; };
 		010000000000000000000137 /* projectStats/Models/DBv2Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000137 /* projectStats/Models/DBv2Models.swift */; };
 		010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */; };
-		010000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */; };
 		010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000140 /* projectStats/Models/AIProvider.swift */; };
 		010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */; };
 		010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000142 /* projectStats/Services/CodexService.swift */; };
 		010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */; };
 		010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */; };
 		010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */; };
-		010000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */; };
 		010000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */; };
 		010000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */; };
 		010000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */; };
@@ -304,7 +297,6 @@
 		020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/GitHubNotificationsCard.swift; sourceTree = "<group>"; };
 		020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/TimeTrackingCard.swift; sourceTree = "<group>"; };
 		020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/FocusModeView.swift; sourceTree = "<group>"; };
-		020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/SparkleEdgeEffect.swift; sourceTree = "<group>"; };
 		020000000000000000000189 /* projectStats/Views/FocusMode/EdgeFXOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/EdgeFXOverlay.swift; sourceTree = "<group>"; };
 		020000000000000000000190 /* projectStats/Views/FocusMode/EdgeFXOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/EdgeFXOverlayView.swift; sourceTree = "<group>"; };
 		020000000000000000000194 /* projectStats/Views/FocusMode/ScrollingPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/ScrollingPromptView.swift; sourceTree = "<group>"; };
@@ -318,12 +310,9 @@
 		020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
 		020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
 		020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabView.swift; sourceTree = "<group>"; };
-		020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/ScratchPadView.swift; sourceTree = "<group>"; };
-		020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Notes/VoiceNoteView.swift; sourceTree = "<group>"; };
 		020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportGeneratorView.swift; sourceTree = "<group>"; };
 		020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportPreviewView.swift; sourceTree = "<group>"; };
 		020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/HygieneReportView.swift; sourceTree = "<group>"; };
-		020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Security/SecretsWarningView.swift; sourceTree = "<group>"; };
 		020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AISettings.swift; sourceTree = "<group>"; };
 		020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AccountView.swift; sourceTree = "<group>"; };
 		020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/CloudSyncSettings.swift; sourceTree = "<group>"; };
@@ -351,17 +340,14 @@
 		020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ListenButton.swift; sourceTree = "<group>"; };
 		020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectArchiveService.swift; sourceTree = "<group>"; };
 		020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SessionSummaryService.swift; sourceTree = "<group>"; };
-		020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/SessionSummaryView.swift; sourceTree = "<group>"; };
 		020000000000000000000137 /* projectStats/Models/DBv2Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/DBv2Models.swift; sourceTree = "<group>"; };
 		020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DBv2MigrationService.swift; sourceTree = "<group>"; };
-		020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/WorkItems/WorkItemsView.swift; sourceTree = "<group>"; };
 		020000000000000000000140 /* projectStats/Models/AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/AIProvider.swift; sourceTree = "<group>"; };
 		020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/AIProviderRegistry.swift; sourceTree = "<group>"; };
 		020000000000000000000142 /* projectStats/Services/CodexService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CodexService.swift; sourceTree = "<group>"; };
 		020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Components/ModelSelectorView.swift; sourceTree = "<group>"; };
 		020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ThinkingLevelService.swift; sourceTree = "<group>"; };
 		020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProviderMetricsService.swift; sourceTree = "<group>"; };
-		020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/ProviderComparisonCard.swift; sourceTree = "<group>"; };
 		020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/AIProviderSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/CloudKitContainer.swift; sourceTree = "<group>"; };
 		020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/CloudKit/Syncable.swift; sourceTree = "<group>"; };
@@ -654,7 +640,6 @@
 				020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */,
 				020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */,
 				020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */,
-				020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */,
 				020000000000000000000189 /* projectStats/Views/FocusMode/EdgeFXOverlay.swift */,
 				020000000000000000000190 /* projectStats/Views/FocusMode/EdgeFXOverlayView.swift */,
 				020000000000000000000194 /* projectStats/Views/FocusMode/ScrollingPromptView.swift */,
@@ -668,12 +653,9 @@
 				020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */,
 				020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */,
 				020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */,
-				020000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift */,
-				020000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift */,
 				020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */,
 				020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */,
 				020000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift */,
-				020000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift */,
 				020000000000000000000109 /* projectStats/Views/Settings/AISettings.swift */,
 				020000000000000000000110 /* projectStats/Views/Settings/AccountView.swift */,
 				020000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift */,
@@ -699,17 +681,14 @@
 				020000000000000000000133 /* projectStats/Views/Components/ListenButton.swift */,
 				020000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift */,
 				020000000000000000000135 /* projectStats/Services/SessionSummaryService.swift */,
-				020000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift */,
 				020000000000000000000137 /* projectStats/Models/DBv2Models.swift */,
 				020000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift */,
-				020000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift */,
 				020000000000000000000140 /* projectStats/Models/AIProvider.swift */,
 				020000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift */,
 				020000000000000000000142 /* projectStats/Services/CodexService.swift */,
 				020000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift */,
 				020000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift */,
 				020000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift */,
-				020000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift */,
 				020000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift */,
 				020000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift */,
 				020000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift */,
@@ -921,7 +900,6 @@
 				010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */,
 				010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */,
 				010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */,
-				010000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift in Sources */,
 				010000000000000000000189 /* projectStats/Views/FocusMode/EdgeFXOverlay.swift in Sources */,
 				010000000000000000000190 /* projectStats/Views/FocusMode/EdgeFXOverlayView.swift in Sources */,
 				010000000000000000000194 /* projectStats/Views/FocusMode/ScrollingPromptView.swift in Sources */,
@@ -935,12 +913,9 @@
 				010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */,
 				010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */,
 				010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */,
-				010000000000000000000103 /* projectStats/Views/Notes/ScratchPadView.swift in Sources */,
-				010000000000000000000104 /* projectStats/Views/Notes/VoiceNoteView.swift in Sources */,
 				010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */,
 				010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */,
 				010000000000000000000107 /* projectStats/Views/Security/HygieneReportView.swift in Sources */,
-				010000000000000000000108 /* projectStats/Views/Security/SecretsWarningView.swift in Sources */,
 				010000000000000000000109 /* projectStats/Views/Settings/AISettings.swift in Sources */,
 				010000000000000000000110 /* projectStats/Views/Settings/AccountView.swift in Sources */,
 				010000000000000000000111 /* projectStats/Views/Settings/CloudSyncSettings.swift in Sources */,
@@ -968,17 +943,14 @@
 				010000000000000000000133 /* projectStats/Views/Components/ListenButton.swift in Sources */,
 				010000000000000000000134 /* projectStats/Services/ProjectArchiveService.swift in Sources */,
 				010000000000000000000135 /* projectStats/Services/SessionSummaryService.swift in Sources */,
-				010000000000000000000136 /* projectStats/Views/Dashboard/SessionSummaryView.swift in Sources */,
 				010000000000000000000137 /* projectStats/Models/DBv2Models.swift in Sources */,
 				010000000000000000000138 /* projectStats/Services/DBv2MigrationService.swift in Sources */,
-				010000000000000000000139 /* projectStats/Views/WorkItems/WorkItemsView.swift in Sources */,
 				010000000000000000000140 /* projectStats/Models/AIProvider.swift in Sources */,
 				010000000000000000000141 /* projectStats/Services/AIProviderRegistry.swift in Sources */,
 				010000000000000000000142 /* projectStats/Services/CodexService.swift in Sources */,
 				010000000000000000000143 /* projectStats/Views/Components/ModelSelectorView.swift in Sources */,
 				010000000000000000000144 /* projectStats/Services/ThinkingLevelService.swift in Sources */,
 				010000000000000000000145 /* projectStats/Services/ProviderMetricsService.swift in Sources */,
-				010000000000000000000146 /* projectStats/Views/Dashboard/ProviderComparisonCard.swift in Sources */,
 				010000000000000000000147 /* projectStats/Views/Settings/AIProviderSettingsView.swift in Sources */,
 				010000000000000000000148 /* projectStats/Services/CloudKit/CloudKitContainer.swift in Sources */,
 				010000000000000000000149 /* projectStats/Services/CloudKit/Syncable.swift in Sources */,

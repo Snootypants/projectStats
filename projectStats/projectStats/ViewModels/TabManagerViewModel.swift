@@ -219,9 +219,8 @@ class TabManagerViewModel: ObservableObject {
 
         tabs = restoredTabs
 
-        let savedIndex = UserDefaults.standard.integer(forKey: "activeTabIndex")
-        if savedIndex >= 0, savedIndex < tabs.count {
-            activeTabID = tabs[savedIndex].id
+        if let homeTab = tabs.first(where: { $0.content == .home }) {
+            activeTabID = homeTab.id
         } else {
             activeTabID = tabs[0].id
         }

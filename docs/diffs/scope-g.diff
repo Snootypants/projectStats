@@ -1,0 +1,492 @@
+diff --git a/docs/ARCHITECTURE.md b/docs/ARCHITECTURE.md
+index f89c852..e6b676b 100644
+--- a/docs/ARCHITECTURE.md
++++ b/docs/ARCHITECTURE.md
+@@ -1,286 +1,28 @@
+-# Architecture Overview
++# ProjectStats — Architecture
+ 
+-## High-Level Architecture
++## Tech Stack
++_List primary technologies, frameworks, and tools._
+ 
+-```
+-┌─────────────────────────────────────────────────────────────────────────────┐
+-│                           ProjectStats App                                   │
+-├─────────────────────────────────────────────────────────────────────────────┤
+-│                                                                             │
+-│   ┌──────────────────────────────────────────────────────────────────────┐  │
+-│   │                            UI Layer                                  │  │
+-│   │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐             │  │
+-│   │  │ TabShell │  │ HomeView │  │Workspace │  │ Settings │             │  │
+-│   │  │   View   │  │Dashboard │  │   View   │  │   View   │             │  │
+-│   │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘             │  │
+-│   └───────┼─────────────┼─────────────┼─────────────┼────────────────────┘  │
+-│           │             │             │             │                       │
+-│   ┌───────┴─────────────┴─────────────┴─────────────┴────────────────────┐  │
+-│   │                         ViewModel Layer                              │  │
+-│   │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐     │  │
+-│   │  │ TabManager │  │ Dashboard  │  │ Terminal   │  │  Settings  │     │  │
+-│   │  │ ViewModel  │  │ ViewModel  │  │ TabsVM     │  │ ViewModel  │     │  │
+-│   │  └────────────┘  └────────────┘  └────────────┘  └────────────┘     │  │
+-│   └───────────────────────────┬──────────────────────────────────────────┘  │
+-│                               │                                             │
+-│   ┌───────────────────────────┴──────────────────────────────────────────┐  │
+-│   │                         Service Layer                                │  │
+-│   │                                                                      │  │
+-│   │  ┌─────────────────────┐  ┌─────────────────────┐                   │  │
+-│   │  │   Data Services     │  │ Integration Services│                   │  │
+-│   │  │  ─────────────────  │  │  ──────────────────  │                   │  │
+-│   │  │  ProjectScanner     │  │  ClaudePlanUsage    │                   │  │
+-│   │  │  GitService         │  │  ClaudeUsageService │                   │  │
+-│   │  │  TimeTrackingService│  │  GitHubService      │                   │  │
+-│   │  │  AchievementService │  │  MessagingService   │                   │  │
+-│   │  └─────────────────────┘  └─────────────────────┘                   │  │
+-│   │                                                                      │  │
+-│   │  ┌─────────────────────┐  ┌─────────────────────┐                   │  │
+-│   │  │   Sync Services     │  │  Utility Services   │                   │  │
+-│   │  │  ─────────────────  │  │  ──────────────────  │                   │  │
+-│   │  │  SyncEngine         │  │  NotificationService│                   │  │
+-│   │  │  CloudKitContainer  │  │  BackupService      │                   │  │
+-│   │  │  OfflineQueueManager│  │  SecretsScanner     │                   │  │
+-│   │  │  SyncScheduler      │  │  KeychainService    │                   │  │
+-│   │  └─────────────────────┘  └─────────────────────┘                   │  │
+-│   └───────────────────────────┬──────────────────────────────────────────┘  │
+-│                               │                                             │
+-│   ┌───────────────────────────┴──────────────────────────────────────────┐  │
+-│   │                          Data Layer                                  │  │
+-│   │  ┌────────────────────────────────────────────────────────────────┐ │  │
+-│   │  │                      SwiftData Models                          │ │  │
+-│   │  │  CachedProject, TimeEntry, SavedPrompt, SavedDiff,            │ │  │
+-│   │  │  AISessionV2, ClaudeUsageSnapshot, AchievementUnlock, ...     │ │  │
+-│   │  └────────────────────────────────────────────────────────────────┘ │  │
+-│   │                               │                                      │  │
+-│   │                    ┌──────────┴──────────┐                          │  │
+-│   │                    │   CloudKit Sync     │                          │  │
+-│   │                    │   (Private DB)      │                          │  │
+-│   │                    └─────────────────────┘                          │  │
+-│   └──────────────────────────────────────────────────────────────────────┘  │
+-│                                                                             │
+-└─────────────────────────────────────────────────────────────────────────────┘
+-```
++## Folder Structure
++_Describe the directory layout and conventions._
+ 
+-## Design Patterns
++## Key Design Decisions
++_Document important architectural choices and rationale._
+ 
+-### MVVM (Model-View-ViewModel)
++## Data Flow
++_Describe how data moves through the application._
+ 
+-The app follows MVVM architecture:
++## Agent Teams Context
+ 
+-- **Models**: SwiftData `@Model` classes that persist to the local database
+-- **Views**: SwiftUI views that observe and display state
+-- **ViewModels**: `ObservableObject` classes that manage business logic and expose state via `@Published` properties
++> This section is auto-updated by the Update Docs button when Agent Teams is enabled.
+ 
+-Example flow:
+-```
+-User taps refresh → View calls ViewModel.refresh() → ViewModel calls Services →
+-Services update Models → SwiftData triggers @Query → View updates automatically
+-```
++### File Ownership Boundaries
++| Domain | Primary Files | Owner Pattern |
++|--------|--------------|---------------|
++| _Scan project to populate_ | | |
+ 
+-### Singleton Services
++### Dependency Graph
++_Run Update Docs with Agent Teams enabled to generate._
+ 
+-Most services are singletons accessed via `ServiceName.shared`:
+-
+-```swift
+-// Service definition
+-@MainActor
+-final class ClaudePlanUsageService: ObservableObject {
+-    static let shared = ClaudePlanUsageService()
+-    private init() { }
+-}
+-
+-// Usage
+-ClaudePlanUsageService.shared.fetchUsage()
+-```
+-
+-**Why Singletons?**
+-- Services manage app-wide state (e.g., current Claude session)
+-- Avoids passing service instances through deep view hierarchies
+-- Ensures consistent state across the app
+-- Works well with SwiftUI's environment object pattern
+-
+-### Observer Pattern
+-
+-State propagation uses multiple mechanisms:
+-
+-1. **@Published + @StateObject**: ViewModels expose reactive state
+-2. **@AppStorage**: Settings automatically sync to UserDefaults
+-3. **SwiftData @Query**: Views automatically update when models change
+-4. **NotificationCenter**: For cross-component events (e.g., `.enterFocusMode`)
+-
+-## Data Layer
+-
+-### SwiftData Models
+-
+-All persistent data uses SwiftData's `@Model` macro:
+-
+-```swift
+-@Model
+-final class SavedPrompt {
+-    var id: UUID
+-    var projectPath: String
+-    var content: String
+-    var createdAt: Date
+-    // ...
+-}
+-```
+-
+-**Model Categories:**
+-- **Cached Data**: CachedProject, CachedPrompt, CachedWorkLog, CachedCommit
+-- **User Data**: SavedPrompt, SavedDiff, ProjectNote, TimeEntry
+-- **AI Data**: AISessionV2, AIProviderConfig, ClaudeUsageSnapshot
+-- **Analytics**: DailyMetric, ProjectSession, WeeklyGoal, WorkItem
+-- **Gamification**: AchievementUnlock
+-
+-### CloudKit Sync
+-
+-Sync is handled by the `SyncEngine` which:
+-1. Converts SwiftData models to `CKRecord` objects
+-2. Pushes local changes to CloudKit private database
+-3. Pulls remote changes using change tokens
+-4. Resolves conflicts via `ConflictResolver`
+-
+-```
+-Local Change → needsSync flag → SyncScheduler triggers →
+-SyncEngine.pushLocalChanges() → CKModifyRecordsOperation →
+-SyncEngine.pullRemoteChanges() → Process CKRecords → Update Models
+-```
+-
+-### Local Storage
+-
+-| Data Type | Storage Location |
+-|-----------|------------------|
+-| SwiftData DB | `~/Library/Application Support/projectStats/default.store` |
+-| Settings | UserDefaults (@AppStorage) |
+-| OAuth Tokens | Keychain (read from Claude Code's keychain item) |
+-| Tab State | UserDefaults (JSON encoded) |
+-
+-## View Layer
+-
+-### Navigation Structure
+-
+-```
+-ProjectStatsApp
+-├── WindowGroup("main")
+-│   └── TabShellView
+-│       ├── TabBarView (Chrome-style tab strip)
+-│       ├── XPProgressBar
+-│       └── Tab Content
+-│           ├── HomeView (when tab.content == .home)
+-│           ├── ProjectPickerView (when .projectPicker)
+-│           └── WorkspaceView (when .projectWorkspace)
+-│               └── IDEModeView
+-│                   ├── FileBrowserView
+-│                   ├── FileViewerView
+-│                   ├── TerminalPanelView
+-│                   └── Tool Tabs (Prompts, Diffs, Environment)
+-│
+-├── MenuBarExtra
+-│   └── MenuBarView
+-│
+-└── Settings
+-    └── SettingsView (sidebar navigation)
+-```
+-
+-### View Hierarchy
+-
+-The main window uses a tab-based navigation:
+-
+-- **TabShellView**: Root container managing tab bar and content area
+-- **TabBarView**: Horizontal tab strip with add/close/drag-reorder
+-- **HomeView**: Dashboard with stats cards, heatmap, notifications
+-- **WorkspaceView**: Project-specific view wrapping IDEModeView
+-- **IDEModeView**: Three-panel layout (explorer, viewer, terminal)
+-
+-## Service Layer
+-
+-### Service Categories
+-
+-**1. Data Services**
+-- `ProjectScanner` — Discovers projects in code directory
+-- `GitService` — Git operations (commits, branches, diff)
+-- `TimeTrackingService` — Human vs AI time tracking
+-- `AchievementService` — Achievement checking and unlocking
+-
+-**2. Integration Services**
+-- `ClaudePlanUsageService` — Anthropic OAuth API for plan usage
+-- `ClaudeUsageService` — ccusage CLI for token stats
+-- `GitHubService` — GitHub API for notifications, repo stats
+-- `MessagingService` — Telegram/Slack/Discord/ntfy
+-
+-**3. Sync Services**
+-- `SyncEngine` — CloudKit push/pull operations
+-- `CloudKitContainer` — Zone and subscription setup
+-- `OfflineQueueManager` — Queue changes when offline
+-- `SyncScheduler` — Periodic and on-change sync triggers
+-
+-**4. Utility Services**
+-- `NotificationService` — Local and push notifications
+-- `BackupService` — Zip project backups
+-- `SecretsScanner` — Detect secrets before commit
+-- `KeychainService` — Secure credential storage
+-
+-## Threading Model
+-
+-### @MainActor
+-
+-Most services and ViewModels are marked `@MainActor` to ensure UI safety:
+-
+-```swift
+-@MainActor
+-final class ClaudePlanUsageService: ObservableObject {
+-    // All properties and methods run on main thread
+-}
+-```
+-
+-### Background Tasks
+-
+-Long-running operations use structured concurrency:
+-
+-```swift
+-Task {
+-    await ProjectScanner.shared.scanProjects()  // Runs on cooperative thread pool
+-    // UI updates automatically happen on main actor
+-}
+-```
+-
+-### Shell Commands
+-
+-Shell commands run synchronously but are called from background tasks:
+-
+-```swift
+-Task.detached {
+-    let result = Shell.run("git log ...", at: path)  // Background thread
+-    await MainActor.run {
+-        self.updateUI(with: result)  // Back to main thread
+-    }
+-}
+-```
+-
+-## Error Handling
+-
+-### Error Display
+-
+-Errors are typically:
+-1. Stored in service `@Published var error: String?`
+-2. Displayed via `.alert()` or inline error views
+-3. Logged to console with `[ServiceName]` prefix
+-
+-### Error Recovery
+-
+-- **Network errors**: Queued for retry (OfflineQueueManager)
+-- **Sync conflicts**: Resolved by ConflictResolver (server wins by default)
+-- **Parse errors**: Gracefully ignored with fallback values
+-- **SwiftData errors**: Model container attempts cleanup and retry
+-
+-## Key Files Reference
+-
+-| File | Purpose |
+-|------|---------|
+-| `App/ProjectStatsApp.swift` | App entry, scene configuration, service initialization |
+-| `ViewModels/SettingsViewModel.swift` | All @AppStorage settings |
+-| `ViewModels/TabManagerViewModel.swift` | Tab state and navigation |
+-| `Services/TerminalOutputMonitor.swift` | Claude detection, git event handling |
+-| `Services/CloudKit/SyncEngine.swift` | CloudKit sync operations |
+-| `Models/AIProvider.swift` | AI model definitions, pricing, thinking levels |
++### Shared State Risks
++_Run Update Docs with Agent Teams enabled to generate._
+\ No newline at end of file
+diff --git a/projectStats/projectStats/ViewModels/TabManagerViewModel.swift b/projectStats/projectStats/ViewModels/TabManagerViewModel.swift
+index cd09d09..1ac85e8 100644
+--- a/projectStats/projectStats/ViewModels/TabManagerViewModel.swift
++++ b/projectStats/projectStats/ViewModels/TabManagerViewModel.swift
+@@ -219,9 +219,8 @@ class TabManagerViewModel: ObservableObject {
+ 
+         tabs = restoredTabs
+ 
+-        let savedIndex = UserDefaults.standard.integer(forKey: "activeTabIndex")
+-        if savedIndex >= 0, savedIndex < tabs.count {
+-            activeTabID = tabs[savedIndex].id
++        if let homeTab = tabs.first(where: { $0.content == .home }) {
++            activeTabID = homeTab.id
+         } else {
+             activeTabID = tabs[0].id
+         }
+diff --git a/projectStats/projectStats/Views/Projects/ProjectListView.swift b/projectStats/projectStats/Views/Projects/ProjectListView.swift
+index bfc1202..90faa9b 100644
+--- a/projectStats/projectStats/Views/Projects/ProjectListView.swift
++++ b/projectStats/projectStats/Views/Projects/ProjectListView.swift
+@@ -4,16 +4,34 @@ import AppKit
+ struct ProjectListView: View {
+     @ObservedObject var viewModel: ProjectListViewModel
+     @State private var selectedProjectID: UUID?
++    @State private var showNewProjectWizard = false
+ 
+     var body: some View {
+         HSplitView {
+             // Project list
+-            List(viewModel.filteredProjects, selection: $selectedProjectID) { project in
+-                ProjectRowView(project: project)
+-                    .tag(project.id)
++            VStack(spacing: 0) {
++                HStack {
++                    Spacer()
++                    Button {
++                        showNewProjectWizard = true
++                    } label: {
++                        Label("New Project", systemImage: "plus")
++                            .font(.system(size: 12))
++                    }
++                    .buttonStyle(.bordered)
++                    .controlSize(.small)
++                    .padding(8)
++                }
++                List(viewModel.filteredProjects, selection: $selectedProjectID) { project in
++                    ProjectRowView(project: project)
++                        .tag(project.id)
++                }
++                .listStyle(.inset)
+             }
+-            .listStyle(.inset)
+             .frame(minWidth: 350)
++            .sheet(isPresented: $showNewProjectWizard) {
++                NewProjectWizard()
++            }
+ 
+             // Detail view
+             if let selectedID = selectedProjectID,
+diff --git a/projectStats/projectStats/Views/Templates/NewProjectWizard.swift b/projectStats/projectStats/Views/Templates/NewProjectWizard.swift
+index 391394a..3b43313 100644
+--- a/projectStats/projectStats/Views/Templates/NewProjectWizard.swift
++++ b/projectStats/projectStats/Views/Templates/NewProjectWizard.swift
+@@ -1,54 +1,95 @@
+ import SwiftUI
+ 
+ struct NewProjectWizard: View {
++    @EnvironmentObject var settingsVM: SettingsViewModel
++    @EnvironmentObject var tabManager: TabManagerViewModel
++    @Environment(\.dismiss) private var dismiss
++
+     @State private var projectName = ""
+-    @State private var location = "~/Code"
+-    @State private var selectedTemplate = "Next.js"
+-    @State private var temperament = "Balanced"
++    @State private var selectedType: ProjectType = .blank
+     @State private var initGit = true
+     @State private var initClaude = true
+-    @State private var initProjectStats = true
+-
+-    private let templates = ["Swift/iOS", "Next.js", "Python", "Monorepo", "From Existing"]
+-    private let temperaments = ["Strict", "Balanced", "Fast", "Teaching", "Senior Dev"]
++    @State private var isCreating = false
++    @State private var errorMessage: String?
+ 
+     var body: some View {
+         VStack(alignment: .leading, spacing: 16) {
+             Text("New Project")
+-                .font(.title2)
++                .font(.title2.bold())
+ 
+             Form {
+                 TextField("Project Name", text: $projectName)
+-                TextField("Location", text: $location)
++                    .textFieldStyle(.roundedBorder)
+ 
+-                Picker("Template", selection: $selectedTemplate) {
+-                    ForEach(templates, id: \.self) { template in
+-                        Text(template).tag(template)
++                Picker("Template", selection: $selectedType) {
++                    ForEach(ProjectType.allCases) { type in
++                        Text(type.rawValue).tag(type)
+                     }
+                 }
+ 
+-                Picker("Claude Temperament", selection: $temperament) {
+-                    ForEach(temperaments, id: \.self) { temp in
+-                        Text(temp).tag(temp)
+-                    }
+-                }
++                Toggle("Initialize Git", isOn: $initGit)
++                Toggle("Create CLAUDE.md", isOn: $initClaude)
++            }
++
++            VStack(alignment: .leading, spacing: 4) {
++                Text("Location")
++                    .font(.caption.bold())
++                Text(settingsVM.codeDirectory.path)
++                    .font(.caption)
++                    .foregroundStyle(.secondary)
++            }
+ 
+-                Toggle("Git repository", isOn: $initGit)
+-                Toggle("CLAUDE.md", isOn: $initClaude)
+-                Toggle("projectstats.json", isOn: $initProjectStats)
++            if let error = errorMessage {
++                Text(error)
++                    .font(.caption)
++                    .foregroundStyle(.red)
+             }
+ 
+             HStack {
++                Button("Cancel") {
++                    dismiss()
++                }
++                .keyboardShortcut(.cancelAction)
++
+                 Spacer()
+-                Button("Cancel") {}
+-                Button("Create Project") {}
++
++                Button("Create Project") {
++                    createProject()
++                }
++                .keyboardShortcut(.defaultAction)
++                .disabled(projectName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isCreating)
+             }
+         }
+         .padding()
+         .frame(minWidth: 520)
+     }
++
++    private func createProject() {
++        isCreating = true
++        errorMessage = nil
++
++        Task { @MainActor in
++            do {
++                let context = AppModelContainer.shared.mainContext
++                let url = try await ProjectCreationService.shared.createProject(
++                    name: projectName,
++                    type: selectedType,
++                    baseDirectory: settingsVM.codeDirectory,
++                    context: context
++                )
++                dismiss()
++                await DashboardViewModel.shared.loadDataIfNeeded()
++                tabManager.openProject(path: url.path)
++            } catch {
++                errorMessage = error.localizedDescription
++            }
++            isCreating = false
++        }
++    }
+ }
+ 
+ #Preview {
+     NewProjectWizard()
++        .environmentObject(SettingsViewModel.shared)
++        .environmentObject(TabManagerViewModel.shared)
+ }
