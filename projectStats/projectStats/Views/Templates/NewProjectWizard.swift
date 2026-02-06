@@ -77,9 +77,10 @@ struct NewProjectWizard: View {
                     baseDirectory: settingsVM.codeDirectory,
                     context: context
                 )
-                await DashboardViewModel.shared.refresh()
+                await DashboardViewModel.shared.reloadProjectsFromDB()
                 tabManager.openProject(path: url.path)
                 dismiss()
+                Task { await DashboardViewModel.shared.refresh() }
             } catch {
                 errorMessage = error.localizedDescription
             }

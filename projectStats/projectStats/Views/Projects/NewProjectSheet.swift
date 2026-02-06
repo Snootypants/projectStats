@@ -128,11 +128,14 @@ struct NewProjectSheet: View {
                     baseDirectory: settingsVM.codeDirectory,
                     context: context
                 )
-                // Refresh project list so new project appears in grid
-                await DashboardViewModel.shared.refresh()
-                // Open the project tab
+                // Fast reload from DB — CachedProject was just inserted,
+                // so this populates dashboardVM.projects immediately
+                await DashboardViewModel.shared.reloadProjectsFromDB()
+                // Now open the tab — the project will be found in dashboardVM.projects
                 tabManager.openProject(path: url.path)
                 dismiss()
+                // Full scan in background (updates line counts, git stats, etc.)
+                Task { await DashboardViewModel.shared.refresh() }
             } catch {
                 errorMessage = error.localizedDescription
             }

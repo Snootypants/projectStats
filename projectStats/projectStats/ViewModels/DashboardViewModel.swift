@@ -228,6 +228,12 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    /// Fast reload of projects from SwiftData cache (no filesystem scan).
+    /// Use after inserting a CachedProject directly to populate the in-memory array.
+    func reloadProjectsFromDB() async {
+        await reloadFromCache(context: AppModelContainer.shared.mainContext)
+    }
+
     /// Force refresh from scanner (used by manual refresh)
     func refresh() async {
         if isLoading { return }
