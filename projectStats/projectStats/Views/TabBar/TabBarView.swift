@@ -189,7 +189,7 @@ struct TabBarItem: View {
 
     private func handleTooltip(hovering: Bool) {
         tooltipTask?.cancel()
-        if hovering {
+        if hovering, project != nil {
             tooltipTask = Task {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 if !Task.isCancelled {
