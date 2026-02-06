@@ -30,7 +30,7 @@ struct ProjectListView: View {
             }
             .frame(minWidth: 350)
             .sheet(isPresented: $showNewProjectWizard) {
-                NewProjectWizard()
+                NewProjectSheet()
             }
 
             // Detail view
