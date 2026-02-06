@@ -16,16 +16,10 @@ struct FocusModeView: View {
 
     var body: some View {
         ZStack {
+            // Background
             Color.black
-                .overlay(
-                    RadialGradient(
-                        colors: [.clear, .black.opacity(0.8)],
-                        center: .center,
-                        startRadius: 100,
-                        endRadius: 500
-                    )
-                )
 
+            // Main content
             VStack(spacing: 30) {
                 HStack {
                     Circle()
@@ -61,14 +55,10 @@ struct FocusModeView: View {
                     StatView(label: "Lines", value: "--")
                     StatView(label: "Time", value: "--")
                 }
-
-                Text("\"Implementing focus mode\"")
-                    .font(.body)
-                    .italic()
-                    .foregroundColor(.white.opacity(0.5))
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 400)
             }
+
+            // Sparkle edge overlay
+            SparkleEdgeEffect()
         }
         .ignoresSafeArea()
         .onAppear { pulseAnimation = true }

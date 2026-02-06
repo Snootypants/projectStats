@@ -103,6 +103,7 @@
 		010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */; };
 		010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */; };
 		010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */; };
+		010000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */; };
 		010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */; };
 		010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */; };
 		010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */; };
@@ -290,6 +291,7 @@
 		020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/GitHubNotificationsCard.swift; sourceTree = "<group>"; };
 		020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/TimeTrackingCard.swift; sourceTree = "<group>"; };
 		020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/FocusModeView.swift; sourceTree = "<group>"; };
+		020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/FocusMode/SparkleEdgeEffect.swift; sourceTree = "<group>"; };
 		020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
 		020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
 		020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/ContextUsageBar.swift; sourceTree = "<group>"; };
@@ -629,6 +631,7 @@
 				020000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift */,
 				020000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift */,
 				020000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift */,
+				020000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift */,
 				020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */,
 				020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */,
 				020000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift */,
@@ -887,6 +890,7 @@
 				010000000000000000000093 /* projectStats/Views/Dashboard/GitHubNotificationsCard.swift in Sources */,
 				010000000000000000000094 /* projectStats/Views/Dashboard/TimeTrackingCard.swift in Sources */,
 				010000000000000000000095 /* projectStats/Views/FocusMode/FocusModeView.swift in Sources */,
+				010000000000000000000186 /* projectStats/Views/FocusMode/SparkleEdgeEffect.swift in Sources */,
 				010000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift in Sources */,
 				010000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift in Sources */,
 				010000000000000000000098 /* projectStats/Views/IDE/ContextUsageBar.swift in Sources */,

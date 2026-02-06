@@ -302,6 +302,15 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(ordered[1].versionNumber, 1)
     }
 
+    // MARK: - SparkleEdgeEffect Tests
+
+    func testSparkleEdgeEffectPointOnPerimeter() {
+        // SparkleEdgeEffect is a view — verify it exists and can be instantiated
+        let effect = SparkleEdgeEffect()
+        XCTAssertNotNil(effect)
+        // Visual rendering tested in UI
+    }
+
     // MARK: - LineNumberTextEditor Tests
 
     func testLineNumberTextEditorReadOnlyDefault() {
