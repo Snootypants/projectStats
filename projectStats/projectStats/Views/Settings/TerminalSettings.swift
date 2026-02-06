@@ -79,6 +79,22 @@ struct TerminalSettingsView: View {
                 Text("When enabled, projects can use multi-agent swarm mode. Each project can independently toggle swarm on/off.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                if viewModel.agentTeamsEnabled {
+                    HStack {
+                        Button(AgentTeamsService.agentTeamsGlobalEnabled ? "Remove Global Setting" : "Enable Globally") {
+                            AgentTeamsService.setAgentTeamsGlobal(!AgentTeamsService.agentTeamsGlobalEnabled)
+                            viewModel.objectWillChange.send()
+                        }
+                        .buttonStyle(.bordered)
+
+                        Text(AgentTeamsService.agentTeamsGlobalEnabled
+                            ? "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 is set in ~/.claude/settings.json"
+                            : "Sets the environment variable globally for Claude Code")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
         .formStyle(.grouped)

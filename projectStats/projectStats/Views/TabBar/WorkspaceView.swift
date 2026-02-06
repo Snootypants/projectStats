@@ -12,6 +12,8 @@ struct WorkspaceView: View {
     @State private var backupMessage: String?
     @State private var showCreateBranchSheet = false
     @State private var swarmEnabled = false
+    @State private var showSwarmWarning = false
+    @AppStorage("swarm.warningDismissed") private var swarmWarningDismissed = false
 
     /// Resolve the Project from the path
     private var project: Project? {
@@ -206,6 +208,18 @@ struct WorkspaceView: View {
         .sheet(isPresented: $showClaudeConfig) {
             ClaudeConfigSheet(projectPath: project.path)
         }
+        .alert("Agent Teams (Swarm)", isPresented: $showSwarmWarning) {
+            Button("Enable") {
+                actuallyEnableSwarm(true, for: project)
+            }
+            Button("Enable & Don't Ask Again") {
+                swarmWarningDismissed = true
+                actuallyEnableSwarm(true, for: project)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Agent Teams runs multiple Claude Code instances simultaneously. Each teammate consumes tokens independently, which can burn through your hourly rate limit 2–5x faster. Use intentionally.")
+        }
         .sheet(isPresented: $showCreateBranchSheet) {
             CreateBranchSheet(
                 projectPath: project.path,
@@ -276,14 +290,24 @@ struct WorkspaceView: View {
 
     private func toggleSwarm(for project: Project) {
         let newState = !swarmEnabled
-        swarmEnabled = newState
-        AgentTeamsService.setSwarmEnabled(newState, for: project.path.path)
 
-        if newState {
-            try? AgentTeamsService.deploySkillMd(to: project.path, projectName: project.name)
-        } else {
-            AgentTeamsService.removeSkillMd(from: project.path)
+        // Show warning on first enable
+        if newState && !swarmWarningDismissed {
+            showSwarmWarning = true
+            return
         }
+
+        actuallyEnableSwarm(newState, for: project)
+    }
+
+    private func actuallyEnableSwarm(_ enabled: Bool, for project: Project) {
+        swarmEnabled = enabled
+        AgentTeamsService.setSwarmEnabled(enabled, for: project.path.path)
+
+        if enabled {
+            try? AgentTeamsService.deploySkillMd(to: project.path, projectName: project.name)
+        }
+        // Swarm OFF does NOT delete files
     }
 
     private func createBackup(for project: Project) {
