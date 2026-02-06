@@ -58,22 +58,27 @@ class ClaudeUsageService: ObservableObject {
             let sinceDate = sevenDaysAgoString()
             let output = try await runCCUsage(args: ["daily", "--json", "--since", sinceDate])
 
-            if let data = output.data(using: .utf8) {
-                let stats = try JSONDecoder().decode([DailyUsageStats].self, from: data)
-                self.globalWeekStats = stats.sorted { $0.date > $1.date }
-                self.globalTodayStats = stats.first { $0.date == todayDateString() }
-
-                await saveSnapshot(projectPath: nil, jsonData: output, stats: stats)
+            // Guard against non-JSON output (ccusage sometimes returns status messages)
+            guard let data = output.data(using: .utf8),
+                  output.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("[") else {
+                lastGlobalRefresh = Date()
+                isLoading = false
+                return
             }
+
+            let stats = try JSONDecoder().decode([DailyUsageStats].self, from: data)
+            self.globalWeekStats = stats.sorted { $0.date > $1.date }
+            self.globalTodayStats = stats.first { $0.date == todayDateString() }
+
+            await saveSnapshot(projectPath: nil, jsonData: output, stats: stats)
 
             lastGlobalRefresh = Date()
         } catch {
-            // Set friendly error message
             lastError = "Unable to load usage data"
             print("[ClaudeUsage] Global error: \(error)")
         }
 
-        isLoading = false  // ALWAYS set to false, even on error
+        isLoading = false
     }
 
     // MARK: - Per-Project Stats
@@ -92,19 +97,23 @@ class ClaudeUsageService: ObservableObject {
             let sinceDate = sevenDaysAgoString()
             let output = try await runCCUsage(args: ["daily", "--json", "--since", sinceDate, "--project", projectName])
 
-            if let data = output.data(using: .utf8) {
-                let stats = try JSONDecoder().decode([DailyUsageStats].self, from: data)
-
-                var projectUsage = ProjectUsageStats()
-                projectUsage.weekStats = stats.sorted { $0.date > $1.date }
-                projectUsage.todayStats = stats.first { $0.date == todayDateString() }
-                projectUsage.lastRefresh = Date()
-
-                self.projectStats[projectPath] = projectUsage
-                self.lastProjectRefresh[projectPath] = Date()
-
-                await saveSnapshot(projectPath: projectPath, jsonData: output, stats: stats)
+            // Guard against non-JSON output (ccusage sometimes returns status messages)
+            guard let data = output.data(using: .utf8),
+                  output.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("[") else {
+                return
             }
+
+            let stats = try JSONDecoder().decode([DailyUsageStats].self, from: data)
+
+            var projectUsage = ProjectUsageStats()
+            projectUsage.weekStats = stats.sorted { $0.date > $1.date }
+            projectUsage.todayStats = stats.first { $0.date == todayDateString() }
+            projectUsage.lastRefresh = Date()
+
+            self.projectStats[projectPath] = projectUsage
+            self.lastProjectRefresh[projectPath] = Date()
+
+            await saveSnapshot(projectPath: projectPath, jsonData: output, stats: stats)
         } catch {
             print("[ClaudeUsage] Project error for \(projectName): \(error)")
         }
