@@ -7,6 +7,9 @@ struct AIModelOption: Identifiable, Hashable {
     let displayName: String
 
     static let anthropicModels: [AIModelOption] = [
+        AIModelOption(id: "claude-opus-4-6", displayName: "Claude Opus 4.6"),
+        AIModelOption(id: "claude-sonnet-4-5-20250929", displayName: "Claude Sonnet 4.5"),
+        AIModelOption(id: "claude-haiku-4-5-20251001", displayName: "Claude Haiku 4.5"),
         AIModelOption(id: "claude-opus-4-20250514", displayName: "Claude Opus 4"),
         AIModelOption(id: "claude-sonnet-4-20250514", displayName: "Claude Sonnet 4"),
         AIModelOption(id: "claude-haiku-4-20250514", displayName: "Claude Haiku 4"),

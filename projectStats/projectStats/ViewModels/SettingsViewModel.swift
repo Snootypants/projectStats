@@ -119,21 +119,21 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("agentTeams.enabled") var agentTeamsEnabled: Bool = false
 
     // MARK: - Terminal Button Settings
-    @AppStorage("terminal.claudeModel") var terminalClaudeModelRaw: String = "claude-opus-4-20250514"
+    @AppStorage("terminal.claudeModel") var terminalClaudeModelRaw: String = "claude-opus-4-6"
     @AppStorage("terminal.claudeFlags") var terminalClaudeFlags: String = ""
-    @AppStorage("terminal.ccyoloModel") var terminalCcyoloModelRaw: String = "claude-opus-4-20250514"
+    @AppStorage("terminal.ccyoloModel") var terminalCcyoloModelRaw: String = "claude-opus-4-6"
     @AppStorage("terminal.codexModel") var terminalCodexModel: String = "codex"
     @AppStorage("terminal.showClaudeButton") var showClaudeButton: Bool = true
     @AppStorage("terminal.showCcyoloButton") var showCcyoloButton: Bool = true
     @AppStorage("terminal.showCodexButton") var showCodexButton: Bool = true
 
     var terminalClaudeModel: AIModel {
-        get { AIModel(rawValue: terminalClaudeModelRaw) ?? .claudeOpus4 }
+        get { AIModel(rawValue: terminalClaudeModelRaw) ?? .claudeOpus46 }
         set { terminalClaudeModelRaw = newValue.rawValue }
     }
 
     var terminalCcyoloModel: AIModel {
-        get { AIModel(rawValue: terminalCcyoloModelRaw) ?? .claudeOpus4 }
+        get { AIModel(rawValue: terminalCcyoloModelRaw) ?? .claudeOpus46 }
         set { terminalCcyoloModelRaw = newValue.rawValue }
     }
 

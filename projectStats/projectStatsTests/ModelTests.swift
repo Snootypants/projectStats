@@ -302,6 +302,35 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(ordered[1].versionNumber, 1)
     }
 
+    // MARK: - AIModel 4.5/4.6 Series Tests
+
+    func testAIModelOpus46RawValue() {
+        XCTAssertEqual(AIModel.claudeOpus46.rawValue, "claude-opus-4-6")
+    }
+
+    func testAIModelOpus46DisplayName() {
+        XCTAssertEqual(AIModel.claudeOpus46.displayName, "Claude Opus 4.6")
+    }
+
+    func testAIModelSonnet5Exists() {
+        let model = AIModel.claudeSonnet5
+        XCTAssertTrue(model.isComingSoon)
+    }
+
+    func testAIModelSonnet5IsComingSoon() {
+        XCTAssertTrue(AIModel.claudeSonnet5.isComingSoon)
+        XCTAssertFalse(AIModel.claudeOpus46.isComingSoon)
+        XCTAssertFalse(AIModel.claudeSonnet4.isComingSoon)
+    }
+
+    func testAIModelSonnet45RawValue() {
+        XCTAssertEqual(AIModel.claudeSonnet45.rawValue, "claude-sonnet-4-5-20250929")
+    }
+
+    func testAIModelHaiku45RawValue() {
+        XCTAssertEqual(AIModel.claudeHaiku45.rawValue, "claude-haiku-4-5-20251001")
+    }
+
     // MARK: - SparkleEdgeEffect Tests
 
     func testSparkleEdgeEffectPointOnPerimeter() {
