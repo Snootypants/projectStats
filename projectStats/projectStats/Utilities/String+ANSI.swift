@@ -17,4 +17,24 @@ extension String {
         result = result.replacingOccurrences(of: "\u{07}", with: "")
         return result
     }
+
+    /// Restores word boundaries lost during ANSI stripping.
+    /// Terminal output often uses cursor movement instead of spaces,
+    /// causing words to smash together after stripping.
+    func restoreWordBoundaries() -> String {
+        var result = self
+        // Insert space between a lowercase/digit and an uppercase letter (camelCase boundary)
+        if let regex = try? NSRegularExpression(pattern: "([a-z0-9])([A-Z])") {
+            let range = NSRange(result.startIndex..., in: result)
+            result = regex.stringByReplacingMatches(in: result, range: range, withTemplate: "$1 $2")
+        }
+        // Collapse runs of whitespace to a single space (but preserve newlines)
+        if let regex = try? NSRegularExpression(pattern: "[^\\S\\n]+") {
+            let range = NSRange(result.startIndex..., in: result)
+            result = regex.stringByReplacingMatches(in: result, range: range, withTemplate: " ")
+        }
+        // Clean up null bytes and other control chars that slip through
+        result = result.filter { $0.asciiValue == nil || $0.asciiValue! >= 32 || $0 == "\n" || $0 == "\r" || $0 == "\t" }
+        return result
+    }
 }

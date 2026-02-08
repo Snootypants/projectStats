@@ -34,6 +34,24 @@ struct VibeTabView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Claude Code orange status bar
+            if bridge.isClaudeActive {
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 6, height: 6)
+                    Text("Claude Code")
+                        .font(.system(size: 11, weight: .semibold))
+                    Text("plan mode")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+                .background(Color.orange.opacity(0.15))
+            }
+
             headerBar
 
             chatView
@@ -125,9 +143,13 @@ struct VibeTabView: View {
             ScrollView {
                 LazyVStack(spacing: 2) {
                     if bridge.chatEntries.isEmpty {
-                        Text("Starting Claude in plan mode...")
-                            .foregroundStyle(.secondary)
-                            .padding(.top, 40)
+                        VStack(spacing: 12) {
+                            ProgressView()
+                                .controlSize(.small)
+                            Text(bridge.isClaudeActive ? "Claude is ready." : "Starting Claude in plan mode...")
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.top, 40)
                     }
 
                     ForEach(bridge.chatEntries) { entry in
@@ -260,7 +282,7 @@ struct VibeTabView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .disabled(inputText.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(inputText.trimmingCharacters(in: .whitespaces).isEmpty || !bridge.isClaudeActive)
                 .keyboardShortcut(.return, modifiers: .command)
                 .padding(.trailing, 10)
             }

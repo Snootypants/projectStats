@@ -51,9 +51,14 @@ final class VibeTerminalBridge: ObservableObject {
 
         // Send claude command after shell starts, then /plan after claude starts
         Task {
-            try? await Task.sleep(for: .seconds(1))
-            process.send("claude")
             try? await Task.sleep(for: .seconds(2))
+            // Clear any partial input that may have been echoed during shell startup
+            process.sendRaw([0x15])  // Ctrl+U — kill line
+            try? await Task.sleep(for: .milliseconds(100))
+            process.send("claude")
+            // Wait for Claude to fully boot and auto-accept trust prompt
+            try? await Task.sleep(for: .seconds(3))
+            isClaudeActive = true
             process.send("/plan")
         }
 
@@ -76,7 +81,7 @@ final class VibeTerminalBridge: ObservableObject {
 
     /// Handle terminal output
     func handleOutput(_ text: String) {
-        let stripped = text.strippingAnsiCodes()
+        let stripped = text.strippingAnsiCodes().restoreWordBoundaries()
 
         // Accumulate raw for persistence
         rawOutputStream += stripped
