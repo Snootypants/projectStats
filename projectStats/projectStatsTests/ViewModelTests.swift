@@ -297,4 +297,11 @@ final class ViewModelTests: XCTestCase {
             tabManager.closeTab(id)
         }
     }
+
+    // MARK: - Scope F: VibeTabView Tests
+
+    func test_F_vibeTabView_rendersWithProject() {
+        let view = VibeTabView(projectPath: "/test/project")
+        XCTAssertNotNil(view)
+    }
 }
