@@ -624,19 +624,22 @@ final class ServiceTests: XCTestCase {
     // MARK: - Scope E: VibeTerminalBridge Tests
 
     @MainActor
-    func test_E_send_appendsToOutputStream() {
+    func test_E_handleOutput_createsChatEntry() {
         let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test/project"))
         bridge.handleOutput("Hello from terminal")
-        XCTAssertTrue(bridge.outputStream.contains("Hello from terminal"))
+        XCTAssertFalse(bridge.chatEntries.isEmpty)
+        if case .claude(_, let text, _) = bridge.chatEntries.last {
+            XCTAssertTrue(text.contains("Hello from terminal"))
+        } else {
+            XCTFail("Expected claude entry")
+        }
     }
 
     @MainActor
-    func test_E_outputStream_trimmedWhenLarge() {
+    func test_E_executionOutput_detectsCompletion() {
         let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
-        // Append a lot of text
-        let bigChunk = String(repeating: "x", count: 600_000)
-        bridge.handleOutput(bigChunk)
-        XCTAssertLessThanOrEqual(bridge.outputStream.count, 512_000 + 1000) // ~500KB + margin
+        bridge.handleExecutionOutput("some output\n✻ Cooked for 2m 30s\n")
+        XCTAssertFalse(bridge.isExecuting)
     }
 
     // MARK: - Scope H: VibeSummarizerService Tests
@@ -673,13 +676,15 @@ final class ServiceTests: XCTestCase {
     }
 
     @MainActor
-    func test_12A_planningTab_outputRoutesToBridge() {
+    func test_12A_outputRoutesToChatEntries() {
         let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
-        bridge.boot()
-        XCTAssertNotNil(bridge.planningTab)
-        // Simulate terminal output via the callback
-        bridge.planningTab?.onOutputCallback?("test output")
-        XCTAssertTrue(bridge.outputStream.contains("test output"))
+        bridge.handleOutput("test output")
+        XCTAssertFalse(bridge.chatEntries.isEmpty)
+        if case .claude(_, let text, _) = bridge.chatEntries.last {
+            XCTAssertTrue(text.contains("test output"))
+        } else {
+            XCTFail("Expected claude entry")
+        }
     }
 
     // MARK: - Scope 12B: Execution Output Wiring Tests

@@ -16,16 +16,18 @@ enum VibeChatEntry: Identifiable {
 @MainActor
 final class VibeTerminalBridge: ObservableObject {
     let projectPath: URL
-    @Published var outputStream: String = ""
     @Published var isClaudeActive: Bool = false
     @Published var executionOutputStream: String = ""
     @Published var isExecuting: Bool = false
     @Published var chatEntries: [VibeChatEntry] = []
 
-    @Published private(set) var planningTab: TerminalTabItem?
-    private var executionTab: TerminalTabItem?
+    private var planningProcess: VibeProcessBridge?
+    private var executionProcess: VibeProcessBridge?
     private let conversationService = VibeConversationService.shared
-    private let maxOutputSize = 512_000 // ~500KB
+    private let maxOutputSize = 512_000
+
+    // Raw log for persistence
+    private var rawOutputStream: String = ""
 
     private var currentClaudeEntryID: UUID?
     private(set) var claudeBuffer: String = ""
@@ -36,60 +38,57 @@ final class VibeTerminalBridge: ObservableObject {
         self.projectPath = projectPath
     }
 
-    /// Boot the planning terminal — starts Claude in /plan mode
+    /// Boot the planning process — starts Claude in /plan mode
     func boot() {
-        guard planningTab == nil else { return }
+        guard planningProcess == nil else { return }
 
-        let tab = TerminalTabItem(kind: .claude, title: "Vibe Planning")
-        tab.onOutputCallback = { [weak self] text in
+        let process = VibeProcessBridge()
+        planningProcess = process
+
+        process.start(directory: projectPath.path) { [weak self] text in
             self?.handleOutput(text)
         }
-        planningTab = tab
 
-        // Commands enqueued here will be sent once VibeTerminalHostView attaches the shell
-        tab.enqueueCommand("claude")
-        // /plan needs to be sent after claude starts
+        // Send claude command after shell starts, then /plan after claude starts
         Task {
+            try? await Task.sleep(for: .seconds(1))
+            process.send("claude")
             try? await Task.sleep(for: .seconds(2))
-            tab.enqueueCommand("/plan")
+            process.send("/plan")
         }
 
         _ = conversationService.startConversation(projectPath: projectPath.path)
-    }
-
-    /// Send user input to the planning terminal
-    func send(_ text: String) {
-        guard let tab = planningTab else { return }
-        tab.sendCommand(text)
     }
 
     /// Send user input and record it as a chat entry
     func sendChat(_ text: String) {
         chatEntries.append(.user(text: text))
         lastSentText = text
+        flushClaudeBuffer()
         currentClaudeEntryID = nil
-        send(text)
+        planningProcess?.send(text)
     }
 
     /// Send a slash command (e.g. /plan, /usage)
     func sendSlashCommand(_ cmd: String) {
-        guard let tab = planningTab else { return }
-        tab.sendCommand(cmd)
+        planningProcess?.send(cmd)
     }
 
-    /// Handle terminal output — called from the terminal view's onOutput callback
+    /// Handle terminal output
     func handleOutput(_ text: String) {
         let stripped = TerminalTabItem.stripAnsiCodes(text)
-        outputStream += stripped
 
-        // Trim if too large
-        if outputStream.count > maxOutputSize {
-            let dropCount = outputStream.count - maxOutputSize
-            outputStream = String(outputStream.dropFirst(dropCount))
+        // Accumulate raw for persistence
+        rawOutputStream += stripped
+        if rawOutputStream.count > maxOutputSize {
+            rawOutputStream = String(rawOutputStream.dropFirst(rawOutputStream.count - maxOutputSize))
         }
-
-        // Persist to conversation
         conversationService.appendToLog(stripped)
+
+        // Feed to monitoring (git detection, XP, achievements)
+        TerminalOutputMonitor.shared.activeProjectPath = projectPath.path
+        TerminalOutputMonitor.shared.processTerminalChunk(text)
+        TimeTrackingService.shared.recordActivity()
 
         // Build chat entries — skip empty/whitespace-only, skip echo of user input
         let trimmed = stripped.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -99,7 +98,6 @@ final class VibeTerminalBridge: ObservableObject {
             return
         }
 
-        // Buffer output and flush into chat entry on a debounce
         claudeBuffer += stripped
         scheduleFlush()
     }
@@ -120,12 +118,10 @@ final class VibeTerminalBridge: ObservableObject {
 
         if let entryID = currentClaudeEntryID,
            let idx = chatEntries.firstIndex(where: { $0.id == entryID }) {
-            // Append to existing claude entry
             if case .claude(let id, let existing, let ts) = chatEntries[idx] {
                 chatEntries[idx] = .claude(id: id, text: existing + text, timestamp: ts)
             }
         } else {
-            // Create new claude entry
             let entry = VibeChatEntry.claude(text: text)
             currentClaudeEntryID = entry.id
             chatEntries.append(entry)
@@ -137,10 +133,8 @@ final class VibeTerminalBridge: ObservableObject {
         let stripped = TerminalTabItem.stripAnsiCodes(text)
         executionOutputStream += stripped
 
-        // Detect completion
-        if stripped.contains("✻ Cooked for") || stripped.contains("✻ Crunched for") {
+        if stripped.contains("✻ Cooked for") || stripped.contains("✻ Crunched for") || stripped.contains("✻ Sautéed for") {
             isExecuting = false
-            // Try to parse duration
             if let duration = parseDuration(from: stripped) {
                 conversationService.completeExecution(duration: duration)
             } else {
@@ -158,7 +152,7 @@ final class VibeTerminalBridge: ObservableObject {
         }
     }
 
-    /// Execute the composed prompt in a new terminal
+    /// Execute the composed prompt in a new process
     func executePrompt() {
         guard let conv = conversationService.activeConversation,
               let prompt = conv.composedPrompt else { return }
@@ -167,27 +161,25 @@ final class VibeTerminalBridge: ObservableObject {
         isExecuting = true
         executionOutputStream = ""
 
-        let tab = TerminalTabItem(kind: .claude, title: "Vibe Execution")
-        tab.onOutputCallback = { [weak self] text in
+        let process = VibeProcessBridge()
+        executionProcess = process
+
+        process.start(directory: projectPath.path) { [weak self] text in
             self?.handleExecutionOutput(text)
         }
-        executionTab = tab
 
         let command = ThinkingLevelService.shared.generatePromptCommand(prompt: prompt)
-        tab.enqueueCommand(command)
+        Task {
+            try? await Task.sleep(for: .seconds(1))
+            process.send(command)
+        }
 
-        // Award XP for VIBE prompt execution and check prompt achievements
         XPService.shared.onPromptExecuted(projectPath: projectPath.path)
         AchievementService.shared.checkPromptAchievements(projectPath: projectPath.path)
-
-        // Add to the project's terminal tabs so it gets a terminal view
-        let termVM = TerminalTabsViewModel.shared
-        termVM.tabs.append(tab)
     }
 
     private func parseDuration(from text: String) -> Double? {
-        // Parse "✻ Cooked for 4m 2s" or "✻ Crunched for 30s"
-        let pattern = "(?:Cooked|Crunched) for\\s+((?:\\d+h\\s*)?(?:\\d+m\\s*)?(?:\\d+s)?)"
+        let pattern = "(?:Cooked|Crunched|Sautéed) for\\s+((?:\\d+h\\s*)?(?:\\d+m\\s*)?(?:\\d+s)?)"
         guard let regex = try? NSRegularExpression(pattern: pattern),
               let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
               let range = Range(match.range(at: 1), in: text) else { return nil }
