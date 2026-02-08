@@ -76,32 +76,10 @@ actor GitRepoService {
     private func runGit(args: [String], workingDir: String) async -> (stdout: String, stderr: String, code: Int) {
         await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {
-                let process = Process()
-                process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
-                process.arguments = args
-                process.currentDirectoryURL = URL(fileURLWithPath: workingDir)
-
-                let stdoutPipe = Pipe()
-                let stderrPipe = Pipe()
-                process.standardOutput = stdoutPipe
-                process.standardError = stderrPipe
-
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-                } catch {
-                    continuation.resume(returning: ("", error.localizedDescription, 1))
-                    return
-                }
-
-                let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
-                let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
-                let stdout = String(data: stdoutData, encoding: .utf8)?
-                    .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                let stderr = String(data: stderrData, encoding: .utf8)?
-                    .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-                continuation.resume(returning: (stdout, stderr, Int(process.terminationStatus)))
+                let escapedArgs = args.map { $0.contains(" ") ? "'\($0)'" : $0 }
+                let command = "git " + escapedArgs.joined(separator: " ")
+                let result = Shell.runResult(command)
+                continuation.resume(returning: (result.output, result.error, result.exitCode))
             }
         }
     }
