@@ -381,7 +381,7 @@ final class TerminalTabsViewModel: ObservableObject {
 
     func addGhostDocUpdateTab() {
         let model = SettingsViewModel.shared.defaultModel
-        let command = "claude --model \(model.rawValue) \"Read the current README.md, CHANGELOG.md, and codebase structure. Update the documentation to accurately reflect the current state. Be concise and accurate.\""
+        let command = "claude \"Read the current README.md, CHANGELOG.md, and codebase structure. Update the documentation to accurately reflect the current state. Be concise and accurate.\""
         let tab = TerminalTabItem(kind: .ghost, title: "Doc Update", isGhost: true, aiModel: model)
         tab.devCommand = command
         tabs.append(tab)

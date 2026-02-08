@@ -37,26 +37,15 @@ final class ThinkingLevelService: ObservableObject {
 
     // MARK: - Command Generation
 
-    /// Generate Claude command with thinking budget
+    /// Generate Claude command — always just "claude" with optional --dangerously-skip-permissions
     func generateClaudeCommand(
         model: AIModel? = nil,
         thinkingLevel: ThinkingLevel? = nil,
         dangerouslySkipPermissions: Bool = false
     ) -> String {
-        let selectedModel = model ?? defaultModel
-        let selectedThinking = thinkingLevel ?? defaultThinkingLevel
-
         var command = "claude"
 
-        // Add model flag (use cliName for short Claude Code names)
-        command += " --model \(selectedModel.cliName)"
-
-        // Add thinking budget if not none
-        if selectedThinking != .none {
-            command += " --thinking-budget \(selectedThinking.budgetTokens)"
-        }
-
-        // Add dangerous mode if requested
+        // Add dangerous mode if requested (ccYOLO)
         if dangerouslySkipPermissions {
             command += " --dangerously-skip-permissions"
         }

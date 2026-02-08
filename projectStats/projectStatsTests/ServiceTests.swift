@@ -646,7 +646,7 @@ final class ServiceTests: XCTestCase {
         let conv = VibeConversation(projectPath: "/test")
         conv.rawLog = "User: Build a kanban board\nClaude: I'll create a kanban board with columns."
         let command = VibeSummarizerService.shared.buildSummarizeCommand(for: conv)
-        XCTAssertTrue(command.contains("--model haiku"))
+        XCTAssertTrue(command.hasPrefix("claude"))
         XCTAssertTrue(command.contains("Summarize"))
     }
 

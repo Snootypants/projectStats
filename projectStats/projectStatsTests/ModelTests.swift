@@ -714,19 +714,24 @@ final class ModelTests: XCTestCase {
     @MainActor
     func test_A_generateCommand_usesCliName() {
         let service = ThinkingLevelService.shared
+        // Commands should just be "claude" with no --model flags
         let command = service.generateClaudeCommand(model: .claudeSonnet4)
-        XCTAssertTrue(command.contains("--model sonnet"))
-        XCTAssertFalse(command.contains("claude-sonnet-4-20250514"))
+        XCTAssertTrue(command.hasPrefix("claude"))
+        XCTAssertFalse(command.contains("--model"))
 
         let opusCmd = service.generateClaudeCommand(model: .claudeOpus4)
-        XCTAssertTrue(opusCmd.contains("--model opus"))
+        XCTAssertTrue(opusCmd.hasPrefix("claude"))
+        XCTAssertFalse(opusCmd.contains("--model"))
 
-        let opus46Cmd = service.generateClaudeCommand(model: .claudeOpus46)
-        XCTAssertTrue(opus46Cmd.contains("--model claude-opus-4-6"))
+        let yoloCmd = service.generateClaudeCommand(model: .claudeOpus46, dangerouslySkipPermissions: true)
+        XCTAssertTrue(yoloCmd.contains("--dangerously-skip-permissions"))
+        XCTAssertFalse(yoloCmd.contains("--model"))
 
-        // Prompt command also uses cliName
+        // Prompt command also should not contain --model
         let promptCmd = service.generatePromptCommand(prompt: "hello", model: .claudeHaiku4)
-        XCTAssertTrue(promptCmd.contains("--model haiku"))
+        XCTAssertTrue(promptCmd.hasPrefix("claude"))
+        XCTAssertFalse(promptCmd.contains("--model"))
+        XCTAssertTrue(promptCmd.contains("hello"))
     }
 
     // MARK: - Scope B: VibeConversation Tests
