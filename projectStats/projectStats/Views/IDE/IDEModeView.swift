@@ -105,11 +105,6 @@ struct IDEModeView: View {
                 activeTab = .files
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .requestDocUpdate)) { notification in
-            guard let path = notification.userInfo?["projectPath"] as? String,
-                  path == project.path.path else { return }
-            terminalTabs.addGhostDocUpdateTab()
-        }
         .background {
             keyboardShortcuts
         }

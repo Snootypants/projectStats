@@ -377,15 +377,6 @@ final class TerminalTabsViewModel: ObservableObject {
         addTab(kind: .devServer, title: "Dev Server", command: command)
     }
 
-    func addGhostDocUpdateTab() {
-        let model = SettingsViewModel.shared.defaultModel
-        let command = "claude \"Read the current README.md, CHANGELOG.md, and codebase structure. Update the documentation to accurately reflect the current state. Be concise and accurate.\""
-        let tab = TerminalTabItem(kind: .ghost, title: "Doc Update", isGhost: true, aiModel: model)
-        tab.devCommand = command
-        tabs.append(tab)
-        tab.enqueueCommand(command)
-    }
-
     /// Add a Claude tab with specific model and thinking level
     func addClaudeTabWithSettings(model: AIModel, thinkingLevel: ThinkingLevel) {
         let command = ThinkingLevelService.shared.generateClaudeCommand(

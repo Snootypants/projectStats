@@ -20,7 +20,6 @@ struct TabBarView: View {
                             onClose: { tabManager.closeTab(tab.id) },
                             onToggleFavorite: { tabManager.toggleFavorite(tab) },
                             onDuplicate: { duplicateTab(tab) },
-                            onUpdateDocs: { requestDocUpdate(tab) },
                             onCloseOthers: { tabManager.closeOtherTabs(keeping: tab.id) }
                         )
                         .draggable(tab.id.uuidString)
@@ -81,13 +80,6 @@ struct TabBarView: View {
         tabManager.openProject(path: path)
     }
 
-    private func requestDocUpdate(_ tab: AppTab) {
-        guard case .projectWorkspace(let path) = tab.content else { return }
-        tabManager.selectTab(tab.id)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            NotificationCenter.default.post(name: .requestDocUpdate, object: nil, userInfo: ["projectPath": path])
-        }
-    }
 }
 
 struct TabBarItem: View {
@@ -100,7 +92,6 @@ struct TabBarItem: View {
     let onClose: () -> Void
     let onToggleFavorite: () -> Void
     let onDuplicate: () -> Void
-    let onUpdateDocs: () -> Void
     let onCloseOthers: () -> Void
 
     @State private var isHovering = false
@@ -170,8 +161,6 @@ struct TabBarItem: View {
         .contextMenu {
             if case .projectWorkspace = tab.content {
                 Button(isFavorite ? "Unfavorite" : "Favorite") { onToggleFavorite() }
-                Divider()
-                Button("Update Docs") { onUpdateDocs() }
                 Divider()
                 Button("Duplicate Tab") { onDuplicate() }
                 Button("Close Tab") { onClose() }
