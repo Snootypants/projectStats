@@ -256,28 +256,12 @@ struct TabShellView: View {
 // MARK: - XP Progress Bar
 
 struct XPProgressBar: View {
-    @StateObject private var achievementService = AchievementService.shared
-
-    private var totalXP: Int {
-        achievementService.unlockedAchievements.reduce(0) { $0 + $1.points }
-    }
-
-    private var currentLevel: Int {
-        // 250 XP per level
-        return (totalXP / 250) + 1
-    }
-
-    private var xpInCurrentLevel: Int {
-        return totalXP % 250
-    }
-
-    private var xpForNextLevel: Int {
-        return 250
-    }
+    @StateObject private var xpService = XPService.shared
 
     private var progress: CGFloat {
-        guard xpForNextLevel > 0 else { return 0 }
-        return CGFloat(xpInCurrentLevel) / CGFloat(xpForNextLevel)
+        let needed = 250
+        guard needed > 0 else { return 0 }
+        return min(1.0, CGFloat(xpService.xpProgressInLevel) / CGFloat(needed))
     }
 
     var body: some View {
@@ -305,18 +289,27 @@ struct XPProgressBar: View {
             .frame(height: 8)
 
             // XP text
-            Text("\(xpInCurrentLevel) / \(xpForNextLevel) XP")
+            Text("\(xpService.xpProgressInLevel) / 250 XP")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
 
             // Level badge
-            Text("Lvl \(currentLevel)")
+            Text("Lvl \(xpService.currentLevel)")
                 .font(.caption.bold())
                 .padding(.horizontal, 8)
                 .padding(.vertical, 2)
                 .background(Color.purple.opacity(0.2))
                 .cornerRadius(8)
+
+            // XP gain indicator
+            if let gain = xpService.recentXPGain {
+                Text("+\(gain.amount)")
+                    .font(.caption2.bold())
+                    .foregroundStyle(.green)
+                    .transition(.opacity)
+                    .animation(.easeOut(duration: 0.3), value: gain.reason)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 6)
