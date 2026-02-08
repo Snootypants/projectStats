@@ -932,4 +932,40 @@ final class ServiceTests: XCTestCase {
         if case .user = bridge.chatEntries[0] {} else { XCTFail("Expected user first") }
         if case .claude = bridge.chatEntries[1] {} else { XCTFail("Expected claude second") }
     }
+
+    // MARK: - Scope 15A: VibeProcessBridge Tests
+
+    @MainActor
+    func test_A_vibeProcessBridge_initialState() {
+        let bridge = VibeProcessBridge()
+        XCTAssertFalse(bridge.isRunning)
+    }
+
+    func test_A_vibeProcessHandler_windowSize() {
+        let handler = VibeProcessHandler()
+        let size = handler.getWindowSize()
+        XCTAssertEqual(size.ws_row, 40)
+        XCTAssertEqual(size.ws_col, 120)
+    }
+
+    func test_A_vibeProcessHandler_dataReceived() {
+        let handler = VibeProcessHandler()
+        var received: String?
+        handler.onData = { text in
+            received = text
+        }
+        let bytes = Array("hello".utf8)
+        handler.dataReceived(slice: bytes[...])
+        XCTAssertEqual(received, "hello")
+    }
+
+    func test_A_vibeProcessHandler_terminate() {
+        let handler = VibeProcessHandler()
+        var exitCode: Int32?
+        handler.onTerminate = { code in
+            exitCode = code
+        }
+        handler.processTerminated(LocalProcess(delegate: handler), exitCode: 0)
+        XCTAssertEqual(exitCode, 0)
+    }
 }
