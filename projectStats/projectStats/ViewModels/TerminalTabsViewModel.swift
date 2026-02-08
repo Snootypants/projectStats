@@ -255,10 +255,20 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     }
 
     static func stripAnsiCodes(_ string: String) -> String {
-        let pattern = "\\x1B\\[[0-9;]*[a-zA-Z]"
+        let pattern = [
+            "\\x1B\\[[0-9;?]*[a-zA-Z]",           // CSI sequences (includes DEC private mode ?2004h etc.)
+            "\\x1B\\][^\u{07}]*(?:\u{07}|\\x1B\\\\)", // OSC sequences: \x1B]...\x07 or \x1B]...\x1B\\
+            "\\x1B[()][0-9A-B]",                    // Character set selection
+            "\\x1B[=>]",                             // Keypad mode
+        ].joined(separator: "|")
+
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return string }
         let range = NSRange(string.startIndex..., in: string)
-        return regex.stringByReplacingMatches(in: string, range: range, withTemplate: "")
+        var result = regex.stringByReplacingMatches(in: string, range: range, withTemplate: "")
+        // Strip any remaining raw escape bytes and BEL
+        result = result.replacingOccurrences(of: "\u{1B}", with: "")
+        result = result.replacingOccurrences(of: "\u{07}", with: "")
+        return result
     }
 }
 

@@ -854,4 +854,82 @@ final class ServiceTests: XCTestCase {
         service.totalXP = savedXP
         service.currentLevel = max(1, (savedXP / 250) + 1)
     }
+
+    // MARK: - Scope 14B: ANSI Stripping Tests
+
+    func test_B_stripAnsi_catchesDECPrivateMode() {
+        let input = "Hello\u{1B}[?2004hWorld\u{1B}[?2004l"
+        let result = TerminalTabItem.stripAnsiCodes(input)
+        XCTAssertEqual(result, "HelloWorld")
+    }
+
+    func test_B_stripAnsi_catchesOSCSequences() {
+        let input = "Hello\u{1B}]0;My Title\u{07}World"
+        let result = TerminalTabItem.stripAnsiCodes(input)
+        XCTAssertEqual(result, "HelloWorld")
+    }
+
+    func test_B_stripAnsi_preservesNormalText() {
+        let input = "Hello World 123 !@#"
+        let result = TerminalTabItem.stripAnsiCodes(input)
+        XCTAssertEqual(result, input)
+    }
+
+    func test_B_stripAnsi_existingPatternsStillWork() {
+        // Green color code
+        let input = "\u{1B}[32mHello\u{1B}[0m"
+        let result = TerminalTabItem.stripAnsiCodes(input)
+        XCTAssertEqual(result, "Hello")
+    }
+
+    // MARK: - Scope 14C: Chat Entry Model Tests
+
+    @MainActor
+    func test_14C_sendInput_createsUserEntry() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.boot()
+        bridge.sendChat("Hello Claude")
+        XCTAssertEqual(bridge.chatEntries.count, 1)
+        if case .user(_, let text, _) = bridge.chatEntries.first {
+            XCTAssertEqual(text, "Hello Claude")
+        } else {
+            XCTFail("Expected user entry")
+        }
+    }
+
+    @MainActor
+    func test_14C_outputCreatesClaudeEntry() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.handleOutput("Hello from Claude")
+        XCTAssertFalse(bridge.chatEntries.isEmpty)
+        if case .claude(_, let text, _) = bridge.chatEntries.last {
+            XCTAssertTrue(text.contains("Hello from Claude"))
+        } else {
+            XCTFail("Expected claude entry")
+        }
+    }
+
+    @MainActor
+    func test_14C_multipleOutputs_appendToSameClaudeEntry() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.handleOutput("Part 1 ")
+        bridge.handleOutput("Part 2")
+        // Should be one claude entry with combined text
+        let claudeEntries = bridge.chatEntries.filter {
+            if case .claude = $0 { return true }
+            return false
+        }
+        XCTAssertEqual(claudeEntries.count, 1)
+    }
+
+    @MainActor
+    func test_14C_userThenClaude_alternatesEntries() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.boot()
+        bridge.sendChat("User message")
+        bridge.handleOutput("Claude response")
+        XCTAssertEqual(bridge.chatEntries.count, 2)
+        if case .user = bridge.chatEntries[0] {} else { XCTFail("Expected user first") }
+        if case .claude = bridge.chatEntries[1] {} else { XCTFail("Expected claude second") }
+    }
 }
