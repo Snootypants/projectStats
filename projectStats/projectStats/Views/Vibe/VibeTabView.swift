@@ -6,6 +6,7 @@ struct VibeTabView: View {
 
     @StateObject private var bridge: VibeTerminalBridge
     @StateObject private var conversationService = VibeConversationService.shared
+    @StateObject private var summarizer = VibeSummarizerService.shared
     @Query private var allTemplates: [PromptTemplate]
 
     @State private var inputText: String = ""
@@ -14,6 +15,7 @@ struct VibeTabView: View {
     @State private var showLockPlanSheet: Bool = false
     @State private var planSummaryText: String = ""
     @State private var showExecutionPanel: Bool = false
+    @State private var showSummaryPopover: Bool = false
 
     init(projectPath: String) {
         self.projectPath = projectPath
@@ -83,6 +85,36 @@ struct VibeTabView: View {
                     .cornerRadius(6)
             }
             .buttonStyle(.plain)
+
+            // Summarize button
+            Button {
+                if let conv = conversationService.activeConversation {
+                    summarizer.summarize(conversation: conv)
+                }
+            } label: {
+                if summarizer.isSummarizing {
+                    ProgressView()
+                        .controlSize(.small)
+                } else {
+                    Label("Summarize", systemImage: "text.redaction")
+                        .font(.caption)
+                }
+            }
+            .buttonStyle(.plain)
+            .disabled(summarizer.isSummarizing || conversationService.activeConversation == nil)
+            .popover(isPresented: $showSummaryPopover) {
+                if let summary = summarizer.lastSummary {
+                    ScrollView {
+                        Text(summary)
+                            .font(.body)
+                            .padding()
+                    }
+                    .frame(width: 400, height: 300)
+                }
+            }
+            .onChange(of: summarizer.lastSummary) { _, newVal in
+                if newVal != nil { showSummaryPopover = true }
+            }
 
             // Status badge
             if let status = conversationService.activeConversation?.status {

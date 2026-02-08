@@ -638,4 +638,24 @@ final class ServiceTests: XCTestCase {
         bridge.handleOutput(bigChunk)
         XCTAssertLessThanOrEqual(bridge.outputStream.count, 512_000 + 1000) // ~500KB + margin
     }
+
+    // MARK: - Scope H: VibeSummarizerService Tests
+
+    @MainActor
+    func test_H_summarize_buildsCommand() {
+        let conv = VibeConversation(projectPath: "/test")
+        conv.rawLog = "User: Build a kanban board\nClaude: I'll create a kanban board with columns."
+        let command = VibeSummarizerService.shared.buildSummarizeCommand(for: conv)
+        XCTAssertTrue(command.contains("--model haiku"))
+        XCTAssertTrue(command.contains("Summarize"))
+    }
+
+    @MainActor
+    func test_H_summarize_handlesLargeLog() {
+        let conv = VibeConversation(projectPath: "/test")
+        conv.rawLog = String(repeating: "A long conversation line.\n", count: 5000)
+        let command = VibeSummarizerService.shared.buildSummarizeCommand(for: conv)
+        // Large logs should use temp file approach
+        XCTAssertTrue(command.contains("Read /tmp/vibe_summary_"))
+    }
 }
