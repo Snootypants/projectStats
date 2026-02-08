@@ -728,4 +728,33 @@ final class ModelTests: XCTestCase {
         let promptCmd = service.generatePromptCommand(prompt: "hello", model: .claudeHaiku4)
         XCTAssertTrue(promptCmd.contains("--model haiku"))
     }
+
+    // MARK: - Scope B: VibeConversation Tests
+
+    func test_B_vibeConversation_creation() {
+        let conv = VibeConversation(projectPath: "/test/project")
+        XCTAssertEqual(conv.projectPath, "/test/project")
+        XCTAssertEqual(conv.status, "planning")
+        XCTAssertEqual(conv.rawLog, "")
+        XCTAssertTrue(conv.title.hasPrefix("Vibe Session"))
+        XCTAssertNil(conv.planSummary)
+        XCTAssertNil(conv.composedPrompt)
+        XCTAssertNil(conv.executionDurationSeconds)
+        XCTAssertNil(conv.templateId)
+        XCTAssertNotNil(conv.id)
+    }
+
+    func test_B_vibeConversation_statusTransitions() {
+        let conv = VibeConversation(projectPath: "/test")
+        XCTAssertEqual(conv.status, "planning")
+
+        conv.status = "ready"
+        XCTAssertEqual(conv.status, "ready")
+
+        conv.status = "executing"
+        XCTAssertEqual(conv.status, "executing")
+
+        conv.status = "completed"
+        XCTAssertEqual(conv.status, "completed")
+    }
 }

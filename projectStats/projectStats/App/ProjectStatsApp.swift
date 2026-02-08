@@ -31,7 +31,9 @@ enum AppModelContainer {
             PromptTemplate.self,
             PromptTemplateVersion.self,
             // Prompt Execution Tracking
-            PromptExecution.self
+            PromptExecution.self,
+            // Vibe Tab
+            VibeConversation.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
