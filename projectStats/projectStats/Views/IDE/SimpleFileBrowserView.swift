@@ -54,7 +54,7 @@ struct SimpleFileBrowserView: View {
             Divider()
 
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     if isLoading {
                         HStack(spacing: 8) {
                             ProgressView()
