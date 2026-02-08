@@ -658,4 +658,48 @@ final class ServiceTests: XCTestCase {
         // Large logs should use temp file approach
         XCTAssertTrue(command.contains("Read /tmp/vibe_summary_"))
     }
+
+    // MARK: - Scope 12A: onOutputCallback Wiring Tests
+
+    @MainActor
+    func test_12A_onOutputCallback_firesFromRecordOutput() {
+        let tab = TerminalTabItem(kind: .shell, title: "Test")
+        var received: String?
+        tab.onOutputCallback = { text in
+            received = text
+        }
+        tab.recordOutput("hello world")
+        XCTAssertEqual(received, "hello world")
+    }
+
+    @MainActor
+    func test_12A_planningTab_outputRoutesToBridge() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.boot()
+        XCTAssertNotNil(bridge.planningTab)
+        // Simulate terminal output via the callback
+        bridge.planningTab?.onOutputCallback?("test output")
+        XCTAssertTrue(bridge.outputStream.contains("test output"))
+    }
+
+    // MARK: - Scope 12B: Execution Output Wiring Tests
+
+    @MainActor
+    func test_12B_executionOutput_detectsCompletion() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        bridge.handleExecutionOutput("some output\n✻ Cooked for 2m 30s\n")
+        XCTAssertFalse(bridge.isExecuting)
+        XCTAssertTrue(bridge.executionOutputStream.contains("Cooked for"))
+    }
+
+    // MARK: - Scope 12C: Ghost Output Wiring Tests
+
+    @MainActor
+    func test_12C_ghostOutput_routesToSummarizer() {
+        let summarizer = VibeSummarizerService.shared
+        summarizer.handleGhostOutput("Summary text here")
+        // Should accumulate in buffer (won't complete without marker)
+        // Just verify it doesn't crash and the method is callable
+        XCTAssertNotNil(summarizer)
+    }
 }

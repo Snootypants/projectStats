@@ -31,6 +31,9 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     var isGhost: Bool
     var startTime: Date?
 
+    /// Optional callback for routing output to external consumers (e.g. VibeTerminalBridge)
+    var onOutputCallback: ((String) -> Void)?
+
     // AI Provider settings for this tab
     @Published var aiProvider: AIProviderType = .claudeCode
     @Published var aiModel: AIModel = .claudeSonnet4
@@ -155,6 +158,8 @@ final class TerminalTabItem: ObservableObject, Identifiable {
         if clean.localizedCaseInsensitiveContains("error") || clean.localizedCaseInsensitiveContains("failed") {
             lastErrorAt = now
         }
+
+        onOutputCallback?(chunk)
     }
 
     func updateStatus(now: Date, notifyOnAttention: Bool) {

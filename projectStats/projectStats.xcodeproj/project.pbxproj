@@ -16,6 +16,7 @@
 		010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */; };
 		010000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */; };
 		010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */; };
+		010000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */; };
 		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
 		010000000000000000000005 /* ReadmeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* ReadmeParser.swift */; };
 		010000000000000000000006 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* Project.swift */; };
@@ -205,6 +206,7 @@
 		020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTabView.swift; sourceTree = "<group>"; };
 		020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeTerminalBridge.swift; sourceTree = "<group>"; };
 		020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeSummarizerService.swift; sourceTree = "<group>"; };
+		020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTerminalHostView.swift; sourceTree = "<group>"; };
 		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000005 /* ReadmeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeParser.swift; sourceTree = "<group>"; };
 		020000000000000000000006 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -713,6 +715,7 @@
 				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
 				020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */,
 				020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */,
+				020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */,
 				020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */,
 			);
 			name = "Recovered References";
@@ -977,6 +980,7 @@
 				010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */,
 				010000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift in Sources */,
 				010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */,
+				010000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ final class VibeTerminalBridge: ObservableObject {
     @Published var executionOutputStream: String = ""
     @Published var isExecuting: Bool = false
 
-    private var planningTab: TerminalTabItem?
+    @Published private(set) var planningTab: TerminalTabItem?
     private var executionTab: TerminalTabItem?
     private let conversationService = VibeConversationService.shared
     private let maxOutputSize = 512_000 // ~500KB
@@ -23,10 +23,12 @@ final class VibeTerminalBridge: ObservableObject {
         guard planningTab == nil else { return }
 
         let tab = TerminalTabItem(kind: .claude, title: "Vibe Planning")
+        tab.onOutputCallback = { [weak self] text in
+            self?.handleOutput(text)
+        }
         planningTab = tab
 
-        // The terminal view will be created and attached by TerminalSessionView
-        // We enqueue commands that will be sent once the shell is ready
+        // Commands enqueued here will be sent once VibeTerminalHostView attaches the shell
         tab.enqueueCommand("claude")
         // /plan needs to be sent after claude starts
         Task {
@@ -62,10 +64,7 @@ final class VibeTerminalBridge: ObservableObject {
 
         // Persist to conversation
         conversationService.appendToLog(stripped)
-
-        // Feed to existing monitoring
-        TerminalOutputMonitor.shared.activeProjectPath = projectPath.path
-        TerminalOutputMonitor.shared.processTerminalChunk(text)
+        // Note: monitor and time tracking handled by VibeTerminalHostView's onOutput
     }
 
     /// Handle execution terminal output

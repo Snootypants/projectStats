@@ -53,6 +53,13 @@ struct VibeTabView: View {
                 Divider()
                 executionMonitor
             }
+
+            // Hidden terminal host — runs the actual shell process for planning
+            if let tab = bridge.planningTab {
+                VibeTerminalHostView(projectPath: URL(fileURLWithPath: projectPath), tab: tab)
+                    .frame(width: 0, height: 0)
+                    .hidden()
+            }
         }
         .onAppear {
             bridge.boot()
