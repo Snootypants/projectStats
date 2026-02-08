@@ -48,6 +48,9 @@ final class VibeSummarizerService: ObservableObject {
         outputBuffer = ""
 
         let tab = TerminalTabItem(kind: .ghost, title: "Vibe Summary", isGhost: true)
+        tab.onOutputCallback = { [weak self] text in
+            self?.handleGhostOutput(text)
+        }
         ghostTab = tab
 
         let command = buildSummarizeCommand(for: conversation)
