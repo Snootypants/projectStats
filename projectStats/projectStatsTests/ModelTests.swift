@@ -692,4 +692,40 @@ final class ModelTests: XCTestCase {
         exec.promptId = promptId
         XCTAssertEqual(exec.promptId, promptId)
     }
+
+    // MARK: - Scope A: AIModel CLI Name Tests
+
+    func test_A_cliName_returnsShortNames() {
+        // Claude 4 series → short names
+        XCTAssertEqual(AIModel.claudeSonnet4.cliName, "sonnet")
+        XCTAssertEqual(AIModel.claudeOpus4.cliName, "opus")
+        XCTAssertEqual(AIModel.claudeHaiku4.cliName, "haiku")
+
+        // Claude 4.5/4.6 series → full identifiers (these ARE the correct CLI names)
+        XCTAssertEqual(AIModel.claudeOpus46.cliName, "claude-opus-4-6")
+        XCTAssertEqual(AIModel.claudeSonnet45.cliName, "claude-sonnet-4-5-20250929")
+        XCTAssertEqual(AIModel.claudeHaiku45.cliName, "claude-haiku-4-5-20251001")
+
+        // Non-Claude models → raw value
+        XCTAssertEqual(AIModel.gpt4o.cliName, "gpt-4o")
+        XCTAssertEqual(AIModel.llama3_2.cliName, "llama3.2")
+    }
+
+    @MainActor
+    func test_A_generateCommand_usesCliName() {
+        let service = ThinkingLevelService.shared
+        let command = service.generateClaudeCommand(model: .claudeSonnet4)
+        XCTAssertTrue(command.contains("--model sonnet"))
+        XCTAssertFalse(command.contains("claude-sonnet-4-20250514"))
+
+        let opusCmd = service.generateClaudeCommand(model: .claudeOpus4)
+        XCTAssertTrue(opusCmd.contains("--model opus"))
+
+        let opus46Cmd = service.generateClaudeCommand(model: .claudeOpus46)
+        XCTAssertTrue(opus46Cmd.contains("--model claude-opus-4-6"))
+
+        // Prompt command also uses cliName
+        let promptCmd = service.generatePromptCommand(prompt: "hello", model: .claudeHaiku4)
+        XCTAssertTrue(promptCmd.contains("--model haiku"))
+    }
 }

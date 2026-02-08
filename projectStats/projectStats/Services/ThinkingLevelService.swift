@@ -48,8 +48,8 @@ final class ThinkingLevelService: ObservableObject {
 
         var command = "claude"
 
-        // Add model flag
-        command += " --model \(selectedModel.rawValue)"
+        // Add model flag (use cliName for short Claude Code names)
+        command += " --model \(selectedModel.cliName)"
 
         // Add thinking budget if not none
         if selectedThinking != .none {

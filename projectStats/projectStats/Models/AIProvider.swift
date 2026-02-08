@@ -169,6 +169,20 @@ enum AIModel: String, CaseIterable, Codable {
         }
     }
 
+    /// Short CLI name for Claude Code's --model flag
+    var cliName: String {
+        switch self {
+        case .claudeSonnet4: return "sonnet"
+        case .claudeOpus4: return "opus"
+        case .claudeHaiku4: return "haiku"
+        // 4.5/4.6 series: full identifiers ARE the correct CLI names
+        case .claudeOpus46: return "claude-opus-4-6"
+        case .claudeSonnet45: return "claude-sonnet-4-5-20250929"
+        case .claudeHaiku45: return "claude-haiku-4-5-20251001"
+        default: return rawValue
+        }
+    }
+
     var isLocal: Bool {
         provider == .ollama
     }
