@@ -191,7 +191,7 @@ struct TabBarItem: View {
         tooltipTask?.cancel()
         if hovering, project != nil {
             tooltipTask = Task {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                try? await Task.sleep(nanoseconds: 300_000_000)
                 if !Task.isCancelled {
                     showTooltip = true
                 }
