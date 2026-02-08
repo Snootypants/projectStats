@@ -104,6 +104,7 @@ struct TabBarItem: View {
     let onCloseOthers: () -> Void
 
     @State private var isHovering = false
+    @State private var isCloseHovering = false
     @State private var showTooltip = false
     @State private var tooltipTask: Task<Void, Never>?
 
@@ -130,10 +131,15 @@ struct TabBarItem: View {
             if tab.isCloseable {
                 Button(action: onClose) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(.tertiary)
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(isCloseHovering ? .primary : .tertiary)
+                        .frame(width: 18, height: 18)
+                        .contentShape(Rectangle())
+                        .background(isCloseHovering ? Color.primary.opacity(0.1) : Color.clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
                 }
                 .buttonStyle(.plain)
+                .onHover { isCloseHovering = $0 }
                 .opacity(isHovering || isActive ? 1 : 0)
             }
         }
