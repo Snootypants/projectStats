@@ -15,6 +15,7 @@ struct SimpleFileBrowserView: View {
     @State private var rootNode: SimpleFileNode?
     @State private var expanded: Set<URL> = []
     @State private var isLoading = false
+    @State private var searchText = ""
     @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = true
 
     private let excludedFolders: Set<String> = [
@@ -26,6 +27,29 @@ struct SimpleFileBrowserView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
+
+            // Search bar
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
+                TextField("Filter files...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 12))
+                if !searchText.isEmpty {
+                    Button {
+                        searchText = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.tertiary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Color.primary.opacity(0.03))
 
             Divider()
 
@@ -41,12 +65,20 @@ struct SimpleFileBrowserView: View {
                         }
                         .padding(8)
                     } else if let root = rootNode {
-                        FileNodeRow(
-                            node: root,
-                            level: 0,
-                            expanded: $expanded,
-                            selectedFile: $selectedFile
-                        )
+                        let displayNode = filteredNode(root)
+                        if let displayNode {
+                            FileNodeRow(
+                                node: displayNode,
+                                level: 0,
+                                expanded: searchText.isEmpty ? $expanded : .constant(allDirectoryURLs(in: displayNode)),
+                                selectedFile: $selectedFile
+                            )
+                        } else {
+                            Text("No matches")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .padding(8)
+                        }
                     } else {
                         Text("No files")
                             .font(.caption)
@@ -99,6 +131,33 @@ struct SimpleFileBrowserView: View {
                 isLoading = false
             }
         }
+    }
+
+    private func filteredNode(_ node: SimpleFileNode) -> SimpleFileNode? {
+        if searchText.isEmpty { return node }
+        let query = searchText.lowercased()
+
+        if node.isDirectory {
+            let filteredChildren = node.children?.compactMap { filteredNode($0) } ?? []
+            if !filteredChildren.isEmpty {
+                return SimpleFileNode(url: node.url, name: node.name, isDirectory: true, children: filteredChildren)
+            }
+            if node.name.lowercased().contains(query) { return node }
+            return nil
+        } else {
+            return node.name.lowercased().contains(query) ? node : nil
+        }
+    }
+
+    private func allDirectoryURLs(in node: SimpleFileNode) -> Set<URL> {
+        var urls: Set<URL> = []
+        if node.isDirectory {
+            urls.insert(node.url)
+            for child in node.children ?? [] {
+                urls.formUnion(allDirectoryURLs(in: child))
+            }
+        }
+        return urls
     }
 
     private func buildFileNode(at url: URL, depth: Int) -> SimpleFileNode? {
