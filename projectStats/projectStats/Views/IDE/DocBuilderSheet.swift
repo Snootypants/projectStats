@@ -4,14 +4,14 @@ struct DocBuilderSheet: View {
     let project: Project
     @Environment(\.dismiss) private var dismiss
 
-    // Core docs
-    @State private var buildArchitecture = true
-    @State private var buildFileStructure = true
-    @State private var buildModels = true
-    @State private var buildServices = true
-    @State private var buildViews = true
-    @State private var buildViewModels = true
-    @State private var buildDependencies = true
+    // Core docs — nothing selected by default
+    @State private var buildArchitecture = false
+    @State private var buildFileStructure = false
+    @State private var buildModels = false
+    @State private var buildServices = false
+    @State private var buildViews = false
+    @State private var buildViewModels = false
+    @State private var buildDependencies = false
     @State private var buildDataFlow = false
     @State private var buildDatabaseSchema = false
     @State private var buildApiIntegrations = false
@@ -19,10 +19,10 @@ struct DocBuilderSheet: View {
     @State private var buildKeyboardShortcuts = false
     @State private var buildSettingsReference = false
     @State private var buildNotifications = false
-    @State private var buildKnownIssues = true
-    @State private var buildChangelog = true
-    @State private var buildTodo = true
-    @State private var buildReadme = true
+    @State private var buildKnownIssues = false
+    @State private var buildChangelog = false
+    @State private var buildTodo = false
+    @State private var buildReadme = false
     @State private var buildAchievements = false
     @State private var buildQaAudit = false
     @State private var buildPrd = false
@@ -31,6 +31,13 @@ struct DocBuilderSheet: View {
     @State private var buildReport = false
     @State private var buildDetailedReport = false
     @State private var buildTechnicalHandoff = false
+
+    // Collapsible section state
+    @State private var coreExpanded = true
+    @State private var codeRefExpanded = false
+    @State private var advancedExpanded = false
+    @State private var sharingExpanded = false
+    @State private var customExpanded = false
 
     // Custom
     @State private var customDocs: [CustomDocEntry] = []
@@ -127,7 +134,7 @@ struct DocBuilderSheet: View {
                             .controlSize(.small)
                     }
 
-                    docSection("Core Documentation") {
+                    collapsibleSection("Core Documentation", isExpanded: $coreExpanded, bindings: [$buildArchitecture, $buildFileStructure, $buildReadme, $buildChangelog, $buildTodo, $buildKnownIssues]) {
                         docToggle("ARCHITECTURE.md", "System architecture and component relationships", $buildArchitecture)
                         docToggle("FILE_STRUCTURE.md", "Complete file tree with descriptions", $buildFileStructure)
                         docToggle("README.md", "Project overview, setup, and usage", $buildReadme)
@@ -136,7 +143,7 @@ struct DocBuilderSheet: View {
                         docToggle("KNOWN_ISSUES.md", "Known bugs and limitations", $buildKnownIssues)
                     }
 
-                    docSection("Code Reference") {
+                    collapsibleSection("Code Reference", isExpanded: $codeRefExpanded, bindings: [$buildModels, $buildServices, $buildViews, $buildViewModels, $buildDependencies, $buildFunctionsIndex]) {
                         docToggle("MODELS.md", "Data model reference", $buildModels)
                         docToggle("SERVICES.md", "Service layer reference", $buildServices)
                         docToggle("VIEWS.md", "View hierarchy reference", $buildViews)
@@ -145,7 +152,7 @@ struct DocBuilderSheet: View {
                         docToggle("FUNCTIONS_INDEX.md", "Public function index", $buildFunctionsIndex)
                     }
 
-                    docSection("Advanced") {
+                    collapsibleSection("Advanced", isExpanded: $advancedExpanded, bindings: [$buildDataFlow, $buildDatabaseSchema, $buildApiIntegrations, $buildKeyboardShortcuts, $buildSettingsReference, $buildNotifications, $buildAchievements, $buildQaAudit, $buildPrd]) {
                         docToggle("DATA_FLOW.md", "Data flow and state management", $buildDataFlow)
                         docToggle("DATABASE_SCHEMA.md", "Database schema reference", $buildDatabaseSchema)
                         docToggle("API_INTEGRATIONS.md", "External API integrations", $buildApiIntegrations)
@@ -157,7 +164,7 @@ struct DocBuilderSheet: View {
                         docToggle("prd.md", "Product requirements document", $buildPrd)
                     }
 
-                    docSection("Sharing & Handoff Reports") {
+                    collapsibleSection("Sharing & Handoff Reports", isExpanded: $sharingExpanded, bindings: [$buildReport, $buildDetailedReport, $buildTechnicalHandoff]) {
                         docToggle("Quick Status Report", "Brief project status for stakeholders", $buildReport)
                         docToggle("Detailed Report", "Comprehensive project report with stats", $buildDetailedReport)
                         docToggle("Technical Handoff", "Everything a new developer needs to know", $buildTechnicalHandoff)
@@ -297,6 +304,59 @@ struct DocBuilderSheet: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.secondary)
             content()
+        }
+    }
+
+    private func collapsibleSection<Content: View>(_ title: String, isExpanded: Binding<Bool>, bindings: [Binding<Bool>], @ViewBuilder content: () -> Content) -> some View {
+        let allOn = bindings.allSatisfy { $0.wrappedValue }
+        let anyOn = bindings.contains { $0.wrappedValue }
+
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                // Disclosure triangle
+                Button {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        isExpanded.wrappedValue.toggle()
+                    }
+                } label: {
+                    Image(systemName: isExpanded.wrappedValue ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 14)
+                }
+                .buttonStyle(.plain)
+
+                // Group checkbox
+                Button {
+                    let newValue = !allOn
+                    for binding in bindings {
+                        binding.wrappedValue = newValue
+                    }
+                } label: {
+                    Image(systemName: allOn ? "checkmark.square.fill" : (anyOn ? "minus.square.fill" : "square"))
+                        .foregroundStyle(allOn || anyOn ? .blue : .secondary)
+                        .font(.system(size: 14))
+                }
+                .buttonStyle(.plain)
+
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.secondary)
+
+                let count = bindings.filter(\.wrappedValue).count
+                if count > 0 {
+                    Text("\(count)/\(bindings.count)")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.tertiary)
+                }
+            }
+
+            if isExpanded.wrappedValue {
+                VStack(alignment: .leading, spacing: 8) {
+                    content()
+                }
+                .padding(.leading, 22)
+            }
         }
     }
 
