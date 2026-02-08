@@ -325,6 +325,41 @@ struct GeneralSettingsView: View {
 
                 Divider()
 
+                // Backup Directory
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Backup Directory")
+                        .font(.headline)
+                    HStack {
+                        TextField("", text: Binding(
+                            get: { UserDefaults.standard.string(forKey: "backupDirectory") ?? "" },
+                            set: { UserDefaults.standard.set($0, forKey: "backupDirectory") }
+                        ))
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(true)
+
+                        Button("Browse...") {
+                            let panel = NSOpenPanel()
+                            panel.canChooseFiles = false
+                            panel.canChooseDirectories = true
+                            panel.allowsMultipleSelection = false
+                            panel.message = "Select backup directory"
+                            if panel.runModal() == .OK, let url = panel.url {
+                                UserDefaults.standard.set(url.path, forKey: "backupDirectory")
+                            }
+                        }
+
+                        Button("Reset") {
+                            UserDefaults.standard.removeObject(forKey: "backupDirectory")
+                        }
+                        .font(.caption)
+                    }
+                    Text("Where project backups are saved. Defaults to ~/Downloads.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Divider()
+
                 // File Browser
                 VStack(alignment: .leading, spacing: 12) {
                     Toggle("Show Hidden Files in File Browser", isOn: $showHiddenFiles)
@@ -812,6 +847,11 @@ struct HomePageSettingsView: View {
                         value: "v1",
                         title: "V1 (Classic)",
                         description: "Original dashboard layout"
+                    )
+                    layoutOption(
+                        value: "v2",
+                        title: "V2 (Refined)",
+                        description: "Interactive weekly graph with project cards"
                     )
                     layoutOption(
                         value: "v5",
