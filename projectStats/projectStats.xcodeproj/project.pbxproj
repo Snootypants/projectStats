@@ -176,6 +176,7 @@
 		010000000000000000000184 /* NewProjectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000184 /* NewProjectSheet.swift */; };
 		010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000191 /* projectStats/Models/PromptExecution.swift */; };
 		010000000000000000000193 /* SwarmTestPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000193 /* SwarmTestPrompt.swift */; };
+		010000000000000000000207 /* DocBuilderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000207 /* DocBuilderSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -290,6 +291,7 @@
 		020000000000000000000096 /* projectStats/Views/Git/CommitDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/CommitDialog.swift; sourceTree = "<group>"; };
 		020000000000000000000097 /* projectStats/Views/Git/GitControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Git/GitControlsView.swift; sourceTree = "<group>"; };
 		020000000000000000000182 /* projectStats/Views/IDE/CompactLockoutBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/CompactLockoutBar.swift; sourceTree = "<group>"; };
+		020000000000000000000207 /* DocBuilderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocBuilderSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/MinimapView.swift; sourceTree = "<group>"; };
 		020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
 		020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 		050000000000000000000015 /* IDE */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000207 /* DocBuilderSheet.swift */,
 				020000000000000000000053 /* EnvironmentManagerView.swift */,
 				020000000000000000000054 /* EnvironmentVariableRow.swift */,
 				02000000000000000000003A /* SimpleFileBrowserView.swift */,
@@ -909,6 +912,7 @@
 				010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */,
 				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
 				010000000000000000000206 /* String+ANSI.swift in Sources */,
+				010000000000000000000207 /* DocBuilderSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

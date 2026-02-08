@@ -11,6 +11,7 @@ struct WorkspaceView: View {
     @State private var isCreatingBackup = false
     @State private var backupMessage: String?
     @State private var showCreateBranchSheet = false
+    @State private var showDocBuilder = false
     @State private var swarmEnabled = false
     @State private var showSwarmWarning = false
     @AppStorage("swarm.warningDismissed") private var swarmWarningDismissed = false
@@ -153,12 +154,12 @@ struct WorkspaceView: View {
 
             // Update Docs button
             Button {
-                refreshDocs(for: project)
+                showDocBuilder = true
             } label: {
                 Image(systemName: "doc.text.magnifyingglass")
             }
             .buttonStyle(.plain)
-            .help("Refresh ARCHITECTURE.md in docs/")
+            .help("Build documentation (Cmd+Shift+D)")
 
             // Backup button
             Button {
@@ -221,6 +222,9 @@ struct WorkspaceView: View {
         .background(Color.primary.opacity(0.02))
         .sheet(isPresented: $showClaudeConfig) {
             ClaudeConfigSheet(projectPath: project.path)
+        }
+        .sheet(isPresented: $showDocBuilder) {
+            DocBuilderSheet(project: project)
         }
         .alert("Agent Teams (Swarm)", isPresented: $showSwarmWarning) {
             Button("Enable") {
@@ -288,18 +292,6 @@ struct WorkspaceView: View {
             lines.append("Last commit: \(commit.message)")
         }
         return lines.joined(separator: "\n")
-    }
-
-    private func refreshDocs(for project: Project) {
-        do {
-            try ProjectCreationService.shared.refreshArchitectureMd(
-                at: project.path,
-                projectName: project.name
-            )
-            backupMessage = "ARCHITECTURE.md refreshed"
-        } catch {
-            backupMessage = "Doc refresh failed: \(error.localizedDescription)"
-        }
     }
 
     private func toggleSwarm(for project: Project) {
