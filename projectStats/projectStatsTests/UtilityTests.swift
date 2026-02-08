@@ -124,26 +124,29 @@ final class UtilityTests: XCTestCase {
 
     // MARK: - LineCounter Tests
 
-    func testLineCounterCountsLines() {
-        let testContent = """
-        line 1
-        line 2
-        line 3
-        """
-
-        let lines = testContent.split(separator: "\n")
-        XCTAssertEqual(lines.count, 3)
+    func testSCCOutputParsing() {
+        let json = """
+        [{"Name":"Swift","Lines":500,"Code":400,"Count":10,"Blanks":50,"Comments":50}]
+        """.data(using: .utf8)!
+        let result = LineCounter.parseSCCOutput(json)
+        XCTAssertEqual(result.lines, 400)
+        XCTAssertEqual(result.files, 10)
     }
 
-    func testLineCounterHandlesEmptyLines() {
-        let testContent = """
-        line 1
+    func testSCCOutputParsingMultipleLanguages() {
+        let json = """
+        [{"Name":"Swift","Lines":500,"Code":400,"Count":10,"Blanks":50,"Comments":50},{"Name":"TypeScript","Lines":300,"Code":250,"Count":5,"Blanks":30,"Comments":20}]
+        """.data(using: .utf8)!
+        let result = LineCounter.parseSCCOutput(json)
+        XCTAssertEqual(result.lines, 650)
+        XCTAssertEqual(result.files, 15)
+    }
 
-        line 3
-        """
-
-        let lines = testContent.split(separator: "\n", omittingEmptySubsequences: false)
-        XCTAssertEqual(lines.count, 3)
+    func testSCCOutputParsingInvalidJSON() {
+        let json = "not json".data(using: .utf8)!
+        let result = LineCounter.parseSCCOutput(json)
+        XCTAssertEqual(result.lines, 0)
+        XCTAssertEqual(result.files, 0)
     }
 
     // MARK: - Logger Tests
