@@ -103,6 +103,9 @@ final class VibeTerminalBridge: ObservableObject {
         executionOutputStream = ""
 
         let tab = TerminalTabItem(kind: .claude, title: "Vibe Execution")
+        tab.onOutputCallback = { [weak self] text in
+            self?.handleExecutionOutput(text)
+        }
         executionTab = tab
 
         let command = ThinkingLevelService.shared.generatePromptCommand(prompt: prompt)
