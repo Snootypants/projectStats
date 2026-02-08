@@ -11,7 +11,6 @@ struct VibeTabView: View {
 
     @State private var inputText: String = ""
     @State private var selectedTemplateID: UUID?
-    @State private var autoScroll: Bool = true
     @State private var showLockPlanSheet: Bool = false
     @State private var planSummaryText: String = ""
     @State private var showExecutionPanel: Bool = false
@@ -35,24 +34,17 @@ struct VibeTabView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header bar
             headerBar
 
-            Divider()
-
-            // Output stream
-            outputStreamView
-
-            Divider()
-
-            // Input area + action bar
-            inputArea
+            chatView
+                .frame(maxHeight: .infinity)
 
             // Execution monitor (collapsible)
             if showExecutionPanel || bridge.isExecuting {
-                Divider()
                 executionMonitor
             }
+
+            floatingInputBar
 
             // Hidden terminal host — runs the actual shell process for planning
             if let tab = bridge.planningTab {
@@ -64,7 +56,6 @@ struct VibeTabView: View {
         }
         .onAppear {
             bridge.boot()
-            // Auto-select default template
             if selectedTemplateID == nil, let def = allTemplates.first(where: { $0.isDefault }) {
                 selectedTemplateID = def.id
             }
@@ -75,13 +66,11 @@ struct VibeTabView: View {
 
     private var headerBar: some View {
         HStack(spacing: 12) {
-            // Project name
             Label(projectName, systemImage: "bolt.fill")
                 .font(.headline)
 
             Spacer()
 
-            // /plan toggle
             Button {
                 bridge.sendSlashCommand("/plan")
             } label: {
@@ -94,7 +83,6 @@ struct VibeTabView: View {
             }
             .buttonStyle(.plain)
 
-            // Summarize button
             Button {
                 if let conv = conversationService.activeConversation {
                     summarizer.summarize(conversation: conv)
@@ -124,7 +112,6 @@ struct VibeTabView: View {
                 if newVal != nil { showSummaryPopover = true }
             }
 
-            // Status badge
             if let status = conversationService.activeConversation?.status {
                 Text(status.capitalized)
                     .font(.caption.bold())
@@ -140,104 +127,164 @@ struct VibeTabView: View {
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
-    // MARK: - Output Stream
+    // MARK: - Chat View
 
-    private var outputStreamView: some View {
+    private var chatView: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                Text(bridge.outputStream.isEmpty ? "Starting Claude in plan mode..." : bridge.outputStream)
-                    .font(.system(.body, design: .monospaced))
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
-                    .id("bottom")
+                LazyVStack(spacing: 0) {
+                    if bridge.chatEntries.isEmpty {
+                        Text("Starting Claude in plan mode...")
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 40)
+                    }
+
+                    ForEach(bridge.chatEntries) { entry in
+                        switch entry {
+                        case .user(_, let text, _):
+                            userBubble(text)
+                        case .claude(_, let text, _):
+                            claudeMessage(text)
+                        }
+                    }
+
+                    // Streaming indicator
+                    if !bridge.claudeBuffer.isEmpty {
+                        HStack(spacing: 4) {
+                            ForEach(0..<3, id: \.self) { i in
+                                Circle()
+                                    .fill(Color.secondary)
+                                    .frame(width: 4, height: 4)
+                            }
+                        }
+                        .padding(.leading, 16)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    Color.clear.frame(height: 1).id("bottom")
+                }
             }
-            .onChange(of: bridge.outputStream) { _, _ in
-                if autoScroll {
+            .onChange(of: bridge.chatEntries.count) { _, _ in
+                withAnimation(.easeOut(duration: 0.2)) {
                     proxy.scrollTo("bottom", anchor: .bottom)
                 }
             }
         }
         .background(Color(nsColor: .textBackgroundColor))
-        .overlay(alignment: .topTrailing) {
-            Toggle("Auto-scroll", isOn: $autoScroll)
-                .toggleStyle(.switch)
-                .controlSize(.mini)
-                .padding(8)
-        }
     }
 
-    // MARK: - Input Area
-
-    private var inputArea: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 8) {
-                TextField("Type a message...", text: $inputText)
-                    .textFieldStyle(.roundedBorder)
-                    .onSubmit {
-                        sendInput()
-                    }
-
-                Button("Send") {
-                    sendInput()
-                }
-                .keyboardShortcut(.return, modifiers: .command)
-                .disabled(inputText.trimmingCharacters(in: .whitespaces).isEmpty)
-            }
-
-            HStack(spacing: 12) {
-                // Lock Plan button
-                Button {
-                    showLockPlanSheet = true
-                } label: {
-                    Label("Lock Plan", systemImage: "lock.fill")
-                        .font(.caption)
-                }
-                .disabled(conversationService.activeConversation?.status != "planning")
-                .popover(isPresented: $showLockPlanSheet) {
-                    VStack(spacing: 12) {
-                        Text("Plan Summary").font(.headline)
-                        TextEditor(text: $planSummaryText)
-                            .frame(width: 300, height: 120)
-                            .font(.body)
-                        HStack {
-                            Button("Cancel") { showLockPlanSheet = false }
-                            Spacer()
-                            Button("Lock") {
-                                bridge.lockPlanAndCompose(summary: planSummaryText, template: selectedTemplate)
-                                showLockPlanSheet = false
-                            }
-                            .disabled(planSummaryText.trimmingCharacters(in: .whitespaces).isEmpty)
-                        }
-                    }
-                    .padding()
-                }
-
-                // Execute button
-                Button {
-                    bridge.executePrompt()
-                    showExecutionPanel = true
-                } label: {
-                    Label("Execute", systemImage: "play.fill")
-                        .font(.caption)
-                }
-                .disabled(conversationService.activeConversation?.status != "ready")
-
-                Spacer()
-
-                // Template picker
-                Picker("Template", selection: $selectedTemplateID) {
-                    Text("None").tag(nil as UUID?)
-                    ForEach(allTemplates) { template in
-                        Text(template.name).tag(template.id as UUID?)
-                    }
-                }
-                .frame(width: 160)
-            }
+    private func userBubble(_ text: String) -> some View {
+        HStack {
+            Spacer(minLength: 60)
+            Text(text)
+                .font(.body)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color.accentColor.opacity(0.15))
+                .cornerRadius(12)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(Color(nsColor: .windowBackgroundColor))
+        .padding(.vertical, 4)
+    }
+
+    private func claudeMessage(_ text: String) -> some View {
+        Text(text)
+            .font(.body)
+            .foregroundStyle(.primary.opacity(0.9))
+            .textSelection(.enabled)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 6)
+    }
+
+    // MARK: - Floating Input Bar
+
+    private var floatingInputBar: some View {
+        VStack(spacing: 8) {
+            // Action row (contextual buttons)
+            if let status = conversationService.activeConversation?.status,
+               status == "planning" || status == "ready" {
+                HStack(spacing: 12) {
+                    // Lock Plan button
+                    Button {
+                        showLockPlanSheet = true
+                    } label: {
+                        Label("Lock Plan", systemImage: "lock.fill")
+                            .font(.caption)
+                    }
+                    .disabled(status != "planning")
+                    .popover(isPresented: $showLockPlanSheet) {
+                        VStack(spacing: 12) {
+                            Text("Plan Summary").font(.headline)
+                            TextEditor(text: $planSummaryText)
+                                .frame(width: 300, height: 120)
+                                .font(.body)
+                            HStack {
+                                Button("Cancel") { showLockPlanSheet = false }
+                                Spacer()
+                                Button("Lock") {
+                                    bridge.lockPlanAndCompose(summary: planSummaryText, template: selectedTemplate)
+                                    showLockPlanSheet = false
+                                }
+                                .disabled(planSummaryText.trimmingCharacters(in: .whitespaces).isEmpty)
+                            }
+                        }
+                        .padding()
+                    }
+
+                    // Execute button
+                    Button {
+                        bridge.executePrompt()
+                        showExecutionPanel = true
+                    } label: {
+                        Label("Execute", systemImage: "play.fill")
+                            .font(.caption)
+                    }
+                    .disabled(status != "ready")
+
+                    Spacer()
+
+                    // Template picker
+                    Picker("Template", selection: $selectedTemplateID) {
+                        Text("None").tag(nil as UUID?)
+                        ForEach(allTemplates) { template in
+                            Text(template.name).tag(template.id as UUID?)
+                        }
+                    }
+                    .frame(width: 160)
+                }
+                .padding(.horizontal, 16)
+            }
+
+            // Input bar
+            HStack(spacing: 8) {
+                TextField("Type a message...", text: $inputText)
+                    .textFieldStyle(.plain)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .onSubmit { sendInput() }
+
+                Button(action: sendInput) {
+                    Image(systemName: "arrow.up.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(
+                            inputText.trimmingCharacters(in: .whitespaces).isEmpty
+                                ? Color.secondary : Color.accentColor
+                        )
+                }
+                .buttonStyle(.plain)
+                .disabled(inputText.trimmingCharacters(in: .whitespaces).isEmpty)
+                .padding(.trailing, 8)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(nsColor: .controlBackgroundColor))
+                    .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+            )
+            .padding(.horizontal, 12)
+        }
+        .padding(.bottom, 12)
     }
 
     // MARK: - Execution Monitor
@@ -294,7 +341,7 @@ struct VibeTabView: View {
     private func sendInput() {
         let text = inputText.trimmingCharacters(in: .whitespaces)
         guard !text.isEmpty else { return }
-        bridge.send(text)
+        bridge.sendChat(text)
         inputText = ""
     }
 

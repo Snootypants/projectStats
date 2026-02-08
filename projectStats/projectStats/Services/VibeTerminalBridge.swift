@@ -28,7 +28,7 @@ final class VibeTerminalBridge: ObservableObject {
     private let maxOutputSize = 512_000 // ~500KB
 
     private var currentClaudeEntryID: UUID?
-    private var claudeBuffer: String = ""
+    private(set) var claudeBuffer: String = ""
     private var flushTask: Task<Void, Never>?
     private var lastSentText: String?
 
