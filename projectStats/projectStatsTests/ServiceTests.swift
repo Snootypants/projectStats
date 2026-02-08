@@ -620,4 +620,22 @@ final class ServiceTests: XCTestCase {
         XCTAssertEqual(service.activeConversation?.composedPrompt, "Build X")
         service.endConversation()
     }
+
+    // MARK: - Scope E: VibeTerminalBridge Tests
+
+    @MainActor
+    func test_E_send_appendsToOutputStream() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test/project"))
+        bridge.handleOutput("Hello from terminal")
+        XCTAssertTrue(bridge.outputStream.contains("Hello from terminal"))
+    }
+
+    @MainActor
+    func test_E_outputStream_trimmedWhenLarge() {
+        let bridge = VibeTerminalBridge(projectPath: URL(fileURLWithPath: "/test"))
+        // Append a lot of text
+        let bigChunk = String(repeating: "x", count: 600_000)
+        bridge.handleOutput(bigChunk)
+        XCTAssertLessThanOrEqual(bridge.outputStream.count, 512_000 + 1000) // ~500KB + margin
+    }
 }
