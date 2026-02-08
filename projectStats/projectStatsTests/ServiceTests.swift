@@ -217,22 +217,6 @@ final class ServiceTests: XCTestCase {
         XCTAssertFalse(sanitized.contains("!"))
     }
 
-    // MARK: - WebAPIClient Tests
-
-    @MainActor
-    func testWebAPIClientSingleton() {
-        let instance1 = WebAPIClient.shared
-        let instance2 = WebAPIClient.shared
-        XCTAssertIdentical(instance1, instance2)
-    }
-
-    @MainActor
-    func testWebAPIClientAuthState() {
-        let client = WebAPIClient.shared
-        // Initial state should be not authenticated
-        XCTAssertNotNil(client)
-    }
-
     // MARK: - AIProviderRegistry Tests
 
     @MainActor
@@ -250,18 +234,6 @@ final class ServiceTests: XCTestCase {
 
         // None should have empty or no flag
         XCTAssert(noneFlag == nil || noneFlag?.isEmpty == true)
-    }
-
-    // MARK: - ProviderMetricsService Tests
-
-    func testProviderMetricsAggregation() {
-        // Test that metrics can be aggregated
-        let costs: [Double] = [0.01, 0.02, 0.015, 0.025]
-        let totalCost = costs.reduce(0, +)
-        let avgCost = totalCost / Double(costs.count)
-
-        XCTAssertEqual(totalCost, 0.07, accuracy: 0.0001)
-        XCTAssertEqual(avgCost, 0.0175, accuracy: 0.0001)
     }
 
     // MARK: - SyncEngine Tests

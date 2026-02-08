@@ -237,29 +237,6 @@ final class IntegrationTests: XCTestCase {
         }
     }
 
-    // MARK: - Web API Integration
-
-    @MainActor
-    func testWebAPIClientIntegration() {
-        let client = WebAPIClient.shared
-
-        // Client should be accessible
-        XCTAssertNotNil(client)
-
-        // Should have auth state
-        XCTAssert(client.isAuthenticated == true || client.isAuthenticated == false)
-    }
-
-    // MARK: - Provider Metrics Integration
-
-    @MainActor
-    func testProviderMetricsIntegration() {
-        let metricsService = ProviderMetricsService.shared
-
-        // Service should be accessible
-        XCTAssertNotNil(metricsService)
-    }
-
     // MARK: - Full Stack Smoke Test
 
     @MainActor
@@ -286,8 +263,6 @@ final class IntegrationTests: XCTestCase {
         XCTAssertNotNil(AIProviderRegistry.shared)
         XCTAssertNotNil(TerminalOutputMonitor.shared)
         XCTAssertNotNil(EnvFileService.shared)
-        XCTAssertNotNil(WebAPIClient.shared)
-        XCTAssertNotNil(ProviderMetricsService.shared)
     }
 
     // MARK: - Scope G: Vibe Tab Entry Points
