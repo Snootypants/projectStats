@@ -702,4 +702,156 @@ final class ServiceTests: XCTestCase {
         // Just verify it doesn't crash and the method is callable
         XCTAssertNotNil(summarizer)
     }
+
+    // MARK: - Scope A: XPService Tests
+
+    @MainActor
+    func test_A_awardXP_incrementsTotal() {
+        let service = XPService.shared
+        let before = service.totalXP
+        service.awardXP(amount: 10, reason: "test")
+        XCTAssertEqual(service.totalXP, before + 10)
+        // Cleanup
+        service.totalXP = before
+    }
+
+    @MainActor
+    func test_A_levelUp_calculatesCorrectly() {
+        let service = XPService.shared
+        let before = service.totalXP
+        // Level 1: 0-249, Level 2: 250-499, Level 3: 500-749
+        service.totalXP = 0
+        service.currentLevel = 1
+        XCTAssertEqual(service.xpForNextLevel, 250)
+        service.totalXP = 250
+        service.currentLevel = 2
+        XCTAssertEqual(service.xpForNextLevel, 500)
+        XCTAssertEqual(service.xpProgressInLevel, 0)
+        service.totalXP = 300
+        XCTAssertEqual(service.xpProgressInLevel, 50)
+        // Cleanup
+        service.totalXP = before
+        service.currentLevel = max(1, (before / 250) + 1)
+    }
+
+    @MainActor
+    func test_A_streakMultiplier_appliesCorrectly() {
+        let service = XPService.shared
+        // Day 1-2: 1.0, Day 3-6: 1.5, Day 7+: 2.0
+        let savedStreak = service.currentStreak
+        service.currentStreak = 1
+        XCTAssertEqual(service.streakMultiplier, 1.0)
+        service.currentStreak = 2
+        XCTAssertEqual(service.streakMultiplier, 1.0)
+        service.currentStreak = 3
+        XCTAssertEqual(service.streakMultiplier, 1.5)
+        service.currentStreak = 6
+        XCTAssertEqual(service.streakMultiplier, 1.5)
+        service.currentStreak = 7
+        XCTAssertEqual(service.streakMultiplier, 2.0)
+        service.currentStreak = 30
+        XCTAssertEqual(service.streakMultiplier, 2.0)
+        // Cleanup
+        service.currentStreak = savedStreak
+    }
+
+    @MainActor
+    func test_A_dailyBonus_onlyOncePerDay() {
+        let service = XPService.shared
+        let before = service.totalXP
+        // Reset daily bonus date to force trigger
+        UserDefaults.standard.set("1999-01-01", forKey: "xp.lastDailyBonusDate")
+        service.checkDailyBonus()
+        let after1 = service.totalXP
+        XCTAssertGreaterThan(after1, before) // Should have awarded bonus
+        service.checkDailyBonus()
+        let after2 = service.totalXP
+        XCTAssertEqual(after1, after2) // Should NOT award again same day
+        // Cleanup
+        service.totalXP = before
+    }
+
+    @MainActor
+    func test_A_streak_resetsAfterMissedDay() {
+        let service = XPService.shared
+        let savedStreak = service.currentStreak
+        // Set streak to 5, last streak date to 3 days ago
+        service.currentStreak = 5
+        let threeDaysAgo = Calendar.current.date(byAdding: .day, value: -3, to: Date())!
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        UserDefaults.standard.set(formatter.string(from: threeDaysAgo), forKey: "xp.lastStreakDate")
+        service.updateStreak()
+        XCTAssertEqual(service.currentStreak, 1) // Should reset
+        // Cleanup
+        service.currentStreak = savedStreak
+    }
+
+    // MARK: - Scope B: XP Trigger Wiring Tests
+
+    @MainActor
+    func test_B_commitDetected_awardsXP() {
+        let service = XPService.shared
+        let before = service.totalXP
+        service.onCommitDetected(projectPath: "/test/project")
+        XCTAssertGreaterThanOrEqual(service.totalXP, before + XPService.xpPerCommit)
+        // Cleanup
+        service.totalXP = before
+    }
+
+    @MainActor
+    func test_B_pushDetected_awardsXP() {
+        let service = XPService.shared
+        let before = service.totalXP
+        service.onPushDetected(projectPath: "/test/project")
+        XCTAssertGreaterThanOrEqual(service.totalXP, before + XPService.xpPerPush)
+        // Cleanup
+        service.totalXP = before
+    }
+
+    // MARK: - Scope C: Achievement Wiring Tests
+
+    @MainActor
+    func test_C_sprinter_unlocksUnderOneHour() {
+        let service = AchievementService.shared
+        let wasUnlocked = service.unlockedAchievements.contains(.sprinter)
+        service.checkSprinterAchievement(promptDuration: 1800, projectPath: "/test")
+        if !wasUnlocked {
+            XCTAssertTrue(service.unlockedAchievements.contains(.sprinter))
+        }
+    }
+
+    // MARK: - Scope D: Daily XP Tests
+
+    @MainActor
+    func test_D_dailyBonus_firesEveryDay() {
+        let service = XPService.shared
+        let before = service.totalXP
+        // Set last bonus to yesterday
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        UserDefaults.standard.set(formatter.string(from: yesterday), forKey: "xp.lastDailyBonusDate")
+        service.checkDailyBonus()
+        XCTAssertGreaterThan(service.totalXP, before)
+        // Cleanup
+        service.totalXP = before
+    }
+
+    // MARK: - Scope E: XP Display Tests
+
+    @MainActor
+    func test_E_xpDisplay_readsFromService() {
+        let service = XPService.shared
+        let savedXP = service.totalXP
+        service.totalXP = 375
+        service.currentLevel = 2
+        XCTAssertEqual(service.totalXP, 375)
+        XCTAssertEqual(service.currentLevel, 2)
+        XCTAssertEqual(service.xpForNextLevel, 500)
+        XCTAssertEqual(service.xpProgressInLevel, 125)
+        // Cleanup
+        service.totalXP = savedXP
+        service.currentLevel = max(1, (savedXP / 250) + 1)
+    }
 }
