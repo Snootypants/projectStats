@@ -238,12 +238,16 @@ struct WorkspaceView: View {
         } message: {
             Text("Agent Teams runs multiple Claude Code instances simultaneously. Each teammate consumes tokens independently, which can burn through your hourly rate limit 2–5x faster. Use intentionally.")
         }
+        .onReceive(NotificationCenter.default.publisher(for: .openDocBuilder)) { _ in
+            showDocBuilder = true
+        }
         .sheet(isPresented: $showCreateBranchSheet) {
             CreateBranchSheet(
                 projectPath: project.path,
                 onCreated: { branchPath in
                     showCreateBranchSheet = false
-                    // Open the new branch folder as a project
+                    // Open the new branch folder in a new tab
+                    tabManager.newTab()
                     tabManager.openProject(path: branchPath.path)
                 },
                 onCancel: { showCreateBranchSheet = false }

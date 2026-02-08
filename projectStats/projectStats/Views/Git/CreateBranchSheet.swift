@@ -8,6 +8,8 @@ struct CreateBranchSheet: View {
     @State private var branchName = ""
     @State private var isCreating = false
     @State private var error: String?
+    @State private var backupBeforeBranch = true
+    @State private var statusMessage: String?
 
     var body: some View {
         VStack(spacing: 16) {
@@ -30,10 +32,19 @@ struct CreateBranchSheet: View {
                     .foregroundStyle(.secondary)
             }
 
+            Toggle("Backup before branching", isOn: $backupBeforeBranch)
+                .font(.caption)
+
             if let error {
                 Text(error)
                     .font(.caption)
                     .foregroundStyle(.red)
+            }
+
+            if let statusMessage {
+                Text(statusMessage)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             HStack {
@@ -52,7 +63,7 @@ struct CreateBranchSheet: View {
             }
 
             if isCreating {
-                ProgressView("Creating branch...")
+                ProgressView(statusMessage ?? "Creating branch...")
                     .progressViewStyle(.linear)
             }
         }
@@ -66,6 +77,13 @@ struct CreateBranchSheet: View {
 
         Task {
             do {
+                // Backup first if requested
+                if backupBeforeBranch {
+                    statusMessage = "Creating backup..."
+                    _ = try await BackupService.shared.createBackup(for: projectPath)
+                    statusMessage = "Backup complete. Creating branch..."
+                }
+
                 let result = try await BranchService.shared.createLocalBranch(
                     from: projectPath,
                     branchName: branchName
@@ -77,6 +95,7 @@ struct CreateBranchSheet: View {
                 await MainActor.run {
                     self.error = error.localizedDescription
                     isCreating = false
+                    statusMessage = nil
                 }
             }
         }
