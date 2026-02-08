@@ -14,7 +14,7 @@ struct VibeTerminalHostView: NSViewRepresentable {
             return existing
         }
 
-        let terminalView = VibeOutputTerminalView(frame: .zero)
+        let terminalView = VibeOutputTerminalView(frame: NSRect(x: 0, y: 0, width: 640, height: 384))
         terminalView.onOutput = { [weak tab, projectPath] text in
             Task { @MainActor in
                 tab?.recordOutput(text)
@@ -34,6 +34,7 @@ struct VibeTerminalHostView: NSViewRepresentable {
             )
             try? await Task.sleep(for: .milliseconds(300))
             tab.attach(terminalView)
+            terminalView.lockTerminalSize()
         }
 
         return terminalView
@@ -48,11 +49,25 @@ struct VibeTerminalHostView: NSViewRepresentable {
 
 private final class VibeOutputTerminalView: LocalProcessTerminalView {
     var onOutput: ((String) -> Void)?
+    private var sizedLocked = false
 
     override func dataReceived(slice: ArraySlice<UInt8>) {
         if let text = String(bytes: slice, encoding: .utf8), !text.isEmpty {
             onOutput?(text)
         }
         super.dataReceived(slice: slice)
+    }
+
+    /// Lock terminal to 80x24 so output buffers correctly even though the view is hidden
+    func lockTerminalSize() {
+        getTerminal().resize(cols: 80, rows: 24)
+        sizedLocked = true
+    }
+
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        if sizedLocked {
+            getTerminal().resize(cols: 80, rows: 24)
+        }
     }
 }
