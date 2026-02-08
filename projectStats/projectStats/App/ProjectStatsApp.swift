@@ -120,9 +120,16 @@ struct ProjectStatsApp: App {
                     ClaudePlanUsageService.shared.startHourlyPolling()
                     await ClaudeContextMonitor.shared.refresh()
                     tabManager.restoreState()
+
+                    // Start periodic Claude usage refresh (every 10 minutes)
+                    ClaudeUsageService.shared.startPeriodicRefresh()
+                    // Fetch immediately on launch
+                    Task { await ClaudeUsageService.shared.refreshGlobal() }
                 }
                 .onDisappear {
                     tabManager.saveState()
+                    // Fetch usage on quit
+                    Task { await ClaudeUsageService.shared.refreshGlobal() }
                 }
                 .onAppear {
                     NSApp.activate(ignoringOtherApps: true)

@@ -19,6 +19,7 @@ class ClaudeUsageService: ObservableObject {
 
     private let globalRefreshInterval: TimeInterval = 600   // 10 minutes
     private let projectRefreshInterval: TimeInterval = 600  // 10 minutes
+    private var periodicTimer: Timer?
 
     struct DailyUsageStats: Codable, Identifiable {
         var id: String { date }
@@ -37,6 +38,17 @@ class ClaudeUsageService: ObservableObject {
         var todayStats: DailyUsageStats?
         var weekStats: [DailyUsageStats] = []
         var lastRefresh: Date?
+    }
+
+    // MARK: - Periodic Refresh
+
+    func startPeriodicRefresh() {
+        periodicTimer?.invalidate()
+        periodicTimer = Timer.scheduledTimer(withTimeInterval: globalRefreshInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                await self?.refreshGlobal()
+            }
+        }
     }
 
     // MARK: - Global Stats
