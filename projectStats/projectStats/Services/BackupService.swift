@@ -24,59 +24,28 @@ final class BackupService {
         // Remove existing file if present
         try? FileManager.default.removeItem(at: outputURL)
 
-        // Use ditto for zip (handles exclusions well)
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
-        process.arguments = [
-            "-c", "-k",
-            "--sequesterRsrc",
-            "--keepParent",
-            "--exclude", ".git",
-            "--exclude", "node_modules",
-            "--exclude", ".build",
-            "--exclude", "build",
-            "--exclude", "DerivedData",
-            "--exclude", ".DS_Store",
-            "--exclude", "*.xcuserstate",
-            "--exclude", ".swiftpm",
-            "--exclude", "Pods",
-            "--exclude", "*.xcworkspace",
-            projectPath.path,
-            outputURL.path
-        ]
-
-        let pipe = Pipe()
-        process.standardError = pipe
-
-        return try await withCheckedThrowingContinuation { continuation in
-            do {
-                try process.run()
-
-                Task.detached {
-                    process.waitUntilExit()
-
-                    await MainActor.run {
-                        guard process.terminationStatus == 0 else {
-                            let errorData = pipe.fileHandleForReading.readDataToEndOfFile()
-                            let errorString = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                            continuation.resume(throwing: BackupError.zipFailed(errorString))
-                            return
-                        }
-
-                        do {
-                            let attrs = try FileManager.default.attributesOfItem(atPath: outputURL.path)
-                            let size = attrs[.size] as? Int64 ?? 0
-
-                            continuation.resume(returning: BackupResult(url: outputURL, size: size, fileCount: 0))
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                }
-            } catch {
-                continuation.resume(throwing: BackupError.zipFailed(error.localizedDescription))
+        let result = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let r = Shell.runResult(
+                    "ditto -c -k --sequesterRsrc --keepParent" +
+                    " --exclude .git --exclude node_modules" +
+                    " --exclude .build --exclude build" +
+                    " --exclude DerivedData --exclude .DS_Store" +
+                    " --exclude '*.xcuserstate' --exclude .swiftpm" +
+                    " --exclude Pods --exclude '*.xcworkspace'" +
+                    " '\(projectPath.path)' '\(outputURL.path)'"
+                )
+                continuation.resume(returning: r)
             }
         }
+
+        guard result.exitCode == 0 else {
+            throw BackupError.zipFailed(result.error.isEmpty ? "Unknown error" : result.error)
+        }
+
+        let attrs = try FileManager.default.attributesOfItem(atPath: outputURL.path)
+        let size = attrs[.size] as? Int64 ?? 0
+        return BackupResult(url: outputURL, size: size, fileCount: 0)
     }
 
     /// Opens Finder with the backup file selected
