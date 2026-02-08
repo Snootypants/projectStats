@@ -122,7 +122,6 @@
 		010000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift */; };
 		010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */; };
 		010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */; };
-		010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */; };
 		010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */; };
 		010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */; };
 		010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */; };
@@ -295,7 +294,6 @@
 		020000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/MinimapView.swift; sourceTree = "<group>"; };
 		020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/DevServerTab.swift; sourceTree = "<group>"; };
 		020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/RunningServersPopover.swift; sourceTree = "<group>"; };
-		020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabBar.swift; sourceTree = "<group>"; };
 		020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/IDE/TerminalTabView.swift; sourceTree = "<group>"; };
 		020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportGeneratorView.swift; sourceTree = "<group>"; };
 		020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Reports/ReportPreviewView.swift; sourceTree = "<group>"; };
@@ -612,7 +610,6 @@
 				020000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift */,
 				020000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift */,
 				020000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift */,
-				020000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift */,
 				020000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift */,
 				020000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift */,
 				020000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift */,
@@ -851,7 +848,6 @@
 				010000000000000000000196 /* projectStats/Views/IDE/MinimapView.swift in Sources */,
 				010000000000000000000099 /* projectStats/Views/IDE/DevServerTab.swift in Sources */,
 				010000000000000000000100 /* projectStats/Views/IDE/RunningServersPopover.swift in Sources */,
-				010000000000000000000101 /* projectStats/Views/IDE/TerminalTabBar.swift in Sources */,
 				010000000000000000000102 /* projectStats/Views/IDE/TerminalTabView.swift in Sources */,
 				010000000000000000000105 /* projectStats/Views/Reports/ReportGeneratorView.swift in Sources */,
 				010000000000000000000106 /* projectStats/Views/Reports/ReportPreviewView.swift in Sources */,

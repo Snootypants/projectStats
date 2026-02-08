@@ -328,6 +328,10 @@ final class TerminalTabsViewModel: ObservableObject {
         selectTab(tabs[index])
     }
 
+    func addShellTab() {
+        addTab(kind: .shell, title: "Shell", command: nil)
+    }
+
     func addClaudeTab() {
         let settings = SettingsViewModel.shared
         let model = settings.terminalClaudeModel

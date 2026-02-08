@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct TerminalPanelView: View {
@@ -6,6 +7,13 @@ struct TerminalPanelView: View {
     @StateObject private var outputMonitor = TerminalOutputMonitor.shared
     @State private var promptText: String = ""
     @FocusState private var isPromptFocused: Bool
+
+    // State migrated from TerminalTabBar
+    @State private var showCustomCommandSheet = false
+    @State private var customCommand: String = ""
+    @State private var showRenamePrompt = false
+    @State private var renameTarget: TerminalTabItem?
+    @State private var renameText: String = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -25,16 +33,16 @@ struct TerminalPanelView: View {
                 Divider()
             }
 
-            // Terminal content area with equal margins and clipping
-            HStack(spacing: 0) {
-                TerminalTabView(viewModel: viewModel)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
-                    .clipped()
+            // Horizontal terminal tab row
+            terminalTabRow
 
-                TerminalTabBar(viewModel: viewModel)
-            }
-            .clipped()
+            Divider()
+
+            // Terminal content
+            TerminalTabView(viewModel: viewModel)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
+                .clipped()
 
             Divider()
 
@@ -44,6 +52,152 @@ struct TerminalPanelView: View {
         .background(Color.primary.opacity(0.02))
         .background {
             terminalShortcuts
+        }
+        .alert("Rename Tab", isPresented: $showRenamePrompt) {
+            TextField("Title", text: $renameText)
+            Button("Cancel", role: .cancel) {}
+            Button("Save") {
+                if let target = renameTarget {
+                    viewModel.renameTab(target, title: renameText)
+                }
+            }
+        }
+        .sheet(isPresented: $showCustomCommandSheet) {
+            VStack(spacing: 16) {
+                Text("Custom Command")
+                    .font(.headline)
+                TextField("Command", text: $customCommand)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 320)
+                HStack {
+                    Spacer()
+                    Button("Cancel") {
+                        showCustomCommandSheet = false
+                        customCommand = ""
+                    }
+                    Button("Run") {
+                        let trimmed = customCommand.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            viewModel.addDevServerTab(command: trimmed)
+                        }
+                        showCustomCommandSheet = false
+                        customCommand = ""
+                    }
+                }
+            }
+            .padding(20)
+            .frame(width: 360)
+        }
+    }
+
+    // MARK: - Horizontal Terminal Tab Row
+
+    private var terminalTabRow: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 2) {
+                ForEach(viewModel.tabs) { tab in
+                    terminalTab(tab)
+                }
+
+                // + button with menu
+                Menu {
+                    Button("Shell") { viewModel.addShellTab() }
+                    Divider()
+                    Button("npm run dev") { viewModel.addDevServerTab(command: "npm run dev") }
+                    Button("npm start") { viewModel.addDevServerTab(command: "npm start") }
+                    Button("yarn dev") { viewModel.addDevServerTab(command: "yarn dev") }
+                    Button("npx prisma studio") { viewModel.addDevServerTab(command: "npx prisma studio") }
+                    Button("python manage.py runserver") { viewModel.addDevServerTab(command: "python manage.py runserver") }
+                    Divider()
+                    Button("Custom Command...") { showCustomCommandSheet = true }
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 24, height: 24)
+                        .contentShape(Rectangle())
+                }
+                .menuStyle(.borderlessButton)
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 8)
+        }
+        .frame(height: 32)
+        .background(Color.primary.opacity(0.03))
+    }
+
+    private func terminalTab(_ tab: TerminalTabItem) -> some View {
+        let isActive = viewModel.activeTabID == tab.id
+
+        return HStack(spacing: 6) {
+            // Status dot
+            Circle()
+                .fill(statusColor(for: tab.status))
+                .frame(width: 6, height: 6)
+
+            // Tab label
+            Text(tabLabel(for: tab))
+                .font(.system(size: 11, weight: isActive ? .semibold : .regular))
+                .lineLimit(1)
+
+            // Port number for dev servers
+            if tab.kind == .devServer, let port = tab.port {
+                Text(":\(port)")
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
+            }
+
+            // Close button (not for shell)
+            if tab.kind != .shell {
+                Button {
+                    viewModel.closeTab(tab)
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.plain)
+                .frame(width: 16, height: 16)
+                .contentShape(Rectangle())
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(isActive ? Color.accentColor.opacity(0.15) : Color.clear)
+        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .contentShape(Rectangle())
+        .onTapGesture {
+            viewModel.selectTab(tab)
+        }
+        .contextMenu {
+            Button("Rename") {
+                renameTarget = tab
+                renameText = tab.title
+                showRenamePrompt = true
+            }
+            Button("Duplicate") { viewModel.duplicateTab(tab) }
+            Divider()
+            Button("Clear Output") { tab.clearOutput() }
+            Button("Kill Process") { tab.sendControlC() }
+            if tab.kind != .shell {
+                Button("Close") { viewModel.closeTab(tab) }
+            }
+        }
+    }
+
+    private func tabLabel(for tab: TerminalTabItem) -> String {
+        switch tab.kind {
+        case .shell: return "Shell"
+        case .claude, .ccYolo, .codex, .devServer, .ghost: return tab.title
+        }
+    }
+
+    private func statusColor(for status: TerminalTabStatus) -> Color {
+        switch status {
+        case .working: return .orange
+        case .idle: return .green
+        case .error: return .red
+        case .needsAttention: return .yellow
         }
     }
 
