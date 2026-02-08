@@ -92,6 +92,9 @@ struct ReportGeneratorView: View {
             }
             _ = generator.generatePDF(for: project, options: options)
             isGenerating = false
+
+            // Collaborator achievement: generated a report
+            AchievementService.shared.checkAndUnlock(.collaborator, projectPath: project.path.path)
         }
     }
 

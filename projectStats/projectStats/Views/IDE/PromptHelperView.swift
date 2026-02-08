@@ -249,8 +249,9 @@ struct PromptHelperView: View {
                     promptId: saved.id
                 )
 
-                // Award XP for prompt execution
+                // Award XP for prompt execution and check prompt achievements
                 XPService.shared.onPromptExecuted(projectPath: projectPath.path)
+                AchievementService.shared.checkPromptAchievements(projectPath: projectPath.path)
             } catch {
                 print("[PromptHelper] Failed to save prompt: \(error)")
             }

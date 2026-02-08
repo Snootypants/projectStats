@@ -342,6 +342,9 @@ class DashboardViewModel: ObservableObject {
         // Calculate aggregated stats
         calculateAggregatedStats()
 
+        // Check line count and project diversity achievements
+        checkLineCountAndProjectAchievements()
+
         // Sync back to SwiftData cache
         await syncToSwiftData()
 
@@ -1181,6 +1184,21 @@ class DashboardViewModel: ObservableObject {
         } catch {
             print("[Dashboard] Error syncing project stats: \(error)")
         }
+    }
+
+    private func checkLineCountAndProjectAchievements() {
+        let weeklyAdded = aggregatedStats.thisWeek.linesAdded
+        let weeklyRemoved = aggregatedStats.thisWeek.linesRemoved
+
+        // Pick the first active project path for attribution
+        let projectPath = projects.first(where: { $0.status == .active })?.path.path
+
+        AchievementService.shared.checkLineCountAchievements(
+            projectPath: projectPath ?? "",
+            weeklyLinesAdded: weeklyAdded,
+            weeklyLinesRemoved: weeklyRemoved
+        )
+        AchievementService.shared.checkProjectDiversityAchievements()
     }
 
     private func fetchGitHubStats() async {

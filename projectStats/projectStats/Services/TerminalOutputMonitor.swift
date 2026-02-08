@@ -109,6 +109,13 @@ final class TerminalOutputMonitor: ObservableObject {
                 // Award XP for completed Claude session
                 XPService.shared.onClaudeSessionCompleted(projectPath: activeProjectPath ?? "")
 
+                // Check session-based and time-based achievements
+                AchievementService.shared.checkSessionAchievements(projectPath: activeProjectPath ?? "")
+                AchievementService.shared.checkDailyTimeAchievements(projectPath: activeProjectPath ?? "")
+
+                // Check sprinter achievement (feature shipped in under 1 hour)
+                AchievementService.shared.checkSprinterAchievement(promptDuration: duration, projectPath: activeProjectPath ?? "")
+
                 // Refresh Claude usage stats (with delay for JSONL write)
                 Task {
                     await ClaudeUsageService.shared.onClaudeFinished(projectPath: activeProjectPath)

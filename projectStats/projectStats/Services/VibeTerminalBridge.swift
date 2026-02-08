@@ -111,8 +111,9 @@ final class VibeTerminalBridge: ObservableObject {
         let command = ThinkingLevelService.shared.generatePromptCommand(prompt: prompt)
         tab.enqueueCommand(command)
 
-        // Award XP for VIBE prompt execution
+        // Award XP for VIBE prompt execution and check prompt achievements
         XPService.shared.onPromptExecuted(projectPath: projectPath.path)
+        AchievementService.shared.checkPromptAchievements(projectPath: projectPath.path)
 
         // Add to the project's terminal tabs so it gets a terminal view
         let termVM = TerminalTabsViewModel.shared

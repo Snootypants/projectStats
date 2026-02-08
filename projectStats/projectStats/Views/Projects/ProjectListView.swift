@@ -217,6 +217,10 @@ struct CompactProjectCard: View {
             toggleArchiveStatus()
         }
 
+        Button("Mark as Complete") {
+            AchievementService.shared.checkAndUnlock(.launcher, projectPath: project.path.path)
+        }
+
         Divider()
 
         Button("Open in Finder") {
