@@ -165,21 +165,7 @@
 		010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */; };
 		010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000159 /* projectStats/Utilities/Logger.swift */; };
 		010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */; };
-		010000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */; };
-		010000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */; };
-		010000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */; };
-		010000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */; };
-		010000000000000000000165 /* projectStats/Views/Dashboard/V3/HomePageV3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000165 /* projectStats/Views/Dashboard/V3/HomePageV3View.swift */; };
-		010000000000000000000166 /* projectStats/Views/Dashboard/V4/HomePageV4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000166 /* projectStats/Views/Dashboard/V4/HomePageV4View.swift */; };
 		010000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */; };
-		010000000000000000000168 /* projectStats/Views/Dashboard/V3/V3TopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000168 /* projectStats/Views/Dashboard/V3/V3TopBar.swift */; };
-		010000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */; };
-		010000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */; };
-		010000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */; };
-		010000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */; };
-		010000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */; };
-		010000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */; };
-		010000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */; };
 		010000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */; };
 		010000000000000000000177 /* projectStats/Views/Dashboard/V5/V5SessionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000177 /* projectStats/Views/Dashboard/V5/V5SessionPanel.swift */; };
 		010000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */; };
@@ -350,21 +336,7 @@
 		020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SubscriptionManager.swift; sourceTree = "<group>"; };
 		020000000000000000000159 /* projectStats/Utilities/Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/Logger.swift; sourceTree = "<group>"; };
 		020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/TerminalSettings.swift; sourceTree = "<group>"; };
-		020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/HomePageV2View.swift; sourceTree = "<group>"; };
-		020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2StatsRow.swift; sourceTree = "<group>"; };
-		020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift; sourceTree = "<group>"; };
-		020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V2/V2ChartView.swift; sourceTree = "<group>"; };
-		020000000000000000000165 /* projectStats/Views/Dashboard/V3/HomePageV3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/HomePageV3View.swift; sourceTree = "<group>"; };
-		020000000000000000000166 /* projectStats/Views/Dashboard/V4/HomePageV4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/HomePageV4View.swift; sourceTree = "<group>"; };
 		020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/HomePageV5View.swift; sourceTree = "<group>"; };
-		020000000000000000000168 /* projectStats/Views/Dashboard/V3/V3TopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3TopBar.swift; sourceTree = "<group>"; };
-		020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3HeroStrip.swift; sourceTree = "<group>"; };
-		020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift; sourceTree = "<group>"; };
-		020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V3/V3ProjectRail.swift; sourceTree = "<group>"; };
-		020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift; sourceTree = "<group>"; };
-		020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift; sourceTree = "<group>"; };
-		020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4TimeCards.swift; sourceTree = "<group>"; };
-		020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V4/V4ProjectFooter.swift; sourceTree = "<group>"; };
 		020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5XPHeader.swift; sourceTree = "<group>"; };
 		020000000000000000000177 /* projectStats/Views/Dashboard/V5/V5SessionPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5SessionPanel.swift; sourceTree = "<group>"; };
 		020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5MoneyPanel.swift; sourceTree = "<group>"; };
@@ -675,21 +647,7 @@
 				020000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift */,
 				020000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift */,
 				020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */,
-				020000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift */,
-				020000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift */,
-				020000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift */,
-				020000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift */,
-				020000000000000000000165 /* projectStats/Views/Dashboard/V3/HomePageV3View.swift */,
-				020000000000000000000166 /* projectStats/Views/Dashboard/V4/HomePageV4View.swift */,
 				020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */,
-				020000000000000000000168 /* projectStats/Views/Dashboard/V3/V3TopBar.swift */,
-				020000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift */,
-				020000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift */,
-				020000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift */,
-				020000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift */,
-				020000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift */,
-				020000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift */,
-				020000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift */,
 				020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */,
 				020000000000000000000177 /* projectStats/Views/Dashboard/V5/V5SessionPanel.swift */,
 				020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */,
@@ -930,21 +888,7 @@
 				010000000000000000000151 /* projectStats/Services/CloudKit/SyncEngine.swift in Sources */,
 				010000000000000000000154 /* projectStats/Views/Components/SyncStatusView.swift in Sources */,
 				010000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift in Sources */,
-				010000000000000000000161 /* projectStats/Views/Dashboard/HomePageV2View.swift in Sources */,
-				010000000000000000000162 /* projectStats/Views/Dashboard/V2/V2StatsRow.swift in Sources */,
-				010000000000000000000163 /* projectStats/Views/Dashboard/V2/V2GalaxyLayout.swift in Sources */,
-				010000000000000000000164 /* projectStats/Views/Dashboard/V2/V2ChartView.swift in Sources */,
-				010000000000000000000165 /* projectStats/Views/Dashboard/V3/HomePageV3View.swift in Sources */,
-				010000000000000000000166 /* projectStats/Views/Dashboard/V4/HomePageV4View.swift in Sources */,
 				010000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift in Sources */,
-				010000000000000000000168 /* projectStats/Views/Dashboard/V3/V3TopBar.swift in Sources */,
-				010000000000000000000169 /* projectStats/Views/Dashboard/V3/V3HeroStrip.swift in Sources */,
-				010000000000000000000170 /* projectStats/Views/Dashboard/V3/V3ThreeColumnCore.swift in Sources */,
-				010000000000000000000171 /* projectStats/Views/Dashboard/V3/V3ProjectRail.swift in Sources */,
-				010000000000000000000172 /* projectStats/Views/Dashboard/V4/V4VerticalHeatmap.swift in Sources */,
-				010000000000000000000173 /* projectStats/Views/Dashboard/V4/V4AnnotatedChart.swift in Sources */,
-				010000000000000000000174 /* projectStats/Views/Dashboard/V4/V4TimeCards.swift in Sources */,
-				010000000000000000000175 /* projectStats/Views/Dashboard/V4/V4ProjectFooter.swift in Sources */,
 				010000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift in Sources */,
 				010000000000000000000177 /* projectStats/Views/Dashboard/V5/V5SessionPanel.swift in Sources */,
 				010000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift in Sources */,

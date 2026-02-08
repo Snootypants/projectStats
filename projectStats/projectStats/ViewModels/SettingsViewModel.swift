@@ -138,7 +138,7 @@ class SettingsViewModel: ObservableObject {
     }
 
     // MARK: - Home Page Layout
-    @AppStorage("homePageLayout") var homePageLayout: String = "v1"
+    @AppStorage("homePageLayout") var homePageLayout: String = "v5"
     // Available: "v1" (classic), "v2" (refined)
     @AppStorage("chartTimeRange") var chartTimeRange: String = "week"
     // Available: "week", "month", "quarter", "year"

@@ -814,21 +814,6 @@ struct HomePageSettingsView: View {
                         description: "Original dashboard layout"
                     )
                     layoutOption(
-                        value: "v2",
-                        title: "V2 (Refined)",
-                        description: "Galaxy layout with centered time display"
-                    )
-                    layoutOption(
-                        value: "v3",
-                        title: "V3 (Command Center)",
-                        description: "Dense 3-column systems dashboard"
-                    )
-                    layoutOption(
-                        value: "v4",
-                        title: "V4 (Timeline)",
-                        description: "Week-as-story with vertical heatmap"
-                    )
-                    layoutOption(
                         value: "v5",
                         title: "V5 (Arcade HUD)",
                         description: "Gamified stats with XP front-and-center"
