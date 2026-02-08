@@ -150,6 +150,22 @@ class TabManagerViewModel: ObservableObject {
         }
     }
 
+    /// Open a VIBE tab for a project (or focus existing one)
+    func openVibeTab(projectPath: String) {
+        // Check if a vibe tab already exists for this project
+        if let existing = tabs.first(where: {
+            if case .vibe(let p) = $0.content { return p == projectPath }
+            return false
+        }) {
+            activeTabID = existing.id
+            return
+        }
+
+        let tab = AppTab(id: UUID(), content: .vibe(projectPath: projectPath), isPinned: false)
+        tabs.append(tab)
+        activeTabID = tab.id
+    }
+
     /// Navigate back from workspace to project picker (park the workspace)
     func navigateBack() {
         guard let index = tabs.firstIndex(where: { $0.id == activeTabID }),
@@ -171,6 +187,7 @@ class TabManagerViewModel: ObservableObject {
             case .home: return ["type": "home"]
             case .projectPicker: return ["type": "picker"]
             case .projectWorkspace(let path): return ["type": "workspace", "path": path]
+            case .vibe(let path): return ["type": "vibe", "path": path]
             }
         }
 
@@ -204,6 +221,14 @@ class TabManagerViewModel: ObservableObject {
                     restoredTabs.append(AppTab(
                         id: UUID(),
                         content: .projectWorkspace(projectPath: path),
+                        isPinned: false
+                    ))
+                }
+            case "vibe":
+                if let path = entry["path"] as? String {
+                    restoredTabs.append(AppTab(
+                        id: UUID(),
+                        content: .vibe(projectPath: path),
                         isPinned: false
                     ))
                 }

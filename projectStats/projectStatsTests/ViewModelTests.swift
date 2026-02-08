@@ -269,4 +269,32 @@ final class ViewModelTests: XCTestCase {
             XCTFail("Expected .fire mode")
         }
     }
+
+    // MARK: - Scope D: Vibe Tab Tests
+
+    func test_D_vibeTabContent_equality() {
+        let a = TabContent.vibe(projectPath: "/test/project")
+        let b = TabContent.vibe(projectPath: "/test/project")
+        let c = TabContent.vibe(projectPath: "/other/project")
+        XCTAssertEqual(a, b)
+        XCTAssertNotEqual(a, c)
+        XCTAssertNotEqual(a, TabContent.home)
+    }
+
+    @MainActor
+    func test_D_openVibeTab_createsTab() {
+        let tabManager = TabManagerViewModel.shared
+        let initialCount = tabManager.tabs.count
+        tabManager.openVibeTab(projectPath: "/test/project")
+        XCTAssertEqual(tabManager.tabs.count, initialCount + 1)
+        if case .vibe(let path) = tabManager.activeTab?.content {
+            XCTAssertEqual(path, "/test/project")
+        } else {
+            XCTFail("Expected .vibe tab content")
+        }
+        // Clean up
+        if let id = tabManager.activeTab?.id {
+            tabManager.closeTab(id)
+        }
+    }
 }

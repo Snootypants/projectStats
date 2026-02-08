@@ -13,6 +13,7 @@
 		010000000000000000000197 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000197 /* ColorExtensions.swift */; };
 		010000000000000000000198 /* projectStats/Models/VibeConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000198 /* projectStats/Models/VibeConversation.swift */; };
 		010000000000000000000199 /* projectStats/Services/VibeConversationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */; };
+		010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */; };
 		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
 		010000000000000000000005 /* ReadmeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* ReadmeParser.swift */; };
 		010000000000000000000006 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* Project.swift */; };
@@ -199,6 +200,7 @@
 		020000000000000000000197 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000198 /* projectStats/Models/VibeConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/VibeConversation.swift; sourceTree = "<group>"; };
 		020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeConversationService.swift; sourceTree = "<group>"; };
+		020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTabView.swift; sourceTree = "<group>"; };
 		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000005 /* ReadmeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeParser.swift; sourceTree = "<group>"; };
 		020000000000000000000006 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -704,6 +706,7 @@
 				020000000000000000000191 /* projectStats/Models/PromptExecution.swift */,
 				020000000000000000000198 /* projectStats/Models/VibeConversation.swift */,
 				020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */,
+				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
 				020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */,
 			);
 			name = "Recovered References";
@@ -965,6 +968,7 @@
 				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
 				010000000000000000000198 /* projectStats/Models/VibeConversation.swift in Sources */,
 				010000000000000000000199 /* projectStats/Services/VibeConversationService.swift in Sources */,
+				010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
