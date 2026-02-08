@@ -11,9 +11,4 @@ final class FeatureFlags: ObservableObject {
     var canUseWebDashboard: Bool { storeKit.isPro }
     var historyDays: Int { storeKit.isPro ? Int.max : 90 }
 
-    var canUseiCloudSync: Bool { true }
-    var canUseAIFeatures: Bool { true }
-    var canUseTerminalTabs: Bool { true }
-    var canUseAchievements: Bool { true }
-    var canUseTimeTracking: Bool { true }
 }
