@@ -1,6 +1,18 @@
 import Foundation
 import SwiftData
 
+enum VibeChatEntry: Identifiable {
+    case user(id: UUID = UUID(), text: String, timestamp: Date = Date())
+    case claude(id: UUID = UUID(), text: String, timestamp: Date = Date())
+
+    var id: UUID {
+        switch self {
+        case .user(let id, _, _): return id
+        case .claude(let id, _, _): return id
+        }
+    }
+}
+
 @MainActor
 final class VibeTerminalBridge: ObservableObject {
     let projectPath: URL
@@ -8,11 +20,17 @@ final class VibeTerminalBridge: ObservableObject {
     @Published var isClaudeActive: Bool = false
     @Published var executionOutputStream: String = ""
     @Published var isExecuting: Bool = false
+    @Published var chatEntries: [VibeChatEntry] = []
 
     @Published private(set) var planningTab: TerminalTabItem?
     private var executionTab: TerminalTabItem?
     private let conversationService = VibeConversationService.shared
     private let maxOutputSize = 512_000 // ~500KB
+
+    private var currentClaudeEntryID: UUID?
+    private var claudeBuffer: String = ""
+    private var flushTask: Task<Void, Never>?
+    private var lastSentText: String?
 
     init(projectPath: URL) {
         self.projectPath = projectPath
@@ -45,6 +63,14 @@ final class VibeTerminalBridge: ObservableObject {
         tab.sendCommand(text)
     }
 
+    /// Send user input and record it as a chat entry
+    func sendChat(_ text: String) {
+        chatEntries.append(.user(text: text))
+        lastSentText = text
+        currentClaudeEntryID = nil
+        send(text)
+    }
+
     /// Send a slash command (e.g. /plan, /usage)
     func sendSlashCommand(_ cmd: String) {
         guard let tab = planningTab else { return }
@@ -64,7 +90,46 @@ final class VibeTerminalBridge: ObservableObject {
 
         // Persist to conversation
         conversationService.appendToLog(stripped)
-        // Note: monitor and time tracking handled by VibeTerminalHostView's onOutput
+
+        // Build chat entries — skip empty/whitespace-only, skip echo of user input
+        let trimmed = stripped.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        if let sent = lastSentText, trimmed.contains(sent) {
+            lastSentText = nil
+            return
+        }
+
+        // Buffer output and flush into chat entry on a debounce
+        claudeBuffer += stripped
+        scheduleFlush()
+    }
+
+    private func scheduleFlush() {
+        flushTask?.cancel()
+        flushTask = Task {
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            flushClaudeBuffer()
+        }
+    }
+
+    private func flushClaudeBuffer() {
+        guard !claudeBuffer.isEmpty else { return }
+        let text = claudeBuffer
+        claudeBuffer = ""
+
+        if let entryID = currentClaudeEntryID,
+           let idx = chatEntries.firstIndex(where: { $0.id == entryID }) {
+            // Append to existing claude entry
+            if case .claude(let id, let existing, let ts) = chatEntries[idx] {
+                chatEntries[idx] = .claude(id: id, text: existing + text, timestamp: ts)
+            }
+        } else {
+            // Create new claude entry
+            let entry = VibeChatEntry.claude(text: text)
+            currentClaudeEntryID = entry.id
+            chatEntries.append(entry)
+        }
     }
 
     /// Handle execution terminal output
