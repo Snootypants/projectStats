@@ -289,4 +289,33 @@ final class IntegrationTests: XCTestCase {
         XCTAssertNotNil(WebAPIClient.shared)
         XCTAssertNotNil(ProviderMetricsService.shared)
     }
+
+    // MARK: - Scope G: Vibe Tab Entry Points
+
+    @MainActor
+    func test_G_openVibeTab_fromHomePage() {
+        let tabManager = TabManagerViewModel.shared
+        let before = tabManager.tabs.count
+        tabManager.openVibeTab(projectPath: "/test/vibe-project")
+        XCTAssertEqual(tabManager.tabs.count, before + 1)
+        if case .vibe(let path) = tabManager.activeTab?.content {
+            XCTAssertEqual(path, "/test/vibe-project")
+        } else {
+            XCTFail("Expected .vibe tab")
+        }
+        if let id = tabManager.activeTab?.id { tabManager.closeTab(id) }
+    }
+
+    @MainActor
+    func test_G_executionCompletion_updatesStatus() {
+        let service = VibeConversationService.shared
+        let conv = service.startConversation(projectPath: "/test")
+        service.lockPlan(summary: "plan")
+        service.startExecution()
+        XCTAssertEqual(conv.status, "executing")
+        service.completeExecution(duration: 120.0)
+        XCTAssertEqual(conv.status, "completed")
+        XCTAssertEqual(conv.executionDurationSeconds, 120.0)
+        service.endConversation()
+    }
 }

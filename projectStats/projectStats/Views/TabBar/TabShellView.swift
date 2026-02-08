@@ -155,6 +155,15 @@ struct TabShellView: View {
 
             Button("") { showCommandPalette.toggle() }
                 .keyboardShortcut("k", modifiers: [.command])
+
+            // Cmd+Shift+V: Open VIBE tab for active project
+            Button("") {
+                if let activeTab = tabManager.activeTab,
+                   case .projectWorkspace(let path) = activeTab.content {
+                    tabManager.openVibeTab(projectPath: path)
+                }
+            }
+            .keyboardShortcut("v", modifiers: [.command, .shift])
         }
         .opacity(0)
         .frame(width: 0, height: 0)

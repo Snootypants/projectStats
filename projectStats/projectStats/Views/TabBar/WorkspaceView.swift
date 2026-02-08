@@ -137,6 +137,20 @@ struct WorkspaceView: View {
             }
             .menuStyle(.borderlessButton)
 
+            // VIBE button
+            Button {
+                tabManager.openVibeTab(projectPath: projectPath)
+            } label: {
+                HStack(spacing: 3) {
+                    Image(systemName: "bolt.fill")
+                    Text("VIBE")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .foregroundStyle(.cyan)
+            }
+            .buttonStyle(.plain)
+            .help("Open VIBE tab (Cmd+Shift+V)")
+
             // Update Docs button
             Button {
                 refreshDocs(for: project)
