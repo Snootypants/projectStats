@@ -227,6 +227,10 @@ struct IDEModeView: View {
                 .keyboardShortcut("3", modifiers: [.command, .shift])
             Button("") { showExplorer.toggle() }
                 .keyboardShortcut("b", modifiers: .command)
+            Button("") {
+                NotificationCenter.default.post(name: .openDocBuilder, object: nil)
+            }
+                .keyboardShortcut("d", modifiers: [.command, .shift])
         }
         .opacity(0)
         .frame(width: 0, height: 0)

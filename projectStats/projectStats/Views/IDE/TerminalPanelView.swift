@@ -145,6 +145,12 @@ struct TerminalPanelView: View {
                 Text(":\(port)")
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
+
+                // Info icon with tooltip
+                Image(systemName: "info.circle")
+                    .font(.system(size: 9))
+                    .foregroundStyle(.tertiary)
+                    .help("localhost:\(port) — Click tab to copy URL")
             }
 
             // Close button (not for shell)
@@ -167,7 +173,14 @@ struct TerminalPanelView: View {
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .contentShape(Rectangle())
         .onTapGesture {
-            viewModel.selectTab(tab)
+            if tab.kind == .devServer, let port = tab.port, viewModel.activeTabID == tab.id {
+                // Already selected — copy URL
+                let url = "http://localhost:\(port)"
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(url, forType: .string)
+            } else {
+                viewModel.selectTab(tab)
+            }
         }
         .contextMenu {
             Button("Rename") {
