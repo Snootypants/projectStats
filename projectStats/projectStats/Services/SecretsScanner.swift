@@ -3,7 +3,48 @@ import Foundation
 final class SecretsScanner {
     static let shared = SecretsScanner()
 
-    let patterns: [(name: String, regex: String)] = [
+    var isGitleaksAvailable: Bool {
+        Shell.run("which gitleaks").contains("/gitleaks")
+    }
+
+    /// Scan staged files for secrets using gitleaks. Falls back to basic regex if gitleaks not installed.
+    func scanStagedFiles(in projectPath: URL) -> [SecretMatch] {
+        let result = Shell.runResult(
+            "gitleaks protect --staged --no-banner --report-format json --report-path /dev/stdout",
+            at: projectPath
+        )
+
+        // gitleaks exit code 0 = clean, exit code 1 = leaks found (with JSON output)
+        if result.exitCode == 0 {
+            return []
+        }
+
+        if let data = result.output.data(using: .utf8),
+           let findings = try? JSONDecoder().decode([GitleaksMatch].self, from: data) {
+            return findings.map { SecretMatch(
+                type: $0.RuleID,
+                filePath: $0.File,
+                line: $0.StartLine,
+                snippet: $0.Match
+            )}
+        }
+
+        // Fallback: basic regex scan if gitleaks not available or JSON parse failed
+        return fallbackScan(in: projectPath)
+    }
+
+    // MARK: - Gitleaks JSON Model
+
+    private struct GitleaksMatch: Decodable {
+        let RuleID: String
+        let File: String
+        let StartLine: Int
+        let Match: String
+    }
+
+    // MARK: - Legacy Regex Fallback
+
+    private let patterns: [(name: String, regex: String)] = [
         ("AWS Key", "AKIA[0-9A-Z]{16}"),
         ("GitHub Token", "ghp_[a-zA-Z0-9]{36}"),
         ("Slack Token", "xox[baprs]-[0-9a-zA-Z]{10,}"),
@@ -14,53 +55,27 @@ final class SecretsScanner {
         ("Generic Secret", "(password|secret|token|api_key)\\s*[=:]\\s*['\"][^'\"]+['\"]")
     ]
 
-    /// Scans only git staged files for secrets
-    func scanStagedFiles(in projectPath: URL) -> [SecretMatch] {
-        // Get list of staged files
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
-        process.arguments = ["-C", projectPath.path, "diff", "--cached", "--name-only"]
-        process.currentDirectoryURL = projectPath
+    private func fallbackScan(in projectPath: URL) -> [SecretMatch] {
+        let stagedResult = Shell.runResult("git diff --cached --name-only", at: projectPath)
+        guard stagedResult.exitCode == 0 else { return [] }
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = FileHandle.nullDevice
-
-        do {
-            try process.run()
-            process.waitUntilExit()
-        } catch {
-            return []
-        }
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        guard let output = String(data: data, encoding: .utf8) else { return [] }
-
-        let stagedFiles = output.components(separatedBy: .newlines)
+        let stagedFiles = stagedResult.output.components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
             .map { projectPath.appendingPathComponent($0) }
 
-        var allMatches: [SecretMatch] = []
-        for file in stagedFiles {
-            let matches = scan(file: file)
-            allMatches.append(contentsOf: matches)
-        }
-
-        return allMatches
-    }
-
-    func scan(file: URL) -> [SecretMatch] {
-        guard let content = try? String(contentsOf: file, encoding: .utf8) else { return [] }
         var matches: [SecretMatch] = []
-        for (name, pattern) in patterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { continue }
-            let nsrange = NSRange(content.startIndex..., in: content)
-            let results = regex.matches(in: content, options: [], range: nsrange)
-            for result in results {
-                let line = lineNumber(for: result.range, in: content)
-                let snippet = snippetFor(range: result.range, in: content)
-                matches.append(SecretMatch(type: name, filePath: file.path, line: line, snippet: snippet))
+        for file in stagedFiles {
+            guard let content = try? String(contentsOf: file, encoding: .utf8) else { continue }
+            for (name, pattern) in patterns {
+                guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+                let nsrange = NSRange(content.startIndex..., in: content)
+                let results = regex.matches(in: content, range: nsrange)
+                for result in results {
+                    let line = lineNumber(for: result.range, in: content)
+                    let snippet = snippetFor(range: result.range, in: content)
+                    matches.append(SecretMatch(type: name, filePath: file.path, line: line, snippet: snippet))
+                }
             }
         }
         return matches
