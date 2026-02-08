@@ -3,6 +3,7 @@ import SwiftUI
 /// V5 XP Header - Large XP bar, level, streak and achievement count
 struct V5XPHeader: View {
     @StateObject private var achievementService = AchievementService.shared
+    @StateObject private var xpService = XPService.shared
     @EnvironmentObject var viewModel: DashboardViewModel
     @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
 
@@ -10,21 +11,11 @@ struct V5XPHeader: View {
         Color.fromHex(accentColorHex) ?? .orange
     }
 
-    private var totalXP: Int {
-        achievementService.unlockedAchievements.reduce(0) { $0 + $1.points }
-    }
-
-    private var currentLevel: Int {
-        max(1, (totalXP / 250) + 1)
-    }
-
     private var xpProgress: Double {
-        let xp = totalXP
-        let level = currentLevel
-        let currentLevelXP = (level - 1) * 250
-        let nextLevelXP = level * 250
-        guard nextLevelXP > currentLevelXP else { return 1.0 }
-        return Double(xp - currentLevelXP) / Double(nextLevelXP - currentLevelXP)
+        let progress = xpService.xpProgressInLevel
+        let needed = 250
+        guard needed > 0 else { return 1.0 }
+        return min(1.0, Double(progress) / Double(needed))
     }
 
     var body: some View {
@@ -49,7 +40,7 @@ struct V5XPHeader: View {
                     // XP text overlay
                     HStack {
                         Spacer()
-                        Text("\(totalXP) / \(currentLevel * 250) XP")
+                        Text("\(xpService.totalXP) / \(xpService.xpForNextLevel) XP")
                             .font(.caption.bold())
                             .foregroundStyle(.white.opacity(0.9))
                         Spacer()
@@ -57,10 +48,25 @@ struct V5XPHeader: View {
                 }
             }
             .frame(height: 24)
+            .overlay(alignment: .trailing) {
+                // XP gain indicator
+                if let gain = xpService.recentXPGain {
+                    Text("+\(gain.amount) XP")
+                        .font(.caption.bold())
+                        .foregroundStyle(accentColor)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(accentColor.opacity(0.15))
+                        .clipShape(Capsule())
+                        .offset(x: 0, y: -20)
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        .animation(.easeOut(duration: 0.3), value: gain.reason)
+                }
+            }
 
             // Level and badges
             HStack(spacing: 24) {
-                Text("LEVEL \(currentLevel)")
+                Text("LEVEL \(xpService.currentLevel)")
                     .font(.system(size: 28, weight: .black, design: .rounded))
 
                 Divider()
@@ -70,7 +76,7 @@ struct V5XPHeader: View {
                 HStack(spacing: 6) {
                     Image(systemName: "flame.fill")
                         .foregroundStyle(.orange)
-                    Text("\(viewModel.aggregatedStats.currentStreak) DAY STREAK")
+                    Text("\(xpService.currentStreak) DAY STREAK")
                         .font(.subheadline.bold())
                 }
 
