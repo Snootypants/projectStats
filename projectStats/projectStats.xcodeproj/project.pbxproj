@@ -176,6 +176,7 @@
 		010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000191 /* projectStats/Models/PromptExecution.swift */; };
 		010000000000000000000193 /* SwarmTestPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000193 /* SwarmTestPrompt.swift */; };
 		010000000000000000000207 /* DocBuilderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000207 /* DocBuilderSheet.swift */; };
+		010000000000000000000208 /* HomePageV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000208 /* HomePageV2View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -347,6 +348,7 @@
 		020000000000000000000184 /* NewProjectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProjectSheet.swift; sourceTree = "<group>"; };
 		020000000000000000000191 /* projectStats/Models/PromptExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/PromptExecution.swift; sourceTree = "<group>"; };
 		020000000000000000000193 /* SwarmTestPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwarmTestPrompt.swift; sourceTree = "<group>"; };
+		020000000000000000000208 /* HomePageV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageV2View.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -503,6 +505,7 @@
 				020000000000000000000020 /* StatsCardsView.swift */,
 				020000000000000000000021 /* ActivityHeatMap.swift */,
 				020000000000000000000022 /* ActivityChart.swift */,
+				020000000000000000000208 /* HomePageV2View.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -909,6 +912,7 @@
 				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
 				010000000000000000000206 /* String+ANSI.swift in Sources */,
 				010000000000000000000207 /* DocBuilderSheet.swift in Sources */,
+				010000000000000000000208 /* HomePageV2View.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
