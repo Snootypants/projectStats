@@ -832,31 +832,22 @@ final class ServiceTests: XCTestCase {
         service.currentLevel = max(1, (savedXP / 250) + 1)
     }
 
-    // MARK: - Scope 14B: ANSI Stripping Tests
+    // MARK: - ANSI Stripping Tests (String+ANSI extension)
 
-    func test_B_stripAnsi_catchesDECPrivateMode() {
-        let input = "Hello\u{1B}[?2004hWorld\u{1B}[?2004l"
-        let result = TerminalTabItem.stripAnsiCodes(input)
-        XCTAssertEqual(result, "HelloWorld")
+    func testStripAnsiCodes_CSI() {
+        XCTAssertEqual("\u{1B}[32mHello\u{1B}[0m".strippingAnsiCodes(), "Hello")
     }
 
-    func test_B_stripAnsi_catchesOSCSequences() {
-        let input = "Hello\u{1B}]0;My Title\u{07}World"
-        let result = TerminalTabItem.stripAnsiCodes(input)
-        XCTAssertEqual(result, "HelloWorld")
+    func testStripAnsiCodes_DECPrivateMode() {
+        XCTAssertEqual("\u{1B}[?2004htest\u{1B}[?2004l".strippingAnsiCodes(), "test")
     }
 
-    func test_B_stripAnsi_preservesNormalText() {
-        let input = "Hello World 123 !@#"
-        let result = TerminalTabItem.stripAnsiCodes(input)
-        XCTAssertEqual(result, input)
+    func testStripAnsiCodes_OSC() {
+        XCTAssertEqual("\u{1B}]0;title\u{07}content".strippingAnsiCodes(), "content")
     }
 
-    func test_B_stripAnsi_existingPatternsStillWork() {
-        // Green color code
-        let input = "\u{1B}[32mHello\u{1B}[0m"
-        let result = TerminalTabItem.stripAnsiCodes(input)
-        XCTAssertEqual(result, "Hello")
+    func testStripAnsiCodes_PreservesNormalText() {
+        XCTAssertEqual("just normal text".strippingAnsiCodes(), "just normal text")
     }
 
     // MARK: - Scope 14C: Chat Entry Model Tests

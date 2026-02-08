@@ -18,6 +18,7 @@
 		010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */; };
 		010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000204 /* projectStats/Services/XPService.swift */; };
 		010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */; };
+		010000000000000000000206 /* String+ANSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000206 /* String+ANSI.swift */; };
 		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
 		010000000000000000000005 /* ReadmeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* ReadmeParser.swift */; };
 		010000000000000000000006 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* Project.swift */; };
@@ -203,6 +204,7 @@
 		020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeSummarizerService.swift; sourceTree = "<group>"; };
 		020000000000000000000204 /* projectStats/Services/XPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/XPService.swift; sourceTree = "<group>"; };
 		020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeProcessBridge.swift; sourceTree = "<group>"; };
+		020000000000000000000206 /* String+ANSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ANSI.swift"; sourceTree = "<group>"; };
 		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000005 /* ReadmeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeParser.swift; sourceTree = "<group>"; };
 		020000000000000000000006 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -499,6 +501,7 @@
 				020000000000000000000056 /* StringExtensions.swift */,
 				020000000000000000000004 /* URLExtensions.swift */,
 				020000000000000000000005 /* ReadmeParser.swift */,
+				020000000000000000000206 /* String+ANSI.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -961,6 +964,7 @@
 				010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */,
 				010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */,
 				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
+				010000000000000000000206 /* String+ANSI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

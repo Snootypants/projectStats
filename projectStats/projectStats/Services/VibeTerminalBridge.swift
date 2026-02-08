@@ -76,7 +76,7 @@ final class VibeTerminalBridge: ObservableObject {
 
     /// Handle terminal output
     func handleOutput(_ text: String) {
-        let stripped = TerminalTabItem.stripAnsiCodes(text)
+        let stripped = text.strippingAnsiCodes()
 
         // Accumulate raw for persistence
         rawOutputStream += stripped
@@ -130,7 +130,7 @@ final class VibeTerminalBridge: ObservableObject {
 
     /// Handle execution terminal output
     func handleExecutionOutput(_ text: String) {
-        let stripped = TerminalTabItem.stripAnsiCodes(text)
+        let stripped = text.strippingAnsiCodes()
         executionOutputStream += stripped
 
         if stripped.contains("✻ Cooked for") || stripped.contains("✻ Crunched for") || stripped.contains("✻ Sautéed for") {

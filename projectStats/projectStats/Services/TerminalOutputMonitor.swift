@@ -61,7 +61,7 @@ final class TerminalOutputMonitor: ObservableObject {
     private init() {}
 
     func processTerminalOutput(_ line: String) {
-        let cleanLine = stripAnsiCodes(line)
+        let cleanLine = line.strippingAnsiCodes()
         let isGitEvent = gitTriggerPatterns.contains { cleanLine.contains($0) }
 
         if isGitEvent {
@@ -177,13 +177,6 @@ final class TerminalOutputMonitor: ObservableObject {
         guard let projectPath = activeProjectPath else { return }
         print("[TerminalMonitor] Git event detected, syncing project: \(projectPath)")
         await DashboardViewModel.shared.syncSingleProject(path: projectPath)
-    }
-
-    private func stripAnsiCodes(_ string: String) -> String {
-        let pattern = "\\x1B\\[[0-9;]*[a-zA-Z]"
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return string }
-        let range = NSRange(string.startIndex..., in: string)
-        return regex.stringByReplacingMatches(in: string, range: range, withTemplate: "")
     }
 
     // MARK: - Claude Detection

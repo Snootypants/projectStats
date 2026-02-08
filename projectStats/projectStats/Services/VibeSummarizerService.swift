@@ -62,7 +62,7 @@ final class VibeSummarizerService: ObservableObject {
 
     /// Called when ghost terminal output arrives
     func handleGhostOutput(_ text: String) {
-        let stripped = TerminalTabItem.stripAnsiCodes(text)
+        let stripped = text.strippingAnsiCodes()
         outputBuffer += stripped
 
         // Check for completion
