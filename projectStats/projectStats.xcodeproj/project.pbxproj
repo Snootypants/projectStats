@@ -16,7 +16,6 @@
 		010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */; };
 		010000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */; };
 		010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */; };
-		010000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */; };
 		010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000204 /* projectStats/Services/XPService.swift */; };
 		010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */; };
 		010000000000000000000004 /* URLExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* URLExtensions.swift */; };
@@ -208,7 +207,6 @@
 		020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTabView.swift; sourceTree = "<group>"; };
 		020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeTerminalBridge.swift; sourceTree = "<group>"; };
 		020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeSummarizerService.swift; sourceTree = "<group>"; };
-		020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTerminalHostView.swift; sourceTree = "<group>"; };
 		020000000000000000000204 /* projectStats/Services/XPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/XPService.swift; sourceTree = "<group>"; };
 		020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeProcessBridge.swift; sourceTree = "<group>"; };
 		020000000000000000000004 /* URLExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtensions.swift; sourceTree = "<group>"; };
@@ -719,7 +717,6 @@
 				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
 				020000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift */,
 				020000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift */,
-				020000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift */,
 				020000000000000000000204 /* projectStats/Services/XPService.swift */,
 				020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */,
 				020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */,
@@ -986,7 +983,6 @@
 				010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */,
 				010000000000000000000201 /* projectStats/Services/VibeTerminalBridge.swift in Sources */,
 				010000000000000000000202 /* projectStats/Services/VibeSummarizerService.swift in Sources */,
-				010000000000000000000203 /* projectStats/Views/Vibe/VibeTerminalHostView.swift in Sources */,
 				010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */,
 				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
 			);
