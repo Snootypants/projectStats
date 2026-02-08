@@ -40,61 +40,31 @@ final class BranchService {
     }
 
     private func copyProject(from source: URL, to destination: URL) async throws {
-        // Use rsync for efficient copying with exclusions
-        return try await withCheckedThrowingContinuation { continuation in
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/rsync")
-            process.arguments = [
-                "-a",
-                "--exclude", "node_modules",
-                "--exclude", ".build",
-                "--exclude", "build",
-                "--exclude", "DerivedData",
-                "--exclude", ".swiftpm/xcode",
-                source.path + "/",
-                destination.path
-            ]
-
-            Task.detached {
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-
-                    if process.terminationStatus == 0 {
-                        continuation.resume()
-                    } else {
-                        continuation.resume(throwing: BranchError.copyFailed)
-                    }
-                } catch {
-                    continuation.resume(throwing: BranchError.copyFailed)
-                }
+        let result = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let r = Shell.runResult(
+                    "rsync -a" +
+                    " --exclude node_modules" +
+                    " --exclude .build" +
+                    " --exclude build" +
+                    " --exclude DerivedData" +
+                    " --exclude .swiftpm/xcode" +
+                    " '\(source.path)/' '\(destination.path)'"
+                )
+                continuation.resume(returning: r)
             }
         }
+        guard result.exitCode == 0 else { throw BranchError.copyFailed }
     }
 
     private func createGitBranch(at path: URL, name: String) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
-            process.arguments = ["-C", path.path, "checkout", "-b", name]
-            process.standardOutput = FileHandle.nullDevice
-            process.standardError = FileHandle.nullDevice
-
-            Task.detached {
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-
-                    if process.terminationStatus == 0 {
-                        continuation.resume()
-                    } else {
-                        continuation.resume(throwing: BranchError.gitBranchFailed)
-                    }
-                } catch {
-                    continuation.resume(throwing: BranchError.gitBranchFailed)
-                }
+        let result = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let r = Shell.runResult("git -C '\(path.path)' checkout -b '\(name)'")
+                continuation.resume(returning: r)
             }
         }
+        guard result.exitCode == 0 else { throw BranchError.gitBranchFailed }
     }
 
     func sanitizeBranchName(_ name: String) -> String {
