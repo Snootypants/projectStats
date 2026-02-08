@@ -248,6 +248,9 @@ struct PromptHelperView: View {
                     isSwarm: isSwarmActive,
                     promptId: saved.id
                 )
+
+                // Award XP for prompt execution
+                XPService.shared.onPromptExecuted(projectPath: projectPath.path)
             } catch {
                 print("[PromptHelper] Failed to save prompt: \(error)")
             }

@@ -106,6 +106,9 @@ final class TerminalOutputMonitor: ObservableObject {
                     durationSeconds: duration
                 )
 
+                // Award XP for completed Claude session
+                XPService.shared.onClaudeSessionCompleted(projectPath: activeProjectPath ?? "")
+
                 // Refresh Claude usage stats (with delay for JSONL write)
                 Task {
                     await ClaudeUsageService.shared.onClaudeFinished(projectPath: activeProjectPath)
@@ -123,6 +126,7 @@ final class TerminalOutputMonitor: ObservableObject {
             if let projectPath = activeProjectPath {
                 Task { @MainActor in
                     AchievementService.shared.onGitPushDetected(projectPath: projectPath)
+                    XPService.shared.onPushDetected(projectPath: projectPath)
                 }
             }
         }
@@ -136,6 +140,7 @@ final class TerminalOutputMonitor: ObservableObject {
                     // Commit detected - check first blood and time-based achievements
                     AchievementService.shared.checkFirstCommitOfDay(projectPath: projectPath)
                     AchievementService.shared.checkTimeBasedAchievements(projectPath: projectPath)
+                    XPService.shared.onCommitDetected(projectPath: projectPath)
                 }
             }
         }
