@@ -573,4 +573,51 @@ final class ServiceTests: XCTestCase {
         let prompt = SwarmTestPrompt.kanbanPrompt
         XCTAssertTrue(prompt.contains("<2500 lines"))
     }
+
+    // MARK: - Scope C: VibeConversationService Tests
+
+    @MainActor
+    func test_C_startConversation_createsModel() {
+        let service = VibeConversationService.shared
+        let conv = service.startConversation(projectPath: "/test/project")
+        XCTAssertNotNil(service.activeConversation)
+        XCTAssertEqual(conv.projectPath, "/test/project")
+        XCTAssertEqual(conv.status, "planning")
+        service.endConversation()
+    }
+
+    @MainActor
+    func test_C_appendToLog_buffersAndFlushes() {
+        let service = VibeConversationService.shared
+        let conv = service.startConversation(projectPath: "/test")
+        service.appendToLog("hello ")
+        service.appendToLog("world")
+        service.flushLogBuffer()
+        XCTAssertEqual(conv.rawLog, "hello world")
+        service.endConversation()
+    }
+
+    @MainActor
+    func test_C_lockPlan_setsStatusReady() {
+        let service = VibeConversationService.shared
+        _ = service.startConversation(projectPath: "/test")
+        service.lockPlan(summary: "Build a feature")
+        XCTAssertEqual(service.activeConversation?.status, "ready")
+        XCTAssertEqual(service.activeConversation?.planSummary, "Build a feature")
+        service.endConversation()
+    }
+
+    @MainActor
+    func test_C_composePrompt_appliesTemplate() {
+        let service = VibeConversationService.shared
+        _ = service.startConversation(projectPath: "/test")
+        service.lockPlan(summary: "Build X")
+        service.composePrompt(templateContent: "TEMPLATE:\n\n{PROMPT}")
+        XCTAssertEqual(service.activeConversation?.composedPrompt, "TEMPLATE:\n\nBuild X")
+
+        // Without template
+        service.composePrompt(templateContent: nil)
+        XCTAssertEqual(service.activeConversation?.composedPrompt, "Build X")
+        service.endConversation()
+    }
 }
