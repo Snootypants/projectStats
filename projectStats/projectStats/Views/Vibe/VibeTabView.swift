@@ -39,7 +39,6 @@ struct VibeTabView: View {
             chatView
                 .frame(maxHeight: .infinity)
 
-            // Execution monitor (collapsible)
             if showExecutionPanel || bridge.isExecuting {
                 executionMonitor
             }
@@ -124,7 +123,7 @@ struct VibeTabView: View {
     private var chatView: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 2) {
                     if bridge.chatEntries.isEmpty {
                         Text("Starting Claude in plan mode...")
                             .foregroundStyle(.secondary)
@@ -140,26 +139,26 @@ struct VibeTabView: View {
                         }
                     }
 
-                    // Streaming indicator
                     if !bridge.claudeBuffer.isEmpty {
                         HStack(spacing: 4) {
-                            ForEach(0..<3, id: \.self) { i in
+                            ForEach(0..<3, id: \.self) { _ in
                                 Circle()
                                     .fill(Color.secondary)
                                     .frame(width: 4, height: 4)
                             }
                         }
-                        .padding(.leading, 16)
+                        .padding(.leading, 20)
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
-                    Color.clear.frame(height: 1).id("bottom")
+                    Color.clear.frame(height: 1).id("chatBottom")
                 }
+                .padding(.vertical, 12)
             }
             .onChange(of: bridge.chatEntries.count) { _, _ in
-                withAnimation(.easeOut(duration: 0.2)) {
-                    proxy.scrollTo("bottom", anchor: .bottom)
+                withAnimation(.easeOut(duration: 0.15)) {
+                    proxy.scrollTo("chatBottom", anchor: .bottom)
                 }
             }
         }
@@ -168,13 +167,14 @@ struct VibeTabView: View {
 
     private func userBubble(_ text: String) -> some View {
         HStack {
-            Spacer(minLength: 60)
+            Spacer(minLength: 80)
             Text(text)
                 .font(.body)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 14)
                 .padding(.vertical, 8)
-                .background(Color.accentColor.opacity(0.15))
-                .cornerRadius(12)
+                .background(Color.accentColor.opacity(0.12))
+                .cornerRadius(14)
+                .foregroundStyle(.primary)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 4)
@@ -186,26 +186,23 @@ struct VibeTabView: View {
             .foregroundStyle(.primary.opacity(0.9))
             .textSelection(.enabled)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 20)
             .padding(.vertical, 6)
     }
 
     // MARK: - Floating Input Bar
 
     private var floatingInputBar: some View {
-        VStack(spacing: 8) {
-            // Action row (contextual buttons)
-            if let status = conversationService.activeConversation?.status,
-               status == "planning" || status == "ready" {
+        VStack(spacing: 6) {
+            if conversationService.activeConversation != nil {
                 HStack(spacing: 12) {
-                    // Lock Plan button
                     Button {
                         showLockPlanSheet = true
                     } label: {
                         Label("Lock Plan", systemImage: "lock.fill")
                             .font(.caption)
                     }
-                    .disabled(status != "planning")
+                    .disabled(conversationService.activeConversation?.status != "planning")
                     .popover(isPresented: $showLockPlanSheet) {
                         VStack(spacing: 12) {
                             Text("Plan Summary").font(.headline)
@@ -225,7 +222,6 @@ struct VibeTabView: View {
                         .padding()
                     }
 
-                    // Execute button
                     Button {
                         bridge.executePrompt()
                         showExecutionPanel = true
@@ -233,27 +229,25 @@ struct VibeTabView: View {
                         Label("Execute", systemImage: "play.fill")
                             .font(.caption)
                     }
-                    .disabled(status != "ready")
+                    .disabled(conversationService.activeConversation?.status != "ready")
 
                     Spacer()
 
-                    // Template picker
                     Picker("Template", selection: $selectedTemplateID) {
                         Text("None").tag(nil as UUID?)
                         ForEach(allTemplates) { template in
                             Text(template.name).tag(template.id as UUID?)
                         }
                     }
-                    .frame(width: 160)
+                    .frame(width: 150)
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
             }
 
-            // Input bar
             HStack(spacing: 8) {
                 TextField("Type a message...", text: $inputText)
                     .textFieldStyle(.plain)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 14)
                     .padding(.vertical, 10)
                     .onSubmit { sendInput() }
 
@@ -262,21 +256,23 @@ struct VibeTabView: View {
                         .font(.title2)
                         .foregroundStyle(
                             inputText.trimmingCharacters(in: .whitespaces).isEmpty
-                                ? Color.secondary : Color.accentColor
+                                ? .secondary : Color.accentColor
                         )
                 }
                 .buttonStyle(.plain)
                 .disabled(inputText.trimmingCharacters(in: .whitespaces).isEmpty)
-                .padding(.trailing, 8)
+                .keyboardShortcut(.return, modifiers: .command)
+                .padding(.trailing, 10)
             }
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: 18)
                     .fill(Color(nsColor: .controlBackgroundColor))
-                    .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+                    .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
             )
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 14)
         }
-        .padding(.bottom, 12)
+        .padding(.bottom, 14)
+        .padding(.top, 6)
     }
 
     // MARK: - Execution Monitor
