@@ -73,7 +73,7 @@ final class AchievementService: ObservableObject {
 
     // MARK: - Achievement Check Helpers
 
-    /// Check and unlock first commit of the day achievement
+    /// Check and unlock first commit of the day achievement + daily XP
     func checkFirstCommitOfDay(projectPath: String) {
         let todayString = formatDate(Date())
 
@@ -84,8 +84,17 @@ final class AchievementService: ObservableObject {
 
         // This is the first commit today!
         lastCommitDateString = todayString
+
+        // One-time achievement unlock
         checkAndUnlock(.firstBlood, projectPath: projectPath)
-        print("[Achievements] First Blood unlocked - first commit of the day!")
+
+        // Daily XP bonus (fires every day, not just first unlock)
+        XPService.shared.checkDailyBonus()
+
+        // Check streak achievements
+        checkStreakAchievements(projectPath: projectPath)
+
+        print("[Achievements] First commit of the day processed")
     }
 
     /// Check time-based achievements (night owl, early bird)
