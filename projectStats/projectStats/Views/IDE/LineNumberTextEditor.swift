@@ -13,11 +13,22 @@ final class LineNumberRulerView: NSRulerView {
 
     override var isFlipped: Bool { true }
 
+    // macOS 14+ defaults clipsToBounds to false — must set explicitly
+    override init(scrollView: NSScrollView?, orientation: NSRulerView.Orientation) {
+        super.init(scrollView: scrollView, orientation: orientation)
+        self.clipsToBounds = true
+    }
+
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+        self.clipsToBounds = true
+    }
+
     override var requiredThickness: CGFloat {
         guard let textView else { return 36 }
         let lineCount = max(textView.string.components(separatedBy: "\n").count, 1)
         let digits = max(String(lineCount).count, 2)
-        return CGFloat(digits) * 8 + 12
+        return ceil(CGFloat(digits) * 8 + 16)
     }
 
     override func drawHashMarksAndLabels(in rect: NSRect) {
@@ -25,7 +36,6 @@ final class LineNumberRulerView: NSRulerView {
               let layoutManager = textView.layoutManager,
               let textContainer = textView.textContainer else { return }
 
-        // Clip drawing to bounds to prevent bleeding
         NSGraphicsContext.current?.saveGraphicsState()
         NSBezierPath(rect: bounds).addClip()
 
@@ -49,15 +59,20 @@ final class LineNumberRulerView: NSRulerView {
 
         var lineNumber = 1
         // Count lines before visible range
-        text.enumerateSubstrings(in: NSRange(location: 0, length: visibleCharRange.location), options: [.byLines, .substringNotRequired]) { _, _, _, _ in
-            lineNumber += 1
+        if visibleCharRange.location > 0 {
+            text.enumerateSubstrings(in: NSRange(location: 0, length: visibleCharRange.location), options: [.byLines, .substringNotRequired]) { _, _, _, _ in
+                lineNumber += 1
+            }
         }
 
         // Draw line numbers for visible lines
         text.enumerateSubstrings(in: visibleCharRange, options: [.byLines, .substringNotRequired]) { _, range, _, _ in
             let glyphRange = layoutManager.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
             var lineRect = layoutManager.lineFragmentRect(forGlyphAt: glyphRange.location, effectiveRange: nil)
+
+            // Convert from text view coordinates to ruler coordinates
             lineRect.origin.y += textView.textContainerInset.height
+            lineRect.origin.y -= textView.visibleRect.origin.y
 
             let label = "\(lineNumber)" as NSString
             let labelSize = label.size(withAttributes: attrs)
@@ -87,6 +102,14 @@ struct LineNumberTextEditor: NSViewRepresentable {
         let scrollView = NSTextView.scrollableTextView()
         let textView = scrollView.documentView as! NSTextView
 
+        // --- Critical scrolling configuration ---
+        textView.isVerticallyResizable = true
+        textView.isHorizontallyResizable = false
+        textView.autoresizingMask = [.width]
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        textView.textContainer?.heightTracksTextView = false
+        textView.textContainer?.widthTracksTextView = true
+
         textView.isEditable = !readOnly
         textView.isSelectable = true
         textView.isRichText = false
@@ -114,16 +137,31 @@ struct LineNumberTextEditor: NSViewRepresentable {
         ruler.clientView = textView
         scrollView.verticalRulerView = ruler
 
-        // Listen for text and selection changes to refresh line numbers
+        // Observe text changes for editing sync
         NotificationCenter.default.addObserver(
             context.coordinator,
-            selector: #selector(Coordinator.textDidChange(_:)),
+            selector: #selector(Coordinator.textDidChangeNotification(_:)),
             name: NSText.didChangeNotification,
+            object: textView
+        )
+
+        // Observe scroll position changes so ruler redraws on every scroll
+        scrollView.contentView.postsBoundsChangedNotifications = true
+        NotificationCenter.default.addObserver(
+            context.coordinator,
+            selector: #selector(Coordinator.rulerNeedsUpdate(_:)),
+            name: NSView.boundsDidChangeNotification,
+            object: scrollView.contentView
+        )
+        NotificationCenter.default.addObserver(
+            context.coordinator,
+            selector: #selector(Coordinator.rulerNeedsUpdate(_:)),
+            name: NSView.frameDidChangeNotification,
             object: textView
         )
         NotificationCenter.default.addObserver(
             context.coordinator,
-            selector: #selector(Coordinator.selectionDidChange(_:)),
+            selector: #selector(Coordinator.rulerNeedsUpdate(_:)),
             name: NSTextView.didChangeSelectionNotification,
             object: textView
         )
@@ -161,7 +199,11 @@ struct LineNumberTextEditor: NSViewRepresentable {
             tv.enclosingScrollView?.verticalRulerView?.needsDisplay = true
         }
 
-        @objc func selectionDidChange(_ notification: Notification) {
+        @objc func textDidChangeNotification(_ notification: Notification) {
+            textDidChange(notification)
+        }
+
+        @objc func rulerNeedsUpdate(_ notification: Notification) {
             textView?.enclosingScrollView?.verticalRulerView?.needsDisplay = true
         }
     }
