@@ -35,6 +35,7 @@ enum AppTheme: String, CaseIterable, Codable {
 
 class SettingsViewModel: ObservableObject {
     static let shared = SettingsViewModel()
+    private let store = SettingsStoreService.shared
 
     @AppStorage("codeDirectoryPath") private var codeDirectoryPath: String = ""
     @AppStorage("defaultEditorRaw") private var defaultEditorRaw: String = Editor.vscode.rawValue
@@ -287,6 +288,36 @@ class SettingsViewModel: ObservableObject {
         set {
             defaultThinkingLevelRaw = newValue.rawValue
         }
+    }
+
+    @MainActor func migrateSettingsToDBIfNeeded() {
+        let migrated = store.getBool("settings.migrated")
+        guard !migrated else { return }
+
+        // Migrate basic settings from UserDefaults
+        let keysToMigrate = [
+            "codeDirectoryPath",
+            "defaultEditorRaw",
+            "defaultTerminalRaw",
+            "refreshInterval",
+            "launchAtLogin",
+            "showInDock",
+            "themeRaw",
+            "homePageLayout",
+            "showPromptsTab",
+            "showDiffsTab",
+            "showEnvironmentTab",
+            "agentTeams.enabled",
+            "focusMode.edgeFXMode"
+        ]
+
+        for key in keysToMigrate {
+            if let value = UserDefaults.standard.string(forKey: key) {
+                store.set(key, value: value)
+            }
+        }
+
+        store.set("settings.migrated", value: true)
     }
 
     private init() {

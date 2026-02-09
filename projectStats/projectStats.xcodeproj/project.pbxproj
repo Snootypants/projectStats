@@ -177,6 +177,8 @@
 		010000000000000000000193 /* SwarmTestPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000193 /* SwarmTestPrompt.swift */; };
 		010000000000000000000207 /* DocBuilderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000207 /* DocBuilderSheet.swift */; };
 		010000000000000000000208 /* HomePageV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000208 /* HomePageV2View.swift */; };
+		010000000000000000000209 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000209 /* AppSetting.swift */; };
+		010000000000000000000210 /* SettingsStoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000210 /* SettingsStoreService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -349,6 +351,8 @@
 		020000000000000000000191 /* projectStats/Models/PromptExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/PromptExecution.swift; sourceTree = "<group>"; };
 		020000000000000000000193 /* SwarmTestPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwarmTestPrompt.swift; sourceTree = "<group>"; };
 		020000000000000000000208 /* HomePageV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageV2View.swift; sourceTree = "<group>"; };
+		020000000000000000000209 /* AppSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
+		020000000000000000000210 /* SettingsStoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreService.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -433,6 +437,7 @@
 		050000000000000000000007 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				020000000000000000000209 /* AppSetting.swift */,
 				020000000000000000000034 /* GitRepoInfo.swift */,
 				020000000000000000000006 /* Project.swift */,
 				020000000000000000000049 /* EnvironmentVariable.swift */,
@@ -450,6 +455,7 @@
 			children = (
 				020000000000000000000126 /* BackupService.swift */,
 				020000000000000000000128 /* BranchService.swift */,
+				020000000000000000000210 /* SettingsStoreService.swift */,
 				020000000000000000000039 /* DataMigrationService.swift */,
 				020000000000000000000051 /* EnvFileService.swift */,
 				020000000000000000000035 /* GitRepoService.swift */,
@@ -913,6 +919,8 @@
 				010000000000000000000206 /* String+ANSI.swift in Sources */,
 				010000000000000000000207 /* DocBuilderSheet.swift in Sources */,
 				010000000000000000000208 /* HomePageV2View.swift in Sources */,
+				010000000000000000000209 /* AppSetting.swift in Sources */,
+				010000000000000000000210 /* SettingsStoreService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

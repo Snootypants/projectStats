@@ -33,7 +33,9 @@ enum AppModelContainer {
             // Prompt Execution Tracking
             PromptExecution.self,
             // Vibe Tab
-            VibeConversation.self
+            VibeConversation.self,
+            // Settings Store
+            AppSetting.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -115,6 +117,7 @@ struct ProjectStatsApp: App {
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DBv2MigrationService.shared.migrateIfNeeded(context: context)
                     await DataCleanupService.shared.cleanupIfNeeded(context: context)
+                    SettingsViewModel.shared.migrateSettingsToDBIfNeeded()
                     seedDefaultTemplateIfNeeded(context: context)
                     await DashboardViewModel.shared.loadDataIfNeeded()
                     ClaudePlanUsageService.shared.startHourlyPolling()
