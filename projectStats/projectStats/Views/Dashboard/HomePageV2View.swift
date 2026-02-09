@@ -14,8 +14,31 @@ struct HomePageV2View: View {
     @State private var hoveredDate: Date?
     @State private var showLines = true
     @State private var showCommits = false
+    @State private var chartRange: ChartRange = .week
+    @State private var customStart: Date = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+    @State private var customEnd: Date = Date()
     @State private var refreshTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var now = Date()
+
+    private enum ChartRange: String, CaseIterable {
+        case day = "Day"
+        case week = "Week"
+        case month = "Month"
+        case quarter = "Quarter"
+        case year = "Year"
+        case custom = "Custom"
+
+        var days: Int {
+            switch self {
+            case .day: return 1
+            case .week: return 7
+            case .month: return 30
+            case .quarter: return 90
+            case .year: return 365
+            case .custom: return 0
+            }
+        }
+    }
 
     private var accentColor: Color {
         Color.fromHex(accentColorHex) ?? .orange
@@ -24,16 +47,16 @@ struct HomePageV2View: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Time Today + Lockout Bars
+                // Time Today + Usage
                 HStack(alignment: .top, spacing: 16) {
                     timePanel
                         .frame(maxWidth: .infinity)
-                    lockoutPanel
+                    usagePanel
                         .frame(maxWidth: .infinity)
                 }
 
-                // Weekly Chart
-                weeklyChart
+                // Activity Chart
+                activityChart
 
                 // Project Cards
                 projectCardsGrid
@@ -66,9 +89,25 @@ struct HomePageV2View: View {
                 .font(.system(size: 44, weight: .bold, design: .rounded))
                 .monospacedDigit()
 
-            VStack(spacing: 8) {
-                meterRow(label: "You", value: humanProgress, time: humanTimeFormatted, color: .green)
-                meterRow(label: "Claude", value: aiProgress, time: aiTimeFormatted, color: .pink)
+            // Simple text rows for You and Claude
+            HStack(spacing: 24) {
+                HStack(spacing: 6) {
+                    Circle().fill(.green).frame(width: 8, height: 8)
+                    Text("You:")
+                        .font(.caption.bold())
+                    Text(humanTimeFormatted)
+                        .font(.system(.caption, design: .monospaced, weight: .semibold))
+                        .foregroundStyle(.green)
+                }
+
+                HStack(spacing: 6) {
+                    Circle().fill(.pink).frame(width: 8, height: 8)
+                    Text("Claude:")
+                        .font(.caption.bold())
+                    Text(aiTimeFormatted)
+                        .font(.system(.caption, design: .monospaced, weight: .semibold))
+                        .foregroundStyle(.pink)
+                }
             }
         }
         .padding(20)
@@ -76,32 +115,9 @@ struct HomePageV2View: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func meterRow(label: String, value: Double, time: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(label)
-                    .font(.caption.bold())
-                Spacer()
-                Text(time)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.white.opacity(0.1))
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(color)
-                        .frame(width: max(4, geo.size.width * value))
-                }
-            }
-            .frame(height: 8)
-        }
-    }
+    // MARK: - Usage Panel
 
-    // MARK: - Lockout Panel
-
-    private var lockoutPanel: some View {
+    private var usagePanel: some View {
         VStack(spacing: 14) {
             HStack {
                 Image(systemName: "gauge.with.needle.fill")
@@ -114,26 +130,30 @@ struct HomePageV2View: View {
 
             if let todayCost = usageService.globalTodayStats?.totalCost {
                 Text(String(format: "$%.2f", todayCost))
-                    .font(.system(size: 44, weight: .bold, design: .rounded))
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
                 Text("today")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
                 Text("--")
-                    .font(.system(size: 44, weight: .bold, design: .rounded))
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundStyle(.secondary)
             }
 
-            VStack(spacing: 8) {
-                lockoutMeter(
+            VStack(spacing: 10) {
+                usageMeter(
                     label: "Session",
+                    endTime: formatEndTime(planUsage.fiveHourResetsAt),
                     percent: planUsage.fiveHourUtilization,
-                    countdown: planUsage.fiveHourTimeRemaining
+                    lines: viewModel.aggregatedStats.today.totalLines,
+                    commits: viewModel.aggregatedStats.today.commits
                 )
-                lockoutMeter(
+                usageMeter(
                     label: "Weekly",
+                    endTime: formatWeeklyEndTime(planUsage.sevenDayResetsAt),
                     percent: planUsage.sevenDayUtilization,
-                    countdown: planUsage.sevenDayTimeRemaining
+                    lines: viewModel.aggregatedStats.thisWeek.totalLines,
+                    commits: viewModel.aggregatedStats.thisWeek.commits
                 )
             }
         }
@@ -142,51 +162,111 @@ struct HomePageV2View: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func lockoutMeter(label: String, percent: Double, countdown: String) -> some View {
+    private func usageMeter(label: String, endTime: String, percent: Double, lines: Int, commits: Int) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(label)
+                Text("\(label) (\(endTime))")
                     .font(.caption.bold())
                 Spacer()
                 Text("\(Int(percent * 100))%")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(countdown)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(.caption.bold())
+                    .foregroundStyle(usageColor(percent))
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color.white.opacity(0.1))
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(lockoutColor(percent))
+                        .fill(usageColor(percent))
                         .frame(width: max(4, geo.size.width * min(percent, 1.0)))
                 }
             }
             .frame(height: 8)
+
+            HStack(spacing: 8) {
+                Text("\(lines.formatted()) lines")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Text("\(commits) commits")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                if label == "Weekly" {
+                    Text(formatWeeklyCountdown(planUsage.sevenDayResetsAt))
+                        .font(.caption2.bold())
+                        .foregroundStyle(.tertiary)
+                }
+            }
         }
     }
 
-    private func lockoutColor(_ value: Double) -> Color {
+    private func usageColor(_ value: Double) -> Color {
         if value > 0.8 { return .red }
         if value > 0.6 { return .orange }
         return .cyan
     }
 
-    // MARK: - Weekly Chart
+    private func formatEndTime(_ date: Date?) -> String {
+        guard let date else { return "--" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: date)
+    }
 
-    private var weeklyChart: some View {
+    private func formatWeeklyEndTime(_ date: Date?) -> String {
+        guard let date else { return "--" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE h:mm a"
+        return formatter.string(from: date)
+    }
+
+    private func formatWeeklyCountdown(_ date: Date?) -> String {
+        guard let date else { return "--" }
+        let interval = date.timeIntervalSinceNow
+        guard interval > 0 else { return "Now" }
+        let totalMinutes = Int(interval) / 60
+        let days = totalMinutes / (60 * 24)
+        let hours = (totalMinutes % (60 * 24)) / 60
+        let minutes = totalMinutes % 60
+        if days > 0 {
+            return "\(days)D \(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
+        }
+        return "\(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
+    }
+
+    // MARK: - Activity Chart
+
+    private var activityChart: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("WEEKLY ACTIVITY")
+                Text("ACTIVITY")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
 
                 Spacer()
 
-                // Checkbox toggles
-                HStack(spacing: 16) {
+                // Time range picker
+                HStack(spacing: 2) {
+                    ForEach(ChartRange.allCases, id: \.self) { range in
+                        Button {
+                            chartRange = range
+                        } label: {
+                            Text(range.rawValue)
+                                .font(.system(size: 10, weight: chartRange == range ? .bold : .regular))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(chartRange == range ? Color.cyan.opacity(0.2) : Color.clear)
+                                .foregroundStyle(chartRange == range ? .cyan : .secondary)
+                                .clipShape(RoundedRectangle(cornerRadius: 4))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                Divider().frame(height: 16)
+
+                // Data type checkboxes
+                HStack(spacing: 12) {
                     Toggle(isOn: $showLines) {
                         HStack(spacing: 4) {
                             Circle().fill(.cyan).frame(width: 8, height: 8)
@@ -207,54 +287,28 @@ struct HomePageV2View: View {
                 }
             }
 
-            let weekData = last7DaysData()
-
-            // Summary tooltip
-            if let hoveredDate,
-               let entry = weekData.first(where: { Calendar.current.isDate($0.date, inSameDayAs: hoveredDate) }) {
+            // Custom date range pickers
+            if chartRange == .custom {
                 HStack(spacing: 12) {
-                    Text(entry.date, format: .dateTime.weekday(.wide).month(.abbreviated).day())
+                    DatePicker("From", selection: $customStart, displayedComponents: .date)
+                        .labelsHidden()
+                    Text("to")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    if showLines {
-                        Text("\((entry.linesAdded + entry.linesRemoved).formatted()) lines")
-                            .font(.caption.bold())
-                            .foregroundStyle(.cyan)
-                    }
-                    if showCommits {
-                        Text("\(entry.commits) commits")
-                            .font(.caption.bold())
-                            .foregroundStyle(.green)
-                    }
+                    DatePicker("To", selection: $customEnd, displayedComponents: .date)
+                        .labelsHidden()
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.primary.opacity(0.06))
-                .clipShape(Capsule())
-            } else {
-                // Week total
-                let totalLines = weekData.reduce(0) { $0 + $1.linesAdded + $1.linesRemoved }
-                let totalCommits = weekData.reduce(0) { $0 + $1.commits }
-                HStack(spacing: 12) {
-                    Text("This week:")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    if showLines {
-                        Text("\(totalLines.formatted()) lines")
-                            .font(.caption.bold())
-                            .foregroundStyle(.cyan)
-                    }
-                    if showCommits {
-                        Text("\(totalCommits) commits")
-                            .font(.caption.bold())
-                            .foregroundStyle(.green)
-                    }
-                }
+                .font(.caption)
             }
+
+            let chartData = dataForRange()
+
+            // Summary
+            chartSummary(data: chartData)
 
             Chart {
                 if showLines {
-                    ForEach(weekData, id: \.date) { entry in
+                    ForEach(chartData, id: \.date) { entry in
                         LineMark(
                             x: .value("Day", entry.date, unit: .day),
                             y: .value("Lines", entry.linesAdded + entry.linesRemoved)
@@ -279,7 +333,7 @@ struct HomePageV2View: View {
                 }
 
                 if showCommits {
-                    ForEach(weekData, id: \.date) { entry in
+                    ForEach(chartData, id: \.date) { entry in
                         LineMark(
                             x: .value("Day", entry.date, unit: .day),
                             y: .value("Commits", entry.commits)
@@ -310,10 +364,10 @@ struct HomePageV2View: View {
                 }
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { _ in
+                AxisMarks(values: .stride(by: xAxisStride)) { _ in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
                         .foregroundStyle(Color.white.opacity(0.08))
-                    AxisValueLabel(format: .dateTime.weekday(.abbreviated))
+                    AxisValueLabel(format: xAxisFormat)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -354,6 +408,85 @@ struct HomePageV2View: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
+    @ViewBuilder
+    private func chartSummary(data: [DayEntry]) -> some View {
+        if let hoveredDate,
+           let entry = data.first(where: { Calendar.current.isDate($0.date, inSameDayAs: hoveredDate) }) {
+            HStack(spacing: 12) {
+                Text(entry.date, format: .dateTime.weekday(.wide).month(.abbreviated).day())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if showLines {
+                    Text("\((entry.linesAdded + entry.linesRemoved).formatted()) lines")
+                        .font(.caption.bold())
+                        .foregroundStyle(.cyan)
+                }
+                if showCommits {
+                    Text("\(entry.commits) commits")
+                        .font(.caption.bold())
+                        .foregroundStyle(.green)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.primary.opacity(0.06))
+            .clipShape(Capsule())
+        } else {
+            let totalLines = data.reduce(0) { $0 + $1.linesAdded + $1.linesRemoved }
+            let totalCommits = data.reduce(0) { $0 + $1.commits }
+            HStack(spacing: 12) {
+                Text("\(chartRange.rawValue) total:")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if showLines {
+                    Text("\(totalLines.formatted()) lines")
+                        .font(.caption.bold())
+                        .foregroundStyle(.cyan)
+                }
+                if showCommits {
+                    Text("\(totalCommits) commits")
+                        .font(.caption.bold())
+                        .foregroundStyle(.green)
+                }
+            }
+        }
+    }
+
+    // MARK: - X Axis Formatting
+
+    private var xAxisStride: Calendar.Component {
+        switch chartRange {
+        case .day: return .hour
+        case .week: return .day
+        case .month: return .weekOfYear
+        case .quarter: return .month
+        case .year: return .month
+        case .custom:
+            let days = Calendar.current.dateComponents([.day], from: customStart, to: customEnd).day ?? 30
+            if days <= 7 { return .day }
+            if days <= 60 { return .weekOfYear }
+            return .month
+        }
+    }
+
+    private var xAxisFormat: Date.FormatStyle {
+        switch chartRange {
+        case .day:
+            return .dateTime.hour()
+        case .week:
+            return .dateTime.weekday(.abbreviated)
+        case .month:
+            return .dateTime.day().month(.abbreviated)
+        case .quarter, .year:
+            return .dateTime.month(.abbreviated)
+        case .custom:
+            let days = Calendar.current.dateComponents([.day], from: customStart, to: customEnd).day ?? 30
+            if days <= 7 { return .dateTime.weekday(.abbreviated) }
+            if days <= 60 { return .dateTime.day().month(.abbreviated) }
+            return .dateTime.month(.abbreviated)
+        }
+    }
+
     // MARK: - Project Cards
 
     private var projectCardsGrid: some View {
@@ -389,16 +522,6 @@ struct HomePageV2View: View {
         return timeService.todayAITotal + current
     }
 
-    private var humanProgress: Double {
-        guard totalTime > 0 else { return 0.5 }
-        return humanTime / totalTime
-    }
-
-    private var aiProgress: Double {
-        guard totalTime > 0 else { return 0.5 }
-        return aiTime / totalTime
-    }
-
     private var totalTimeFormatted: String { formatDuration(totalTime) }
     private var humanTimeFormatted: String { formatDuration(humanTime) }
     private var aiTimeFormatted: String { formatDuration(aiTime) }
@@ -418,11 +541,26 @@ struct HomePageV2View: View {
         let commits: Int
     }
 
-    private func last7DaysData() -> [DayEntry] {
+    private func dataForRange() -> [DayEntry] {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
-        return (0..<7).reversed().map { offset in
-            let date = cal.date(byAdding: .day, value: -offset, to: today)!
+
+        let startDate: Date
+        let endDate: Date
+
+        if chartRange == .custom {
+            startDate = cal.startOfDay(for: customStart)
+            endDate = cal.startOfDay(for: customEnd)
+        } else {
+            let numDays = max(chartRange.days, 1)
+            startDate = cal.date(byAdding: .day, value: -(numDays - 1), to: today)!
+            endDate = today
+        }
+
+        let dayCount = max(1, (cal.dateComponents([.day], from: startDate, to: endDate).day ?? 0) + 1)
+
+        return (0..<dayCount).map { offset in
+            let date = cal.date(byAdding: .day, value: offset, to: startDate)!
             if let stats = viewModel.activities[date] {
                 return DayEntry(date: date, linesAdded: stats.linesAdded, linesRemoved: stats.linesRemoved, commits: stats.commits)
             }
