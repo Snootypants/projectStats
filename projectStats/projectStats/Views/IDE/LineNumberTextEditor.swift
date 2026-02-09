@@ -72,14 +72,6 @@ final class LineNumberRulerView: NSRulerView {
     }
 }
 
-// MARK: - Scroll View Subclass (prevents SwiftUI from expanding to full content size)
-
-final class FlippedScrollView: NSScrollView {
-    override var intrinsicContentSize: NSSize {
-        NSSize(width: NSView.noIntrinsicMetric, height: NSView.noIntrinsicMetric)
-    }
-}
-
 // MARK: - NSViewRepresentable Wrapper
 
 struct LineNumberTextEditor: NSViewRepresentable {
@@ -90,24 +82,11 @@ struct LineNumberTextEditor: NSViewRepresentable {
         Coordinator(self)
     }
 
-    func makeNSView(context: Context) -> FlippedScrollView {
-        let scrollView = FlippedScrollView()
-        scrollView.hasVerticalScroller = true
-        scrollView.hasHorizontalScroller = false
-        scrollView.autohidesScrollers = true
-        scrollView.borderType = .noBorder
+    func makeNSView(context: Context) -> NSScrollView {
+        // Use Apple's factory method — creates a properly configured scrollable text view
+        let scrollView = NSTextView.scrollableTextView()
+        let textView = scrollView.documentView as! NSTextView
 
-        // Create text storage → layout manager → text container → text view
-        let textStorage = NSTextStorage()
-        let layoutManager = NSLayoutManager()
-        textStorage.addLayoutManager(layoutManager)
-
-        let textContainer = NSTextContainer(containerSize: NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude))
-        textContainer.widthTracksTextView = true
-        layoutManager.addTextContainer(textContainer)
-
-        let contentSize = scrollView.contentSize
-        let textView = NSTextView(frame: NSRect(origin: .zero, size: contentSize), textContainer: textContainer)
         textView.isEditable = !readOnly
         textView.isSelectable = true
         textView.isRichText = false
@@ -115,11 +94,6 @@ struct LineNumberTextEditor: NSViewRepresentable {
         textView.font = NSFont.monospacedSystemFont(ofSize: 13, weight: .regular)
         textView.textColor = NSColor.textColor
         textView.backgroundColor = NSColor.textBackgroundColor
-        textView.autoresizingMask = [.width]
-        textView.isVerticallyResizable = true
-        textView.isHorizontallyResizable = false
-        textView.minSize = NSSize(width: 0, height: 0)
-        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.textContainerInset = NSSize(width: 4, height: 8)
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
@@ -129,7 +103,9 @@ struct LineNumberTextEditor: NSViewRepresentable {
         textView.delegate = context.coordinator
         context.coordinator.textView = textView
 
-        scrollView.documentView = textView
+        // Clip contents to bounds
+        scrollView.wantsLayer = true
+        scrollView.layer?.masksToBounds = true
 
         // Set up line number ruler
         scrollView.hasVerticalRuler = true
@@ -155,25 +131,14 @@ struct LineNumberTextEditor: NSViewRepresentable {
         return scrollView
     }
 
-    func updateNSView(_ scrollView: FlippedScrollView, context: Context) {
+    func updateNSView(_ scrollView: NSScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
-
-        // Ensure text container width matches scroll view so line-wrapping is correct
-        let containerWidth = scrollView.contentSize.width
-        if containerWidth > 0, let tc = textView.textContainer {
-            tc.containerSize = NSSize(width: containerWidth, height: CGFloat.greatestFiniteMagnitude)
-        }
 
         // Only update if text changed externally
         if textView.string != text {
             let selectedRanges = textView.selectedRanges
             textView.string = text
             textView.selectedRanges = selectedRanges
-
-            // Force layout so the text view calculates its full height
-            if let lm = textView.layoutManager, let tc = textView.textContainer {
-                lm.ensureLayout(for: tc)
-            }
             scrollView.verticalRulerView?.needsDisplay = true
         }
 
