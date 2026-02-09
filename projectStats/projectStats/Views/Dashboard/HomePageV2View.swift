@@ -99,18 +99,18 @@ struct HomePageV2View: View {
                 HStack(spacing: 6) {
                     Circle().fill(.green).frame(width: 8, height: 8)
                     Text("You:")
-                        .font(.caption.bold())
+                        .font(.system(size: 13, weight: .bold))
                     Text(humanTimeFormatted)
-                        .font(.system(.caption, design: .monospaced, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
                         .foregroundStyle(.green)
                 }
 
                 HStack(spacing: 6) {
                     Circle().fill(.pink).frame(width: 8, height: 8)
                     Text("Claude:")
-                        .font(.caption.bold())
+                        .font(.system(size: 13, weight: .bold))
                     Text(aiTimeFormatted)
-                        .font(.system(.caption, design: .monospaced, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
                         .foregroundStyle(.pink)
                 }
             }
