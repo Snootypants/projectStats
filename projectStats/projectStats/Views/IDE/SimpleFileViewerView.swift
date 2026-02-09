@@ -8,6 +8,9 @@ struct SimpleFileViewerView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var loadToken = UUID()
+    @State private var scrollOffset: CGFloat = 0
+    @State private var visibleRange: CGFloat = 0.3
+    @State private var minimapScrollTarget: CGFloat?
 
     private let maxPreviewBytes: Int = 2 * 1024 * 1024
     private enum FileReadError: Error, LocalizedError {
@@ -91,13 +94,23 @@ struct SimpleFileViewerView: View {
             )
         } else {
             HStack(spacing: 0) {
-                LineNumberTextEditor(text: $content, readOnly: false)
+                LineNumberTextEditor(
+                    text: $content,
+                    readOnly: false,
+                    onScrollChange: { offset, range in
+                        scrollOffset = offset
+                        visibleRange = range
+                    },
+                    scrollTo: minimapScrollTarget
+                )
                 if !content.isEmpty {
                     MinimapView(
                         text: content,
-                        visibleRange: 0.3,
-                        scrollOffset: 0,
-                        onScroll: { _ in }
+                        visibleRange: visibleRange,
+                        scrollOffset: scrollOffset,
+                        onScroll: { target in
+                            minimapScrollTarget = target
+                        }
                     )
                 }
             }

@@ -92,6 +92,8 @@ final class LineNumberRulerView: NSRulerView {
 struct LineNumberTextEditor: NSViewRepresentable {
     @Binding var text: String
     var readOnly: Bool = false
+    var onScrollChange: ((CGFloat, CGFloat) -> Void)?  // (scrollOffset 0-1, visibleRange 0-1)
+    var scrollTo: CGFloat?  // nil = no programmatic scroll, 0-1 = position
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -181,6 +183,17 @@ struct LineNumberTextEditor: NSViewRepresentable {
         }
 
         textView.isEditable = !readOnly
+
+        // Programmatic scroll from minimap
+        if let target = scrollTo {
+            let docHeight = textView.frame.height
+            let visibleHeight = scrollView.contentView.bounds.height
+            if docHeight > visibleHeight {
+                let y = target * (docHeight - visibleHeight)
+                scrollView.contentView.scroll(to: NSPoint(x: 0, y: y))
+                scrollView.reflectScrolledClipView(scrollView.contentView)
+            }
+        }
     }
 
     // MARK: - Coordinator
@@ -204,7 +217,21 @@ struct LineNumberTextEditor: NSViewRepresentable {
         }
 
         @objc func rulerNeedsUpdate(_ notification: Notification) {
-            textView?.enclosingScrollView?.verticalRulerView?.needsDisplay = true
+            guard let tv = textView, let scrollView = tv.enclosingScrollView else { return }
+            scrollView.verticalRulerView?.needsDisplay = true
+            reportScrollPosition(scrollView: scrollView, textView: tv)
+        }
+
+        func reportScrollPosition(scrollView: NSScrollView, textView: NSTextView) {
+            let docHeight = textView.frame.height
+            let visibleHeight = scrollView.contentView.bounds.height
+            guard docHeight > visibleHeight else {
+                parent.onScrollChange?(0, 1)
+                return
+            }
+            let offset = scrollView.contentView.bounds.origin.y / (docHeight - visibleHeight)
+            let range = visibleHeight / docHeight
+            parent.onScrollChange?(min(max(offset, 0), 1), min(range, 1))
         }
     }
 }
