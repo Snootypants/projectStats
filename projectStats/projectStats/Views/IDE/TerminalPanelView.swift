@@ -6,6 +6,7 @@ struct TerminalPanelView: View {
     @State private var showHistory = false
     @StateObject private var outputMonitor = TerminalOutputMonitor.shared
     @State private var promptText: String = ""
+    @State private var swarmEnabled = false
     @FocusState private var isPromptFocused: Bool
 
     // State migrated from TerminalTabBar
@@ -220,6 +221,20 @@ struct TerminalPanelView: View {
                 .foregroundStyle(.secondary)
                 .font(.system(size: 14))
 
+            if SettingsViewModel.shared.agentTeamsEnabled {
+                Toggle(isOn: $swarmEnabled) {
+                    HStack(spacing: 3) {
+                        Image(systemName: swarmEnabled ? "person.3.fill" : "person.3")
+                            .font(.system(size: 11))
+                        Text("Swarm")
+                            .font(.system(size: 11, weight: swarmEnabled ? .bold : .regular))
+                    }
+                    .foregroundStyle(swarmEnabled ? .orange : .secondary)
+                }
+                .toggleStyle(.checkbox)
+                .help("Enable swarm mode - tells Claude to use agent teams")
+            }
+
             TextField("Send prompt to Claude...", text: $promptText, axis: .vertical)
                 .textFieldStyle(.plain)
                 .lineLimit(1...5)
@@ -246,7 +261,10 @@ struct TerminalPanelView: View {
     private func sendPrompt() {
         guard !promptText.isEmpty else { return }
 
-        let textToSend = promptText
+        var textToSend = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if swarmEnabled {
+            textToSend += "\n\nIMPORTANT: Use swarm mode for this task. Launch multiple sub-agents to work in parallel using the Task tool. Break the work into independent scopes and delegate each to a separate agent for maximum speed."
+        }
         promptText = ""
 
         // First, send to terminal immediately (sendCommand adds carriage return to execute)
