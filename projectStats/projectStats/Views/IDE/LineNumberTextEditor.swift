@@ -69,15 +69,15 @@ final class LineNumberRulerView: NSRulerView {
         text.enumerateSubstrings(in: visibleCharRange, options: [.byLines, .substringNotRequired]) { _, range, _, _ in
             let glyphRange = layoutManager.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
             var lineRect = layoutManager.lineFragmentRect(forGlyphAt: glyphRange.location, effectiveRange: nil)
+            lineRect.origin.y += textView.textContainerInset.height
 
             // Convert from text view coordinates to ruler coordinates
-            lineRect.origin.y += textView.textContainerInset.height
-            lineRect.origin.y -= textView.visibleRect.origin.y
+            let rulerRect = self.convert(lineRect, from: textView)
 
             let label = "\(lineNumber)" as NSString
             let labelSize = label.size(withAttributes: attrs)
             let x = self.bounds.width - labelSize.width - 8
-            let y = lineRect.origin.y + (lineRect.height - labelSize.height) / 2
+            let y = rulerRect.origin.y + (rulerRect.height - labelSize.height) / 2
 
             label.draw(at: NSPoint(x: x, y: y), withAttributes: attrs)
             lineNumber += 1

@@ -28,7 +28,7 @@ struct IDEModeView: View {
     @StateObject private var environmentViewModel: EnvironmentViewModel
 
     @State private var selectedFile: URL?
-    @State private var activeTab: IDETab = .prompts
+    @State private var activeTab: IDETab = .files
 
     @AppStorage("workspace.terminalWidth") private var terminalWidth: Double = 450
     @AppStorage("workspace.explorerWidth") private var explorerWidth: Double = 200
