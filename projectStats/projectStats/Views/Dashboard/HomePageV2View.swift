@@ -69,7 +69,7 @@ struct HomePageV2View: View {
         .onReceive(refreshTimer) { _ in
             now = Date()
         }
-        .onReceive(Timer.publish(every: 15, on: .main, in: .common).autoconnect()) { _ in
+        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
             Task { await planUsage.fetchUsage() }
         }
         .task {
@@ -143,17 +143,15 @@ struct HomePageV2View: View {
             VStack(spacing: 14) {
                 usageMeter(
                     label: "Session",
-                    endTime: formatEndTime(planUsage.fiveHourResetsAt),
                     percent: planUsage.fiveHourUtilization,
-                    countdown: formatSessionCountdown(planUsage.fiveHourResetsAt),
+                    resetInfo: formatSessionReset(planUsage.fiveHourResetsAt),
                     lines: viewModel.aggregatedStats.today.totalLines,
                     commits: viewModel.aggregatedStats.today.commits
                 )
                 usageMeter(
                     label: "Weekly",
-                    endTime: formatWeeklyEndTime(planUsage.sevenDayResetsAt),
                     percent: planUsage.sevenDayUtilization,
-                    countdown: formatWeeklyCountdown(planUsage.sevenDayResetsAt),
+                    resetInfo: formatWeeklyReset(planUsage.sevenDayResetsAt),
                     lines: viewModel.aggregatedStats.thisWeek.totalLines,
                     commits: viewModel.aggregatedStats.thisWeek.commits
                 )
@@ -166,18 +164,15 @@ struct HomePageV2View: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func usageMeter(label: String, endTime: String, percent: Double, countdown: String, lines: Int, commits: Int) -> some View {
+    private func usageMeter(label: String, percent: Double, resetInfo: String, lines: Int, commits: Int) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text("\(label) (\(endTime))")
+                Text(label)
                     .font(.system(size: 15, weight: .bold))
                 Spacer()
                 Text("\(Int(percent * 100))%")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(usageColor(percent))
-                Text(countdown)
-                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.tertiary)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -198,6 +193,9 @@ struct HomePageV2View: View {
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
                 Spacer()
+                Text(resetInfo)
+                    .font(.system(size: 12))
+                    .foregroundStyle(.tertiary)
             }
         }
     }
@@ -208,42 +206,21 @@ struct HomePageV2View: View {
         return .cyan
     }
 
-    private func formatEndTime(_ date: Date?) -> String {
-        guard let date else { return "--" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter.string(from: date)
-    }
-
-    private func formatWeeklyEndTime(_ date: Date?) -> String {
-        guard let date else { return "--" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE h:mm a"
-        return formatter.string(from: date)
-    }
-
-    private func formatSessionCountdown(_ date: Date?) -> String {
+    private func formatSessionReset(_ date: Date?) -> String {
         guard let date else { return "--" }
         let interval = date.timeIntervalSinceNow
-        guard interval > 0 else { return "Now" }
+        guard interval > 0 else { return "Resets now" }
         let totalMinutes = Int(interval) / 60
         let hours = totalMinutes / 60
         let minutes = totalMinutes % 60
-        return "\(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
+        return "Resets in \(hours) hr \(String(format: "%02d", minutes)) min"
     }
 
-    private func formatWeeklyCountdown(_ date: Date?) -> String {
+    private func formatWeeklyReset(_ date: Date?) -> String {
         guard let date else { return "--" }
-        let interval = date.timeIntervalSinceNow
-        guard interval > 0 else { return "Now" }
-        let totalMinutes = Int(interval) / 60
-        let days = totalMinutes / (60 * 24)
-        let hours = (totalMinutes % (60 * 24)) / 60
-        let minutes = totalMinutes % 60
-        if days > 0 {
-            return "\(days) D \(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
-        }
-        return "\(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE h:mm a"
+        return "Resets \(formatter.string(from: date))"
     }
 
     // MARK: - Activity Chart
