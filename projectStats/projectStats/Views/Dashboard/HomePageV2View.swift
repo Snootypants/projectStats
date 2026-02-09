@@ -167,10 +167,10 @@ struct HomePageV2View: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text("\(label) (\(endTime))")
-                    .font(.system(size: 13, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                 Spacer()
                 Text("\(Int(percent * 100))%")
-                    .font(.system(size: 13, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(usageColor(percent))
                 Text(countdown)
                     .font(.system(size: 12, weight: .semibold, design: .monospaced))

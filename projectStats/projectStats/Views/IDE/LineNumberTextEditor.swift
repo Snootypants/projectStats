@@ -72,6 +72,14 @@ final class LineNumberRulerView: NSRulerView {
     }
 }
 
+// MARK: - Scroll View Subclass (prevents SwiftUI from expanding to full content size)
+
+final class FlippedScrollView: NSScrollView {
+    override var intrinsicContentSize: NSSize {
+        NSSize(width: NSView.noIntrinsicMetric, height: NSView.noIntrinsicMetric)
+    }
+}
+
 // MARK: - NSViewRepresentable Wrapper
 
 struct LineNumberTextEditor: NSViewRepresentable {
@@ -82,8 +90,8 @@ struct LineNumberTextEditor: NSViewRepresentable {
         Coordinator(self)
     }
 
-    func makeNSView(context: Context) -> NSScrollView {
-        let scrollView = NSScrollView()
+    func makeNSView(context: Context) -> FlippedScrollView {
+        let scrollView = FlippedScrollView()
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
         scrollView.autohidesScrollers = true
@@ -146,7 +154,7 @@ struct LineNumberTextEditor: NSViewRepresentable {
         return scrollView
     }
 
-    func updateNSView(_ scrollView: NSScrollView, context: Context) {
+    func updateNSView(_ scrollView: FlippedScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
 
         // Only update if text changed externally
