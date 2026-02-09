@@ -195,7 +195,7 @@ struct HomePageV2View: View {
                 Spacer()
                 Text(resetInfo)
                     .font(.system(size: 12))
-                    .foregroundStyle(.tertiary)
+                    .foregroundStyle(.secondary)
             }
         }
     }
