@@ -69,6 +69,9 @@ struct HomePageV2View: View {
         .onReceive(refreshTimer) { _ in
             now = Date()
         }
+        .onReceive(Timer.publish(every: 15, on: .main, in: .common).autoconnect()) { _ in
+            Task { await planUsage.fetchUsage() }
+        }
         .task {
             await planUsage.fetchUsage()
         }
@@ -226,7 +229,7 @@ struct HomePageV2View: View {
         let totalMinutes = Int(interval) / 60
         let hours = totalMinutes / 60
         let minutes = totalMinutes % 60
-        return "\(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
+        return "\(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
     }
 
     private func formatWeeklyCountdown(_ date: Date?) -> String {
@@ -238,9 +241,9 @@ struct HomePageV2View: View {
         let hours = (totalMinutes % (60 * 24)) / 60
         let minutes = totalMinutes % 60
         if days > 0 {
-            return "\(days)D \(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
+            return "\(days) D \(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
         }
-        return "\(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
+        return "\(String(format: "%02d", hours)) H \(String(format: "%02d", minutes)) M"
     }
 
     // MARK: - Activity Chart
