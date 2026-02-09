@@ -59,6 +59,7 @@ struct WorkspaceView: View {
                     await ClaudePlanUsageService.shared.fetchUsage()
                     await ClaudeContextMonitor.shared.refresh()
                     await ClaudeUsageService.shared.refreshProjectIfNeeded(project.path.path)
+                    await DashboardViewModel.shared.syncSingleProject(path: project.path.path)
                 }
             }
             .onDisappear {
@@ -66,6 +67,9 @@ struct WorkspaceView: View {
                     TerminalOutputMonitor.shared.activeProjectPath = nil
                 }
                 TimeTrackingService.shared.stopTracking()
+                Task {
+                    await DashboardViewModel.shared.syncSingleProject(path: project.path.path)
+                }
             }
         } else {
             // Project not found (maybe directory was deleted)

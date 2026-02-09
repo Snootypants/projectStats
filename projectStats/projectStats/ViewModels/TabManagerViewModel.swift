@@ -84,6 +84,13 @@ class TabManagerViewModel: ObservableObject {
             Task {
                 await ClaudeUsageService.shared.onTabSwitch(projectPath: projectPath)
             }
+
+            // Sync project stats when switching to a project workspace tab
+            if let projectPath {
+                Task { @MainActor in
+                    await DashboardViewModel.shared.syncSingleProject(path: projectPath)
+                }
+            }
         }
     }
 
