@@ -90,15 +90,18 @@ struct SimpleFileViewerView: View {
                 message: errorMessage
             )
         } else {
-            HStack(spacing: 0) {
-                LineNumberTextEditor(text: $content, readOnly: false)
-                if !content.isEmpty {
-                    MinimapView(
-                        text: content,
-                        visibleRange: 0.3,
-                        scrollOffset: 0,
-                        onScroll: { _ in }
-                    )
+            GeometryReader { geo in
+                HStack(spacing: 0) {
+                    LineNumberTextEditor(text: $content, readOnly: false)
+                        .frame(width: geo.size.width - (content.isEmpty ? 0 : 60), height: geo.size.height)
+                    if !content.isEmpty {
+                        MinimapView(
+                            text: content,
+                            visibleRange: 0.3,
+                            scrollOffset: 0,
+                            onScroll: { _ in }
+                        )
+                    }
                 }
             }
         }

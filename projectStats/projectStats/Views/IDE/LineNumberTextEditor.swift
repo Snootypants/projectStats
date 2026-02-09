@@ -106,7 +106,8 @@ struct LineNumberTextEditor: NSViewRepresentable {
         textContainer.widthTracksTextView = true
         layoutManager.addTextContainer(textContainer)
 
-        let textView = NSTextView(frame: .zero, textContainer: textContainer)
+        let contentSize = scrollView.contentSize
+        let textView = NSTextView(frame: NSRect(origin: .zero, size: contentSize), textContainer: textContainer)
         textView.isEditable = !readOnly
         textView.isSelectable = true
         textView.isRichText = false
@@ -117,6 +118,8 @@ struct LineNumberTextEditor: NSViewRepresentable {
         textView.autoresizingMask = [.width]
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
+        textView.minSize = NSSize(width: 0, height: 0)
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.textContainerInset = NSSize(width: 4, height: 8)
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
@@ -127,8 +130,6 @@ struct LineNumberTextEditor: NSViewRepresentable {
         context.coordinator.textView = textView
 
         scrollView.documentView = textView
-        scrollView.wantsLayer = true
-        scrollView.layer?.masksToBounds = true
 
         // Set up line number ruler
         scrollView.hasVerticalRuler = true
@@ -157,11 +158,22 @@ struct LineNumberTextEditor: NSViewRepresentable {
     func updateNSView(_ scrollView: FlippedScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
 
+        // Ensure text container width matches scroll view so line-wrapping is correct
+        let containerWidth = scrollView.contentSize.width
+        if containerWidth > 0, let tc = textView.textContainer {
+            tc.containerSize = NSSize(width: containerWidth, height: CGFloat.greatestFiniteMagnitude)
+        }
+
         // Only update if text changed externally
         if textView.string != text {
             let selectedRanges = textView.selectedRanges
             textView.string = text
             textView.selectedRanges = selectedRanges
+
+            // Force layout so the text view calculates its full height
+            if let lm = textView.layoutManager, let tc = textView.textContainer {
+                lm.ensureLayout(for: tc)
+            }
             scrollView.verticalRulerView?.needsDisplay = true
         }
 
