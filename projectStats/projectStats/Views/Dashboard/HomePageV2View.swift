@@ -12,6 +12,7 @@ struct HomePageV2View: View {
     @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
 
     @State private var hoveredDate: Date?
+    @State private var hoverX: CGFloat?
     @State private var showLines = true
     @State private var showCommits = false
     @State private var chartRange: ChartRange = .week
@@ -47,13 +48,14 @@ struct HomePageV2View: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Time Today + Usage
+                // Time Today + Usage (equal height)
                 HStack(alignment: .top, spacing: 16) {
                     timePanel
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, minHeight: 160)
                     usagePanel
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, minHeight: 160)
                 }
+                .fixedSize(horizontal: false, vertical: true)
 
                 // Activity Chart
                 activityChart
@@ -75,7 +77,7 @@ struct HomePageV2View: View {
     // MARK: - Time Panel
 
     private var timePanel: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 0) {
             HStack {
                 Image(systemName: "timer")
                     .foregroundStyle(.cyan)
@@ -85,11 +87,14 @@ struct HomePageV2View: View {
                 Spacer()
             }
 
+            Spacer()
+
             Text(totalTimeFormatted)
                 .font(.system(size: 44, weight: .bold, design: .rounded))
                 .monospacedDigit()
 
-            // Simple text rows for You and Claude
+            Spacer().frame(height: 12)
+
             HStack(spacing: 24) {
                 HStack(spacing: 6) {
                     Circle().fill(.green).frame(width: 8, height: 8)
@@ -109,6 +114,8 @@ struct HomePageV2View: View {
                         .foregroundStyle(.pink)
                 }
             }
+
+            Spacer()
         }
         .padding(20)
         .background(Color.primary.opacity(0.04))
@@ -118,7 +125,7 @@ struct HomePageV2View: View {
     // MARK: - Usage Panel
 
     private var usagePanel: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 0) {
             HStack {
                 Image(systemName: "gauge.with.needle.fill")
                     .foregroundStyle(.cyan)
@@ -128,23 +135,14 @@ struct HomePageV2View: View {
                 Spacer()
             }
 
-            if let todayCost = usageService.globalTodayStats?.totalCost {
-                Text(String(format: "$%.2f", todayCost))
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                Text("today")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            } else {
-                Text("--")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundStyle(.secondary)
-            }
+            Spacer()
 
-            VStack(spacing: 10) {
+            VStack(spacing: 14) {
                 usageMeter(
                     label: "Session",
                     endTime: formatEndTime(planUsage.fiveHourResetsAt),
                     percent: planUsage.fiveHourUtilization,
+                    countdown: formatSessionCountdown(planUsage.fiveHourResetsAt),
                     lines: viewModel.aggregatedStats.today.totalLines,
                     commits: viewModel.aggregatedStats.today.commits
                 )
@@ -152,25 +150,31 @@ struct HomePageV2View: View {
                     label: "Weekly",
                     endTime: formatWeeklyEndTime(planUsage.sevenDayResetsAt),
                     percent: planUsage.sevenDayUtilization,
+                    countdown: formatWeeklyCountdown(planUsage.sevenDayResetsAt),
                     lines: viewModel.aggregatedStats.thisWeek.totalLines,
                     commits: viewModel.aggregatedStats.thisWeek.commits
                 )
             }
+
+            Spacer()
         }
         .padding(20)
         .background(Color.primary.opacity(0.04))
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func usageMeter(label: String, endTime: String, percent: Double, lines: Int, commits: Int) -> some View {
+    private func usageMeter(label: String, endTime: String, percent: Double, countdown: String, lines: Int, commits: Int) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text("\(label) (\(endTime))")
-                    .font(.caption.bold())
+                    .font(.system(size: 13, weight: .bold))
                 Spacer()
                 Text("\(Int(percent * 100))%")
-                    .font(.caption.bold())
+                    .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(usageColor(percent))
+                Text(countdown)
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(.tertiary)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -185,17 +189,12 @@ struct HomePageV2View: View {
 
             HStack(spacing: 8) {
                 Text("\(lines.formatted()) lines")
-                    .font(.caption2)
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
                 Text("\(commits) commits")
-                    .font(.caption2)
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
                 Spacer()
-                if label == "Weekly" {
-                    Text(formatWeeklyCountdown(planUsage.sevenDayResetsAt))
-                        .font(.caption2.bold())
-                        .foregroundStyle(.tertiary)
-                }
             }
         }
     }
@@ -218,6 +217,16 @@ struct HomePageV2View: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE h:mm a"
         return formatter.string(from: date)
+    }
+
+    private func formatSessionCountdown(_ date: Date?) -> String {
+        guard let date else { return "--" }
+        let interval = date.timeIntervalSinceNow
+        guard interval > 0 else { return "Now" }
+        let totalMinutes = Int(interval) / 60
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        return "\(String(format: "%02d", hours))H \(String(format: "%02d", minutes))M"
     }
 
     private func formatWeeklyCountdown(_ date: Date?) -> String {
@@ -303,9 +312,11 @@ struct HomePageV2View: View {
 
             let chartData = dataForRange()
 
-            // Summary
-            chartSummary(data: chartData)
+            // Fixed-height summary row (prevents resize on hover)
+            chartSummaryFixed(data: chartData)
+                .frame(height: 24)
 
+            // Chart with inline tooltip overlay
             Chart {
                 if showLines {
                     ForEach(chartData, id: \.date) { entry in
@@ -359,7 +370,7 @@ struct HomePageV2View: View {
 
                 if let hoveredDate {
                     RuleMark(x: .value("Day", hoveredDate, unit: .day))
-                        .foregroundStyle(.white.opacity(0.3))
+                        .foregroundStyle(.cyan.opacity(0.4))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
                 }
             }
@@ -387,11 +398,20 @@ struct HomePageV2View: View {
                         .onContinuousHover { phase in
                             switch phase {
                             case .active(let location):
+                                hoverX = location.x
                                 if let date: Date = proxy.value(atX: location.x) {
                                     hoveredDate = date
                                 }
                             case .ended:
                                 hoveredDate = nil
+                                hoverX = nil
+                            }
+                        }
+                        .overlay(alignment: .topLeading) {
+                            if let hoveredDate, let hoverX,
+                               let entry = chartData.first(where: { Calendar.current.isDate($0.date, inSameDayAs: hoveredDate) }) {
+                                chartTooltip(entry: entry)
+                                    .offset(x: tooltipX(hoverX: hoverX, geoWidth: geo.size.width), y: 4)
                             }
                         }
                 }
@@ -408,47 +428,54 @@ struct HomePageV2View: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
+    private func tooltipX(hoverX: CGFloat, geoWidth: CGFloat) -> CGFloat {
+        let tooltipWidth: CGFloat = 160
+        let x = hoverX - tooltipWidth / 2
+        return max(0, min(x, geoWidth - tooltipWidth))
+    }
+
+    private func chartTooltip(entry: DayEntry) -> some View {
+        VStack(spacing: 4) {
+            if showLines {
+                Text("\((entry.linesAdded + entry.linesRemoved).formatted())")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+            }
+            if showCommits {
+                Text("\(entry.commits) commits")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+            Text(entry.date, format: .dateTime.weekday(.abbreviated))
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.6))
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color(red: 0.15, green: 0.17, blue: 0.25).opacity(0.95))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .frame(width: 160)
+    }
+
     @ViewBuilder
-    private func chartSummary(data: [DayEntry]) -> some View {
-        if let hoveredDate,
-           let entry = data.first(where: { Calendar.current.isDate($0.date, inSameDayAs: hoveredDate) }) {
-            HStack(spacing: 12) {
-                Text(entry.date, format: .dateTime.weekday(.wide).month(.abbreviated).day())
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                if showLines {
-                    Text("\((entry.linesAdded + entry.linesRemoved).formatted()) lines")
-                        .font(.caption.bold())
-                        .foregroundStyle(.cyan)
-                }
-                if showCommits {
-                    Text("\(entry.commits) commits")
-                        .font(.caption.bold())
-                        .foregroundStyle(.green)
-                }
+    private func chartSummaryFixed(data: [DayEntry]) -> some View {
+        let totalLines = data.reduce(0) { $0 + $1.linesAdded + $1.linesRemoved }
+        let totalCommits = data.reduce(0) { $0 + $1.commits }
+        HStack(spacing: 12) {
+            Text("\(chartRange.rawValue) total:")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            if showLines {
+                Text("\(totalLines.formatted()) lines")
+                    .font(.caption.bold())
+                    .foregroundStyle(.cyan)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(Color.primary.opacity(0.06))
-            .clipShape(Capsule())
-        } else {
-            let totalLines = data.reduce(0) { $0 + $1.linesAdded + $1.linesRemoved }
-            let totalCommits = data.reduce(0) { $0 + $1.commits }
-            HStack(spacing: 12) {
-                Text("\(chartRange.rawValue) total:")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                if showLines {
-                    Text("\(totalLines.formatted()) lines")
-                        .font(.caption.bold())
-                        .foregroundStyle(.cyan)
-                }
-                if showCommits {
-                    Text("\(totalCommits) commits")
-                        .font(.caption.bold())
-                        .foregroundStyle(.green)
-                }
+            if showCommits {
+                Text("\(totalCommits) commits")
+                    .font(.caption.bold())
+                    .foregroundStyle(.green)
             }
+            Spacer()
         }
     }
 
@@ -591,7 +618,6 @@ private struct V2ProjectCard: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top row: language tag + star
             HStack {
                 if let language = project.language {
                     Text(language)
@@ -609,14 +635,12 @@ private struct V2ProjectCard: View {
             }
             .padding(.bottom, 10)
 
-            // Project name centered
             Text(project.name)
                 .font(.system(size: 14, weight: .semibold))
                 .lineLimit(1)
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 12)
 
-            // Bottom row: time ago + line count
             HStack {
                 Text(project.lastActivityString)
                     .font(.caption2)
