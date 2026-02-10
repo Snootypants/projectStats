@@ -181,6 +181,11 @@
 		010000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift */; };
 		010000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */; };
 		010000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift */; };
+		010000000000000000000304 /* projectStats/Views/Vibe/ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000304 /* projectStats/Views/Vibe/ChatBubbleView.swift */; };
+		010000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift */; };
+		010000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift */; };
+		010000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift */; };
+		010000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -359,6 +364,11 @@
 		020000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/VibeChatMessage.swift; sourceTree = "<group>"; };
 		020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/ClaudeProcessManager.swift; sourceTree = "<group>"; };
 		020000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/ViewModels/VibeChatViewModel.swift; sourceTree = "<group>"; };
+		020000000000000000000304 /* projectStats/Views/Vibe/ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/ChatBubbleView.swift; sourceTree = "<group>"; };
+		020000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/ToolCallCardView.swift; sourceTree = "<group>"; };
+		020000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/PermissionCardView.swift; sourceTree = "<group>"; };
+		020000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/SessionStatsView.swift; sourceTree = "<group>"; };
+		020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/ChatInputView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -676,6 +686,11 @@
 				020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */,
 				020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */,
 				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
+				020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */,
+				020000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift */,
+				020000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift */,
+				020000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift */,
+				020000000000000000000304 /* projectStats/Views/Vibe/ChatBubbleView.swift */,
 				020000000000000000000204 /* projectStats/Services/XPService.swift */,
 				020000000000000000000188 /* projectStats/Services/AgentTeamsService.swift */,
 			);
@@ -923,6 +938,11 @@
 				010000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift in Sources */,
 				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
 				010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */,
+				010000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift in Sources */,
+				010000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift in Sources */,
+				010000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift in Sources */,
+				010000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift in Sources */,
+				010000000000000000000304 /* projectStats/Views/Vibe/ChatBubbleView.swift in Sources */,
 				010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */,
 				010000000000000000000206 /* String+ANSI.swift in Sources */,
 				010000000000000000000207 /* DocBuilderSheet.swift in Sources */,
