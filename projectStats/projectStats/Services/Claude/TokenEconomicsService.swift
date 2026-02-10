@@ -18,6 +18,16 @@ final class TokenEconomicsService: ObservableObject {
         let totalDurationApiMs: Int
         let errorCount: Int
 
+        // Time-period spend
+        let todayCost: Double
+        let todaySessions: Int
+        let thisWeekCost: Double
+        let thisWeekSessions: Int
+        let thisMonthCost: Double
+        let thisMonthSessions: Int
+        let dailyAverageCost: Double
+        let projectedMonthlyCost: Double
+
         var totalTokens: Int {
             totalInputTokens + totalOutputTokens + totalCacheReadTokens + totalCacheCreationTokens
         }
@@ -53,11 +63,16 @@ final class TokenEconomicsService: ObservableObject {
             return Double(errorCount) / Double(totalSessions)
         }
 
-        var formattedTotalCost: String {
-            if totalCost >= 1.0 {
-                return String(format: "$%.2f", totalCost)
-            }
-            return String(format: "$%.4f", totalCost)
+        var formattedTotalCost: String { formatCost(totalCost) }
+        var formattedTodayCost: String { formatCost(todayCost) }
+        var formattedWeekCost: String { formatCost(thisWeekCost) }
+        var formattedMonthCost: String { formatCost(thisMonthCost) }
+        var formattedProjectedMonthly: String { formatCost(projectedMonthlyCost) }
+
+        private func formatCost(_ cost: Double) -> String {
+            if cost >= 1.0 { return String(format: "$%.2f", cost) }
+            if cost > 0 { return String(format: "$%.4f", cost) }
+            return "$0"
         }
     }
 
@@ -108,16 +123,44 @@ final class TokenEconomicsService: ObservableObject {
     }
 
     private func aggregate(_ sessions: [ConversationSession]) -> Economics {
-        Economics(
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfToday = calendar.startOfDay(for: now)
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)) ?? now
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
+
+        let todaySessions = sessions.filter { $0.startedAt >= startOfToday }
+        let weekSessions = sessions.filter { $0.startedAt >= startOfWeek }
+        let monthSessions = sessions.filter { $0.startedAt >= startOfMonth }
+
+        let todayCost = todaySessions.reduce(0.0) { $0 + $1.costUsd }
+        let weekCost = weekSessions.reduce(0.0) { $0 + $1.costUsd }
+        let monthCost = monthSessions.reduce(0.0) { $0 + $1.costUsd }
+
+        let totalCost = sessions.reduce(0.0) { $0 + $1.costUsd }
+        let uniqueDays = Set(sessions.map { calendar.startOfDay(for: $0.startedAt) }).count
+        let dailyAvg = uniqueDays > 0 ? totalCost / Double(uniqueDays) : 0
+        let daysInMonth = calendar.range(of: .day, in: .month, for: now)?.count ?? 30
+        let projectedMonthly = dailyAvg * Double(daysInMonth)
+
+        return Economics(
             totalSessions: sessions.count,
-            totalCost: sessions.reduce(0) { $0 + $1.costUsd },
+            totalCost: totalCost,
             totalInputTokens: sessions.reduce(0) { $0 + $1.inputTokens },
             totalOutputTokens: sessions.reduce(0) { $0 + $1.outputTokens },
             totalCacheReadTokens: sessions.reduce(0) { $0 + $1.cacheReadTokens },
             totalCacheCreationTokens: sessions.reduce(0) { $0 + $1.cacheCreationTokens },
             totalDurationMs: sessions.reduce(0) { $0 + $1.durationMs },
             totalDurationApiMs: sessions.reduce(0) { $0 + $1.durationApiMs },
-            errorCount: sessions.filter(\.isError).count
+            errorCount: sessions.filter(\.isError).count,
+            todayCost: todayCost,
+            todaySessions: todaySessions.count,
+            thisWeekCost: weekCost,
+            thisWeekSessions: weekSessions.count,
+            thisMonthCost: monthCost,
+            thisMonthSessions: monthSessions.count,
+            dailyAverageCost: dailyAvg,
+            projectedMonthlyCost: projectedMonthly
         )
     }
 }
