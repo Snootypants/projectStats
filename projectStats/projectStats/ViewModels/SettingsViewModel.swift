@@ -171,6 +171,22 @@ class SettingsViewModel: ObservableObject {
         }
     }
 
+    /// After a successful AI Chat test, copy the provider key into the
+    /// dedicated keychain slot so embeddings/memory features can find it.
+    func syncProviderKeyToKeychain() {
+        let key = aiApiKey
+        guard !key.isEmpty else { return }
+        switch aiProvider {
+        case .openai:
+            if openAIApiKey.isEmpty { openAIApiKey = key }
+        case .anthropic:
+            // Anthropic key stored under ai.apiKey already — nothing extra needed
+            break
+        default:
+            break
+        }
+    }
+
     var elevenLabsApiKey: String {
         get { KeychainService.shared.get(key: "elevenLabs_apiKey") ?? "" }
         set {

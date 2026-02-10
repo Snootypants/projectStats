@@ -231,8 +231,15 @@ struct AISettingsView: View {
 
         Task {
             let response = await AIService.shared.send(prompt: "Say hello in one sentence.")
-            testResult = response == nil ? "Error" : "Success"
+            let success = response != nil
+            testResult = success ? "Success" : "Error"
             isTesting = false
+
+            // On success, sync the provider key to the dedicated keychain slot
+            // so embeddings/memory features can find it
+            if success {
+                viewModel.syncProviderKeyToKeychain()
+            }
         }
     }
 }
