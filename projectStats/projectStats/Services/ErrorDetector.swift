@@ -1,6 +1,9 @@
 import Foundation
 
-// FIXME: [DEAD CODE] ErrorDetector and DetectedError are never used anywhere in the app. Safe to delete.
+// MARK: - DORMANT — Not wired to any UI or ViewModel.
+// Error detection patterns defined but never instantiated or called.
+// Do NOT maintain or update until activated.
+// To activate: remove this marker, wire to a ViewModel, add tests.
 
 struct DetectedError: Identifiable {
     let id = UUID()

@@ -1,6 +1,9 @@
 import SwiftUI
 
-// FIXME: [DEAD CODE] ClaudeTokenUsageCard is defined but never integrated into any dashboard or view hierarchy.
+// MARK: - DORMANT — Not wired to any view hierarchy.
+// Claude token usage card defined but never integrated into dashboard.
+// Do NOT maintain or update until activated.
+// To activate: remove this marker, add to a dashboard view.
 
 struct ClaudeTokenUsageCard: View {
     @ObservedObject var usageService = ClaudeUsageService.shared

@@ -1,5 +1,10 @@
 import Foundation
 
+// MARK: - DORMANT — Not wired to any UI or ViewModel.
+// Scaffolded early but superseded by AIProviderRegistry + per-provider logic.
+// Do NOT maintain or update until activated.
+// To activate: remove this marker, wire to a ViewModel, add tests.
+
 enum AIProvider: String, CaseIterable, Codable {
     case anthropic
     case openai

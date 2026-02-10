@@ -99,6 +99,8 @@ final class DailyMetric {
 }
 
 /// Work item for tracking tasks, bugs, features
+// NOTE: Model registered in SwiftData schema but not yet wired to UI/service.
+// Do not remove — would require schema migration. Implement or leave as-is.
 @Model
 final class WorkItem {
     var id: UUID
@@ -163,6 +165,8 @@ final class WorkItem {
 }
 
 /// Weekly goal for tracking progress
+// NOTE: Model registered in SwiftData schema but not yet wired to UI/service.
+// Do not remove — would require schema migration. Implement or leave as-is.
 @Model
 final class WeeklyGoal {
     var id: UUID
