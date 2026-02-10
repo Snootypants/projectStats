@@ -31,7 +31,7 @@ final class EmbeddingService {
 
     /// Embed multiple texts, batching in groups of 100
     func embed(texts: [String]) async throws -> [[Float]] {
-        let apiKey = SettingsViewModel.shared.aiApiKey
+        let apiKey = SettingsViewModel.shared.openAIApiKey
         guard !apiKey.isEmpty else { throw EmbeddingError.missingAPIKey }
 
         var allEmbeddings: [[Float]] = []

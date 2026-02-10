@@ -7,6 +7,14 @@ struct AIProviderSettingsView: View {
     @State private var testingProvider: AIProviderType?
     @State private var testResult: (success: Bool, message: String)?
     @State private var showingAPIKeyField: AIProviderType?
+    @State private var keyTestState: KeyTestState = .idle
+
+    enum KeyTestState: Equatable {
+        case idle
+        case testing(String) // which key
+        case success(String)
+        case failure(String)
+    }
 
     var body: some View {
         Form {
@@ -56,14 +64,35 @@ struct AIProviderSettingsView: View {
 
             // API Keys Section
             Section("API Keys") {
-                SecureField("Anthropic API Key", text: $settingsViewModel.aiApiKey)
-                    .textFieldStyle(.roundedBorder)
+                HStack {
+                    SecureField("Anthropic API Key", text: $settingsViewModel.aiApiKey)
+                        .textFieldStyle(.roundedBorder)
+                    keyTestButton(label: "Anthropic") {
+                        await testAnthropicKey()
+                    }
+                }
 
-                SecureField("OpenAI API Key", text: $settingsViewModel.openAIApiKey)
-                    .textFieldStyle(.roundedBorder)
+                HStack {
+                    SecureField("OpenAI API Key", text: $settingsViewModel.openAIApiKey)
+                        .textFieldStyle(.roundedBorder)
+                    keyTestButton(label: "OpenAI") {
+                        await testOpenAIKey()
+                    }
+                }
 
                 SecureField("ElevenLabs API Key", text: $settingsViewModel.elevenLabsApiKey)
                     .textFieldStyle(.roundedBorder)
+
+                // Test result
+                if case .success(let msg) = keyTestState {
+                    Label(msg, systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                        .font(.caption)
+                } else if case .failure(let msg) = keyTestState {
+                    Label(msg, systemImage: "xmark.circle.fill")
+                        .foregroundStyle(.red)
+                        .font(.caption)
+                }
             }
 
             // Ollama Configuration Section
@@ -113,6 +142,87 @@ struct AIProviderSettingsView: View {
         .formStyle(.grouped)
         .task {
             providerRegistry.loadProviders(context: AppModelContainer.shared.mainContext)
+        }
+    }
+
+    @ViewBuilder
+    private func keyTestButton(label: String, action: @escaping () async -> Void) -> some View {
+        Button {
+            keyTestState = .testing(label)
+            Task { await action() }
+        } label: {
+            if case .testing(let which) = keyTestState, which == label {
+                ProgressView()
+                    .scaleEffect(0.5)
+                    .frame(width: 40)
+            } else {
+                Text("Test")
+                    .frame(width: 40)
+            }
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.small)
+        .disabled(keyTestState != .idle && {
+            if case .testing = keyTestState { return true }
+            return false
+        }())
+    }
+
+    private func testOpenAIKey() async {
+        let key = settingsViewModel.openAIApiKey
+        guard !key.isEmpty else {
+            keyTestState = .failure("OpenAI key is empty")
+            return
+        }
+
+        var request = URLRequest(url: URL(string: "https://api.openai.com/v1/models")!)
+        request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse, http.statusCode == 200 {
+                keyTestState = .success("OpenAI key is valid")
+            } else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                keyTestState = .failure("OpenAI: HTTP \(code)")
+            }
+        } catch {
+            keyTestState = .failure("OpenAI: \(error.localizedDescription)")
+        }
+    }
+
+    private func testAnthropicKey() async {
+        let key = settingsViewModel.aiApiKey
+        guard !key.isEmpty else {
+            keyTestState = .failure("Anthropic key is empty")
+            return
+        }
+
+        var request = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
+        request.httpMethod = "POST"
+        request.setValue(key, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        // Minimal request — will succeed or fail based on auth
+        let body: [String: Any] = [
+            "model": "claude-haiku-4-5-20251001",
+            "max_tokens": 1,
+            "messages": [["role": "user", "content": "hi"]]
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse, http.statusCode == 200 {
+                keyTestState = .success("Anthropic key is valid")
+            } else if let http = response as? HTTPURLResponse, http.statusCode == 401 {
+                keyTestState = .failure("Anthropic: Invalid API key")
+            } else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                keyTestState = .failure("Anthropic: HTTP \(code)")
+            }
+        } catch {
+            keyTestState = .failure("Anthropic: \(error.localizedDescription)")
         }
     }
 
