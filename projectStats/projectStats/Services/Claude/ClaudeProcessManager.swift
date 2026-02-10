@@ -35,10 +35,12 @@ final class ClaudeProcessManager: ObservableObject {
 
     /// Locate the claude binary
     func locateClaude() async {
-        // Try `which claude` first
-        let result = Shell.runResult("which claude")
-        if result.exitCode == 0, !result.output.isEmpty {
-            claudeBinaryPath = result.output
+        // Try `which claude` first via login shell so PATH is populated
+        let result = Shell.runResult("/bin/zsh -lc 'which claude'")
+        let path = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
+        if result.exitCode == 0, !path.isEmpty, FileManager.default.isExecutableFile(atPath: path) {
+            claudeBinaryPath = path
+            print("[ClaudeProcess] Found claude at: \(path)")
             return
         }
 
@@ -46,18 +48,22 @@ final class ClaudeProcessManager: ObservableObject {
         let candidates = [
             "\(NSHomeDirectory())/.npm-global/bin/claude",
             "/usr/local/bin/claude",
-            "\(NSHomeDirectory())/.local/bin/claude"
+            "\(NSHomeDirectory())/.local/bin/claude",
+            "/opt/homebrew/bin/claude"
         ]
 
-        for path in candidates {
-            if FileManager.default.isExecutableFile(atPath: path) {
-                claudeBinaryPath = path
+        for candidate in candidates {
+            if FileManager.default.isExecutableFile(atPath: candidate) {
+                claudeBinaryPath = candidate
+                print("[ClaudeProcess] Found claude at: \(candidate)")
                 return
             }
         }
+
+        print("[ClaudeProcess] Claude binary not found")
     }
 
-    /// Start a Claude Code session
+    /// Start a Claude Code session with streaming JSON I/O
     func start(
         projectPath: String,
         permissionMode: PermissionMode,
@@ -65,7 +71,10 @@ final class ClaudeProcessManager: ObservableObject {
         onEvent: @escaping ([ClaudeEvent]) -> Void
     ) {
         guard let binary = claudeBinaryPath else {
-            sessionState = .error("Claude binary not found")
+            let msg = "Claude binary not found"
+            print("[ClaudeProcess] ERROR: \(msg)")
+            sessionState = .error(msg)
+            onEvent([.error(msg)])
             return
         }
 
@@ -80,21 +89,43 @@ final class ClaudeProcessManager: ObservableObject {
 
         proc.executableURL = URL(fileURLWithPath: binary)
 
-        var args = ["--output-format", "stream-json"]
+        // Build arguments: -p for print mode, stream-json for both input and output
+        var args: [String] = []
         if permissionMode == .flavor {
-            args.insert("--dangerously-skip-permissions", at: 0)
+            args.append("--dangerously-skip-permissions")
         }
+        args.append(contentsOf: [
+            "-p",
+            "--output-format", "stream-json",
+            "--input-format", "stream-json",
+            "--verbose"
+        ])
         if let systemPrompt = appendSystemPrompt, !systemPrompt.isEmpty {
             args.append(contentsOf: ["--append-system-prompt", systemPrompt])
         }
-        args.append("-p")
         proc.arguments = args
         proc.currentDirectoryURL = URL(fileURLWithPath: projectPath)
         proc.standardInput = stdin
         proc.standardOutput = stdout
         proc.standardError = stderr
 
-        // Read stdout line by line
+        // Inherit user's PATH so claude can find node/npm
+        var env = ProcessInfo.processInfo.environment
+        let userPaths = [
+            "\(NSHomeDirectory())/.npm-global/bin",
+            "/opt/homebrew/bin",
+            "/usr/local/bin",
+            "\(NSHomeDirectory())/.local/bin",
+            "\(NSHomeDirectory())/.nvm/versions/node/*/bin"
+        ]
+        let existingPath = env["PATH"] ?? "/usr/bin:/bin"
+        env["PATH"] = (userPaths + [existingPath]).joined(separator: ":")
+        proc.environment = env
+
+        print("[ClaudeProcess] Starting: \(binary) \(args.joined(separator: " "))")
+        print("[ClaudeProcess] CWD: \(projectPath)")
+
+        // Read stdout line by line (NDJSON)
         stdout.fileHandleForReading.readabilityHandler = { [weak self] handle in
             let data = handle.availableData
             guard !data.isEmpty else { return }
@@ -106,12 +137,33 @@ final class ClaudeProcessManager: ObservableObject {
             }
         }
 
+        // Read stderr for errors
+        stderr.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            let data = handle.availableData
+            guard !data.isEmpty else { return }
+
+            if let text = String(data: data, encoding: .utf8) {
+                let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !trimmed.isEmpty {
+                    print("[ClaudeProcess] STDERR: \(trimmed)")
+                    Task { @MainActor [weak self] in
+                        self?.eventHandler?([.error("stderr: \(trimmed)")])
+                    }
+                }
+            }
+        }
+
         // Handle process exit
         proc.terminationHandler = { [weak self] proc in
+            print("[ClaudeProcess] Process exited with code \(proc.terminationStatus)")
             Task { @MainActor [weak self] in
-                self?.sessionState = proc.terminationStatus == 0
-                    ? .done
-                    : .error("Process exited with code \(proc.terminationStatus)")
+                if proc.terminationStatus == 0 {
+                    self?.sessionState = .done
+                } else {
+                    let msg = "Process exited with code \(proc.terminationStatus)"
+                    self?.sessionState = .error(msg)
+                    self?.eventHandler?([.error(msg)])
+                }
                 self?.cleanup()
             }
         }
@@ -123,18 +175,43 @@ final class ClaudeProcessManager: ObservableObject {
             self.stdoutPipe = stdout
             self.stderrPipe = stderr
             self.sessionState = .running
+            print("[ClaudeProcess] Process launched successfully (PID: \(proc.processIdentifier))")
         } catch {
-            sessionState = .error("Failed to start: \(error.localizedDescription)")
+            let msg = "Failed to start: \(error.localizedDescription)"
+            print("[ClaudeProcess] ERROR: \(msg)")
+            sessionState = .error(msg)
+            onEvent([.error(msg)])
         }
     }
 
-    /// Send a user message via stdin
+    /// Send a user message via stdin as stream-json format
     func sendMessage(_ text: String) {
-        guard let pipe = stdinPipe else { return }
+        guard let pipe = stdinPipe else {
+            print("[ClaudeProcess] Cannot send message — no stdin pipe")
+            return
+        }
 
-        // For -p mode, just write the text followed by newline
-        // Claude Code in -p mode reads from stdin
-        if let data = (text + "\n").data(using: .utf8) {
+        // Stream-json input format: JSON with type, message.role, message.content
+        let messageJSON: [String: Any] = [
+            "type": "user",
+            "message": [
+                "role": "user",
+                "content": [
+                    ["type": "text", "text": text]
+                ]
+            ]
+        ]
+
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: messageJSON),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("[ClaudeProcess] Failed to serialize message JSON")
+            return
+        }
+
+        let line = jsonString + "\n"
+        print("[ClaudeProcess] Sending: \(line.prefix(200))")
+
+        if let data = line.data(using: .utf8) {
             pipe.fileHandleForWriting.write(data)
         }
     }
@@ -148,7 +225,12 @@ final class ClaudeProcessManager: ObservableObject {
 
     /// Stop the current session
     func stop() {
-        process?.terminate()
+        if let proc = process, proc.isRunning {
+            // Close stdin to signal EOF, then terminate
+            stdinPipe?.fileHandleForWriting.closeFile()
+            proc.terminate()
+            print("[ClaudeProcess] Stopped process")
+        }
         cleanup()
         sessionState = .idle
     }
@@ -180,6 +262,9 @@ final class ClaudeProcessManager: ObservableObject {
                 // Update session state based on events
                 for event in events {
                     switch event {
+                    case .system:
+                        print("[ClaudeProcess] Got system init event")
+                        sessionState = .running
                     case .assistantText:
                         sessionState = .thinking
                     case .toolUse:
@@ -195,12 +280,14 @@ final class ClaudeProcessManager: ObservableObject {
             }
         } catch {
             // Log parse error but don't crash -- skip malformed lines
+            print("[ClaudeProcess] Parse error: \(error.localizedDescription) -- line: \(line.prefix(200))")
             eventHandler?([.error("Parse error: \(error.localizedDescription) -- line: \(line.prefix(100))")])
         }
     }
 
     private func cleanup() {
         stdoutPipe?.fileHandleForReading.readabilityHandler = nil
+        stderrPipe?.fileHandleForReading.readabilityHandler = nil
         stdinPipe = nil
         stdoutPipe = nil
         stderrPipe = nil
