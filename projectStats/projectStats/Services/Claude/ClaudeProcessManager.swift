@@ -37,6 +37,16 @@ final class ClaudeProcessManager: ObservableObject {
         Task { await locateClaude() }
     }
 
+    deinit {
+        // Ensure process is terminated if this object is deallocated
+        if let proc = process, proc.isRunning {
+            stdinPipe?.fileHandleForWriting.closeFile()
+            proc.terminate()
+        }
+        stdoutPipe?.fileHandleForReading.readabilityHandler = nil
+        stderrPipe?.fileHandleForReading.readabilityHandler = nil
+    }
+
     /// Locate the claude binary
     func locateClaude() async {
         defer { hasCheckedForClaude = true }
@@ -308,5 +318,7 @@ final class ClaudeProcessManager: ObservableObject {
         stderrPipe = nil
         process = nil
         lineBuffer = ""
+        eventHandler = nil
+        rawLineHandler = nil
     }
 }
