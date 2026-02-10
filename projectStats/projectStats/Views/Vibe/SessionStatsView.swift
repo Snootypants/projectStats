@@ -47,6 +47,25 @@ struct SessionStatsView: View {
                         .font(.system(.title3, design: .monospaced))
                         .foregroundStyle(.primary)
                 }
+            } else if let estimate = SessionEstimator.shared.estimate(projectPath: viewModel.projectPath) {
+                Divider()
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Typical Session")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    HStack(spacing: 8) {
+                        Label(estimate.formattedMedianDuration, systemImage: "clock")
+                        Label(estimate.formattedMedianCost, systemImage: "dollarsign.circle")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    Text("Based on \(estimate.sampleSize) sessions")
+                        .font(.caption2)
+                        .foregroundStyle(.quaternary)
+                }
+            }
+
+            if viewModel.sessionState != .idle {
 
                 // Tool calls
                 VStack(alignment: .leading, spacing: 4) {

@@ -15,7 +15,13 @@ final class ConversationStore {
         toolBreakdown: [String: Int],
         costUsd: Double,
         durationMs: Int,
-        numTurns: Int
+        numTurns: Int,
+        inputTokens: Int = 0,
+        outputTokens: Int = 0,
+        cacheCreationTokens: Int = 0,
+        cacheReadTokens: Int = 0,
+        durationApiMs: Int = 0,
+        isError: Bool = false
     ) {
         let projectURL = URL(fileURLWithPath: projectPath)
 
@@ -54,7 +60,13 @@ final class ConversationStore {
             costUsd: costUsd,
             numTurns: numTurns,
             toolCallCounts: toolBreakdown,
-            filesTouched: filesTouched
+            filesTouched: filesTouched,
+            inputTokens: inputTokens,
+            outputTokens: outputTokens,
+            cacheCreationTokens: cacheCreationTokens,
+            cacheReadTokens: cacheReadTokens,
+            durationApiMs: durationApiMs,
+            isError: isError
         )
         session.endedAt = Date()
 

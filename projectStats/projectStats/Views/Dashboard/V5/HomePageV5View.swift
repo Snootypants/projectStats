@@ -24,8 +24,13 @@ struct HomePageV5View: View {
                         .frame(maxWidth: .infinity)
                 }
 
-                // CENTER - Project Activity
-                V5ProjectActivity()
+                // CENTER - Token Economics + Project Activity
+                HStack(alignment: .top, spacing: 20) {
+                    V5TokenEconomicsCard()
+                        .frame(maxWidth: .infinity)
+                    V5ProjectActivity()
+                        .frame(maxWidth: .infinity)
+                }
 
                 // BOTTOM - Game-like project cards
                 V5GameCards()

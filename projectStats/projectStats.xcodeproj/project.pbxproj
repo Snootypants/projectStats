@@ -200,6 +200,9 @@
 		010000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */; };
 		010000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift */; };
 		010000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */; };
+		89B21B92402E4E97AEDD60B6 /* projectStats/Services/Claude/SessionEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8F305E9FF64DE4B510B3FC /* projectStats/Services/Claude/SessionEstimator.swift */; };
+		DD0EF27FB1064989A94936B5 /* projectStats/Services/Claude/TokenEconomicsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCD907E08F842A8870ED18A /* projectStats/Services/Claude/TokenEconomicsService.swift */; };
+		4827C33D6BEA472FB60D0153 /* projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C906B9758653438AAC1D4574 /* projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -397,6 +400,9 @@
 		020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/ChatInputView.swift; sourceTree = "<group>"; };
 		020000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/ConversationSession.swift; sourceTree = "<group>"; };
 		020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/ConversationStore.swift; sourceTree = "<group>"; };
+		4F8F305E9FF64DE4B510B3FC /* projectStats/Services/Claude/SessionEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/SessionEstimator.swift; sourceTree = "<group>"; };
+		6DCD907E08F842A8870ED18A /* projectStats/Services/Claude/TokenEconomicsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/TokenEconomicsService.swift; sourceTree = "<group>"; };
+		C906B9758653438AAC1D4574 /* projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -711,9 +717,12 @@
 				020000000000000000000178 /* projectStats/Views/Dashboard/V5/V5MoneyPanel.swift */,
 				020000000000000000000179 /* projectStats/Views/Dashboard/V5/V5ProjectActivity.swift */,
 				020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */,
+				C906B9758653438AAC1D4574 /* projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift */,
 				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
 				020000000000000000000191 /* projectStats/Models/PromptExecution.swift */,
 				020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */,
+				4F8F305E9FF64DE4B510B3FC /* projectStats/Services/Claude/SessionEstimator.swift */,
+				6DCD907E08F842A8870ED18A /* projectStats/Services/Claude/TokenEconomicsService.swift */,
 				02000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift */,
 				02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */,
 				02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */,
@@ -1005,6 +1014,9 @@
 				010000000000000000000208 /* HomePageV2View.swift in Sources */,
 				010000000000000000000209 /* AppSetting.swift in Sources */,
 				010000000000000000000210 /* SettingsStoreService.swift in Sources */,
+				89B21B92402E4E97AEDD60B6 /* projectStats/Services/Claude/SessionEstimator.swift in Sources */,
+				DD0EF27FB1064989A94936B5 /* projectStats/Services/Claude/TokenEconomicsService.swift in Sources */,
+				4827C33D6BEA472FB60D0153 /* projectStats/Views/Dashboard/V5/V5TokenEconomicsCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

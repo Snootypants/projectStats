@@ -403,6 +403,7 @@ final class VibeChatViewModel: ObservableObject {
                 cumulativeActiveTime += TimeInterval(resultEvent.durationMs) / 1000.0
                 elapsedTime = cumulativeActiveTime
                 saveSession(resultEvent: resultEvent)
+                notifySessionComplete(resultEvent: resultEvent)
 
             case .error(let msg):
                 messages.append(.fromError(msg))
@@ -437,7 +438,28 @@ final class VibeChatViewModel: ObservableObject {
             toolBreakdown: toolBreakdown,
             costUsd: resultEvent.costUsd,
             durationMs: resultEvent.durationMs,
-            numTurns: resultEvent.numTurns
+            numTurns: resultEvent.numTurns,
+            inputTokens: resultEvent.inputTokens,
+            outputTokens: resultEvent.outputTokens,
+            cacheCreationTokens: resultEvent.cacheCreationTokens,
+            cacheReadTokens: resultEvent.cacheReadTokens,
+            durationApiMs: resultEvent.durationApiMs,
+            isError: resultEvent.isError
+        )
+    }
+
+    private func notifySessionComplete(resultEvent: ResultEvent) {
+        let settings = SettingsViewModel.shared
+        guard settings.notifyClaudeFinished else { return }
+
+        let projectName = URL(fileURLWithPath: projectPath).lastPathComponent
+        let cost = resultEvent.formattedCost
+        let duration = resultEvent.formattedDuration
+        let tokens = resultEvent.formattedTokens
+
+        NotificationService.shared.sendNotification(
+            title: "VIBE Session Complete",
+            message: "\(projectName) — \(duration), \(cost), \(tokens) tokens"
         )
     }
 }

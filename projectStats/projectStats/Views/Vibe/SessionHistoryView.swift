@@ -40,6 +40,22 @@ struct SessionHistoryView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
 
+                // Token details
+                if session.totalTokens > 0 {
+                    HStack(spacing: 8) {
+                        Label(formatTokenCount(session.totalTokens) + " tok", systemImage: "brain")
+                        if session.tokensPerSecond > 0 {
+                            Label(String(format: "%.0f tok/s", session.tokensPerSecond), systemImage: "speedometer")
+                        }
+                        if session.isError {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                }
+
                 if let summary = firstUserMessage(for: session) {
                     Text(summary)
                         .font(.caption2)
