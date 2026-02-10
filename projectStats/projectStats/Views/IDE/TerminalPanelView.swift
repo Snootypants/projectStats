@@ -282,10 +282,8 @@ struct TerminalPanelView: View {
                         wasExecuted: true
                     )
                     context.insert(saved)
-                    try context.save()
+                    context.safeSave()
                     Log.terminal.debug("[Prompts] Saved prompt: \(textToSend.prefix(50))...")
-                } catch {
-                    Log.terminal.error("[Prompts] Failed to save: \(error)")
                 }
             }
         } else {

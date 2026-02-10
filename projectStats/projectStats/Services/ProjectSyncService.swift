@@ -63,7 +63,7 @@ final class ProjectSyncService {
                 }
             }
 
-            try context.save()
+            context.safeSave()
             Log.data.info("[ProjectSync] Synced \(projects.count) projects to SwiftData")
         } catch {
             Log.data.error("[ProjectSync] Error syncing projects: \(error)")
@@ -90,7 +90,7 @@ final class ProjectSyncService {
                 }
             }
 
-            try context.save()
+            context.safeSave()
             Log.data.info("[ProjectSync] Synced \(perProjectActivities.count) projects' activities")
         } catch {
             Log.data.error("[ProjectSync] Error syncing activities: \(error)")
@@ -112,11 +112,7 @@ final class ProjectSyncService {
         await syncRecentCommits(for: project, context: context)
         await syncProjectStats(for: project, context: context)
 
-        do {
-            try context.save()
-        } catch {
-            Log.sync.error("[ProjectSync] Error saving single-project sync: \(error)")
-        }
+        context.safeSave()
 
         if let updatedCached = try? context.fetch(FetchDescriptor<CachedProject>(
             predicate: #Predicate { $0.path == path }
@@ -272,7 +268,7 @@ final class ProjectSyncService {
                 }
             }
 
-            try context.save()
+            context.safeSave()
             Log.sync.info("[ProjectSync] Synced prompts to SwiftData")
         } catch {
             Log.sync.error("[ProjectSync] Error syncing prompts: \(error)")
@@ -393,7 +389,7 @@ final class ProjectSyncService {
                 }
             }
 
-            try context.save()
+            context.safeSave()
             Log.sync.info("[ProjectSync] Synced work logs to SwiftData")
         } catch {
             Log.sync.error("[ProjectSync] Error syncing work logs: \(error)")

@@ -85,14 +85,9 @@ final class AIProviderRegistry: ObservableObject {
             context.insert(provider)
         }
 
-        do {
-            try context.save()
-            providers = defaults
-            defaultProvider = claudeCode
-            Log.ai.info("[AIProviderRegistry] Created default providers")
-        } catch {
-            Log.ai.error("[AIProviderRegistry] Failed to save default providers: \(error)")
-        }
+        context.safeSave()
+        providers = defaults
+        defaultProvider = claudeCode
     }
 
     // MARK: - CRUD Operations
@@ -101,27 +96,16 @@ final class AIProviderRegistry: ObservableObject {
     func addProvider(_ provider: AIProviderConfig, context: ModelContext) {
         context.insert(provider)
 
-        do {
-            try context.save()
-            providers.append(provider)
-            Log.ai.info("[AIProviderRegistry] Added provider: \(provider.displayName)")
-        } catch {
-            Log.ai.error("[AIProviderRegistry] Failed to add provider: \(error)")
-        }
+        context.safeSave()
+        providers.append(provider)
     }
 
     /// Update an existing provider
     func updateProvider(_ provider: AIProviderConfig, context: ModelContext) {
         provider.updatedAt = Date()
 
-        do {
-            try context.save()
-            // Refresh providers list
-            loadProviders(context: context)
-            Log.ai.info("[AIProviderRegistry] Updated provider: \(provider.displayName)")
-        } catch {
-            Log.ai.error("[AIProviderRegistry] Failed to update provider: \(error)")
-        }
+        context.safeSave()
+        loadProviders(context: context)
     }
 
     /// Delete a provider
@@ -136,15 +120,10 @@ final class AIProviderRegistry: ObservableObject {
 
         context.delete(provider)
 
-        do {
-            try context.save()
-            providers.removeAll { $0.id == provider.id }
-            if provider.isDefault, let first = enabledProviders.first {
-                setDefaultProvider(first, context: context)
-            }
-            Log.ai.info("[AIProviderRegistry] Deleted provider: \(provider.displayName)")
-        } catch {
-            Log.ai.error("[AIProviderRegistry] Failed to delete provider: \(error)")
+        context.safeSave()
+        providers.removeAll { $0.id == provider.id }
+        if provider.isDefault, let first = enabledProviders.first {
+            setDefaultProvider(first, context: context)
         }
     }
 
@@ -159,12 +138,7 @@ final class AIProviderRegistry: ObservableObject {
         provider.updatedAt = Date()
         defaultProvider = provider
 
-        do {
-            try context.save()
-            Log.ai.info("[AIProviderRegistry] Set default provider: \(provider.displayName)")
-        } catch {
-            Log.ai.error("[AIProviderRegistry] Failed to set default provider: \(error)")
-        }
+        context.safeSave()
     }
 
     // MARK: - Queries

@@ -43,12 +43,8 @@ class DataMigrationService {
         }
 
         // Step 4: Save the projects
-        do {
-            try modelContext.save()
-            Log.data.info("[DataMigration] Saved \(projectPaths.count) projects")
-        } catch {
-            Log.data.error("[DataMigration] Error saving projects: \(error)")
-        }
+        modelContext.safeSave()
+        Log.data.info("[DataMigration] Saved \(projectPaths.count) projects")
 
         // Step 5: Rebuild daily activity from git logs
         await rebuildDailyActivity(for: projectPaths, modelContext: modelContext)
@@ -80,7 +76,7 @@ class DataMigrationService {
                 modelContext.delete(activity)
             }
 
-            try modelContext.save()
+            modelContext.safeSave()
         } catch {
             Log.data.error("[DataMigration] Error deleting records: \(error)")
         }
@@ -209,12 +205,8 @@ class DataMigrationService {
             }
         }
 
-        do {
-            try modelContext.save()
-            Log.data.info("[DataMigration] Saved \(totalActivities) daily activity records")
-        } catch {
-            Log.data.error("[DataMigration] Error saving activity: \(error)")
-        }
+        modelContext.safeSave()
+        Log.data.info("[DataMigration] Saved \(totalActivities) daily activity records")
     }
 
     /// Count files in a directory

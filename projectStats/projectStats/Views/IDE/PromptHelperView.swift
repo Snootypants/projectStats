@@ -237,7 +237,7 @@ struct PromptHelperView: View {
                     wasExecuted: true
                 )
                 context.insert(saved)
-                try context.save()
+                context.safeSave()
 
                 // Track prompt execution with usage snapshots
                 PromptExecutionTracker.shared.startExecution(

@@ -61,7 +61,7 @@ class PromptImportService {
             }
 
             if importCount > 0 {
-                try context.save()
+                context.safeSave()
                 Log.sync.info("[PromptImport] Imported \(importCount) prompts from \(promptsDir.lastPathComponent)")
             }
         } catch {
@@ -130,7 +130,7 @@ class PromptImportService {
             }
 
             if importCount > 0 {
-                try context.save()
+                context.safeSave()
                 Log.sync.info("[WorkLogImport] Imported \(importCount) work logs from \(workDir.lastPathComponent)")
             }
         } catch {
