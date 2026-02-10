@@ -17,6 +17,28 @@ struct V5TokenEconomicsCard: View {
             }
 
             if let econ = service.economics {
+                // Spend breakdown — most useful info on top
+                VStack(alignment: .leading, spacing: 6) {
+                    spendRow(label: "Today", cost: econ.todayCost, sessions: econ.todaySessions)
+                    spendRow(label: "This Week", cost: econ.thisWeekCost, sessions: econ.thisWeekSessions)
+                    spendRow(label: "This Month", cost: econ.thisMonthCost, sessions: econ.thisMonthSessions)
+
+                    if econ.projectedMonthlyCost > 0 {
+                        Divider()
+                        HStack {
+                            Text("Projected")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("~\(econ.formattedProjectedMonthly)/mo")
+                                .font(.caption.bold())
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                }
+
+                Divider()
+
                 // Big number — total tokens
                 Text(formatTokenCount(econ.totalTokens))
                     .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -107,6 +129,22 @@ struct V5TokenEconomicsCard: View {
             Text(label)
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+        }
+    }
+
+    private func spendRow(label: String, cost: Double, sessions: Int) -> some View {
+        HStack {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            if sessions > 0 {
+                Text("\(sessions) session\(sessions == 1 ? "" : "s")")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            Text(cost >= 1.0 ? String(format: "$%.2f", cost) : (cost > 0 ? String(format: "$%.4f", cost) : "$0"))
+                .font(.caption.bold())
         }
     }
 }
