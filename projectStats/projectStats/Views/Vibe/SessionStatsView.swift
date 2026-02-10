@@ -70,6 +70,12 @@ struct SessionStatsView: View {
                 }
             }
 
+            // Memory indexing status
+            if viewModel.sessionState == .done {
+                Divider()
+                memoryStatus
+            }
+
             Spacer()
 
             // Messages count
@@ -79,6 +85,44 @@ struct SessionStatsView: View {
         }
         .padding(16)
         .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    @ObservedObject private var memoryPipeline = MemoryPipeline.shared
+
+    @ViewBuilder
+    private var memoryStatus: some View {
+        switch memoryPipeline.indexingState {
+        case .idle:
+            EmptyView()
+        case .indexing:
+            HStack(spacing: 6) {
+                ProgressView()
+                    .scaleEffect(0.6)
+                    .frame(width: 12, height: 12)
+                Text("Indexing session...")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        case .done:
+            HStack(spacing: 4) {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+                    .font(.caption2)
+                Text("Session indexed")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        case .error(let msg):
+            HStack(spacing: 4) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.orange)
+                    .font(.caption2)
+                Text(msg)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+        }
     }
 
     private var stateColor: Color {

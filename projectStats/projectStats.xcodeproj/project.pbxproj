@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */; };
 		01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */; };
 		01000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */; };
 		01000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */; };
@@ -194,6 +195,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/MemoryPipeline.swift; sourceTree = "<group>"; };
 		02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/VectorStore.swift; sourceTree = "<group>"; };
 		02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/StoredEmbedding.swift; sourceTree = "<group>"; };
 		02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/EmbeddingService.swift; sourceTree = "<group>"; };
@@ -689,6 +691,7 @@
 				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
 				020000000000000000000191 /* projectStats/Models/PromptExecution.swift */,
 				020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */,
+				02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */,
 				02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */,
 				02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */,
 				02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */,
@@ -946,6 +949,7 @@
 				010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */,
 				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
 				010000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift in Sources */,
+				01000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift in Sources */,
 				01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */,
 				01000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift in Sources */,
 				01000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift in Sources */,

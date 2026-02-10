@@ -61,6 +61,16 @@ final class ConversationStore {
         let context = AppModelContainer.shared.mainContext
         context.insert(session)
         try? context.save()
+
+        // Trigger memory pipeline in background
+        Task {
+            await MemoryPipeline.shared.indexSession(
+                projectPath: projectPath,
+                sessionId: sessionId,
+                rawLines: rawLines,
+                summary: summary
+            )
+        }
     }
 
     // MARK: - Private
