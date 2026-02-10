@@ -5,6 +5,7 @@ struct VibeChatMessage: Identifiable, Equatable {
     let timestamp: Date
     let role: MessageRole
     var content: MessageContent  // var so we can update tool results and permission status
+    var parentToolUseId: String? // Links subagent messages to their parent Task
 
     enum MessageRole: Equatable {
         case user
@@ -15,7 +16,7 @@ struct VibeChatMessage: Identifiable, Equatable {
 
     enum MessageContent: Equatable {
         case text(String)
-        case toolCall(name: String, summary: String, input: String, result: String?, isExpanded: Bool)
+        case toolCall(name: String, summary: String, input: String, result: String?, isExpanded: Bool, model: String?)
         case permissionRequest(tool: String, description: String, command: String?, status: PermissionStatus)
         case error(String)
         case sessionStats(cost: String, duration: String, turns: Int, sessionId: String)
@@ -67,8 +68,10 @@ struct VibeChatMessage: Identifiable, Equatable {
                 summary: event.summary,
                 input: inputStr,
                 result: nil,
-                isExpanded: false
-            )
+                isExpanded: false,
+                model: event.model
+            ),
+            parentToolUseId: event.parentToolUseId
         )
     }
 

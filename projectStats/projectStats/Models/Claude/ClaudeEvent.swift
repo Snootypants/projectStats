@@ -8,6 +8,7 @@ struct ClaudeStreamEvent: Decodable {
     let subtype: String?
     let sessionId: String?
     let message: ClaudeStreamMessage?
+    let parentToolUseId: String?
     // Result fields
     let totalCostUsd: Double?
     let durationMs: Int?
@@ -15,10 +16,12 @@ struct ClaudeStreamEvent: Decodable {
     let numTurns: Int?
     let isError: Bool?
     let usage: ClaudeUsage?
+    let modelUsage: [String: ModelUsageEntry]?
 
     enum CodingKeys: String, CodingKey {
-        case type, subtype, message, usage
+        case type, subtype, message, usage, modelUsage
         case sessionId = "session_id"
+        case parentToolUseId = "parent_tool_use_id"
         case totalCostUsd = "total_cost_usd"
         case durationMs = "duration_ms"
         case durationApiMs = "duration_api_ms"
@@ -41,9 +44,20 @@ struct ClaudeUsage: Decodable {
     }
 }
 
+/// Per-model cost/token breakdown in result events (camelCase keys in JSON)
+struct ModelUsageEntry: Decodable {
+    let inputTokens: Int?
+    let outputTokens: Int?
+    let cacheReadInputTokens: Int?
+    let cacheCreationInputTokens: Int?
+    let costUSD: Double?
+}
+
 struct ClaudeStreamMessage: Decodable {
     let role: String?
     let content: [ClaudeContentBlock]?
+    let model: String?
+    let usage: ClaudeUsage?
 }
 
 struct ClaudeContentBlock: Decodable {
@@ -131,7 +145,7 @@ enum AnyCodableValue: Decodable {
 /// Parsed, typed event for use in the app
 enum ClaudeEvent {
     case system(sessionId: String)
-    case assistantText(String)
+    case assistantText(String, model: String?, usage: ClaudeUsage?)
     case toolUse(ToolUseEvent)
     case toolResult(toolUseId: String, output: String)
     case userMessage(String)
@@ -141,6 +155,9 @@ enum ClaudeEvent {
     /// Parse a raw stream event into one or more app events
     static func from(_ raw: ClaudeStreamEvent) -> [ClaudeEvent] {
         var events: [ClaudeEvent] = []
+        let model = raw.message?.model
+        let messageUsage = raw.message?.usage
+        let parentId = raw.parentToolUseId
 
         switch raw.type {
         case "system":
@@ -152,14 +169,16 @@ enum ClaudeEvent {
                     switch block.type {
                     case "text":
                         if let text = block.text, !text.isEmpty {
-                            events.append(.assistantText(text))
+                            events.append(.assistantText(text, model: model, usage: messageUsage))
                         }
                     case "tool_use":
                         if let name = block.name {
                             events.append(.toolUse(ToolUseEvent(
                                 toolUseId: block.id ?? "",
                                 name: name,
-                                input: block.input
+                                input: block.input,
+                                model: model,
+                                parentToolUseId: parentId
                             )))
                         }
                     case "tool_result":
@@ -192,7 +211,8 @@ enum ClaudeEvent {
                 inputTokens: raw.usage?.inputTokens ?? 0,
                 outputTokens: raw.usage?.outputTokens ?? 0,
                 cacheCreationTokens: raw.usage?.cacheCreationInputTokens ?? 0,
-                cacheReadTokens: raw.usage?.cacheReadInputTokens ?? 0
+                cacheReadTokens: raw.usage?.cacheReadInputTokens ?? 0,
+                modelUsage: raw.modelUsage ?? [:]
             )))
 
         default:
@@ -207,6 +227,8 @@ struct ToolUseEvent {
     let toolUseId: String
     let name: String
     let input: ClaudeToolInput?
+    let model: String?
+    let parentToolUseId: String?
 
     /// One-line summary for collapsed display
     var summary: String {
@@ -240,6 +262,7 @@ struct ResultEvent {
     let outputTokens: Int
     let cacheCreationTokens: Int
     let cacheReadTokens: Int
+    let modelUsage: [String: ModelUsageEntry]
 
     var totalTokens: Int {
         inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens
@@ -261,12 +284,25 @@ struct ResultEvent {
     }
 
     var formattedTokens: String {
-        let total = totalTokens
-        if total >= 1_000_000 {
-            return String(format: "%.1fM", Double(total) / 1_000_000)
-        } else if total >= 1_000 {
-            return String(format: "%.1fK", Double(total) / 1_000)
-        }
-        return "\(total)"
+        formatTokenCount(totalTokens)
     }
+}
+
+/// Format a token count with K/M suffixes
+func formatTokenCount(_ count: Int) -> String {
+    if count >= 1_000_000 {
+        return String(format: "%.1fM", Double(count) / 1_000_000)
+    } else if count >= 1_000 {
+        return String(format: "%.1fK", Double(count) / 1_000)
+    }
+    return "\(count)"
+}
+
+/// Extract display name from full model ID (e.g. "claude-opus-4-6" → "Opus")
+func modelDisplayName(_ modelId: String?) -> String? {
+    guard let id = modelId?.lowercased() else { return nil }
+    if id.contains("opus") { return "Opus" }
+    if id.contains("sonnet") { return "Sonnet" }
+    if id.contains("haiku") { return "Haiku" }
+    return nil
 }

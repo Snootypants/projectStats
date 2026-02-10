@@ -173,6 +173,19 @@ class TabManagerViewModel: ObservableObject {
         activeTabID = tab.id
     }
 
+    /// Toggle the active tab between workspace and vibe mode
+    func toggleVibeMode() {
+        guard let index = tabs.firstIndex(where: { $0.id == activeTabID }) else { return }
+        switch tabs[index].content {
+        case .projectWorkspace(let path):
+            tabs[index].content = .vibe(projectPath: path)
+        case .vibe(let path):
+            tabs[index].content = .projectWorkspace(projectPath: path)
+        default:
+            break
+        }
+    }
+
     /// Navigate back from workspace to project picker (park the workspace)
     func navigateBack() {
         guard let index = tabs.firstIndex(where: { $0.id == activeTabID }),

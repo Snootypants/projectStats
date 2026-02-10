@@ -106,7 +106,7 @@ final class ConversationStore {
                 let prefix = msg.role == .user ? "**User:**" : "**Claude:**"
                 lines.append("\(prefix) \(text)")
                 lines.append("")
-            case .toolCall(let name, let summary, _, _, _):
+            case .toolCall(let name, let summary, _, _, _, _):
                 lines.append("> Tool: \(name) — \(summary)")
             case .error(let text):
                 lines.append("> Error: \(text)")
@@ -121,7 +121,7 @@ final class ConversationStore {
     private func extractFilesTouched(messages: [VibeChatMessage]) -> [String] {
         var files = Set<String>()
         for msg in messages {
-            if case .toolCall(let name, let summary, _, _, _) = msg.content {
+            if case .toolCall(let name, let summary, _, _, _, _) = msg.content {
                 if name == "Write" || name == "Edit" {
                     files.insert(summary)
                 }

@@ -37,6 +37,19 @@ struct ChatBubbleView: View {
 
     private func assistantBubble(_ text: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Spacer()
+                Button(action: {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(text, forType: .string)
+                }) {
+                    Image(systemName: "doc.on.doc")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.plain)
+                .help("Copy to clipboard")
+            }
             ForEach(Array(splitMarkdownSegments(text).enumerated()), id: \.offset) { _, segment in
                 switch segment {
                 case .text(let str):

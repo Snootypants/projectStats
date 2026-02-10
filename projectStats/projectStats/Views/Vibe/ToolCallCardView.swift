@@ -5,7 +5,7 @@ struct ToolCallCardView: View {
     let onToggle: () -> Void
 
     var body: some View {
-        if case .toolCall(let name, let summary, let input, let result, let isExpanded) = message.content {
+        if case .toolCall(let name, let summary, let input, let result, let isExpanded, let model) = message.content {
             VStack(alignment: .leading, spacing: 0) {
                 // Header - always visible
                 Button(action: onToggle) {
@@ -24,6 +24,16 @@ struct ToolCallCardView: View {
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                             .truncationMode(.middle)
+
+                        if let displayName = modelDisplayName(model) {
+                            Text(displayName)
+                                .font(.caption2)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(modelColor(displayName).opacity(0.15))
+                                .foregroundStyle(modelColor(displayName))
+                                .cornerRadius(4)
+                        }
 
                         Spacer()
 
@@ -91,6 +101,15 @@ struct ToolCallCardView: View {
             )
             .padding(.horizontal, 16)
             .padding(.vertical, 2)
+        }
+    }
+
+    private func modelColor(_ name: String) -> Color {
+        switch name {
+        case "Opus": return .purple
+        case "Sonnet": return .blue
+        case "Haiku": return .green
+        default: return .gray
         }
     }
 

@@ -29,6 +29,12 @@ final class VibeChatViewModel: ObservableObject {
     @Published var isThinking: Bool = false
     @Published var autoApproveAll: Bool = false
 
+    // Live token tracking (accumulated from assistant message usage)
+    @Published var liveInputTokens: Int = 0
+    @Published var liveOutputTokens: Int = 0
+    @Published var liveCacheReadTokens: Int = 0
+    @Published var liveCacheCreationTokens: Int = 0
+
     @AppStorage("vibePermissionMode") var permissionMode: String = PermissionMode.sansFlavor.rawValue
 
     var selectedPermissionMode: PermissionMode {
@@ -57,7 +63,7 @@ final class VibeChatViewModel: ObservableObject {
     var toolBreakdown: [String: Int] {
         var counts: [String: Int] = [:]
         for msg in messages {
-            if case .toolCall(let name, _, _, _, _) = msg.content {
+            if case .toolCall(let name, _, _, _, _, _) = msg.content {
                 counts[name, default: 0] += 1
             }
         }
@@ -101,6 +107,10 @@ final class VibeChatViewModel: ObservableObject {
         rawLines = []
         toolUseIdToMessageIndex = [:]
         autoApproveAll = false
+        liveInputTokens = 0
+        liveOutputTokens = 0
+        liveCacheReadTokens = 0
+        liveCacheCreationTokens = 0
         isReplayMode = false
         sessionState = .running // Set immediately so Start button hides
         sessionStartTime = Date()
@@ -272,8 +282,8 @@ final class VibeChatViewModel: ObservableObject {
 
     func toggleToolExpansion(messageId: UUID) {
         guard let idx = messages.firstIndex(where: { $0.id == messageId }) else { return }
-        if case .toolCall(let name, let summary, let input, let result, let expanded) = messages[idx].content {
-            messages[idx].content = .toolCall(name: name, summary: summary, input: input, result: result, isExpanded: !expanded)
+        if case .toolCall(let name, let summary, let input, let result, let expanded, let model) = messages[idx].content {
+            messages[idx].content = .toolCall(name: name, summary: summary, input: input, result: result, isExpanded: !expanded, model: model)
         }
     }
 
@@ -285,7 +295,7 @@ final class VibeChatViewModel: ObservableObject {
             case .system:
                 sessionState = .running
 
-            case .assistantText(let text):
+            case .assistantText(let text, _, let usage):
                 // Append to last assistant message or create new one
                 if let lastIdx = messages.indices.last,
                    case .text(let existing) = messages[lastIdx].content,
@@ -293,6 +303,13 @@ final class VibeChatViewModel: ObservableObject {
                     messages[lastIdx].content = .text(existing + text)
                 } else {
                     messages.append(.fromAssistantText(text))
+                }
+                // Accumulate live tokens
+                if let u = usage {
+                    liveInputTokens += u.inputTokens ?? 0
+                    liveOutputTokens += u.outputTokens ?? 0
+                    liveCacheReadTokens += u.cacheReadInputTokens ?? 0
+                    liveCacheCreationTokens += u.cacheCreationInputTokens ?? 0
                 }
                 isThinking = true
 
@@ -307,8 +324,8 @@ final class VibeChatViewModel: ObservableObject {
                 // Attach result to the matching tool call message
                 if let idx = toolUseIdToMessageIndex[toolUseId],
                    idx < messages.count,
-                   case .toolCall(let name, let summary, let input, _, let expanded) = messages[idx].content {
-                    messages[idx].content = .toolCall(name: name, summary: summary, input: input, result: output, isExpanded: expanded)
+                   case .toolCall(let name, let summary, let input, _, let expanded, let model) = messages[idx].content {
+                    messages[idx].content = .toolCall(name: name, summary: summary, input: input, result: output, isExpanded: expanded, model: model)
                 }
 
             case .userMessage:

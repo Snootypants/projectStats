@@ -37,21 +37,66 @@ struct SessionStatsView: View {
                     .foregroundStyle(.primary)
             }
 
-            // Tool breakdown
+            // Live tokens
+            if viewModel.liveInputTokens > 0 || viewModel.liveOutputTokens > 0 {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Tokens")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    HStack {
+                        Text("In:")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(formatTokenCount(viewModel.liveInputTokens))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.primary)
+                    }
+                    HStack {
+                        Text("Out:")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(formatTokenCount(viewModel.liveOutputTokens))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.primary)
+                    }
+                    if viewModel.liveCacheReadTokens > 0 {
+                        HStack {
+                            Text("Cache:")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(formatTokenCount(viewModel.liveCacheReadTokens))
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+            }
+
+            // Tool breakdown with bars
             if !viewModel.toolBreakdown.isEmpty {
+                let sorted = viewModel.toolBreakdown.sorted(by: { $0.value > $1.value })
+                let maxCount = sorted.first?.value ?? 1
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Breakdown")
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
-                    ForEach(viewModel.toolBreakdown.sorted(by: { $0.value > $1.value }), id: \.key) { tool, count in
-                        HStack {
-                            Text(tool)
-                                .font(.caption.monospaced())
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Text("\(count)")
-                                .font(.caption.bold())
-                                .foregroundStyle(.primary)
+                    ForEach(sorted, id: \.key) { tool, count in
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text(tool)
+                                    .font(.caption.monospaced())
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Text("\(count)")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.primary)
+                            }
+                            GeometryReader { geo in
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(toolBarColor(tool))
+                                    .frame(width: max(4, geo.size.width * CGFloat(count) / CGFloat(maxCount)))
+                            }
+                            .frame(height: 4)
                         }
                     }
                 }
@@ -152,6 +197,19 @@ struct SessionStatsView: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
+        }
+    }
+
+    private func toolBarColor(_ name: String) -> Color {
+        switch name {
+        case "Bash": return .orange
+        case "Read": return .blue
+        case "Write": return .green
+        case "Edit": return .purple
+        case "Grep": return .cyan
+        case "Glob": return .yellow
+        case "Task": return .pink
+        default: return .gray
         }
     }
 

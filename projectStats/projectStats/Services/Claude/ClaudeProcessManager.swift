@@ -280,7 +280,7 @@ final class ClaudeProcessManager: ObservableObject {
                     case .system:
                         print("[ClaudeProcess] Got system init event")
                         sessionState = .running
-                    case .assistantText:
+                    case .assistantText(_, _, _):
                         sessionState = .thinking
                     case .toolUse:
                         sessionState = .running
