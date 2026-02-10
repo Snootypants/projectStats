@@ -102,7 +102,9 @@ struct LineNumberTextEditor: NSViewRepresentable {
     func makeNSView(context: Context) -> NSScrollView {
         // Use Apple's factory method — creates a properly configured scrollable text view
         let scrollView = NSTextView.scrollableTextView()
-        let textView = scrollView.documentView as! NSTextView
+        guard let textView = scrollView.documentView as? NSTextView else {
+            return scrollView
+        }
 
         // --- Critical scrolling configuration ---
         textView.isVerticallyResizable = true

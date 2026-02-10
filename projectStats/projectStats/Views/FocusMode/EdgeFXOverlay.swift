@@ -219,7 +219,7 @@ final class EdgeFXOverlay: NSView {
     private func configureEdgeEmitters(cells: [CAEmitterCell], topVector: CGVector, bottomVector: CGVector, leftVector: CGVector, rightVector: CGVector, baseSpeed: CGFloat) {
         func cellsWithDirection(_ v: CGVector) -> [CAEmitterCell] {
             cells.map { src in
-                let c = src.copy() as! CAEmitterCell
+                guard let c = src.copy() as? CAEmitterCell else { return src }
                 c.emissionLongitude = atan2(v.dy, v.dx)
                 c.emissionRange = .pi / 2
                 c.velocity = c.velocity * baseSpeed
