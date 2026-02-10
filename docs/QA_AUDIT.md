@@ -1,5 +1,14 @@
 # QA Audit Report — 2026-02-04
 
+## Post-Prompt 20 Updates (2026-02-10)
+
+- 17 raw .save() calls converted to safeSave() (Scope A)
+- Dead services (AIService, ErrorDetector, ClaudeTokenUsageCard, FocusModeWindowManager) marked DORMANT (Scope B)
+- WorkItem and WeeklyGoal models annotated as schema-registered but not yet wired (Scope B)
+- Old VIBE tab references removed from AppTab, TabManagerViewModel, TabShellView, HomeView, WorkspaceView (Scope C)
+- VIBE system is now window-based (VibeChatViewModel, ChatInputView, etc.) — tab system removed
+- VibeTabView.swift marked DORMANT
+
 ## Summary
 
 | Metric | Status |

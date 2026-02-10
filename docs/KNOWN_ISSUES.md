@@ -29,6 +29,10 @@ None identified.
 | Legacy files | `ContentView.swift`, `Item.swift` | Unused template files from Xcode project creation |
 | Legacy DashboardView | `Views/Dashboard/DashboardView.swift` | Original dashboard view, replaced by HomeView but still in codebase |
 | Hardcoded ntfy topic | SettingsViewModel | Default topic "projectstats-caleb" should be empty or generic |
+| DORMANT: AIService | `Services/AIService.swift` | Superseded by AIProviderRegistry, marked DORMANT |
+| DORMANT: ErrorDetector | `Services/ErrorDetector.swift` | Never wired to any UI, marked DORMANT |
+| DORMANT: VibeTabView | `Views/Vibe/VibeTabView.swift` | Old VIBE tab view, replaced by VIBE Window system |
+| Unused schema models | `Models/DBv2Models.swift` | WorkItem and WeeklyGoal registered in schema but not wired to UI |
 
 ---
 
