@@ -14,10 +14,13 @@ struct VibeTabView: View {
         URL(fileURLWithPath: projectPath).lastPathComponent
     }
 
+    @ObservedObject private var settings = SettingsViewModel.shared
+
     var body: some View {
         HStack(spacing: 0) {
             // Main chat area (75%)
             VStack(spacing: 0) {
+                missingKeysWarning
                 chatArea
                 ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
             }
@@ -117,6 +120,35 @@ struct VibeTabView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(nsColor: .textBackgroundColor))
+    }
+
+    // MARK: - Missing Keys Warning
+
+    @ViewBuilder
+    private var missingKeysWarning: some View {
+        let missingKeys = missingKeyNames
+        if !missingKeys.isEmpty {
+            HStack(spacing: 8) {
+                Image(systemName: "key.fill")
+                    .foregroundStyle(.orange)
+                Text("Missing API keys: \(missingKeys.joined(separator: ", ")). Some features (memory, embeddings) won't work.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("Settings")
+                    .font(.caption.bold())
+                    .foregroundStyle(.orange)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.orange.opacity(0.1))
+        }
+    }
+
+    private var missingKeyNames: [String] {
+        var missing: [String] = []
+        if settings.openAIApiKey.isEmpty { missing.append("OpenAI") }
+        return missing
     }
 
     // MARK: - Chat List

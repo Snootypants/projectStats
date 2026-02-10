@@ -80,8 +80,13 @@ struct AIProviderSettingsView: View {
                     }
                 }
 
-                SecureField("ElevenLabs API Key", text: $settingsViewModel.elevenLabsApiKey)
-                    .textFieldStyle(.roundedBorder)
+                HStack {
+                    SecureField("ElevenLabs API Key", text: $settingsViewModel.elevenLabsApiKey)
+                        .textFieldStyle(.roundedBorder)
+                    keyTestButton(label: "ElevenLabs") {
+                        await testElevenLabsKey()
+                    }
+                }
 
                 // Test result
                 if case .success(let msg) = keyTestState {
@@ -223,6 +228,31 @@ struct AIProviderSettingsView: View {
             }
         } catch {
             keyTestState = .failure("Anthropic: \(error.localizedDescription)")
+        }
+    }
+
+    private func testElevenLabsKey() async {
+        let key = settingsViewModel.elevenLabsApiKey
+        guard !key.isEmpty else {
+            keyTestState = .failure("ElevenLabs key is empty")
+            return
+        }
+
+        var request = URLRequest(url: URL(string: "https://api.elevenlabs.io/v1/user")!)
+        request.setValue(key, forHTTPHeaderField: "xi-api-key")
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse, http.statusCode == 200 {
+                keyTestState = .success("ElevenLabs key is valid")
+            } else if let http = response as? HTTPURLResponse, http.statusCode == 401 {
+                keyTestState = .failure("ElevenLabs: Invalid API key")
+            } else {
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                keyTestState = .failure("ElevenLabs: HTTP \(code)")
+            }
+        } catch {
+            keyTestState = .failure("ElevenLabs: \(error.localizedDescription)")
         }
     }
 
