@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift */; };
 		010000000000000000000001 /* ProjectStatsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000001 /* ProjectStatsApp.swift */; };
 		010000000000000000000002 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* Shell.swift */; };
 		010000000000000000000003 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000003 /* DateExtensions.swift */; };
@@ -188,6 +189,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/SessionHistoryView.swift; sourceTree = "<group>"; };
 		020000000000000000000001 /* ProjectStatsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStatsApp.swift; sourceTree = "<group>"; };
 		020000000000000000000002 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		020000000000000000000003 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 				020000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift */,
 				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
 				020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */,
+				02000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift */,
 				020000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift */,
 				020000000000000000000306 /* projectStats/Views/Vibe/PermissionCardView.swift */,
 				020000000000000000000305 /* projectStats/Views/Vibe/ToolCallCardView.swift */,
@@ -928,6 +931,7 @@
 				010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */,
 				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
 				010000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift in Sources */,
+				01000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift in Sources */,
 				010000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift in Sources */,
 				010000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift in Sources */,
 				010000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift in Sources */,

@@ -80,25 +80,105 @@ final class VibeChatViewModel: ObservableObject {
         processManager.claudeBinaryPath != nil
     }
 
+    @Published var isReplayMode: Bool = false
+
     // MARK: - Session Control
 
-    func startSession() {
+    func startSession(appendSystemPrompt: String? = nil) {
         messages = []
         toolCallCount = 0
         elapsedTime = 0
         rawLines = []
         toolUseIdToMessageIndex = [:]
         autoApproveAll = false
+        isReplayMode = false
         sessionStartTime = Date()
 
         startTimer()
 
         processManager.start(
             projectPath: projectPath,
-            permissionMode: selectedPermissionMode
+            permissionMode: selectedPermissionMode,
+            appendSystemPrompt: appendSystemPrompt
         ) { [weak self] events in
             self?.handleEvents(events)
         }
+    }
+
+    /// Load a past session as read-only replay
+    func loadSessionForReplay(session: ConversationSession) {
+        messages = []
+        toolCallCount = 0
+        isReplayMode = true
+        sessionState = .done
+
+        guard let summary = loadSessionSummary(session: session) else {
+            messages.append(.fromError("Could not load session summary"))
+            return
+        }
+
+        // Parse the markdown summary back into messages
+        for line in summary.components(separatedBy: "\n") {
+            if line.hasPrefix("**User:**") {
+                let text = String(line.dropFirst("**User:** ".count))
+                messages.append(.fromUser(text))
+            } else if line.hasPrefix("**Claude:**") {
+                let text = String(line.dropFirst("**Claude:** ".count))
+                messages.append(.fromAssistantText(text))
+            } else if line.hasPrefix("> Tool:") {
+                let text = String(line.dropFirst("> Tool: ".count))
+                messages.append(.fromAssistantText("Tool: \(text)"))
+            } else if line.hasPrefix("> Error:") {
+                let text = String(line.dropFirst("> Error: ".count))
+                messages.append(.fromError(text))
+            }
+        }
+
+        // Add session stats at the end
+        messages.append(VibeChatMessage(
+            id: UUID(),
+            timestamp: Date(),
+            role: .system,
+            content: .sessionStats(
+                cost: String(format: "$%.4f", session.costUsd),
+                duration: "\(session.durationMs / 1000)s",
+                turns: session.numTurns,
+                sessionId: session.sessionId
+            )
+        ))
+    }
+
+    /// Start a new session with context from a previous session
+    func continueSession(session: ConversationSession) {
+        guard let summary = loadSessionSummary(session: session) else {
+            startSession()
+            return
+        }
+
+        let contextPrompt = """
+        You are continuing a previous session on this project. Here's what was discussed:
+
+        \(summary)
+
+        Continue from where we left off.
+        """
+        startSession(appendSystemPrompt: contextPrompt)
+    }
+
+    private func loadSessionSummary(session: ConversationSession) -> String? {
+        let projectURL = URL(fileURLWithPath: session.projectPath)
+        let conversationsDir = projectURL.appendingPathComponent(".claude/conversations")
+        let shortId = String(session.sessionId.prefix(8))
+
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: conversationsDir, includingPropertiesForKeys: nil
+        ) else { return nil }
+
+        guard let mdFile = files.first(where: { $0.lastPathComponent.contains(shortId) && $0.pathExtension == "md" }) else {
+            return nil
+        }
+
+        return try? String(contentsOf: mdFile, encoding: .utf8)
     }
 
     func stopSession() {

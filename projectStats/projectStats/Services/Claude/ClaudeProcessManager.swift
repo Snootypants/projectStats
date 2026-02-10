@@ -61,6 +61,7 @@ final class ClaudeProcessManager: ObservableObject {
     func start(
         projectPath: String,
         permissionMode: PermissionMode,
+        appendSystemPrompt: String? = nil,
         onEvent: @escaping ([ClaudeEvent]) -> Void
     ) {
         guard let binary = claudeBinaryPath else {
@@ -79,10 +80,14 @@ final class ClaudeProcessManager: ObservableObject {
 
         proc.executableURL = URL(fileURLWithPath: binary)
 
-        var args = ["--output-format", "stream-json", "-p"]
+        var args = ["--output-format", "stream-json"]
         if permissionMode == .flavor {
             args.insert("--dangerously-skip-permissions", at: 0)
         }
+        if let systemPrompt = appendSystemPrompt, !systemPrompt.isEmpty {
+            args.append(contentsOf: ["--append-system-prompt", systemPrompt])
+        }
+        args.append("-p")
         proc.arguments = args
         proc.currentDirectoryURL = URL(fileURLWithPath: projectPath)
         proc.standardInput = stdin

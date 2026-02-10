@@ -19,7 +19,7 @@ struct VibeTabView: View {
             // Main chat area (75%)
             VStack(spacing: 0) {
                 chatArea
-                ChatInputView(viewModel: viewModel, isEnabled: viewModel.sessionState == .running || viewModel.sessionState == .thinking)
+                ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
             }
             .frame(maxWidth: .infinity)
 
@@ -103,6 +103,12 @@ struct VibeTabView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+
+            SessionHistoryView(
+                projectPath: projectPath,
+                onView: { session in viewModel.loadSessionForReplay(session: session) },
+                onContinue: { session in viewModel.continueSession(session: session) }
+            )
 
             Spacer()
         }
