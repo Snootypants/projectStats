@@ -3,13 +3,13 @@ import SwiftUI
 struct ClaudeUsageSettingsView: View {
     // Use @AppStorage directly to avoid "Publishing changes from within view updates" warning
     // This occurs when @Published properties on an ObservableObject are modified during render
-    @AppStorage("ccusage_showCost") private var showCost = true
-    @AppStorage("ccusage_showChart") private var showChart = true
-    @AppStorage("ccusage_showInputTokens") private var showInputTokens = false
-    @AppStorage("ccusage_showOutputTokens") private var showOutputTokens = false
-    @AppStorage("ccusage_showCacheTokens") private var showCacheTokens = false
-    @AppStorage("ccusage_showModelBreakdown") private var showModelBreakdown = false
-    @AppStorage("ccusage_daysToShow") private var daysToShow = 7
+    @AppStorage(AppStorageKeys.ccusageShowCost) private var showCost = true
+    @AppStorage(AppStorageKeys.ccusageShowChart) private var showChart = true
+    @AppStorage(AppStorageKeys.ccusageShowInputTokens) private var showInputTokens = false
+    @AppStorage(AppStorageKeys.ccusageShowOutputTokens) private var showOutputTokens = false
+    @AppStorage(AppStorageKeys.ccusageShowCacheTokens) private var showCacheTokens = false
+    @AppStorage(AppStorageKeys.ccusageShowModelBreakdown) private var showModelBreakdown = false
+    @AppStorage(AppStorageKeys.ccusageDaysToShow) private var daysToShow = 7
 
     var body: some View {
         Form {

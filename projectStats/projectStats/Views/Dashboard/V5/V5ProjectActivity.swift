@@ -3,7 +3,7 @@ import SwiftUI
 /// V5 Project Activity - Horizontal bars showing time per project
 struct V5ProjectActivity: View {
     @EnvironmentObject var viewModel: DashboardViewModel
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
 
     private var accentColor: Color {
         Color.fromHex(accentColorHex) ?? .orange

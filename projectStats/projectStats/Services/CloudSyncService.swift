@@ -65,14 +65,14 @@ enum SyncStatus: Equatable {
 final class CloudSyncService: ObservableObject {
     static let shared = CloudSyncService()
 
-    @AppStorage("sync.endpoint") var endpoint: String = ""
-    @AppStorage("sync.apiKey") var apiKey: String = ""
-    @AppStorage("sync.include.chat") var includeChatMessages: Bool = true
-    @AppStorage("sync.include.projects") var includeProjectStats: Bool = true
-    @AppStorage("sync.include.usage") var includeClaudeUsage: Bool = true
-    @AppStorage("sync.include.time") var includeTimeTracking: Bool = true
-    @AppStorage("sync.include.achievements") var includeAchievements: Bool = true
-    @AppStorage("sync.frequencyMinutes") var syncFrequencyMinutes: Int = 60
+    @AppStorage(AppStorageKeys.syncEndpoint) var endpoint: String = ""
+    @AppStorage(AppStorageKeys.syncApiKey) var apiKey: String = ""
+    @AppStorage(AppStorageKeys.syncIncludeChat) var includeChatMessages: Bool = true
+    @AppStorage(AppStorageKeys.syncIncludeProjects) var includeProjectStats: Bool = true
+    @AppStorage(AppStorageKeys.syncIncludeUsage) var includeClaudeUsage: Bool = true
+    @AppStorage(AppStorageKeys.syncIncludeTime) var includeTimeTracking: Bool = true
+    @AppStorage(AppStorageKeys.syncIncludeAchievements) var includeAchievements: Bool = true
+    @AppStorage(AppStorageKeys.syncFrequencyMinutes) var syncFrequencyMinutes: Int = 60
 
     @Published var lastSync: Date?
     @Published var syncStatus: SyncStatus = .idle

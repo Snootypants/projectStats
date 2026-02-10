@@ -5,7 +5,7 @@ struct V5MoneyPanel: View {
     @StateObject private var usageService = ClaudeUsageService.shared
     @StateObject private var planUsage = ClaudePlanUsageService.shared
     @EnvironmentObject var viewModel: DashboardViewModel
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
 
     private var accentColor: Color {
         Color.fromHex(accentColorHex) ?? .orange

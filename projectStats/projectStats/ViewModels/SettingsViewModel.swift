@@ -38,8 +38,8 @@ class SettingsViewModel: ObservableObject {
     static let shared = SettingsViewModel()
     private let store = SettingsStoreService.shared
 
-    @AppStorage("codeDirectoryPath") private var codeDirectoryPath: String = ""
-    @AppStorage("defaultEditorRaw") private var defaultEditorRaw: String = Editor.vscode.rawValue
+    @AppStorage(AppStorageKeys.codeDirectoryPath) private var codeDirectoryPath: String = ""
+    @AppStorage(AppStorageKeys.defaultEditorRaw) private var defaultEditorRaw: String = Editor.vscode.rawValue
 
     var githubToken: String {
         get { KeychainService.shared.get(key: "githubToken") ?? "" }
@@ -52,47 +52,47 @@ class SettingsViewModel: ObservableObject {
             objectWillChange.send()
         }
     }
-    @AppStorage("defaultTerminalRaw") private var defaultTerminalRaw: String = Terminal.terminal.rawValue
-    @AppStorage("refreshInterval") var refreshInterval: Int = 15
-    @AppStorage("launchAtLogin") var launchAtLogin: Bool = false {
+    @AppStorage(AppStorageKeys.defaultTerminalRaw) private var defaultTerminalRaw: String = Terminal.terminal.rawValue
+    @AppStorage(AppStorageKeys.refreshInterval) var refreshInterval: Int = 15
+    @AppStorage(AppStorageKeys.launchAtLogin) var launchAtLogin: Bool = false {
         didSet { updateLaunchAtLogin() }
     }
-    @AppStorage("showInDock") var showInDock: Bool = false
-    @AppStorage("themeRaw") private var themeRaw: String = AppTheme.system.rawValue
-    @AppStorage("sync.enabled") var syncEnabled: Bool = false  // Disabled by default
+    @AppStorage(AppStorageKeys.showInDock) var showInDock: Bool = false
+    @AppStorage(AppStorageKeys.themeRaw) private var themeRaw: String = AppTheme.system.rawValue
+    @AppStorage(AppStorageKeys.syncEnabled) var syncEnabled: Bool = false  // Disabled by default
 
-    @AppStorage("notifyClaudeFinished") var notifyClaudeFinished: Bool = true
-    @AppStorage("playSoundOnClaudeFinished") var playSoundOnClaudeFinished: Bool = true
-    @AppStorage("notificationSound") var notificationSound: String = "Ping"
-    @AppStorage("notifyBuildComplete") var notifyBuildComplete: Bool = true
-    @AppStorage("notifyServerStart") var notifyServerStart: Bool = true
-    @AppStorage("notifyContextHigh") var notifyContextHigh: Bool = true
-    @AppStorage("notifyPlanUsageHigh") var notifyPlanUsageHigh: Bool = true
-    @AppStorage("notifyGitPushCompleted") var notifyGitPushCompleted: Bool = false
-    @AppStorage("notifyAchievementUnlocked") var notifyAchievementUnlocked: Bool = false
-    @AppStorage("pushNotificationsEnabled") var pushNotificationsEnabled: Bool = false
-    @AppStorage("ntfyTopic") var ntfyTopic: String = ""
+    @AppStorage(AppStorageKeys.notifyClaudeFinished) var notifyClaudeFinished: Bool = true
+    @AppStorage(AppStorageKeys.playSoundOnClaudeFinished) var playSoundOnClaudeFinished: Bool = true
+    @AppStorage(AppStorageKeys.notificationSound) var notificationSound: String = "Ping"
+    @AppStorage(AppStorageKeys.notifyBuildComplete) var notifyBuildComplete: Bool = true
+    @AppStorage(AppStorageKeys.notifyServerStart) var notifyServerStart: Bool = true
+    @AppStorage(AppStorageKeys.notifyContextHigh) var notifyContextHigh: Bool = true
+    @AppStorage(AppStorageKeys.notifyPlanUsageHigh) var notifyPlanUsageHigh: Bool = true
+    @AppStorage(AppStorageKeys.notifyGitPushCompleted) var notifyGitPushCompleted: Bool = false
+    @AppStorage(AppStorageKeys.notifyAchievementUnlocked) var notifyAchievementUnlocked: Bool = false
+    @AppStorage(AppStorageKeys.pushNotificationsEnabled) var pushNotificationsEnabled: Bool = false
+    @AppStorage(AppStorageKeys.ntfyTopic) var ntfyTopic: String = ""
 
-    @AppStorage("messaging.service") private var messagingServiceRaw: String = MessagingServiceType.telegram.rawValue
-    @AppStorage("messaging.telegram.token") var telegramBotToken: String = ""
-    @AppStorage("messaging.telegram.chat") var telegramChatId: String = ""
-    @AppStorage("messaging.slack.webhook") var slackWebhookURL: String = ""
-    @AppStorage("messaging.discord.webhook") var discordWebhookURL: String = ""
-    @AppStorage("messaging.ntfy.topic") var messagingNtfyTopic: String = ""
-    @AppStorage("messaging.notifications.enabled") var messagingNotificationsEnabled: Bool = false
-    @AppStorage("messaging.remote.enabled") var remoteCommandsEnabled: Bool = false {
+    @AppStorage(AppStorageKeys.messagingService) private var messagingServiceRaw: String = MessagingServiceType.telegram.rawValue
+    @AppStorage(AppStorageKeys.messagingTelegramToken) var telegramBotToken: String = ""
+    @AppStorage(AppStorageKeys.messagingTelegramChat) var telegramChatId: String = ""
+    @AppStorage(AppStorageKeys.messagingSlackWebhook) var slackWebhookURL: String = ""
+    @AppStorage(AppStorageKeys.messagingDiscordWebhook) var discordWebhookURL: String = ""
+    @AppStorage(AppStorageKeys.messagingNtfyTopic) var messagingNtfyTopic: String = ""
+    @AppStorage(AppStorageKeys.messagingNotificationsEnabled) var messagingNotificationsEnabled: Bool = false
+    @AppStorage(AppStorageKeys.messagingRemoteEnabled) var remoteCommandsEnabled: Bool = false {
         didSet {
             startRemotePollingIfNeeded()
         }
     }
-    @AppStorage("messaging.remote.interval") var remoteCommandsInterval: Int = 30 {
+    @AppStorage(AppStorageKeys.messagingRemoteInterval) var remoteCommandsInterval: Int = 30 {
         didSet {
             startRemotePollingIfNeeded()
         }
     }
 
-    @AppStorage("ai.provider") private var aiProviderRaw: String = AIProvider.anthropic.rawValue
-    @AppStorage("ai.model") var aiModel: String = "claude-sonnet-4-20250514"
+    @AppStorage(AppStorageKeys.aiProvider) private var aiProviderRaw: String = AIProvider.anthropic.rawValue
+    @AppStorage(AppStorageKeys.aiModel) var aiModel: String = "claude-sonnet-4-20250514"
 
     var aiApiKey: String {
         get { KeychainService.shared.get(key: "ai.apiKey") ?? "" }
@@ -105,29 +105,29 @@ class SettingsViewModel: ObservableObject {
             objectWillChange.send()
         }
     }
-    @AppStorage("ai.baseUrl") var aiBaseURL: String = ""
+    @AppStorage(AppStorageKeys.aiBaseURL) var aiBaseURL: String = ""
 
     // AI Model & Thinking Settings
-    @AppStorage("ai.defaultModel") var defaultModelRaw: String = "claude-sonnet-4-20250514"
-    @AppStorage("ai.defaultThinkingLevel") var defaultThinkingLevelRaw: String = "none"
-    @AppStorage("ai.showModelInToolbar") var showModelInToolbar: Bool = true
+    @AppStorage(AppStorageKeys.aiDefaultModel) var defaultModelRaw: String = "claude-sonnet-4-20250514"
+    @AppStorage(AppStorageKeys.aiDefaultThinkingLevel) var defaultThinkingLevelRaw: String = "none"
+    @AppStorage(AppStorageKeys.aiShowModelInToolbar) var showModelInToolbar: Bool = true
 
     // IDE Tab visibility
-    @AppStorage("showPromptsTab") var showPromptsTab: Bool = true
-    @AppStorage("showDiffsTab") var showDiffsTab: Bool = true
-    @AppStorage("showEnvironmentTab") var showEnvironmentTab: Bool = true
+    @AppStorage(AppStorageKeys.showPromptsTab) var showPromptsTab: Bool = true
+    @AppStorage(AppStorageKeys.showDiffsTab) var showDiffsTab: Bool = true
+    @AppStorage(AppStorageKeys.showEnvironmentTab) var showEnvironmentTab: Bool = true
 
     // MARK: - Agent Teams (Swarm) Settings
-    @AppStorage("agentTeams.enabled") var agentTeamsEnabled: Bool = false
+    @AppStorage(AppStorageKeys.agentTeamsEnabled) var agentTeamsEnabled: Bool = false
 
     // MARK: - Terminal Button Settings
-    @AppStorage("terminal.claudeModel") var terminalClaudeModelRaw: String = "claude-opus-4-6"
-    @AppStorage("terminal.claudeFlags") var terminalClaudeFlags: String = ""
-    @AppStorage("terminal.ccyoloModel") var terminalCcyoloModelRaw: String = "claude-opus-4-6"
-    @AppStorage("terminal.codexModel") var terminalCodexModel: String = "codex"
-    @AppStorage("terminal.showClaudeButton") var showClaudeButton: Bool = true
-    @AppStorage("terminal.showCcyoloButton") var showCcyoloButton: Bool = true
-    @AppStorage("terminal.showCodexButton") var showCodexButton: Bool = true
+    @AppStorage(AppStorageKeys.terminalClaudeModel) var terminalClaudeModelRaw: String = "claude-opus-4-6"
+    @AppStorage(AppStorageKeys.terminalClaudeFlags) var terminalClaudeFlags: String = ""
+    @AppStorage(AppStorageKeys.terminalCcyoloModel) var terminalCcyoloModelRaw: String = "claude-opus-4-6"
+    @AppStorage(AppStorageKeys.terminalCodexModel) var terminalCodexModel: String = "codex"
+    @AppStorage(AppStorageKeys.terminalShowClaudeButton) var showClaudeButton: Bool = true
+    @AppStorage(AppStorageKeys.terminalShowCcyoloButton) var showCcyoloButton: Bool = true
+    @AppStorage(AppStorageKeys.terminalShowCodexButton) var showCodexButton: Bool = true
 
     var terminalClaudeModel: AIModel {
         get { AIModel(rawValue: terminalClaudeModelRaw) ?? .claudeOpus46 }
@@ -140,24 +140,24 @@ class SettingsViewModel: ObservableObject {
     }
 
     // MARK: - Home Page Layout
-    @AppStorage("homePageLayout") var homePageLayout: String = "v5"
+    @AppStorage(AppStorageKeys.homePageLayout) var homePageLayout: String = "v5"
     // Available: "v1" (classic), "v2" (refined)
-    @AppStorage("chartTimeRange") var chartTimeRange: String = "week"
+    @AppStorage(AppStorageKeys.chartTimeRange) var chartTimeRange: String = "week"
     // Available: "week", "month", "quarter", "year"
-    @AppStorage("chartDataType") var chartDataType: String = "lines"
+    @AppStorage(AppStorageKeys.chartDataType) var chartDataType: String = "lines"
     // Available: "lines", "commits"
 
     // MARK: - Claude Usage Display Settings
-    @AppStorage("ccusage_showCost") var ccusageShowCost: Bool = true
-    @AppStorage("ccusage_showChart") var ccusageShowChart: Bool = true
-    @AppStorage("ccusage_showInputTokens") var ccusageShowInputTokens: Bool = false
-    @AppStorage("ccusage_showOutputTokens") var ccusageShowOutputTokens: Bool = false
-    @AppStorage("ccusage_showCacheTokens") var ccusageShowCacheTokens: Bool = false
-    @AppStorage("ccusage_showModelBreakdown") var ccusageShowModelBreakdown: Bool = false
-    @AppStorage("ccusage_daysToShow") var ccusageDaysToShow: Int = 7
+    @AppStorage(AppStorageKeys.ccusageShowCost) var ccusageShowCost: Bool = true
+    @AppStorage(AppStorageKeys.ccusageShowChart) var ccusageShowChart: Bool = true
+    @AppStorage(AppStorageKeys.ccusageShowInputTokens) var ccusageShowInputTokens: Bool = false
+    @AppStorage(AppStorageKeys.ccusageShowOutputTokens) var ccusageShowOutputTokens: Bool = false
+    @AppStorage(AppStorageKeys.ccusageShowCacheTokens) var ccusageShowCacheTokens: Bool = false
+    @AppStorage(AppStorageKeys.ccusageShowModelBreakdown) var ccusageShowModelBreakdown: Bool = false
+    @AppStorage(AppStorageKeys.ccusageDaysToShow) var ccusageDaysToShow: Int = 7
 
     // MARK: - API Keys (stored in Keychain for security)
-    @AppStorage("elevenLabs_voiceId") var elevenLabsVoiceId: String = ""
+    @AppStorage(AppStorageKeys.elevenLabsVoiceId) var elevenLabsVoiceId: String = ""
 
     var openAIApiKey: String {
         get { KeychainService.shared.get(key: "openai_apiKey") ?? "" }
@@ -184,15 +184,15 @@ class SettingsViewModel: ObservableObject {
     }
 
     // MARK: - Voice
-    @AppStorage("tts_enabled") var ttsEnabled: Bool = false
-    @AppStorage("tts_provider") var ttsProvider: String = "openai"
-    @AppStorage("voice_autoTranscribe") var voiceAutoTranscribe: Bool = true
+    @AppStorage(AppStorageKeys.ttsEnabled) var ttsEnabled: Bool = false
+    @AppStorage(AppStorageKeys.ttsProvider) var ttsProvider: String = "openai"
+    @AppStorage(AppStorageKeys.voiceAutoTranscribe) var voiceAutoTranscribe: Bool = true
 
     // Focus Mode
-    @AppStorage("focusMode.edgeFXMode") var focusModeEdgeFXRaw: String = "fire"
+    @AppStorage(AppStorageKeys.focusModeEdgeFXMode) var focusModeEdgeFXRaw: String = "fire"
 
     // Custom Project Paths
-    @AppStorage("customProjectPaths") var customProjectPathsJSON: String = "[]"
+    @AppStorage(AppStorageKeys.customProjectPaths) var customProjectPathsJSON: String = "[]"
 
     var customProjectPaths: [String] {
         get { (try? JSONDecoder().decode([String].self, from: Data(customProjectPathsJSON.utf8))) ?? [] }
@@ -208,9 +208,9 @@ class SettingsViewModel: ObservableObject {
     }
 
     // Lockout Bar Colors
-    @AppStorage("lockoutBar.sessionColor") var sessionBarColorHex: String = "#3B82F6"
-    @AppStorage("lockoutBar.weeklyColor") var weeklyBarColorHex: String = "#3B82F6"
-    @AppStorage("lockoutBar.warningColor") var warningBarColorHex: String = "#EF4444"
+    @AppStorage(AppStorageKeys.lockoutBarSessionColor) var sessionBarColorHex: String = "#3B82F6"
+    @AppStorage(AppStorageKeys.lockoutBarWeeklyColor) var weeklyBarColorHex: String = "#3B82F6"
+    @AppStorage(AppStorageKeys.lockoutBarWarningColor) var warningBarColorHex: String = "#EF4444"
 
     var focusModeEdgeFX: EdgeFXOverlay.Mode {
         get {

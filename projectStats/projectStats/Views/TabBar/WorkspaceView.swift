@@ -14,7 +14,7 @@ struct WorkspaceView: View {
     @State private var showDocBuilder = false
     @State private var swarmEnabled = false
     @State private var showSwarmWarning = false
-    @AppStorage("swarm.warningDismissed") private var swarmWarningDismissed = false
+    @AppStorage(AppStorageKeys.swarmWarningDismissed) private var swarmWarningDismissed = false
 
     /// Resolve the Project from the path
     private var project: Project? {

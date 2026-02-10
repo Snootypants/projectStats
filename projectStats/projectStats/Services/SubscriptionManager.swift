@@ -5,8 +5,8 @@ import SwiftUI
 final class SubscriptionManager: ObservableObject {
     static let shared = SubscriptionManager()
 
-    @AppStorage("subscription.proCode") private var proCode: String = ""
-    @AppStorage("subscription.isProActive") private var isProActive: Bool = false
+    @AppStorage(AppStorageKeys.subscriptionProCode) private var proCode: String = ""
+    @AppStorage(AppStorageKeys.subscriptionIsProActive) private var isProActive: Bool = false
 
     @Published var validationError: String?
 

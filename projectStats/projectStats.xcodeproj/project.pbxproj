@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */; };
 		01000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift */; };
 		01000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */; };
 		01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */; };
@@ -355,6 +356,7 @@
 		020000000000000000000155 /* projectStats/Views/Settings/SyncSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/SyncSettingsView.swift; sourceTree = "<group>"; };
 		020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SubscriptionManager.swift; sourceTree = "<group>"; };
 		020000000000000000000159 /* projectStats/Utilities/Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/Logger.swift; sourceTree = "<group>"; };
+		02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/AppStorageKeys.swift; sourceTree = "<group>"; };
 		020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/TerminalSettings.swift; sourceTree = "<group>"; };
 		020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/HomePageV5View.swift; sourceTree = "<group>"; };
 		020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5XPHeader.swift; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 				020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */,
 				020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */,
 				020000000000000000000159 /* projectStats/Utilities/Logger.swift */,
+				02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */,
 				020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */,
 				020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */,
 				020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */,
@@ -876,6 +879,7 @@
 				010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */,
 				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
 				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
+				01000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift in Sources */,
 				010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */,
 				010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */,
 				010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */,

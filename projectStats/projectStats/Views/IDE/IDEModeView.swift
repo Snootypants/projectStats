@@ -30,17 +30,17 @@ struct IDEModeView: View {
     @State private var selectedFile: URL?
     @State private var activeTab: IDETab = .files
 
-    @AppStorage("workspace.terminalWidth") private var terminalWidth: Double = 450
-    @AppStorage("workspace.explorerWidth") private var explorerWidth: Double = 200
-    @AppStorage("workspace.viewerWidth") private var viewerWidth: Double = 450
-    @AppStorage("workspace.showTerminal") private var showTerminal: Bool = true
-    @AppStorage("workspace.showExplorer") private var showExplorer: Bool = true
-    @AppStorage("workspace.showViewer") private var showViewer: Bool = true
+    @AppStorage(AppStorageKeys.workspaceTerminalWidth) private var terminalWidth: Double = 450
+    @AppStorage(AppStorageKeys.workspaceExplorerWidth) private var explorerWidth: Double = 200
+    @AppStorage(AppStorageKeys.workspaceViewerWidth) private var viewerWidth: Double = 450
+    @AppStorage(AppStorageKeys.workspaceShowTerminal) private var showTerminal: Bool = true
+    @AppStorage(AppStorageKeys.workspaceShowExplorer) private var showExplorer: Bool = true
+    @AppStorage(AppStorageKeys.workspaceShowViewer) private var showViewer: Bool = true
 
     // IDE Tab visibility settings
-    @AppStorage("showPromptsTab") private var showPromptsTab: Bool = true
-    @AppStorage("showDiffsTab") private var showDiffsTab: Bool = true
-    @AppStorage("showEnvironmentTab") private var showEnvironmentTab: Bool = true
+    @AppStorage(AppStorageKeys.showPromptsTab) private var showPromptsTab: Bool = true
+    @AppStorage(AppStorageKeys.showDiffsTab) private var showDiffsTab: Bool = true
+    @AppStorage(AppStorageKeys.showEnvironmentTab) private var showEnvironmentTab: Bool = true
 
     @State private var dragStartTerminal: (CGFloat, CGFloat, CGFloat)?
     @State private var dragStartExplorer: (CGFloat, CGFloat, CGFloat)?
@@ -341,12 +341,12 @@ private struct ResizableDivider: View {
     @State private var isDragging = false
 
     // All settings from @AppStorage — NO hardcoded values
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
-    @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
-    @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
-    @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
-    @AppStorage("dividerBarOpacity") private var barOpacity: Double = 1.0
-    @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.dividerGlowOpacity) private var glowOpacity: Double = 0.5
+    @AppStorage(AppStorageKeys.dividerGlowRadius) private var glowRadius: Double = 3.0
+    @AppStorage(AppStorageKeys.dividerLineThickness) private var lineThickness: Double = 2.0
+    @AppStorage(AppStorageKeys.dividerBarOpacity) private var barOpacity: Double = 1.0
+    @AppStorage(AppStorageKeys.previewDividerGlow) private var previewGlow: Bool = false
 
     private var glowColor: Color {
         Color.fromHex(accentColorHex) ?? .orange

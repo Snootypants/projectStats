@@ -3,7 +3,7 @@ import SwiftUI
 /// V5 Session Panel - Big timer with You vs Claude split
 struct V5SessionPanel: View {
     @ObservedObject var timeService = TimeTrackingService.shared
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
     @State private var refreshTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var now = Date()
 

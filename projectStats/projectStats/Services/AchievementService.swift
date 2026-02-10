@@ -13,9 +13,9 @@ final class AchievementService: ObservableObject {
     @Published var recentlyUnlocked: Achievement?
 
     // Progress tracking for incremental achievements
-    @AppStorage("achievement.nightOwlCount") private var nightOwlCount: Int = 0
-    @AppStorage("achievement.earlyBirdCount") private var earlyBirdCount: Int = 0
-    @AppStorage("achievement.lastCommitDate") private var lastCommitDateString: String = ""
+    @AppStorage(AppStorageKeys.achievementNightOwlCount) private var nightOwlCount: Int = 0
+    @AppStorage(AppStorageKeys.achievementEarlyBirdCount) private var earlyBirdCount: Int = 0
+    @AppStorage(AppStorageKeys.achievementLastCommitDate) private var lastCommitDateString: String = ""
 
     private init() {
         loadUnlocked()

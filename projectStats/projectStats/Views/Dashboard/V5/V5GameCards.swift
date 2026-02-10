@@ -4,7 +4,7 @@ import SwiftUI
 struct V5GameCards: View {
     @EnvironmentObject var viewModel: DashboardViewModel
     @EnvironmentObject var tabManager: TabManagerViewModel
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
 
     private var accentColor: Color {
         Color.fromHex(accentColorHex) ?? .orange

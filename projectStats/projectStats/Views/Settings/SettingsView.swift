@@ -97,7 +97,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
 struct SettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
     @State private var selectedTab: SettingsTab = .general
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
 
     private var accentColor: Color {
         Color.fromHex(accentColorHex) ?? .orange
@@ -247,7 +247,7 @@ private struct SettingsDivider: View {
 
 struct GeneralSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
-    @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = true
+    @AppStorage(AppStorageKeys.showHiddenFiles) private var showHiddenFiles: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -378,12 +378,12 @@ struct GeneralSettingsView: View {
 
 struct AppearanceSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
-    @AppStorage("dividerGlowOpacity") private var glowOpacity: Double = 0.5
-    @AppStorage("dividerGlowRadius") private var glowRadius: Double = 3.0
-    @AppStorage("dividerLineThickness") private var lineThickness: Double = 2.0
-    @AppStorage("dividerBarOpacity") private var barOpacity: Double = 1.0
-    @AppStorage("previewDividerGlow") private var previewGlow: Bool = false
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.dividerGlowOpacity) private var glowOpacity: Double = 0.5
+    @AppStorage(AppStorageKeys.dividerGlowRadius) private var glowRadius: Double = 3.0
+    @AppStorage(AppStorageKeys.dividerLineThickness) private var lineThickness: Double = 2.0
+    @AppStorage(AppStorageKeys.dividerBarOpacity) private var barOpacity: Double = 1.0
+    @AppStorage(AppStorageKeys.previewDividerGlow) private var previewGlow: Bool = false
 
     private let colorPresets: [(name: String, hex: String)] = [
         ("Orange", "#FF9500"),
@@ -799,36 +799,36 @@ struct HomePageSettingsView: View {
     @EnvironmentObject var viewModel: SettingsViewModel
 
     // Data Display checkboxes - all disabled for now (stored for future use)
-    @AppStorage("homeDataShow_linesPerDay") private var showLinesPerDay = false
-    @AppStorage("homeDataShow_commitsPerDay") private var showCommitsPerDay = false
-    @AppStorage("homeDataShow_netLines") private var showNetLines = false
-    @AppStorage("homeDataShow_codeChurnRate") private var showCodeChurnRate = false
-    @AppStorage("homeDataShow_linesPerCommit") private var showLinesPerCommit = false
-    @AppStorage("homeDataShow_totalTimeToday") private var showTotalTimeToday = false
-    @AppStorage("homeDataShow_humanAiTimeSplit") private var showHumanAiTimeSplit = false
-    @AppStorage("homeDataShow_avgSessionLength") private var showAvgSessionLength = false
-    @AppStorage("homeDataShow_mostProductiveHour") private var showMostProductiveHour = false
-    @AppStorage("homeDataShow_inputOutputTokens") private var showInputOutputTokens = false
-    @AppStorage("homeDataShow_cacheTokens") private var showCacheTokens = false
-    @AppStorage("homeDataShow_costUsd") private var showCostUsd = false
-    @AppStorage("homeDataShow_modelBreakdown") private var showModelBreakdown = false
-    @AppStorage("homeDataShow_costPerLine") private var showCostPerLine = false
-    @AppStorage("homeDataShow_costPerCommit") private var showCostPerCommit = false
-    @AppStorage("homeDataShow_sessionBlockUsage") private var showSessionBlockUsage = false
-    @AppStorage("homeDataShow_weeklyUsage") private var showWeeklyUsage = false
-    @AppStorage("homeDataShow_usageRate") private var showUsageRate = false
-    @AppStorage("homeDataShow_predictedTimeToLimit") private var showPredictedTimeToLimit = false
-    @AppStorage("homeDataShow_languageDistribution") private var showLanguageDistribution = false
-    @AppStorage("homeDataShow_mostActiveProject") private var showMostActiveProject = false
-    @AppStorage("homeDataShow_projectHealth") private var showProjectHealth = false
-    @AppStorage("homeDataShow_linesPerDayRolling") private var showLinesPerDayRolling = false
-    @AppStorage("homeDataShow_commitsPerDayRolling") private var showCommitsPerDayRolling = false
-    @AppStorage("homeDataShow_velocityTrend") private var showVelocityTrend = false
-    @AppStorage("homeDataShow_weekOverWeek") private var showWeekOverWeek = false
-    @AppStorage("homeDataShow_xpProgress") private var showXpProgress = false
-    @AppStorage("homeDataShow_achievementProgress") private var showAchievementProgress = false
-    @AppStorage("homeDataShow_currentStreak") private var showCurrentStreak = false
-    @AppStorage("homeDataShow_longestStreak") private var showLongestStreak = false
+    @AppStorage(AppStorageKeys.homeDataShowLinesPerDay) private var showLinesPerDay = false
+    @AppStorage(AppStorageKeys.homeDataShowCommitsPerDay) private var showCommitsPerDay = false
+    @AppStorage(AppStorageKeys.homeDataShowNetLines) private var showNetLines = false
+    @AppStorage(AppStorageKeys.homeDataShowCodeChurnRate) private var showCodeChurnRate = false
+    @AppStorage(AppStorageKeys.homeDataShowLinesPerCommit) private var showLinesPerCommit = false
+    @AppStorage(AppStorageKeys.homeDataShowTotalTimeToday) private var showTotalTimeToday = false
+    @AppStorage(AppStorageKeys.homeDataShowHumanAiTimeSplit) private var showHumanAiTimeSplit = false
+    @AppStorage(AppStorageKeys.homeDataShowAvgSessionLength) private var showAvgSessionLength = false
+    @AppStorage(AppStorageKeys.homeDataShowMostProductiveHour) private var showMostProductiveHour = false
+    @AppStorage(AppStorageKeys.homeDataShowInputOutputTokens) private var showInputOutputTokens = false
+    @AppStorage(AppStorageKeys.homeDataShowCacheTokens) private var showCacheTokens = false
+    @AppStorage(AppStorageKeys.homeDataShowCostUsd) private var showCostUsd = false
+    @AppStorage(AppStorageKeys.homeDataShowModelBreakdown) private var showModelBreakdown = false
+    @AppStorage(AppStorageKeys.homeDataShowCostPerLine) private var showCostPerLine = false
+    @AppStorage(AppStorageKeys.homeDataShowCostPerCommit) private var showCostPerCommit = false
+    @AppStorage(AppStorageKeys.homeDataShowSessionBlockUsage) private var showSessionBlockUsage = false
+    @AppStorage(AppStorageKeys.homeDataShowWeeklyUsage) private var showWeeklyUsage = false
+    @AppStorage(AppStorageKeys.homeDataShowUsageRate) private var showUsageRate = false
+    @AppStorage(AppStorageKeys.homeDataShowPredictedTimeToLimit) private var showPredictedTimeToLimit = false
+    @AppStorage(AppStorageKeys.homeDataShowLanguageDistribution) private var showLanguageDistribution = false
+    @AppStorage(AppStorageKeys.homeDataShowMostActiveProject) private var showMostActiveProject = false
+    @AppStorage(AppStorageKeys.homeDataShowProjectHealth) private var showProjectHealth = false
+    @AppStorage(AppStorageKeys.homeDataShowLinesPerDayRolling) private var showLinesPerDayRolling = false
+    @AppStorage(AppStorageKeys.homeDataShowCommitsPerDayRolling) private var showCommitsPerDayRolling = false
+    @AppStorage(AppStorageKeys.homeDataShowVelocityTrend) private var showVelocityTrend = false
+    @AppStorage(AppStorageKeys.homeDataShowWeekOverWeek) private var showWeekOverWeek = false
+    @AppStorage(AppStorageKeys.homeDataShowXpProgress) private var showXpProgress = false
+    @AppStorage(AppStorageKeys.homeDataShowAchievementProgress) private var showAchievementProgress = false
+    @AppStorage(AppStorageKeys.homeDataShowCurrentStreak) private var showCurrentStreak = false
+    @AppStorage(AppStorageKeys.homeDataShowLongestStreak) private var showLongestStreak = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {

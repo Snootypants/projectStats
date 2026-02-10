@@ -9,14 +9,14 @@ struct SyncSettingsView: View {
     @StateObject private var conflictResolver = ConflictResolver.shared
 
     // Sync settings
-    @AppStorage("sync.enabled") private var syncEnabled = false
-    @AppStorage("sync.prompts") private var syncPrompts = true
-    @AppStorage("sync.diffs") private var syncDiffs = true
-    @AppStorage("sync.aiSessions") private var syncAISessions = true
-    @AppStorage("sync.timeEntries") private var syncTimeEntries = true
-    @AppStorage("sync.achievements") private var syncAchievements = true
-    @AppStorage("sync.automatic") private var syncAutomatic = true
-    @AppStorage("sync.intervalMinutes") private var syncIntervalMinutes = 15
+    @AppStorage(AppStorageKeys.syncEnabled) private var syncEnabled = false
+    @AppStorage(AppStorageKeys.syncPrompts) private var syncPrompts = true
+    @AppStorage(AppStorageKeys.syncDiffs) private var syncDiffs = true
+    @AppStorage(AppStorageKeys.syncAISessions) private var syncAISessions = true
+    @AppStorage(AppStorageKeys.syncTimeEntries) private var syncTimeEntries = true
+    @AppStorage(AppStorageKeys.syncAchievements) private var syncAchievements = true
+    @AppStorage(AppStorageKeys.syncAutomatic) private var syncAutomatic = true
+    @AppStorage(AppStorageKeys.syncIntervalMinutes) private var syncIntervalMinutes = 15
 
     var body: some View {
         Form {

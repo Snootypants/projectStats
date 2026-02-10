@@ -9,7 +9,7 @@ struct HomePageV2View: View {
     @StateObject private var planUsage = ClaudePlanUsageService.shared
     @ObservedObject private var timeService = TimeTrackingService.shared
     @StateObject private var achievementService = AchievementService.shared
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
 
     @State private var hoveredDate: Date?
     @State private var hoverX: CGFloat?

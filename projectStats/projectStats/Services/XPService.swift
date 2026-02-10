@@ -5,11 +5,11 @@ import SwiftUI
 final class XPService: ObservableObject {
     static let shared = XPService()
 
-    @AppStorage("xp.totalXP") var totalXP: Int = 0
-    @AppStorage("xp.currentLevel") var currentLevel: Int = 1
-    @AppStorage("xp.lastDailyBonusDate") private var lastDailyBonusDate: String = ""
-    @AppStorage("xp.currentStreak") var currentStreak: Int = 0
-    @AppStorage("xp.lastStreakDate") private var lastStreakDate: String = ""
+    @AppStorage(AppStorageKeys.xpTotalXP) var totalXP: Int = 0
+    @AppStorage(AppStorageKeys.xpCurrentLevel) var currentLevel: Int = 1
+    @AppStorage(AppStorageKeys.xpLastDailyBonusDate) private var lastDailyBonusDate: String = ""
+    @AppStorage(AppStorageKeys.xpCurrentStreak) var currentStreak: Int = 0
+    @AppStorage(AppStorageKeys.xpLastStreakDate) private var lastStreakDate: String = ""
 
     @Published var recentXPGain: (amount: Int, reason: String)?
 

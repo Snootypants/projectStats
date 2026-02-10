@@ -16,7 +16,7 @@ struct SimpleFileBrowserView: View {
     @State private var expanded: Set<URL> = []
     @State private var isLoading = false
     @State private var searchText = ""
-    @AppStorage("showHiddenFiles") private var showHiddenFiles: Bool = true
+    @AppStorage(AppStorageKeys.showHiddenFiles) private var showHiddenFiles: Bool = true
 
     private let excludedFolders: Set<String> = [
         "node_modules", ".git", ".next", "dist", "build",

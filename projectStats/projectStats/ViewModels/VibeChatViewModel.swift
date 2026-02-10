@@ -36,7 +36,7 @@ final class VibeChatViewModel: ObservableObject {
     @Published var liveCacheReadTokens: Int = 0
     @Published var liveCacheCreationTokens: Int = 0
 
-    @AppStorage("vibePermissionMode") var permissionMode: String = PermissionMode.sansFlavor.rawValue
+    @AppStorage(AppStorageKeys.vibePermissionMode) var permissionMode: String = PermissionMode.sansFlavor.rawValue
 
     var selectedPermissionMode: PermissionMode {
         get { PermissionMode(rawValue: permissionMode) ?? .sansFlavor }

@@ -78,7 +78,7 @@ struct CompactProjectCard: View {
     let project: Project
     @EnvironmentObject var dashboardVM: DashboardViewModel
     @Environment(\.modelContext) private var modelContext
-    @AppStorage("accentColorHex") private var accentColorHex: String = "#FF9500"
+    @AppStorage(AppStorageKeys.accentColorHex) private var accentColorHex: String = "#FF9500"
     @State private var isHovering = false
 
     private var accentColor: Color {
