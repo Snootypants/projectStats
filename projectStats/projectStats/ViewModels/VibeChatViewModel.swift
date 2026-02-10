@@ -88,7 +88,8 @@ final class VibeChatViewModel: ObservableObject {
         }
     }
 
-    /// Restore the most recent completed session so the chat area isn't blank
+    /// Restore the most recent completed session so the chat area isn't blank.
+    /// Keeps sessionState = .idle so no process runs until the user interacts.
     private func loadMostRecentSession() {
         guard messages.isEmpty, sessionState == .idle else { return }
 
@@ -100,7 +101,25 @@ final class VibeChatViewModel: ObservableObject {
         )
         descriptor.fetchLimit = 1
         guard let session = (try? context.fetch(descriptor))?.first else { return }
-        loadSessionForReplay(session: session)
+
+        // Parse the summary into messages without entering replay mode
+        guard let summary = loadSessionSummary(session: session) else { return }
+        for line in summary.components(separatedBy: "\n") {
+            if line.hasPrefix("**User:**") {
+                let text = String(line.dropFirst("**User:** ".count))
+                messages.append(.fromUser(text))
+            } else if line.hasPrefix("**Claude:**") {
+                let text = String(line.dropFirst("**Claude:** ".count))
+                messages.append(.fromAssistantText(text))
+            } else if line.hasPrefix("> Tool:") {
+                let text = String(line.dropFirst("> Tool: ".count))
+                messages.append(.fromAssistantText("Tool: \(text)"))
+            } else if line.hasPrefix("> Error:") {
+                let text = String(line.dropFirst("> Error: ".count))
+                messages.append(.fromError(text))
+            }
+        }
+        // sessionState stays .idle — no process started
     }
 
     var claudeFound: Bool {
@@ -266,8 +285,34 @@ final class VibeChatViewModel: ObservableObject {
         guard !text.isEmpty else { return }
 
         messages.append(.fromUser(text))
-        processManager.sendMessage(text)
         currentInput = ""
+
+        // If no active process, start one then send the message
+        if sessionState == .idle || sessionState == .done {
+            isReplayMode = false
+            sessionState = .running
+            sessionStartTime = Date()
+            rawLines = []
+            toolUseIdToMessageIndex = [:]
+            toolCallCount = 0
+            elapsedTime = 0
+            liveInputTokens = 0
+            liveOutputTokens = 0
+            liveCacheReadTokens = 0
+            liveCacheCreationTokens = 0
+            startTimer()
+
+            // Build context, start process, then send the first message
+            Task {
+                let context = await ContextBuilder.shared.buildContext(projectPath: projectPath)
+                launchProcess(appendSystemPrompt: context)
+                // Small delay to let the process initialize before sending
+                try? await Task.sleep(for: .milliseconds(500))
+                processManager.sendMessage(text)
+            }
+        } else {
+            processManager.sendMessage(text)
+        }
     }
 
     // MARK: - Permission Handling

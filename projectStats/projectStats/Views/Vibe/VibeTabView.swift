@@ -23,7 +23,7 @@ struct VibeTabView: View {
             VStack(spacing: 0) {
                 missingKeysWarning
                 chatArea
-                ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
+                ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking || (viewModel.sessionState == .idle && !viewModel.messages.isEmpty)))
             }
             .frame(maxWidth: .infinity)
 
@@ -40,7 +40,7 @@ struct VibeTabView: View {
 
     @ViewBuilder
     private var chatArea: some View {
-        if viewModel.sessionState == .idle {
+        if viewModel.sessionState == .idle && viewModel.messages.isEmpty {
             emptyState
         } else {
             chatList
