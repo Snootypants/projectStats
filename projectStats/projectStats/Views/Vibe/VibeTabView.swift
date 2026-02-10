@@ -23,14 +23,14 @@ struct VibeTabView: View {
             VStack(spacing: 0) {
                 missingKeysWarning
                 chatArea
+                    .overlay(alignment: .topTrailing) {
+                        codeToggleButton
+                            .padding(.top, 8)
+                            .padding(.trailing, 12)
+                    }
                 ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
             }
             .frame(maxWidth: .infinity)
-            .overlay(alignment: .topTrailing) {
-                codeToggleButton
-                    .padding(.top, 8)
-                    .padding(.trailing, 12)
-            }
 
             Divider()
 
@@ -176,7 +176,10 @@ struct VibeTabView: View {
 
     private var missingKeyNames: [String] {
         var missing: [String] = []
-        if settings.openAIApiKey.isEmpty { missing.append("OpenAI") }
+        // Check both the dedicated OpenAI key and the AI Chat provider key (when provider is OpenAI)
+        let hasOpenAIKey = !settings.openAIApiKey.isEmpty
+            || (settings.aiProvider == .openai && !settings.aiApiKey.isEmpty)
+        if !hasOpenAIKey { missing.append("OpenAI") }
         return missing
     }
 
