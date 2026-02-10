@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import os.log
 
 @MainActor
 class DataCleanupService {
@@ -41,7 +42,7 @@ class DataCleanupService {
 
         if movedCount > 0 {
             try? context.save()
-            print("[DataCleanup] Moved \(movedCount) diffs from SavedPrompt to SavedDiff")
+            Log.data.info("[DataCleanup] Moved \(movedCount) diffs from SavedPrompt to SavedDiff")
         }
 
         UserDefaults.standard.set(true, forKey: cleanupKey)

@@ -132,7 +132,7 @@ final class ClaudePlanUsageService: ObservableObject {
         } catch {
             isOffline = true
             self.error = error.localizedDescription
-            print("[Usage] Fetch failed: \(error). Will retry on next cycle.")
+            Log.claude.error("[Usage] Fetch failed: \(error). Will retry on next cycle.")
         }
     }
 
@@ -227,7 +227,7 @@ final class ClaudePlanUsageService: ObservableObject {
         context.insert(snapshot)
         try? context.save()
 
-        print("[ClaudePlanUsage] Hourly snapshot saved: 5h=\(Int(fiveHourUtilization * 100))%")
+        Log.claude.info("[ClaudePlanUsage] Hourly snapshot saved: 5h=\(Int(self.fiveHourUtilization * 100))%")
     }
 
     func saveSnapshotNow() async {

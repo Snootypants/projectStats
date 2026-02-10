@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import os.log
 
 enum PermissionMode: String, CaseIterable {
     case flavor      // YOLO - skip permissions
@@ -45,7 +46,7 @@ final class ClaudeProcessManager: ObservableObject {
         let path = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
         if result.exitCode == 0, !path.isEmpty, FileManager.default.isExecutableFile(atPath: path) {
             claudeBinaryPath = path
-            print("[ClaudeProcess] Found claude at: \(path)")
+            Log.claude.info("Found claude at: \(path)")
             return
         }
 
@@ -60,12 +61,12 @@ final class ClaudeProcessManager: ObservableObject {
         for candidate in candidates {
             if FileManager.default.isExecutableFile(atPath: candidate) {
                 claudeBinaryPath = candidate
-                print("[ClaudeProcess] Found claude at: \(candidate)")
+                Log.claude.info("Found claude at: \(candidate)")
                 return
             }
         }
 
-        print("[ClaudeProcess] Claude binary not found")
+        Log.claude.warning("Claude binary not found")
     }
 
     /// Start a Claude Code session with streaming JSON I/O
@@ -78,7 +79,7 @@ final class ClaudeProcessManager: ObservableObject {
     ) {
         guard let binary = claudeBinaryPath else {
             let msg = "Claude binary not found"
-            print("[ClaudeProcess] ERROR: \(msg)")
+            Log.claude.error("\(msg)")
             sessionState = .error(msg)
             onEvent([.error(msg)])
             return
@@ -132,8 +133,8 @@ final class ClaudeProcessManager: ObservableObject {
         env["PATH"] = (userPaths + [existingPath]).joined(separator: ":")
         proc.environment = env
 
-        print("[ClaudeProcess] Starting: \(binary) \(args.joined(separator: " "))")
-        print("[ClaudeProcess] CWD: \(projectPath)")
+        Log.claude.info("Starting: \(binary) \(args.joined(separator: " "))")
+        Log.claude.info("CWD: \(projectPath)")
 
         // Read stdout line by line (NDJSON)
         stdout.fileHandleForReading.readabilityHandler = { [weak self] handle in
@@ -155,7 +156,7 @@ final class ClaudeProcessManager: ObservableObject {
             if let text = String(data: data, encoding: .utf8) {
                 let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !trimmed.isEmpty {
-                    print("[ClaudeProcess] STDERR: \(trimmed)")
+                    Log.claude.error("STDERR: \(trimmed)")
                     Task { @MainActor [weak self] in
                         self?.eventHandler?([.error("stderr: \(trimmed)")])
                     }
@@ -165,10 +166,10 @@ final class ClaudeProcessManager: ObservableObject {
 
         // Handle process exit — only act if this is still the current process
         proc.terminationHandler = { [weak self] proc in
-            print("[ClaudeProcess] Process exited with code \(proc.terminationStatus)")
+            Log.claude.info("Process exited with code \(proc.terminationStatus)")
             Task { @MainActor [weak self] in
                 guard let self, self.processGeneration == currentGeneration else {
-                    print("[ClaudeProcess] Ignoring stale termination handler (generation mismatch)")
+                    Log.claude.debug("Ignoring stale termination handler (generation mismatch)")
                     return
                 }
                 if proc.terminationStatus == 0 {
@@ -189,10 +190,10 @@ final class ClaudeProcessManager: ObservableObject {
             self.stdoutPipe = stdout
             self.stderrPipe = stderr
             self.sessionState = .running
-            print("[ClaudeProcess] Process launched successfully (PID: \(proc.processIdentifier))")
+            Log.claude.info("Process launched successfully (PID: \(proc.processIdentifier))")
         } catch {
             let msg = "Failed to start: \(error.localizedDescription)"
-            print("[ClaudeProcess] ERROR: \(msg)")
+            Log.claude.error("\(msg)")
             sessionState = .error(msg)
             onEvent([.error(msg)])
         }
@@ -201,7 +202,7 @@ final class ClaudeProcessManager: ObservableObject {
     /// Send a user message via stdin as stream-json format
     func sendMessage(_ text: String) {
         guard let pipe = stdinPipe else {
-            print("[ClaudeProcess] Cannot send message — no stdin pipe")
+            Log.claude.warning("Cannot send message — no stdin pipe")
             return
         }
 
@@ -218,12 +219,12 @@ final class ClaudeProcessManager: ObservableObject {
 
         guard let jsonData = try? JSONSerialization.data(withJSONObject: messageJSON),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
-            print("[ClaudeProcess] Failed to serialize message JSON")
+            Log.claude.error("Failed to serialize message JSON")
             return
         }
 
         let line = jsonString + "\n"
-        print("[ClaudeProcess] Sending: \(line.prefix(200))")
+        Log.claude.debug("Sending: \(line.prefix(200))")
 
         if let data = line.data(using: .utf8) {
             pipe.fileHandleForWriting.write(data)
@@ -243,7 +244,7 @@ final class ClaudeProcessManager: ObservableObject {
             // Close stdin to signal EOF, then terminate
             stdinPipe?.fileHandleForWriting.closeFile()
             proc.terminate()
-            print("[ClaudeProcess] Stopped process")
+            Log.claude.info("Stopped process")
         }
         cleanup()
         sessionState = .idle
@@ -278,7 +279,7 @@ final class ClaudeProcessManager: ObservableObject {
                 for event in events {
                     switch event {
                     case .system:
-                        print("[ClaudeProcess] Got system init event")
+                        Log.claude.info("Got system init event")
                         sessionState = .running
                     case .assistantText(_, _, _):
                         sessionState = .thinking
@@ -295,7 +296,7 @@ final class ClaudeProcessManager: ObservableObject {
             }
         } catch {
             // Log parse error but don't surface to UI -- unknown event types (e.g. "type":"user" echoes) are expected
-            print("[ClaudeProcess] Skipping unrecognized line: \(line.prefix(200))")
+            Log.claude.debug("Skipping unrecognized line: \(line.prefix(200))")
         }
     }
 

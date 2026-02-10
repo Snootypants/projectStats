@@ -85,7 +85,7 @@ final class TimeTrackingService: ObservableObject {
         aiSessionStart = Date()
         currentAIType = aiType
 
-        print("[TimeTracking] AI session started: \(aiType) for \(project)")
+        Log.time.info("[TimeTracking] AI session started: \(aiType) for \(project)")
     }
 
     func stopAITracking(tokensUsed: Int? = nil) {
@@ -105,7 +105,7 @@ final class TimeTrackingService: ObservableObject {
         currentAIType = nil
         refreshTotals()
 
-        print("[TimeTracking] AI session ended: \(aiType) duration: \(entry.duration)s")
+        Log.time.info("[TimeTracking] AI session ended: \(aiType) duration: \(entry.duration)s")
     }
 
     // MARK: - Idle Detection
@@ -117,7 +117,7 @@ final class TimeTrackingService: ObservableObject {
         if isPaused, currentProject != nil {
             isPaused = false
             humanSessionStart = Date()
-            print("[TimeTracking] Resumed from idle")
+            Log.time.info("[TimeTracking] Resumed from idle")
         }
     }
 
@@ -184,7 +184,7 @@ final class TimeTrackingService: ObservableObject {
         }
 
         isPaused = true
-        print("[TimeTracking] Paused due to idle")
+        Log.time.info("[TimeTracking] Paused due to idle")
     }
 
     func resumeTracking(project: String) {

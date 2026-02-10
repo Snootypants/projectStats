@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import os.log
 
 /// Service for managing data migrations and database rebuilds
 @MainActor
@@ -16,16 +17,16 @@ class DataMigrationService {
         let storedVersion = UserDefaults.standard.integer(forKey: dataVersionKey)
 
         if storedVersion < currentDataVersion {
-            print("[DataMigration] Migration needed: v\(storedVersion) -> v\(currentDataVersion)")
+            Log.data.info("[DataMigration] Migration needed: v\(storedVersion) -> v\(self.currentDataVersion)")
             await performFullRebuild(modelContext: modelContext)
             UserDefaults.standard.set(currentDataVersion, forKey: dataVersionKey)
-            print("[DataMigration] Migration complete")
+            Log.data.info("[DataMigration] Migration complete")
         }
     }
 
     /// Force a full rebuild of the database from projectstats.json files
     func performFullRebuild(modelContext: ModelContext) async {
-        print("[DataMigration] Starting full database rebuild...")
+        Log.data.info("[DataMigration] Starting full database rebuild...")
 
         // Step 1: Delete all existing records
         await deleteAllRecords(modelContext: modelContext)
@@ -33,7 +34,7 @@ class DataMigrationService {
         // Step 2: Find all projectstats.json files
         let codeDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Code")
         let jsonFiles = findAllProjectStatsJSON(in: codeDirectory)
-        print("[DataMigration] Found \(jsonFiles.count) projectstats.json files")
+        Log.data.info("[DataMigration] Found \(jsonFiles.count) projectstats.json files")
 
         // Step 3: Create CachedProject records from JSON files
         var projectPaths: [URL] = []
@@ -48,22 +49,22 @@ class DataMigrationService {
         // Step 4: Save the projects
         do {
             try modelContext.save()
-            print("[DataMigration] Saved \(projectPaths.count) projects")
+            Log.data.info("[DataMigration] Saved \(projectPaths.count) projects")
         } catch {
-            print("[DataMigration] Error saving projects: \(error)")
+            Log.data.error("[DataMigration] Error saving projects: \(error)")
         }
 
         // Step 5: Rebuild daily activity from git logs
         await rebuildDailyActivity(for: projectPaths, modelContext: modelContext)
 
-        print("[DataMigration] Rebuild complete!")
+        Log.data.info("[DataMigration] Rebuild complete!")
     }
 
     /// Clear all cached data without rebuilding
     func clearDatabase(modelContext: ModelContext) async {
-        print("[DataMigration] Clearing database...")
+        Log.data.info("[DataMigration] Clearing database...")
         await deleteAllRecords(modelContext: modelContext)
-        print("[DataMigration] Database cleared")
+        Log.data.info("[DataMigration] Database cleared")
     }
 
     /// Delete all CachedProject and CachedDailyActivity records
@@ -85,7 +86,7 @@ class DataMigrationService {
 
             try modelContext.save()
         } catch {
-            print("[DataMigration] Error deleting records: \(error)")
+            Log.data.error("[DataMigration] Error deleting records: \(error)")
         }
     }
 
@@ -214,9 +215,9 @@ class DataMigrationService {
 
         do {
             try modelContext.save()
-            print("[DataMigration] Saved \(totalActivities) daily activity records")
+            Log.data.info("[DataMigration] Saved \(totalActivities) daily activity records")
         } catch {
-            print("[DataMigration] Error saving activity: \(error)")
+            Log.data.error("[DataMigration] Error saving activity: \(error)")
         }
     }
 

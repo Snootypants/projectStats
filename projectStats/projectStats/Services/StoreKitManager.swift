@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import os.log
 
 enum ProductID: String {
     case proMonthly = "com.35bird.projectstats.pro.monthly"
@@ -37,7 +38,7 @@ final class StoreKitManager: ObservableObject {
                 ProductID.proYearly.rawValue
             ])
         } catch {
-            print("Failed to load products: \(error)")
+            Log.subscription.error("Failed to load products: \(error)")
         }
     }
 

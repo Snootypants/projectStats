@@ -87,7 +87,7 @@ class ClaudeUsageService: ObservableObject {
             lastGlobalRefresh = Date()
         } catch {
             lastError = "Unable to load usage data"
-            print("[ClaudeUsage] Global error: \(error)")
+            Log.claude.error("[ClaudeUsage] Global error: \(error)")
         }
 
         isLoading = false
@@ -127,7 +127,7 @@ class ClaudeUsageService: ObservableObject {
 
             await saveSnapshot(projectPath: projectPath, jsonData: output, stats: stats)
         } catch {
-            print("[ClaudeUsage] Project error for \(projectName): \(error)")
+            Log.claude.error("[ClaudeUsage] Project error for \(projectName): \(error)")
         }
     }
 

@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 import CryptoKit
+import os.log
 
 @MainActor
 class DashboardViewModel: ObservableObject {
@@ -172,15 +173,15 @@ class DashboardViewModel: ObservableObject {
 
             if !cachedProjects.isEmpty {
                 projects = cachedProjects.map { $0.toProject() }
-                print("[Dashboard] Loaded \(projects.count) projects from cache")
+                Log.data.info("[Dashboard] Loaded \(self.projects.count) projects from cache")
             } else {
                 // Fall back to scanning if cache is empty
-                print("[Dashboard] Cache empty, falling back to scanner")
+                Log.data.info("[Dashboard] Cache empty, falling back to scanner")
                 await loadDataFromScanner()
                 return
             }
         } catch {
-            print("[Dashboard] Error loading from cache: \(error)")
+            Log.data.error("[Dashboard] Error loading from cache: \(error)")
             await loadDataFromScanner()
             return
         }
@@ -208,9 +209,9 @@ class DashboardViewModel: ObservableObject {
                 }
             }
             activities = allActivities
-            print("[Dashboard] Loaded \(cachedActivities.count) activity records from cache")
+            Log.data.info("[Dashboard] Loaded \(cachedActivities.count) activity records from cache")
         } catch {
-            print("[Dashboard] Error loading activities: \(error)")
+            Log.data.error("[Dashboard] Error loading activities: \(error)")
         }
 
         // Calculate aggregated stats
@@ -222,9 +223,9 @@ class DashboardViewModel: ObservableObject {
         // Kick off a background refresh to update cache with latest data
         Task { [weak self] in
             guard let self else { return }
-            print("[Dashboard] Starting background refresh...")
+            Log.sync.info("[Dashboard] Starting background refresh...")
             await self.loadDataFromScanner()
-            print("[Dashboard] Background refresh complete")
+            Log.sync.info("[Dashboard] Background refresh complete")
         }
     }
 
@@ -272,7 +273,7 @@ class DashboardViewModel: ObservableObject {
         do {
             try context.save()
         } catch {
-            print("[Dashboard] Error saving single-project sync: \(error)")
+            Log.sync.error("[Dashboard] Error saving single-project sync: \(error)")
         }
 
         // Update just this project in-memory instead of full DB reload
@@ -545,9 +546,9 @@ class DashboardViewModel: ObservableObject {
             }
 
             try context.save()
-            print("[Dashboard] Synced \(projects.count) projects to SwiftData")
+            Log.data.info("[Dashboard] Synced \(self.projects.count) projects to SwiftData")
         } catch {
-            print("[Dashboard] Error syncing projects to SwiftData: \(error)")
+            Log.data.error("[Dashboard] Error syncing projects to SwiftData: \(error)")
         }
 
         // Sync activities - reuse the already-computed perProjectActivities
@@ -574,9 +575,9 @@ class DashboardViewModel: ObservableObject {
             }
 
             try context.save()
-            print("[Dashboard] Synced \(perProjectActivities.count) projects' activities to SwiftData")
+            Log.data.info("[Dashboard] Synced \(self.perProjectActivities.count) projects' activities to SwiftData")
         } catch {
-            print("[Dashboard] Error syncing activities to SwiftData: \(error)")
+            Log.data.error("[Dashboard] Error syncing activities to SwiftData: \(error)")
         }
 
         // Sync prompts and work logs
@@ -598,7 +599,7 @@ class DashboardViewModel: ObservableObject {
             let cachedProjects = try context.fetch(descriptor)
             projects = cachedProjects.map { $0.toProject() }
         } catch {
-            print("[Dashboard] Error loading projects from cache: \(error)")
+            Log.data.error("[Dashboard] Error loading projects from cache: \(error)")
         }
 
         do {
@@ -624,7 +625,7 @@ class DashboardViewModel: ObservableObject {
             }
             activities = allActivities
         } catch {
-            print("[Dashboard] Error loading activities from cache: \(error)")
+            Log.data.error("[Dashboard] Error loading activities from cache: \(error)")
         }
 
         calculateAggregatedStats()
@@ -703,9 +704,9 @@ class DashboardViewModel: ObservableObject {
             }
 
             try context.save()
-            print("[Dashboard] Synced prompts to SwiftData")
+            Log.sync.info("[Dashboard] Synced prompts to SwiftData")
         } catch {
-            print("[Dashboard] Error syncing prompts: \(error)")
+            Log.sync.error("[Dashboard] Error syncing prompts: \(error)")
         }
     }
 
@@ -772,7 +773,7 @@ class DashboardViewModel: ObservableObject {
                 context.delete(cached)
             }
         } catch {
-            print("[Dashboard] Error syncing prompts for project: \(error)")
+            Log.sync.error("[Dashboard] Error syncing prompts for project: \(error)")
         }
     }
 
@@ -825,9 +826,9 @@ class DashboardViewModel: ObservableObject {
             }
 
             try context.save()
-            print("[Dashboard] Synced work logs to SwiftData")
+            Log.sync.info("[Dashboard] Synced work logs to SwiftData")
         } catch {
-            print("[Dashboard] Error syncing work logs: \(error)")
+            Log.sync.error("[Dashboard] Error syncing work logs: \(error)")
         }
     }
 
@@ -876,7 +877,7 @@ class DashboardViewModel: ObservableObject {
                 }
             }
         } catch {
-            print("[Dashboard] Error syncing work logs for project: \(error)")
+            Log.sync.error("[Dashboard] Error syncing work logs for project: \(error)")
         }
     }
 
@@ -906,7 +907,7 @@ class DashboardViewModel: ObservableObject {
                 context.insert(commit)
             }
         } catch {
-            print("[Dashboard] Error syncing recent commits: \(error)")
+            Log.sync.error("[Dashboard] Error syncing recent commits: \(error)")
         }
     }
 
@@ -1182,7 +1183,7 @@ class DashboardViewModel: ObservableObject {
 
             cached.lastScanned = Date()
         } catch {
-            print("[Dashboard] Error syncing project stats: \(error)")
+            Log.sync.error("[Dashboard] Error syncing project stats: \(error)")
         }
     }
 

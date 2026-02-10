@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import os.log
 
 /// Handles migration to DB v2 models
 @MainActor
@@ -17,13 +18,13 @@ final class DBv2MigrationService {
     func migrateIfNeeded(context: ModelContext) async {
         guard !hasMigrated else { return }
 
-        print("[DBv2Migration] Starting migration...")
+        Log.data.info("[DBv2Migration] Starting migration...")
 
         await migrateCommitsToDailyMetrics(context: context)
         await migrateTimeEntriesToSessions(context: context)
 
         UserDefaults.standard.set(true, forKey: migrationKey)
-        print("[DBv2Migration] Migration completed")
+        Log.data.info("[DBv2Migration] Migration completed")
     }
 
     /// Aggregate commits into DailyMetric records
@@ -85,7 +86,7 @@ final class DBv2MigrationService {
         }
 
         try? context.save()
-        print("[DBv2Migration] Migrated \(grouped.count) project daily metrics")
+        Log.data.info("[DBv2Migration] Migrated \(grouped.count) project daily metrics")
     }
 
     /// Convert TimeEntry records to ProjectSession records
@@ -129,7 +130,7 @@ final class DBv2MigrationService {
         }
 
         try? context.save()
-        print("[DBv2Migration] Migrated \(grouped.count) sessions from time entries")
+        Log.data.info("[DBv2Migration] Migrated \(grouped.count) sessions from time entries")
     }
 
     /// Force re-migration if needed (for development/debugging)

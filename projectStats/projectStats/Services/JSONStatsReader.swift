@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 /// Represents the structure of a projectstats.json file
 struct ProjectStatsJSON: Codable {
@@ -68,7 +69,7 @@ struct JSONStatsReader {
             let stats = try decoder.decode(ProjectStatsJSON.self, from: data)
             return stats
         } catch {
-            print("[JSONStatsReader] Warning: Failed to parse projectstats.json at \(jsonPath.path): \(error)")
+            Log.scanner.warning("[JSONStatsReader] Failed to parse projectstats.json at \(jsonPath.path): \(error)")
             return nil
         }
     }

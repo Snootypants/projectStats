@@ -175,7 +175,7 @@ final class TerminalOutputMonitor: ObservableObject {
 
     private func triggerSync() async {
         guard let projectPath = activeProjectPath else { return }
-        print("[TerminalMonitor] Git event detected, syncing project: \(projectPath)")
+        Log.terminal.info("[TerminalMonitor] Git event detected, syncing project: \(projectPath)")
         await DashboardViewModel.shared.syncSingleProject(path: projectPath)
     }
 
@@ -211,7 +211,7 @@ final class TerminalOutputMonitor: ObservableObject {
     }
 
     private func checkAndNotifyClaudeFinished() {
-        print("[Monitor] Claude session ended, checking notification conditions")
+        Log.terminal.debug("[Monitor] Claude session ended, checking notification conditions")
 
         // Check if the app is not frontmost OR the project tab is not active
         let isAppActive = NSApp.isActive
@@ -222,17 +222,17 @@ final class TerminalOutputMonitor: ObservableObject {
             isTabActive = path == activeProjectPath
         }
 
-        print("[Monitor] App active: \(isAppActive), Tab active: \(isTabActive)")
+        Log.terminal.debug("[Monitor] App active: \(isAppActive), Tab active: \(isTabActive)")
 
         if !isAppActive || !isTabActive {
             let projectName = URL(fileURLWithPath: activeProjectPath ?? "").lastPathComponent
-            print("[Monitor] Sending notification for project: \(projectName)")
+            Log.terminal.info("[Monitor] Sending notification for project: \(projectName)")
             NotificationService.shared.sendNotification(
                 title: "Claude finished",
                 message: "Ready for review in \(projectName)"
             )
         } else {
-            print("[Monitor] Notification skipped - app and tab are active")
+            Log.terminal.debug("[Monitor] Notification skipped - app and tab are active")
         }
     }
 
@@ -257,7 +257,7 @@ final class TerminalOutputMonitor: ObservableObject {
         let context = AppModelContainer.shared.mainContext
         context.insert(session)
 
-        print("[TerminalMonitor] Started \(provider.displayName) session with \(model.displayName)")
+        Log.terminal.info("[TerminalMonitor] Started \(provider.displayName) session with \(model.displayName)")
     }
 
     /// End the current session with token usage
@@ -279,9 +279,9 @@ final class TerminalOutputMonitor: ObservableObject {
         // Save to SwiftData
         do {
             try AppModelContainer.shared.mainContext.save()
-            print("[TerminalMonitor] Ended session: \(session.totalTokens) tokens, $\(String(format: "%.4f", session.costUSD))")
+            Log.terminal.info("[TerminalMonitor] Ended session: \(session.totalTokens) tokens, $\(String(format: "%.4f", session.costUSD))")
         } catch {
-            print("[TerminalMonitor] Failed to save session: \(error)")
+            Log.terminal.error("[TerminalMonitor] Failed to save session: \(error)")
         }
 
         activeSession = nil

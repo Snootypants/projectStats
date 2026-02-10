@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import os.log
 
 @MainActor
 final class MemoryPipeline: ObservableObject {
@@ -24,7 +25,7 @@ final class MemoryPipeline: ObservableObject {
     ) async {
         // Skip if already indexed
         guard !VectorStore.shared.hasSession(sessionId: sessionId, projectPath: projectPath) else {
-            print("[MemoryPipeline] Session \(sessionId.prefix(8)) already indexed, skipping")
+            Log.ai.debug("Session \(sessionId.prefix(8)) already indexed, skipping")
             return
         }
 
@@ -40,7 +41,7 @@ final class MemoryPipeline: ObservableObject {
             )
 
             guard !chunks.isEmpty else {
-                print("[MemoryPipeline] No chunks produced for session \(sessionId.prefix(8))")
+                Log.ai.warning("No chunks produced for session \(sessionId.prefix(8))")
                 indexingState = .done
                 return
             }
@@ -63,10 +64,10 @@ final class MemoryPipeline: ObservableObject {
             }
             VectorStore.shared.store(embeddings: storedEmbeddings, projectPath: projectPath)
 
-            print("[MemoryPipeline] Indexed session \(sessionId.prefix(8)): \(chunks.count) chunks")
+            Log.ai.info("Indexed session \(sessionId.prefix(8)): \(chunks.count) chunks")
             indexingState = .done
         } catch {
-            print("[MemoryPipeline] Failed to index session \(sessionId.prefix(8)): \(error.localizedDescription)")
+            Log.ai.error("Failed to index session \(sessionId.prefix(8)): \(error.localizedDescription)")
             indexingState = .error(error.localizedDescription)
         }
     }
@@ -90,7 +91,7 @@ final class MemoryPipeline: ObservableObject {
         }
 
         let mdFiles = files.filter { $0.pathExtension == "md" }
-        print("[MemoryPipeline] Rebuilding memory: \(mdFiles.count) sessions found")
+        Log.ai.info("Rebuilding memory: \(mdFiles.count) sessions found")
 
         for mdFile in mdFiles {
             guard let content = try? String(contentsOf: mdFile, encoding: .utf8) else { continue }
@@ -109,6 +110,6 @@ final class MemoryPipeline: ObservableObject {
         }
 
         indexingState = .done
-        print("[MemoryPipeline] Rebuild complete")
+        Log.ai.info("Rebuild complete")
     }
 }

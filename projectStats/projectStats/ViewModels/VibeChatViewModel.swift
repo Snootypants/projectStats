@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import os.log
 
 /// Shared store that keeps VibeChatViewModel instances alive across tab switches
 @MainActor
@@ -97,7 +98,7 @@ final class VibeChatViewModel: ObservableObject {
     func startSession(appendSystemPrompt: String? = nil) {
         // Prevent double-starts while process is launching
         if sessionState == .running || sessionState == .thinking {
-            print("[VibeChatVM] Already running, ignoring startSession()")
+            Log.vibe.debug("Already running, ignoring startSession()")
             return
         }
 
@@ -153,7 +154,7 @@ final class VibeChatViewModel: ObservableObject {
             try content.write(to: url, atomically: true, encoding: .utf8)
             return url
         } catch {
-            print("[VibeChatVM] Failed to export JSON: \(error)")
+            Log.vibe.error("Failed to export JSON: \(error)")
             return nil
         }
     }

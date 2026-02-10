@@ -253,7 +253,7 @@ struct PromptHelperView: View {
                 XPService.shared.onPromptExecuted(projectPath: projectPath.path)
                 AchievementService.shared.checkPromptAchievements(projectPath: projectPath.path)
             } catch {
-                print("[PromptHelper] Failed to save prompt: \(error)")
+                Log.ai.error("[PromptHelper] Failed to save prompt: \(error)")
             }
         }
 

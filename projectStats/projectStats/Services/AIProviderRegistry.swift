@@ -28,7 +28,7 @@ final class AIProviderRegistry: ObservableObject {
                 createDefaultProviders(context: context)
             }
         } catch {
-            print("[AIProviderRegistry] Failed to load providers: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to load providers: \(error)")
             createDefaultProviders(context: context)
         }
     }
@@ -89,9 +89,9 @@ final class AIProviderRegistry: ObservableObject {
             try context.save()
             providers = defaults
             defaultProvider = claudeCode
-            print("[AIProviderRegistry] Created default providers")
+            Log.ai.info("[AIProviderRegistry] Created default providers")
         } catch {
-            print("[AIProviderRegistry] Failed to save default providers: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to save default providers: \(error)")
         }
     }
 
@@ -104,9 +104,9 @@ final class AIProviderRegistry: ObservableObject {
         do {
             try context.save()
             providers.append(provider)
-            print("[AIProviderRegistry] Added provider: \(provider.displayName)")
+            Log.ai.info("[AIProviderRegistry] Added provider: \(provider.displayName)")
         } catch {
-            print("[AIProviderRegistry] Failed to add provider: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to add provider: \(error)")
         }
     }
 
@@ -118,9 +118,9 @@ final class AIProviderRegistry: ObservableObject {
             try context.save()
             // Refresh providers list
             loadProviders(context: context)
-            print("[AIProviderRegistry] Updated provider: \(provider.displayName)")
+            Log.ai.info("[AIProviderRegistry] Updated provider: \(provider.displayName)")
         } catch {
-            print("[AIProviderRegistry] Failed to update provider: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to update provider: \(error)")
         }
     }
 
@@ -142,9 +142,9 @@ final class AIProviderRegistry: ObservableObject {
             if provider.isDefault, let first = enabledProviders.first {
                 setDefaultProvider(first, context: context)
             }
-            print("[AIProviderRegistry] Deleted provider: \(provider.displayName)")
+            Log.ai.info("[AIProviderRegistry] Deleted provider: \(provider.displayName)")
         } catch {
-            print("[AIProviderRegistry] Failed to delete provider: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to delete provider: \(error)")
         }
     }
 
@@ -161,9 +161,9 @@ final class AIProviderRegistry: ObservableObject {
 
         do {
             try context.save()
-            print("[AIProviderRegistry] Set default provider: \(provider.displayName)")
+            Log.ai.info("[AIProviderRegistry] Set default provider: \(provider.displayName)")
         } catch {
-            print("[AIProviderRegistry] Failed to set default provider: \(error)")
+            Log.ai.error("[AIProviderRegistry] Failed to set default provider: \(error)")
         }
     }
 

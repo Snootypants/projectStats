@@ -56,11 +56,11 @@ final class SubscriptionManager: ObservableObject {
             proCode = trimmed
             isProActive = true
             validationError = nil
-            print("[Subscription] Pro activated with code: \(trimmed.prefix(8))...")
+            Log.subscription.info("[Subscription] Pro activated with code: \(trimmed.prefix(8))...")
         } else {
             isProActive = false
             validationError = "Invalid subscription code"
-            print("[Subscription] Invalid code attempted")
+            Log.subscription.warning("[Subscription] Invalid code attempted")
         }
 
         return isValid

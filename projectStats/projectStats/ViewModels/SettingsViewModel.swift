@@ -2,6 +2,7 @@ import AppKit
 import Foundation
 import SwiftUI
 import ServiceManagement
+import os.log
 
 enum Editor: String, CaseIterable, Codable {
     case vscode = "Visual Studio Code"
@@ -338,7 +339,7 @@ class SettingsViewModel: ObservableObject {
                 try SMAppService.mainApp.unregister()
             }
         } catch {
-            print("Failed to update launch at login: \(error)")
+            Log.general.error("Failed to update launch at login: \(error)")
         }
     }
 

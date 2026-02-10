@@ -13,9 +13,9 @@ final class NotificationService: NSObject, ObservableObject {
     private func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
-                print("[Notifications] Authorization granted")
+                Log.messaging.info("[Notifications] Authorization granted")
             } else if let error = error {
-                print("[Notifications] Authorization error: \(error)")
+                Log.messaging.error("[Notifications] Authorization error: \(error)")
             }
         }
 
@@ -23,7 +23,7 @@ final class NotificationService: NSObject, ObservableObject {
     }
 
     func sendNotification(title: String, message: String, sound: Bool = true) {
-        print("[Notifications] Attempting to send: \(title) - \(message)")
+        Log.messaging.debug("[Notifications] Attempting to send: \(title) - \(message)")
 
         let content = UNMutableNotificationContent()
         content.title = title
@@ -43,9 +43,9 @@ final class NotificationService: NSObject, ObservableObject {
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("[Notifications] Error sending: \(error)")
+                Log.messaging.error("[Notifications] Error sending: \(error)")
             } else {
-                print("[Notifications] Sent successfully: \(title)")
+                Log.messaging.info("[Notifications] Sent successfully: \(title)")
             }
         }
 

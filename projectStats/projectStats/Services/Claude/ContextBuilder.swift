@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 @MainActor
 final class ContextBuilder {
@@ -11,7 +12,7 @@ final class ContextBuilder {
         // Check if API key is available
         let apiKey = SettingsViewModel.shared.aiApiKey
         guard !apiKey.isEmpty else {
-            print("[ContextBuilder] No API key configured, skipping context injection")
+            Log.ai.info("No API key configured, skipping context injection")
             return nil
         }
 
@@ -23,7 +24,7 @@ final class ContextBuilder {
             let results = VectorStore.shared.search(query: queryVector, projectPath: projectPath, topK: 8)
 
             guard !results.isEmpty else {
-                print("[ContextBuilder] No relevant context found for project")
+                Log.ai.debug("No relevant context found for project")
                 return nil
             }
 
@@ -50,7 +51,7 @@ final class ContextBuilder {
 
             return contextLines.joined(separator: "\n")
         } catch {
-            print("[ContextBuilder] Failed to build context: \(error.localizedDescription)")
+            Log.ai.error("Failed to build context: \(error.localizedDescription)")
             return nil
         }
     }

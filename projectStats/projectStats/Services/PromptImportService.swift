@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import os.log
 
 @MainActor
 class PromptImportService {
@@ -61,10 +62,10 @@ class PromptImportService {
 
             if importCount > 0 {
                 try context.save()
-                print("[PromptImport] Imported \(importCount) prompts from \(promptsDir.lastPathComponent)")
+                Log.sync.info("[PromptImport] Imported \(importCount) prompts from \(promptsDir.lastPathComponent)")
             }
         } catch {
-            print("[PromptImport] Error: \(error)")
+            Log.sync.error("[PromptImport] Error: \(error)")
         }
     }
 
@@ -130,10 +131,10 @@ class PromptImportService {
 
             if importCount > 0 {
                 try context.save()
-                print("[WorkLogImport] Imported \(importCount) work logs from \(workDir.lastPathComponent)")
+                Log.sync.info("[WorkLogImport] Imported \(importCount) work logs from \(workDir.lastPathComponent)")
             }
         } catch {
-            print("[WorkLogImport] Error: \(error)")
+            Log.sync.error("[WorkLogImport] Error: \(error)")
         }
     }
 }

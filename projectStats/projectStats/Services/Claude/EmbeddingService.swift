@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import os.log
 
 enum EmbeddingError: LocalizedError {
     case missingAPIKey
@@ -96,7 +97,7 @@ final class EmbeddingService {
 
         let embeddingResponse = try JSONDecoder().decode(EmbeddingResponse.self, from: data)
         totalTokensUsed += embeddingResponse.usage.totalTokens
-        print("[EmbeddingService] Embedded \(texts.count) texts, \(embeddingResponse.usage.totalTokens) tokens (total: \(totalTokensUsed))")
+        Log.ai.info("Embedded \(texts.count) texts, \(embeddingResponse.usage.totalTokens) tokens (total: \(self.totalTokensUsed))")
 
         // Sort by index to maintain order
         let sorted = embeddingResponse.data.sorted { $0.index < $1.index }

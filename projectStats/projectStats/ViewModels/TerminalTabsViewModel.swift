@@ -1,6 +1,7 @@
 import AppKit
 import Foundation
 import SwiftTerm
+import os.log
 
 enum TerminalTabKind: String, Codable {
     case shell
@@ -96,7 +97,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
 
     func sendCommand(_ command: String) {
         guard let terminalView else {
-            print("[Terminal] ⏳ No terminal view yet, queuing command")
+            Log.terminal.debug("[Terminal] No terminal view yet, queuing command")
             pendingCommands.append(command)
             return
         }
@@ -112,7 +113,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
         if let data = textWithReturn.data(using: .utf8) {
             terminalView.send([UInt8](data))
         }
-        print("[Terminal] ✅ Sent \(textWithReturn.count) chars to terminal")
+        Log.terminal.debug("[Terminal] Sent \(textWithReturn.count) chars to terminal")
 
         if kind == .devServer {
             startTime = Date()

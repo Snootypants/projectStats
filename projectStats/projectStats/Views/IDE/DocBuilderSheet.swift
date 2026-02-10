@@ -36,7 +36,7 @@ private final class DocProcessBridge {
             self.process = proc
             self.stdinPipe = stdin
         } catch {
-            print("[DocProcessBridge] Failed to start: \(error)")
+            Log.terminal.error("[DocProcessBridge] Failed to start: \(error)")
         }
     }
 

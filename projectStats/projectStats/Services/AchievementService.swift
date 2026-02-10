@@ -58,7 +58,7 @@ final class AchievementService: ObservableObject {
         gcAchievement.showsCompletionBanner = true
         GKAchievement.report([gcAchievement]) { error in
             if let error {
-                print("Game Center error: \(error)")
+                Log.xp.error("Game Center error: \(error)")
             }
         }
         #endif
@@ -94,7 +94,7 @@ final class AchievementService: ObservableObject {
         // Check streak achievements
         checkStreakAchievements(projectPath: projectPath)
 
-        print("[Achievements] First commit of the day processed")
+        Log.xp.info("[Achievements] First commit of the day processed")
     }
 
     /// Check time-based achievements (night owl, early bird)
@@ -104,7 +104,7 @@ final class AchievementService: ObservableObject {
         // Night Owl - coding past midnight (12am - 5am)
         if hour >= 0 && hour < 5 {
             nightOwlCount += 1
-            print("[Achievements] Night owl count: \(nightOwlCount)")
+            Log.xp.debug("[Achievements] Night owl count: \(self.nightOwlCount)")
             if nightOwlCount >= 5 {
                 checkAndUnlock(.nightOwl, projectPath: projectPath)
             }
@@ -113,7 +113,7 @@ final class AchievementService: ObservableObject {
         // Early Bird - coding before 6am (4am - 6am to distinguish from night owl)
         if hour >= 4 && hour < 6 {
             earlyBirdCount += 1
-            print("[Achievements] Early bird count: \(earlyBirdCount)")
+            Log.xp.debug("[Achievements] Early bird count: \(self.earlyBirdCount)")
             if earlyBirdCount >= 5 {
                 checkAndUnlock(.earlyBird, projectPath: projectPath)
             }
@@ -125,7 +125,7 @@ final class AchievementService: ObservableObject {
         let weekday = Calendar.current.component(.weekday, from: Date())
         if weekday == 6 { // Friday (Sunday = 1, so Friday = 6)
             checkAndUnlock(.shipper, projectPath: projectPath)
-            print("[Achievements] Shipper unlocked - Friday deploy!")
+            Log.xp.info("[Achievements] Shipper unlocked - Friday deploy!")
         }
     }
 
@@ -138,7 +138,7 @@ final class AchievementService: ObservableObject {
 
         if totalCommits >= 1000 {
             checkAndUnlock(.prolific, projectPath: projectPath)
-            print("[Achievements] Prolific unlocked - 1000 total commits!")
+            Log.xp.info("[Achievements] Prolific unlocked - 1000 total commits!")
         }
 
         // Get commits this month
@@ -147,13 +147,13 @@ final class AchievementService: ObservableObject {
 
         if monthlyCommits >= 100 {
             checkAndUnlock(.centurion, projectPath: projectPath)
-            print("[Achievements] Centurion unlocked - 100 commits this month!")
+            Log.xp.info("[Achievements] Centurion unlocked - 100 commits this month!")
         }
     }
 
     /// Called when a git push is detected - runs all relevant achievement checks
     func onGitPushDetected(projectPath: String) {
-        print("[Achievements] Git push detected, checking achievements for: \(projectPath)")
+        Log.xp.info("[Achievements] Git push detected, checking achievements for: \(projectPath)")
 
         checkFirstCommitOfDay(projectPath: projectPath)
         checkTimeBasedAchievements(projectPath: projectPath)

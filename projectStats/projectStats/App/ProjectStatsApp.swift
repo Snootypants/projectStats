@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import SwiftData
+import os.log
 
 /// Shared model container for the app
 enum AppModelContainer {
@@ -42,9 +43,9 @@ enum AppModelContainer {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            print("[SwiftData] ModelContainer creation failed: \(error). Clearing store and retrying.")
+            Log.data.error("[SwiftData] ModelContainer creation failed: \(error). Clearing store and retrying.")
             if let cleanupError = deletePersistentStoreFiles() {
-                print("[SwiftData] Failed to clear store: \(cleanupError)")
+                Log.data.error("[SwiftData] Failed to clear store: \(cleanupError)")
             }
             do {
                 return try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -183,7 +184,7 @@ private func seedDefaultTemplateIfNeeded(context: ModelContext) {
     )
     context.insert(template)
     try? context.save()
-    print("[App] Seeded default prompt template")
+    Log.lifecycle.info("[App] Seeded default prompt template")
 }
 
 // MARK: - Default Prompt Template
@@ -225,7 +226,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Initialize NotificationService to request permissions at launch
         _ = NotificationService.shared
-        print("[App] NotificationService initialized, requesting permissions")
+        Log.lifecycle.info("[App] NotificationService initialized, requesting permissions")
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
