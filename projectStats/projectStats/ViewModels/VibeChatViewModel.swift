@@ -96,6 +96,19 @@ final class VibeChatViewModel: ObservableObject {
 
         startTimer()
 
+        if let prompt = appendSystemPrompt {
+            // Explicit prompt provided (e.g., from "Continue" session)
+            launchProcess(appendSystemPrompt: prompt)
+        } else {
+            // Try automatic context injection from project memory
+            Task {
+                let context = await ContextBuilder.shared.buildContext(projectPath: projectPath)
+                launchProcess(appendSystemPrompt: context)
+            }
+        }
+    }
+
+    private func launchProcess(appendSystemPrompt: String?) {
         processManager.start(
             projectPath: projectPath,
             permissionMode: selectedPermissionMode,
