@@ -13,6 +13,7 @@
 		01000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift */; };
 		01000000000000000000K001 /* projectStats/Utilities/ModelContext+SafeSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000K001 /* projectStats/Utilities/ModelContext+SafeSave.swift */; };
 		01000000000000000000K002 /* projectStats/Services/DataBackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000K002 /* projectStats/Services/DataBackupService.swift */; };
+		01000000000000000000K003 /* projectStats/Utilities/SchemaVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000K003 /* projectStats/Utilities/SchemaVersion.swift */; };
 		01000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift */; };
 		01000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */; };
 		01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */; };
@@ -367,6 +368,7 @@
 		02000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/GitHubSyncService.swift; sourceTree = "<group>"; };
 		02000000000000000000K001 /* projectStats/Utilities/ModelContext+SafeSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "projectStats/Utilities/ModelContext+SafeSave.swift"; sourceTree = "<group>"; };
 		02000000000000000000K002 /* projectStats/Services/DataBackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/DataBackupService.swift; sourceTree = "<group>"; };
+		02000000000000000000K003 /* projectStats/Utilities/SchemaVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/SchemaVersion.swift; sourceTree = "<group>"; };
 		020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/TerminalSettings.swift; sourceTree = "<group>"; };
 		020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/HomePageV5View.swift; sourceTree = "<group>"; };
 		020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5XPHeader.swift; sourceTree = "<group>"; };
@@ -643,6 +645,7 @@
 				020000000000000000000159 /* projectStats/Utilities/Logger.swift */,
 				02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */,
 				02000000000000000000K001 /* projectStats/Utilities/ModelContext+SafeSave.swift */,
+				02000000000000000000K003 /* projectStats/Utilities/SchemaVersion.swift */,
 				020000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift */,
 				020000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift */,
 				020000000000000000000086 /* projectStats/Views/Achievements/AchievementBanner.swift */,
@@ -900,6 +903,7 @@
 				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
 				01000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift in Sources */,
 				01000000000000000000K001 /* projectStats/Utilities/ModelContext+SafeSave.swift in Sources */,
+				01000000000000000000K003 /* projectStats/Utilities/SchemaVersion.swift in Sources */,
 				010000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift in Sources */,
 				010000000000000000000084 /* projectStats/ViewModels/GitControlsViewModel.swift in Sources */,
 				010000000000000000000085 /* projectStats/ViewModels/TerminalTabsViewModel.swift in Sources */,

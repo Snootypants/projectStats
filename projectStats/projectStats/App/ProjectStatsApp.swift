@@ -43,7 +43,9 @@ enum AppModelContainer {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            Log.data.error("[SwiftData] ModelContainer creation failed: \(error). Clearing store and retrying.")
+            Log.data.error("[SwiftData] ModelContainer creation failed: \(error). Backing up and clearing store.")
+            // Back up before nuking — this is the last line of defense for user data
+            DataBackupService.shared.backupStore()
             if let cleanupError = deletePersistentStoreFiles() {
                 Log.data.error("[SwiftData] Failed to clear store: \(cleanupError)")
             }

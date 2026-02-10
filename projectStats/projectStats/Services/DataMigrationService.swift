@@ -7,21 +7,17 @@ import os.log
 class DataMigrationService {
     static let shared = DataMigrationService()
 
-    private let currentDataVersion = 3
-    private let dataVersionKey = "dataVersion"
-
     private init() {}
 
     /// Check if migration is needed and perform it
     func migrateIfNeeded(modelContext: ModelContext) async {
-        let storedVersion = UserDefaults.standard.integer(forKey: dataVersionKey)
+        guard SchemaVersion.needsDataMigration else { return }
 
-        if storedVersion < currentDataVersion {
-            Log.data.info("[DataMigration] Migration needed: v\(storedVersion) -> v\(self.currentDataVersion)")
-            await performFullRebuild(modelContext: modelContext)
-            UserDefaults.standard.set(currentDataVersion, forKey: dataVersionKey)
-            Log.data.info("[DataMigration] Migration complete")
-        }
+        let storedVersion = SchemaVersion.storedDataVersion
+        Log.data.info("[DataMigration] Migration needed: v\(storedVersion) -> v\(SchemaVersion.dataVersion)")
+        await performFullRebuild(modelContext: modelContext)
+        SchemaVersion.storedDataVersion = SchemaVersion.dataVersion
+        Log.data.info("[DataMigration] Migration complete")
     }
 
     /// Force a full rebuild of the database from projectstats.json files

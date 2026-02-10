@@ -7,12 +7,10 @@ import os.log
 final class DBv2MigrationService {
     static let shared = DBv2MigrationService()
 
-    private let migrationKey = "dbv2_migration_completed"
-
     private init() {}
 
     var hasMigrated: Bool {
-        UserDefaults.standard.bool(forKey: migrationKey)
+        SchemaVersion.dbv2Completed
     }
 
     func migrateIfNeeded(context: ModelContext) async {
@@ -23,7 +21,7 @@ final class DBv2MigrationService {
         await migrateCommitsToDailyMetrics(context: context)
         await migrateTimeEntriesToSessions(context: context)
 
-        UserDefaults.standard.set(true, forKey: migrationKey)
+        SchemaVersion.dbv2Completed = true
         Log.data.info("[DBv2Migration] Migration completed")
     }
 
@@ -135,7 +133,7 @@ final class DBv2MigrationService {
 
     /// Force re-migration if needed (for development/debugging)
     func resetMigration() {
-        UserDefaults.standard.set(false, forKey: migrationKey)
+        SchemaVersion.dbv2Completed = false
     }
 
     /// Get migration status details

@@ -3,7 +3,6 @@ import os.log
 
 /// Backs up SwiftData store files to a timestamped directory.
 /// Call on app launch and before migrations to protect against data loss.
-@MainActor
 final class DataBackupService {
     static let shared = DataBackupService()
     private init() {}
