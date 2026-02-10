@@ -105,8 +105,16 @@ struct SessionStatsView: View {
     }
 
     private func exportJSON() {
-        guard let url = viewModel.exportRawJSON() else { return }
-        NSWorkspace.shared.activateFileViewerSelecting([url])
+        let panel = NSSavePanel()
+        panel.title = "Export Session JSON"
+        panel.nameFieldStringValue = "vibe-session.jsonl"
+        panel.allowedContentTypes = [.json]
+        panel.canCreateDirectories = true
+
+        guard panel.runModal() == .OK, let dest = panel.url else { return }
+
+        let content = viewModel.rawLines.joined(separator: "\n")
+        try? content.write(to: dest, atomically: true, encoding: .utf8)
     }
 
     @ObservedObject private var memoryPipeline = MemoryPipeline.shared
