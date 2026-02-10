@@ -5,7 +5,7 @@ import Foundation
 enum SchemaVersion {
     /// Current data migration version (used by DataMigrationService).
     /// Bump when projectstats.json parsing or CachedProject schema changes.
-    static let dataVersion = 3
+    static let dataVersion = 4
 
     /// Whether DBv2 migration has been completed.
     /// Tracks one-time migration from TimeEntry→ProjectSession, CachedCommit→DailyMetric.

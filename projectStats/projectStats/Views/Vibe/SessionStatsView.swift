@@ -3,6 +3,7 @@ import SwiftUI
 struct SessionStatsView: View {
     @ObservedObject var viewModel: VibeChatViewModel
     var onToggleCode: (() -> Void)?
+    @State private var cachedEstimate: SessionEstimator.Estimate?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -47,7 +48,7 @@ struct SessionStatsView: View {
                         .font(.system(.title3, design: .monospaced))
                         .foregroundStyle(.primary)
                 }
-            } else if let estimate = SessionEstimator.shared.estimate(projectPath: viewModel.projectPath) {
+            } else if let estimate = cachedEstimate {
                 Divider()
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Typical Session")
@@ -188,6 +189,14 @@ struct SessionStatsView: View {
         }
         .padding(16)
         .frame(maxHeight: .infinity, alignment: .top)
+        .onAppear {
+            cachedEstimate = SessionEstimator.shared.estimate(projectPath: viewModel.projectPath)
+        }
+        .onChange(of: viewModel.sessionState) { _, newState in
+            if newState == .idle || newState == .done {
+                cachedEstimate = SessionEstimator.shared.estimate(projectPath: viewModel.projectPath)
+            }
+        }
     }
 
     private func exportJSON() {

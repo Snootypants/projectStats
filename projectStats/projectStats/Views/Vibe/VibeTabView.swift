@@ -5,6 +5,7 @@ struct VibeTabView: View {
     @EnvironmentObject var tabManager: TabManagerViewModel
 
     @StateObject private var viewModel: VibeChatViewModel
+    @State private var sessionEstimate: SessionEstimator.Estimate?
 
     init(projectPath: String) {
         self.projectPath = projectPath
@@ -84,6 +85,17 @@ struct VibeTabView: View {
                     .foregroundStyle(.tertiary)
             }
 
+            // Session estimate from history
+            if let estimate = sessionEstimate {
+                HStack(spacing: 16) {
+                    Label(estimate.formattedMedianDuration, systemImage: "clock")
+                    Label(estimate.formattedMedianCost, systemImage: "dollarsign.circle")
+                    Label(formatTokenCount(estimate.medianTokens) + " tok", systemImage: "brain")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
             if viewModel.claudeFound {
                 Button(action: { viewModel.startSession() }) {
                     Label("Start Claude Code", systemImage: "play.fill")
@@ -119,6 +131,9 @@ struct VibeTabView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(nsColor: .textBackgroundColor))
+        .onAppear {
+            sessionEstimate = SessionEstimator.shared.estimate(projectPath: projectPath)
+        }
     }
 
     // MARK: - Missing Keys Warning
