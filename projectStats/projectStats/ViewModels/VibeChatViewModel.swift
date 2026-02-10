@@ -123,9 +123,28 @@ final class VibeChatViewModel: ObservableObject {
         processManager.start(
             projectPath: projectPath,
             permissionMode: selectedPermissionMode,
-            appendSystemPrompt: appendSystemPrompt
+            appendSystemPrompt: appendSystemPrompt,
+            onRawLine: { [weak self] line in
+                self?.rawLines.append(line)
+            }
         ) { [weak self] events in
             self?.handleEvents(events)
+        }
+    }
+
+    /// Export raw NDJSON to a file, returns the URL if successful
+    func exportRawJSON() -> URL? {
+        guard !rawLines.isEmpty else { return nil }
+        let content = rawLines.joined(separator: "\n")
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "vibe-session-\(Date().timeIntervalSince1970).jsonl"
+        let url = tempDir.appendingPathComponent(fileName)
+        do {
+            try content.write(to: url, atomically: true, encoding: .utf8)
+            return url
+        } catch {
+            print("[VibeChatVM] Failed to export JSON: \(error)")
+            return nil
         }
     }
 

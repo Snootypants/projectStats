@@ -9,20 +9,35 @@ struct ClaudeStreamEvent: Decodable {
     let sessionId: String?
     let message: ClaudeStreamMessage?
     // Result fields
-    let costUsd: Double?
+    let totalCostUsd: Double?
     let durationMs: Int?
     let durationApiMs: Int?
     let numTurns: Int?
     let isError: Bool?
+    let usage: ClaudeUsage?
 
     enum CodingKeys: String, CodingKey {
-        case type, subtype, message
+        case type, subtype, message, usage
         case sessionId = "session_id"
-        case costUsd = "cost_usd"
+        case totalCostUsd = "total_cost_usd"
         case durationMs = "duration_ms"
         case durationApiMs = "duration_api_ms"
         case numTurns = "num_turns"
         case isError = "is_error"
+    }
+}
+
+struct ClaudeUsage: Decodable {
+    let inputTokens: Int?
+    let outputTokens: Int?
+    let cacheCreationInputTokens: Int?
+    let cacheReadInputTokens: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case inputTokens = "input_tokens"
+        case outputTokens = "output_tokens"
+        case cacheCreationInputTokens = "cache_creation_input_tokens"
+        case cacheReadInputTokens = "cache_read_input_tokens"
     }
 }
 
@@ -168,12 +183,16 @@ enum ClaudeEvent {
 
         case "result":
             events.append(.result(ResultEvent(
-                costUsd: raw.costUsd ?? 0,
+                costUsd: raw.totalCostUsd ?? 0,
                 durationMs: raw.durationMs ?? 0,
                 durationApiMs: raw.durationApiMs ?? 0,
                 numTurns: raw.numTurns ?? 0,
                 sessionId: raw.sessionId ?? "",
-                isError: raw.isError ?? false
+                isError: raw.isError ?? false,
+                inputTokens: raw.usage?.inputTokens ?? 0,
+                outputTokens: raw.usage?.outputTokens ?? 0,
+                cacheCreationTokens: raw.usage?.cacheCreationInputTokens ?? 0,
+                cacheReadTokens: raw.usage?.cacheReadInputTokens ?? 0
             )))
 
         default:
@@ -217,9 +236,20 @@ struct ResultEvent {
     let numTurns: Int
     let sessionId: String
     let isError: Bool
+    let inputTokens: Int
+    let outputTokens: Int
+    let cacheCreationTokens: Int
+    let cacheReadTokens: Int
+
+    var totalTokens: Int {
+        inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens
+    }
 
     var formattedCost: String {
-        String(format: "$%.4f", costUsd)
+        if costUsd >= 1.0 {
+            return String(format: "$%.2f", costUsd)
+        }
+        return String(format: "$%.4f", costUsd)
     }
 
     var formattedDuration: String {
@@ -228,5 +258,15 @@ struct ResultEvent {
             return "\(seconds / 60)m \(seconds % 60)s"
         }
         return "\(seconds)s"
+    }
+
+    var formattedTokens: String {
+        let total = totalTokens
+        if total >= 1_000_000 {
+            return String(format: "%.1fM", Double(total) / 1_000_000)
+        } else if total >= 1_000 {
+            return String(format: "%.1fK", Double(total) / 1_000)
+        }
+        return "\(total)"
     }
 }

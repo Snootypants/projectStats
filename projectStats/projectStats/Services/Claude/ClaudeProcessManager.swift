@@ -26,6 +26,7 @@ final class ClaudeProcessManager: ObservableObject {
     private var stdoutPipe: Pipe?
     private var stderrPipe: Pipe?
     private var eventHandler: (([ClaudeEvent]) -> Void)?
+    private var rawLineHandler: ((String) -> Void)?
     private var lineBuffer = ""
     private var processGeneration: Int = 0 // Guards against stale termination handlers
 
@@ -72,6 +73,7 @@ final class ClaudeProcessManager: ObservableObject {
         projectPath: String,
         permissionMode: PermissionMode,
         appendSystemPrompt: String? = nil,
+        onRawLine: ((String) -> Void)? = nil,
         onEvent: @escaping ([ClaudeEvent]) -> Void
     ) {
         guard let binary = claudeBinaryPath else {
@@ -88,6 +90,7 @@ final class ClaudeProcessManager: ObservableObject {
         let currentGeneration = processGeneration
 
         self.eventHandler = onEvent
+        self.rawLineHandler = onRawLine
 
         let proc = Process()
         let stdin = Pipe()
@@ -263,6 +266,7 @@ final class ClaudeProcessManager: ObservableObject {
     }
 
     private func parseLine(_ line: String) {
+        rawLineHandler?(line)
         guard let data = line.data(using: .utf8) else { return }
 
         do {

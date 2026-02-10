@@ -78,13 +78,35 @@ struct SessionStatsView: View {
 
             Spacer()
 
+            // Export button
+            if !viewModel.rawLines.isEmpty {
+                Button(action: exportJSON) {
+                    Label("Export JSON", systemImage: "square.and.arrow.up")
+                        .font(.caption)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+            }
+
             // Messages count
-            Text("\(viewModel.messages.count) messages")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+            HStack {
+                Text("\(viewModel.messages.count) messages")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                if !viewModel.rawLines.isEmpty {
+                    Text("\(viewModel.rawLines.count) events")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
         }
         .padding(16)
         .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    private func exportJSON() {
+        guard let url = viewModel.exportRawJSON() else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([url])
     }
 
     @ObservedObject private var memoryPipeline = MemoryPipeline.shared
