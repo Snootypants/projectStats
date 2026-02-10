@@ -108,9 +108,6 @@ struct TabShellView: View {
 
         case .projectWorkspace(let path):
             WorkspaceView(projectPath: path)
-
-        case .vibe(let path):
-            VibeTabView(projectPath: path)
         }
     }
 
@@ -156,11 +153,6 @@ struct TabShellView: View {
             Button("") { showCommandPalette.toggle() }
                 .keyboardShortcut("k", modifiers: [.command])
 
-            // Cmd+Shift+V: Toggle VIBE/Code mode for active tab
-            Button("") {
-                tabManager.toggleVibeMode()
-            }
-            .keyboardShortcut("v", modifiers: [.command, .shift])
         }
         .opacity(0)
         .frame(width: 0, height: 0)

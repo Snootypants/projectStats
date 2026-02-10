@@ -160,26 +160,6 @@ struct HomeView: View {
                 ? "Last: \(achievementService.mostRecentAchievement!.title) — \(achievementService.mostRecentAchievement!.description)"
                 : "View Achievements")
 
-            // VIBE button — opens vibe tab for first recent project
-            if let firstProject = viewModel.recentProjects.first {
-                Button {
-                    tabManager.openVibeTab(projectPath: firstProject.path.path)
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "bolt.fill")
-                            .foregroundStyle(.cyan)
-                        Text("VIBE")
-                            .font(.caption.bold())
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.cyan.opacity(0.2))
-                    .cornerRadius(16)
-                }
-                .buttonStyle(.plain)
-                .help("Start a VIBE session")
-            }
-
             Spacer()
         }
     }

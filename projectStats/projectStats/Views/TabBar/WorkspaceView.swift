@@ -142,20 +142,6 @@ struct WorkspaceView: View {
             }
             .menuStyle(.borderlessButton)
 
-            // VIBE button — toggles into vibe mode
-            Button {
-                tabManager.toggleVibeMode()
-            } label: {
-                HStack(spacing: 3) {
-                    Image(systemName: "bolt.fill")
-                    Text("VIBE")
-                        .font(.system(size: 11, weight: .bold))
-                }
-                .foregroundStyle(.cyan)
-            }
-            .buttonStyle(.plain)
-            .help("Toggle VIBE mode (Cmd+Shift+V)")
-
             // Update Docs button
             Button {
                 showDocBuilder = true

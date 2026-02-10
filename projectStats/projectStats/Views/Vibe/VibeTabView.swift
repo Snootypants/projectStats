@@ -1,8 +1,12 @@
 import SwiftUI
 
+// MARK: - DORMANT — Old VIBE tab view, replaced by VIBE Window system.
+// The VIBE tab was removed from AppTab/TabContent in Prompt 20.
+// This file remains because it references shared Vibe components.
+// Safe to delete once VIBE Window is confirmed stable.
+
 struct VibeTabView: View {
     let projectPath: String
-    @EnvironmentObject var tabManager: TabManagerViewModel
 
     @StateObject private var viewModel: VibeChatViewModel
 
@@ -55,24 +59,8 @@ struct VibeTabView: View {
         VStack(spacing: 24) {
             Spacer()
 
-            // Back to code button
-            HStack {
-                Spacer()
-                Button {
-                    tabManager.toggleVibeMode()
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                        Text("Code")
-                            .font(.caption.bold())
-                    }
-                    .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-                .help("Switch to Code mode (Cmd+Shift+V)")
-                .padding(.trailing, 16)
-                .padding(.top, 8)
-            }
+            // Back to code button (DORMANT — toggleVibeMode removed)
+            EmptyView()
 
             Image(systemName: "bolt.fill")
                 .font(.system(size: 48))
