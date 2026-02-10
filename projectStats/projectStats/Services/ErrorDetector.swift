@@ -1,5 +1,7 @@
 import Foundation
 
+// FIXME: [DEAD CODE] ErrorDetector and DetectedError are never used anywhere in the app. Safe to delete.
+
 struct DetectedError: Identifiable {
     let id = UUID()
     let type: String

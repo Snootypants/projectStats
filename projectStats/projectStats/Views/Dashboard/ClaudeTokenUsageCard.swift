@@ -1,5 +1,7 @@
 import SwiftUI
 
+// FIXME: [DEAD CODE] ClaudeTokenUsageCard is defined but never integrated into any dashboard or view hierarchy.
+
 struct ClaudeTokenUsageCard: View {
     @ObservedObject var usageService = ClaudeUsageService.shared
     var projectPath: String? = nil  // nil = show global stats
