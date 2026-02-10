@@ -7,7 +7,7 @@ struct VibeTabView: View {
 
     init(projectPath: String) {
         self.projectPath = projectPath
-        self._viewModel = StateObject(wrappedValue: VibeChatViewModel(projectPath: projectPath))
+        self._viewModel = StateObject(wrappedValue: VibeChatViewModelStore.shared.viewModel(for: projectPath))
     }
 
     private var projectName: String {

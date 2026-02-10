@@ -1,6 +1,22 @@
 import Foundation
 import SwiftUI
 
+/// Shared store that keeps VibeChatViewModel instances alive across tab switches
+@MainActor
+final class VibeChatViewModelStore {
+    static let shared = VibeChatViewModelStore()
+    private var viewModels: [String: VibeChatViewModel] = [:]
+
+    func viewModel(for projectPath: String) -> VibeChatViewModel {
+        if let existing = viewModels[projectPath] {
+            return existing
+        }
+        let vm = VibeChatViewModel(projectPath: projectPath)
+        viewModels[projectPath] = vm
+        return vm
+    }
+}
+
 @MainActor
 final class VibeChatViewModel: ObservableObject {
     let projectPath: String
