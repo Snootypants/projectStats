@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */; };
+		01000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */; };
+		01000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */; };
+		01000000000000000000D002 /* projectStats/Services/Claude/ConversationChunker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000D002 /* projectStats/Services/Claude/ConversationChunker.swift */; };
+		01000000000000000000D001 /* projectStats/Models/Claude/ConversationChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000D001 /* projectStats/Models/Claude/ConversationChunk.swift */; };
 		01000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift */; };
 		010000000000000000000001 /* ProjectStatsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000001 /* ProjectStatsApp.swift */; };
 		010000000000000000000002 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* Shell.swift */; };
@@ -189,6 +194,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/VectorStore.swift; sourceTree = "<group>"; };
+		02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/StoredEmbedding.swift; sourceTree = "<group>"; };
+		02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/EmbeddingService.swift; sourceTree = "<group>"; };
+		02000000000000000000D002 /* projectStats/Services/Claude/ConversationChunker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/ConversationChunker.swift; sourceTree = "<group>"; };
+		02000000000000000000D001 /* projectStats/Models/Claude/ConversationChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/ConversationChunk.swift; sourceTree = "<group>"; };
 		02000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/SessionHistoryView.swift; sourceTree = "<group>"; };
 		020000000000000000000001 /* ProjectStatsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStatsApp.swift; sourceTree = "<group>"; };
 		020000000000000000000002 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
@@ -679,6 +689,11 @@
 				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
 				020000000000000000000191 /* projectStats/Models/PromptExecution.swift */,
 				020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */,
+				02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */,
+				02000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift */,
+				02000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift */,
+				02000000000000000000D002 /* projectStats/Services/Claude/ConversationChunker.swift */,
+				02000000000000000000D001 /* projectStats/Models/Claude/ConversationChunk.swift */,
 				020000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift */,
 				020000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift */,
 				020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */,
@@ -931,6 +946,11 @@
 				010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */,
 				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
 				010000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift in Sources */,
+				01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */,
+				01000000000000000000F001 /* projectStats/Models/Claude/StoredEmbedding.swift in Sources */,
+				01000000000000000000E001 /* projectStats/Services/Claude/EmbeddingService.swift in Sources */,
+				01000000000000000000D002 /* projectStats/Services/Claude/ConversationChunker.swift in Sources */,
+				01000000000000000000D001 /* projectStats/Models/Claude/ConversationChunk.swift in Sources */,
 				01000000000000000000B001 /* projectStats/Views/Vibe/SessionHistoryView.swift in Sources */,
 				010000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift in Sources */,
 				010000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift in Sources */,

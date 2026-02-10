@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 enum EmbeddingError: LocalizedError {
     case missingAPIKey
@@ -37,7 +38,7 @@ final class EmbeddingService {
 
         // Batch in groups of 100
         let batchSize = 100
-        for batchStart in stride(from: 0, to: texts.count, through: batchSize) {
+        for batchStart in stride(from: 0, to: texts.count, by: batchSize) {
             let batchEnd = min(batchStart + batchSize, texts.count)
             let batch = Array(texts[batchStart..<batchEnd])
 
