@@ -225,7 +225,7 @@ final class ClaudePlanUsageService: ObservableObject {
 
         let context = AppModelContainer.shared.mainContext
         context.insert(snapshot)
-        try? context.save()
+        context.safeSave()
 
         Log.claude.info("[ClaudePlanUsage] Hourly snapshot saved: 5h=\(Int(self.fiveHourUtilization * 100))%")
     }
@@ -246,7 +246,7 @@ final class ClaudePlanUsageService: ObservableObject {
 
         let context = AppModelContainer.shared.mainContext
         context.insert(snapshot)
-        try? context.save()
+        context.safeSave()
     }
 
     func getSnapshots(since date: Date) -> [ClaudePlanUsageSnapshot] {

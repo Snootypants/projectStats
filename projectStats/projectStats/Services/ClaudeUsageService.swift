@@ -266,7 +266,7 @@ class ClaudeUsageService: ObservableObject {
 
         let context = AppModelContainer.shared.mainContext
         context.insert(snapshot)
-        try? context.save()
+        context.safeSave()
     }
 
     // MARK: - Formatted Output

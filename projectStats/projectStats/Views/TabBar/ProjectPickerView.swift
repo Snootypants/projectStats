@@ -143,7 +143,7 @@ struct ProjectPickerView: View {
                     lastScanned: Date()
                 )
                 context.insert(cached)
-                try? context.save()
+                context.safeSave()
             }
 
             Task {

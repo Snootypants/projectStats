@@ -215,7 +215,7 @@ final class TimeTrackingService: ObservableObject {
     private func saveEntry(_ entry: TimeEntry) {
         let context = AppModelContainer.shared.mainContext
         context.insert(entry)
-        try? context.save()
+        context.safeSave()
     }
 
     func refreshTotals() {

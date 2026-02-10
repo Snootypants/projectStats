@@ -112,7 +112,7 @@ final class MessagingService: ObservableObject {
             handled: direction == "incoming"
         )
         context.insert(message)
-        try? context.save()
+        context.safeSave()
     }
 
     private func handleRemoteCommand(_ text: String) async {

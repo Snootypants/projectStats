@@ -114,6 +114,10 @@ struct ProjectStatsApp: App {
                 .task {
                     guard !hasMigrated else { return }
                     hasMigrated = true
+
+                    // Back up store before any migrations
+                    DataBackupService.shared.backupStore()
+
                     let context = AppModelContainer.shared.mainContext
                     await DataMigrationService.shared.migrateIfNeeded(modelContext: context)
                     await DBv2MigrationService.shared.migrateIfNeeded(context: context)
@@ -183,7 +187,7 @@ private func seedDefaultTemplateIfNeeded(context: ModelContext) {
         isDefault: true
     )
     context.insert(template)
-    try? context.save()
+    context.safeSave()
     Log.lifecycle.info("[App] Seeded default prompt template")
 }
 

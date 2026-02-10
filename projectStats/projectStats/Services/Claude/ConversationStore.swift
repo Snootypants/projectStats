@@ -60,7 +60,7 @@ final class ConversationStore {
 
         let context = AppModelContainer.shared.mainContext
         context.insert(session)
-        try? context.save()
+        context.safeSave()
 
         // Trigger memory pipeline in background
         Task {

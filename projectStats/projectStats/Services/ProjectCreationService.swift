@@ -97,7 +97,7 @@ final class ProjectCreationService {
             lastScanned: Date()
         )
         context.insert(cached)
-        try? context.save()
+        context.safeSave()
 
         return projectURL
     }
@@ -122,7 +122,7 @@ final class ProjectCreationService {
             lastScanned: Date()
         )
         context.insert(cached)
-        try? context.save()
+        context.safeSave()
     }
 
     /// Terminal command for Next.js (to be sent to workspace terminal)

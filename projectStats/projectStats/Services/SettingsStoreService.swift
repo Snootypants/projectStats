@@ -51,7 +51,7 @@ class SettingsStoreService: ObservableObject {
         } else {
             context.insert(AppSetting(key: key, value: value))
         }
-        try? context.save()
+        context.safeSave()
     }
 
     func set(_ key: String, value: Bool) { set(key, value: String(value)) }

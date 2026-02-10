@@ -15,7 +15,7 @@ final class ProjectArchiveService {
 
         project.isArchived = true
         project.archivedAt = Date()
-        try? context.save()
+        context.safeSave()
     }
 
     func restoreProject(_ path: String, context: ModelContext) {
@@ -26,7 +26,7 @@ final class ProjectArchiveService {
 
         project.isArchived = false
         project.archivedAt = nil
-        try? context.save()
+        context.safeSave()
     }
 
     func getArchivedProjects(context: ModelContext) -> [CachedProject] {

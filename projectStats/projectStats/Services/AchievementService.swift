@@ -46,7 +46,7 @@ final class AchievementService: ObservableObject {
         let context = AppModelContainer.shared.mainContext
         let unlock = AchievementUnlock(key: achievement.rawValue, unlockedAt: Date(), projectPath: projectPath)
         context.insert(unlock)
-        try? context.save()
+        context.safeSave()
 
         reportToGameCenter(achievement)
     }

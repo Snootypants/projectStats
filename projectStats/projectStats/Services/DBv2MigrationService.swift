@@ -85,7 +85,7 @@ final class DBv2MigrationService {
             context.insert(metric)
         }
 
-        try? context.save()
+        context.safeSave()
         Log.data.info("[DBv2Migration] Migrated \(grouped.count) project daily metrics")
     }
 
@@ -129,7 +129,7 @@ final class DBv2MigrationService {
             context.insert(session)
         }
 
-        try? context.save()
+        context.safeSave()
         Log.data.info("[DBv2Migration] Migrated \(grouped.count) sessions from time entries")
     }
 

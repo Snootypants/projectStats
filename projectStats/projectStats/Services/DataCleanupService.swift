@@ -41,7 +41,7 @@ class DataCleanupService {
         }
 
         if movedCount > 0 {
-            try? context.save()
+            context.safeSave()
             Log.data.info("[DataCleanup] Moved \(movedCount) diffs from SavedPrompt to SavedDiff")
         }
 

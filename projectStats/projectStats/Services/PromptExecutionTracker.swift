@@ -36,7 +36,7 @@ final class PromptExecutionTracker: ObservableObject {
 
         let context = AppModelContainer.shared.mainContext
         context.insert(execution)
-        try? context.save()
+        context.safeSave()
 
         activeExecutions[projectPath] = execution.id
     }
@@ -64,7 +64,7 @@ final class PromptExecutionTracker: ObservableObject {
                 durationSeconds: durationSeconds,
                 commitCount: nil
             )
-            try? context.save()
+            context.safeSave()
 
             activeExecutions.removeValue(forKey: projectPath)
         }
