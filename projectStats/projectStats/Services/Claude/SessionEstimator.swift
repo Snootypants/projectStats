@@ -14,6 +14,7 @@ final class SessionEstimator {
         let p75Cost: Double
         let medianTokens: Int
         let sampleSize: Int
+        let isGlobal: Bool
 
         var formattedMedianDuration: String {
             formatDuration(medianDurationMs)
@@ -39,7 +40,7 @@ final class SessionEstimator {
         }
     }
 
-    /// Get estimate for a project based on its history
+    /// Get estimate for a project based on its history, falls back to global
     func estimate(projectPath: String) -> Estimate? {
         let context = AppModelContainer.shared.mainContext
         let path = projectPath
@@ -49,21 +50,12 @@ final class SessionEstimator {
         )
         descriptor.fetchLimit = 50
 
-        guard let sessions = try? context.fetch(descriptor),
-              sessions.count >= 3 else { return nil }
+        if let sessions = try? context.fetch(descriptor), sessions.count >= 3 {
+            return buildEstimate(from: sessions, isGlobal: false)
+        }
 
-        let durations = sessions.map(\.durationMs).sorted()
-        let costs = sessions.map(\.costUsd).sorted()
-        let tokens = sessions.map(\.totalTokens).sorted()
-
-        return Estimate(
-            medianDurationMs: percentile(durations, p: 0.5),
-            p75DurationMs: percentile(durations, p: 0.75),
-            medianCost: percentileDouble(costs, p: 0.5),
-            p75Cost: percentileDouble(costs, p: 0.75),
-            medianTokens: percentile(tokens, p: 0.5),
-            sampleSize: sessions.count
-        )
+        // Fallback to global estimate for new/low-history projects
+        return globalEstimate()
     }
 
     /// Get estimate across all projects (global baseline)
@@ -77,6 +69,10 @@ final class SessionEstimator {
         guard let sessions = try? context.fetch(descriptor),
               sessions.count >= 3 else { return nil }
 
+        return buildEstimate(from: sessions, isGlobal: true)
+    }
+
+    private func buildEstimate(from sessions: [ConversationSession], isGlobal: Bool) -> Estimate {
         let durations = sessions.map(\.durationMs).sorted()
         let costs = sessions.map(\.costUsd).sorted()
         let tokens = sessions.map(\.totalTokens).sorted()
@@ -87,7 +83,8 @@ final class SessionEstimator {
             medianCost: percentileDouble(costs, p: 0.5),
             p75Cost: percentileDouble(costs, p: 0.75),
             medianTokens: percentile(tokens, p: 0.5),
-            sampleSize: sessions.count
+            sampleSize: sessions.count,
+            isGlobal: isGlobal
         )
     }
 

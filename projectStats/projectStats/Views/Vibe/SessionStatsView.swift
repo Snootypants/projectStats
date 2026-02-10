@@ -60,7 +60,7 @@ struct SessionStatsView: View {
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    Text("Based on \(estimate.sampleSize) sessions")
+                    Text("Based on \(estimate.sampleSize) sessions\(estimate.isGlobal ? " (all projects)" : "")")
                         .font(.caption2)
                         .foregroundStyle(.quaternary)
                 }
