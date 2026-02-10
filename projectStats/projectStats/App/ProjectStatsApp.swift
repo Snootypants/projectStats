@@ -33,7 +33,6 @@ enum AppModelContainer {
             // Prompt Execution Tracking
             PromptExecution.self,
             // Vibe Tab
-            VibeConversation.self,
             ConversationSession.self,
             // Settings Store
             AppSetting.self

@@ -11,8 +11,6 @@
 		010000000000000000000002 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* Shell.swift */; };
 		010000000000000000000003 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000003 /* DateExtensions.swift */; };
 		010000000000000000000197 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000197 /* ColorExtensions.swift */; };
-		010000000000000000000198 /* projectStats/Models/VibeConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000198 /* projectStats/Models/VibeConversation.swift */; };
-		010000000000000000000199 /* projectStats/Services/VibeConversationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */; };
 		010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */; };
 		010000000000000000000204 /* projectStats/Services/XPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000204 /* projectStats/Services/XPService.swift */; };
 		010000000000000000000206 /* String+ANSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000206 /* String+ANSI.swift */; };
@@ -176,7 +174,6 @@
 		010000000000000000000208 /* HomePageV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000208 /* HomePageV2View.swift */; };
 		010000000000000000000209 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000209 /* AppSetting.swift */; };
 		010000000000000000000210 /* SettingsStoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000210 /* SettingsStoreService.swift */; };
-		010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */; };
 		010000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift */; };
 		010000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift */; };
 		010000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */; };
@@ -195,8 +192,6 @@
 		020000000000000000000002 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		020000000000000000000003 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		020000000000000000000197 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
-		020000000000000000000198 /* projectStats/Models/VibeConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/VibeConversation.swift; sourceTree = "<group>"; };
-		020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeConversationService.swift; sourceTree = "<group>"; };
 		020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Vibe/VibeTabView.swift; sourceTree = "<group>"; };
 		020000000000000000000204 /* projectStats/Services/XPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/XPService.swift; sourceTree = "<group>"; };
 		020000000000000000000206 /* String+ANSI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ANSI.swift"; sourceTree = "<group>"; };
@@ -361,7 +356,6 @@
 		020000000000000000000210 /* SettingsStoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreService.swift; sourceTree = "<group>"; };
 		030000000000000000000001 /* projectStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		030000000000000000000002 /* projectStats.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectStats.entitlements; sourceTree = "<group>"; };
-		020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/VibeProcessBridge.swift; sourceTree = "<group>"; };
 		020000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/ClaudeEvent.swift; sourceTree = "<group>"; };
 		020000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Models/Claude/VibeChatMessage.swift; sourceTree = "<group>"; };
 		020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/Claude/ClaudeProcessManager.swift; sourceTree = "<group>"; };
@@ -682,15 +676,12 @@
 				020000000000000000000180 /* projectStats/Views/Dashboard/V5/V5GameCards.swift */,
 				020000000000000000000181 /* projectStats/Models/PromptTemplate.swift */,
 				020000000000000000000191 /* projectStats/Models/PromptExecution.swift */,
-				020000000000000000000198 /* projectStats/Models/VibeConversation.swift */,
 				020000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift */,
 				020000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift */,
 				020000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift */,
 				020000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift */,
 				020000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift */,
 				020000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift */,
-				020000000000000000000199 /* projectStats/Services/VibeConversationService.swift */,
-				020000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift */,
 				020000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift */,
 				020000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift */,
 				020000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift */,
@@ -936,15 +927,12 @@
 				010000000000000000000188 /* projectStats/Services/AgentTeamsService.swift in Sources */,
 				010000000000000000000191 /* projectStats/Models/PromptExecution.swift in Sources */,
 				010000000000000000000193 /* SwarmTestPrompt.swift in Sources */,
-				010000000000000000000198 /* projectStats/Models/VibeConversation.swift in Sources */,
-				010000000000000000000199 /* projectStats/Services/VibeConversationService.swift in Sources */,
 				010000000000000000000310 /* projectStats/Services/Claude/ConversationStore.swift in Sources */,
 				010000000000000000000309 /* projectStats/Models/Claude/ConversationSession.swift in Sources */,
 				010000000000000000000303 /* projectStats/ViewModels/VibeChatViewModel.swift in Sources */,
 				010000000000000000000302 /* projectStats/Services/Claude/ClaudeProcessManager.swift in Sources */,
 				010000000000000000000301 /* projectStats/Models/Claude/VibeChatMessage.swift in Sources */,
 				010000000000000000000300 /* projectStats/Models/Claude/ClaudeEvent.swift in Sources */,
-				010000000000000000000205 /* projectStats/Services/VibeProcessBridge.swift in Sources */,
 				010000000000000000000200 /* projectStats/Views/Vibe/VibeTabView.swift in Sources */,
 				010000000000000000000308 /* projectStats/Views/Vibe/ChatInputView.swift in Sources */,
 				010000000000000000000307 /* projectStats/Views/Vibe/SessionStatsView.swift in Sources */,

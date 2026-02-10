@@ -1,5 +1,59 @@
 import SwiftUI
 
+/// Lightweight shell process for DocBuilder — replaces old VibeProcessBridge (SwiftTerm).
+/// Uses Foundation Process + Pipe to run a login shell and send commands.
+@MainActor
+private final class DocProcessBridge {
+    private var process: Process?
+    private var stdinPipe: Pipe?
+    private var onOutput: ((String) -> Void)?
+
+    func start(directory: String, onOutput: @escaping (String) -> Void) {
+        guard process == nil else { return }
+        self.onOutput = onOutput
+
+        let proc = Process()
+        let stdin = Pipe()
+        let stdout = Pipe()
+
+        proc.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        let escaped = directory.replacingOccurrences(of: "'", with: "'\\''")
+        proc.arguments = ["-l", "-c", "cd '\(escaped)'; exec /bin/zsh -l"]
+        proc.standardInput = stdin
+        proc.standardOutput = stdout
+        proc.standardError = stdout // merge stderr into stdout
+
+        stdout.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            let data = handle.availableData
+            guard !data.isEmpty, let text = String(data: data, encoding: .utf8) else { return }
+            Task { @MainActor [weak self] in
+                self?.onOutput?(text)
+            }
+        }
+
+        do {
+            try proc.run()
+            self.process = proc
+            self.stdinPipe = stdin
+        } catch {
+            print("[DocProcessBridge] Failed to start: \(error)")
+        }
+    }
+
+    func sendRaw(_ bytes: [UInt8]) {
+        guard let pipe = stdinPipe else { return }
+        pipe.fileHandleForWriting.write(Data(bytes))
+    }
+
+    func stop() {
+        stdinPipe?.fileHandleForWriting.closeFile()
+        process?.terminate()
+        process = nil
+        stdinPipe = nil
+        onOutput = nil
+    }
+}
+
 struct DocBuilderSheet: View {
     let project: Project
     @Environment(\.dismiss) private var dismiss
@@ -48,7 +102,7 @@ struct DocBuilderSheet: View {
     // Progress
     @State private var isBuilding = false
     @State private var buildProgress: [(name: String, status: DocBuildStatus)] = []
-    @State private var bridge: VibeProcessBridge?
+    @State private var bridge: DocProcessBridge?
 
     enum DocBuildStatus: Equatable {
         case pending, building, done, failed
@@ -396,6 +450,14 @@ struct DocBuilderSheet: View {
 
     // MARK: - Build Logic
 
+    /// Shared buffer that both the output closure and async polling can safely access on @MainActor.
+    private final class OutputBuffer {
+        var text = ""
+        func clear() { text = "" }
+    }
+
+    private static let sentinel = "___DOC_DONE___"
+
     private func startBuild() {
         let docs = selectedDocs
         guard !docs.isEmpty else { return }
@@ -407,16 +469,16 @@ struct DocBuilderSheet: View {
         let useSwarm = AgentTeamsService.isSwarmEnabled(for: projectDir)
 
         Task {
-            let vpb = VibeProcessBridge()
+            let dpb = DocProcessBridge()
+            let buffer = OutputBuffer()
 
-            var outputBuffer = ""
-            vpb.start(directory: projectDir) { text in
-                outputBuffer += text
+            dpb.start(directory: projectDir) { text in
+                buffer.text += text
             }
-            bridge = vpb
+            bridge = dpb
 
-            // Give shell time to initialize
-            try? await Task.sleep(nanoseconds: 500_000_000)
+            // Give shell time to fully initialize (login shell sources rc files)
+            try? await Task.sleep(for: .seconds(2))
 
             if useSwarm {
                 // Swarm mode: single prompt telling Claude to use Task tool for parallel workers
@@ -427,9 +489,9 @@ struct DocBuilderSheet: View {
                 and based on actual code. Do not hallucinate. For reports, save to docs/reports/ subdirectory.
                 """
                 markAllBuilding()
-                vpb.send("claude \"\(prompt.replacingOccurrences(of: "\"", with: "\\\""))\"")
-                // Monitor for completion
-                await monitorCompletion(docs: docs, buffer: &outputBuffer)
+                let escaped = prompt.replacingOccurrences(of: "'", with: "'\\''")
+                dpb.sendRaw([0x15] + Array("claude -p '\(escaped)' --dangerously-skip-permissions; echo '\(Self.sentinel)'\r".utf8))
+                await monitorCompletion(docs: docs, buffer: buffer)
             } else {
                 // Sequential mode: one doc at a time
                 for (index, doc) in docs.enumerated() {
@@ -439,16 +501,16 @@ struct DocBuilderSheet: View {
                     let subdir = isReport(doc) ? "docs/reports" : "docs"
                     let prompt = buildPrompt(for: doc, subdir: subdir)
 
-                    outputBuffer = ""
-                    vpb.send("claude \"\(prompt.replacingOccurrences(of: "\"", with: "\\\""))\"")
+                    buffer.clear()
+                    let escaped = prompt.replacingOccurrences(of: "'", with: "'\\''")
+                    dpb.sendRaw([0x15] + Array("claude -p '\(escaped)' --dangerously-skip-permissions; echo '\(Self.sentinel)'\r".utf8))
 
-                    // Wait for Claude to finish (look for shell prompt return)
-                    await waitForCompletion(buffer: &outputBuffer)
+                    await waitForCompletion(buffer: buffer)
                     updateStatus(index: index, status: .done)
                 }
             }
 
-            vpb.stop()
+            dpb.stop()
             bridge = nil
             isBuilding = false
         }
@@ -484,45 +546,35 @@ struct DocBuilderSheet: View {
         buildProgress[index].status = status
     }
 
-    private func waitForCompletion(buffer: inout String) async {
-        // Poll for shell prompt return (indicates Claude finished)
+    private func waitForCompletion(buffer: OutputBuffer) async {
         let start = Date()
         let timeout: TimeInterval = 300 // 5 min max per doc
         while isBuilding {
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            try? await Task.sleep(for: .seconds(1))
             if Date().timeIntervalSince(start) > timeout { break }
-            // Check if output contains a shell prompt ($ or %) indicating Claude is done
-            if buffer.hasSuffix("$ ") || buffer.hasSuffix("% ") ||
-               buffer.contains("\n$ ") || buffer.contains("\n% ") {
-                // Give a brief pause for any trailing output
-                try? await Task.sleep(nanoseconds: 500_000_000)
-                break
-            }
+            if buffer.text.contains(Self.sentinel) { break }
         }
     }
 
-    private func monitorCompletion(docs: [String], buffer: inout String) async {
+    private func monitorCompletion(docs: [String], buffer: OutputBuffer) async {
         let start = Date()
         let timeout: TimeInterval = 600 // 10 min for swarm
         while isBuilding {
-            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            try? await Task.sleep(for: .seconds(2))
             if Date().timeIntervalSince(start) > timeout { break }
 
             // Check each doc for file write confirmation in output
             for (index, doc) in docs.enumerated() {
                 if buildProgress[index].status == .building {
-                    if buffer.contains(doc) && (buffer.contains("Created") || buffer.contains("wrote") || buffer.contains("generated")) {
+                    if buffer.text.contains(doc) && (buffer.text.contains("Created") || buffer.text.contains("wrote") || buffer.text.contains("generated")) {
                         updateStatus(index: index, status: .done)
                     }
                 }
             }
 
-            // Check if all done
+            // Check if all done or sentinel appeared (Claude exited)
             if buildProgress.allSatisfy({ $0.status == .done }) { break }
-
-            // Check for shell prompt (all work complete)
-            if buffer.hasSuffix("$ ") || buffer.hasSuffix("% ") {
-                // Mark remaining as done
+            if buffer.text.contains(Self.sentinel) {
                 for i in buildProgress.indices where buildProgress[i].status == .building {
                     updateStatus(index: i, status: .done)
                 }
