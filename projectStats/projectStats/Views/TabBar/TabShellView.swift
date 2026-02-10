@@ -108,6 +108,9 @@ struct TabShellView: View {
 
         case .projectWorkspace(let path):
             WorkspaceView(projectPath: path)
+
+        case .vibe(let path):
+            VibeTabView(projectPath: path)
         }
     }
 

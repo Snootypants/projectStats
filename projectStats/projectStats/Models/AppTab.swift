@@ -5,12 +5,14 @@ enum TabContent: Equatable {
     case home
     case projectPicker
     case projectWorkspace(projectPath: String)
+    case vibe(projectPath: String)
 
     static func == (lhs: TabContent, rhs: TabContent) -> Bool {
         switch (lhs, rhs) {
         case (.home, .home): return true
         case (.projectPicker, .projectPicker): return true
         case (.projectWorkspace(let a), .projectWorkspace(let b)): return a == b
+        case (.vibe(let a), .vibe(let b)): return a == b
         default: return false
         }
     }
@@ -29,6 +31,8 @@ struct AppTab: Identifiable, Equatable {
         case .projectPicker: return "Projects"
         case .projectWorkspace(let path):
             return URL(fileURLWithPath: path).lastPathComponent
+        case .vibe(let path):
+            return "Vibe - \(URL(fileURLWithPath: path).lastPathComponent)"
         }
     }
 
@@ -38,6 +42,7 @@ struct AppTab: Identifiable, Equatable {
         case .home: return "house.fill"
         case .projectPicker: return "square.grid.2x2"
         case .projectWorkspace: return "folder.fill"
+        case .vibe: return "bolt.fill"
         }
     }
 
