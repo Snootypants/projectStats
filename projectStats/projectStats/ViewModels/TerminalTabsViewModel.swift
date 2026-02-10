@@ -31,7 +31,7 @@ final class TerminalTabItem: ObservableObject, Identifiable {
     var isGhost: Bool
     var startTime: Date?
 
-    /// Optional callback for routing output to external consumers (e.g. VibeTerminalBridge)
+    /// Optional callback for routing output to external consumers
     var onOutputCallback: ((String) -> Void)?
 
     // AI Provider settings for this tab

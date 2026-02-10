@@ -23,7 +23,7 @@ final class VibeProcessHandler: LocalProcessDelegate {
 }
 
 /// Manages a headless shell process using LocalProcess directly.
-/// Replaces the broken hidden-NSView approach (VibeTerminalHostView).
+/// NOTE: Kept for DocBuilderSheet compatibility. The new VIBE tab uses ClaudeProcessManager instead.
 @MainActor
 final class VibeProcessBridge: ObservableObject {
     @Published var isRunning = false
