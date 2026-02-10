@@ -461,5 +461,14 @@ final class VibeChatViewModel: ObservableObject {
             title: "VIBE Session Complete",
             message: "\(projectName) — \(duration), \(cost), \(tokens) tokens"
         )
+
+        // Send via configured messaging provider (Telegram/Discord/Slack/ntfy)
+        let messagingText = resultEvent.isError
+            ? "VIBE session failed — \(projectName)\n\(duration), \(cost)"
+            : "VIBE session done — \(projectName)\n\(duration), \(cost), \(tokens) tokens"
+
+        Task {
+            await MessagingService.shared.send(message: messagingText, projectPath: projectPath)
+        }
     }
 }
