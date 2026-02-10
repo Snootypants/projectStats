@@ -40,7 +40,7 @@ struct SessionStatsView: View {
 
                 // Timer
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Elapsed")
+                    Text("Active")
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                     Text(formattedTime)

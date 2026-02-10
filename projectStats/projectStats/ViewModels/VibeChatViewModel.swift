@@ -31,11 +31,14 @@ final class VibeChatViewModel: ObservableObject {
     @Published var isThinking: Bool = false
     @Published var autoApproveAll: Bool = false
 
-    // Live token tracking (accumulated from assistant message usage)
+    // Cumulative token tracking (from result events — accurate totals across all exchanges)
     @Published var liveInputTokens: Int = 0
     @Published var liveOutputTokens: Int = 0
     @Published var liveCacheReadTokens: Int = 0
     @Published var liveCacheCreationTokens: Int = 0
+
+    // Cumulative active time across all exchanges
+    private var cumulativeActiveTime: TimeInterval = 0
 
     @AppStorage(AppStorageKeys.vibePermissionMode) var permissionMode: String = PermissionMode.sansFlavor.rawValue
 
@@ -144,6 +147,7 @@ final class VibeChatViewModel: ObservableObject {
         messages = []
         toolCallCount = 0
         elapsedTime = 0
+        cumulativeActiveTime = 0
         rawLines = []
         toolUseIdToMessageIndex = [:]
         autoApproveAll = false
@@ -294,12 +298,7 @@ final class VibeChatViewModel: ObservableObject {
             sessionStartTime = Date()
             rawLines = []
             toolUseIdToMessageIndex = [:]
-            toolCallCount = 0
-            elapsedTime = 0
-            liveInputTokens = 0
-            liveOutputTokens = 0
-            liveCacheReadTokens = 0
-            liveCacheCreationTokens = 0
+            // Don't reset token counters or elapsed — they accumulate across exchanges
             startTimer()
 
             // Build context, start process, then send the first message
@@ -361,7 +360,7 @@ final class VibeChatViewModel: ObservableObject {
             case .system:
                 sessionState = .running
 
-            case .assistantText(let text, _, let usage):
+            case .assistantText(let text, _, _):
                 // Append to last assistant message or create new one
                 if let lastIdx = messages.indices.last,
                    case .text(let existing) = messages[lastIdx].content,
@@ -369,13 +368,6 @@ final class VibeChatViewModel: ObservableObject {
                     messages[lastIdx].content = .text(existing + text)
                 } else {
                     messages.append(.fromAssistantText(text))
-                }
-                // Accumulate live tokens
-                if let u = usage {
-                    liveInputTokens += u.inputTokens ?? 0
-                    liveOutputTokens += u.outputTokens ?? 0
-                    liveCacheReadTokens += u.cacheReadInputTokens ?? 0
-                    liveCacheCreationTokens += u.cacheCreationInputTokens ?? 0
                 }
                 isThinking = true
 
@@ -402,6 +394,14 @@ final class VibeChatViewModel: ObservableObject {
                 sessionState = .done
                 isThinking = false
                 stopTimer()
+                // Accumulate accurate totals from the result event
+                liveInputTokens += resultEvent.inputTokens
+                liveOutputTokens += resultEvent.outputTokens
+                liveCacheReadTokens += resultEvent.cacheReadTokens
+                liveCacheCreationTokens += resultEvent.cacheCreationTokens
+                // Accumulate active time
+                cumulativeActiveTime += TimeInterval(resultEvent.durationMs) / 1000.0
+                elapsedTime = cumulativeActiveTime
                 saveSession(resultEvent: resultEvent)
 
             case .error(let msg):
@@ -418,7 +418,7 @@ final class VibeChatViewModel: ObservableObject {
         sessionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self, let start = self.sessionStartTime else { return }
-                self.elapsedTime = Date().timeIntervalSince(start)
+                self.elapsedTime = self.cumulativeActiveTime + Date().timeIntervalSince(start)
             }
         }
     }
