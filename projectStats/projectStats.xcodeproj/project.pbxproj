@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		01000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */; };
+		01000000000000000000J001 /* projectStats/Services/ProjectSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000J001 /* projectStats/Services/ProjectSyncService.swift */; };
+		01000000000000000000J002 /* projectStats/Services/ActivityCalculationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000J002 /* projectStats/Services/ActivityCalculationService.swift */; };
+		01000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift */; };
 		01000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000H001 /* projectStats/Services/Claude/ContextBuilder.swift */; };
 		01000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000G001 /* projectStats/Services/Claude/MemoryPipeline.swift */; };
 		01000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000F002 /* projectStats/Services/Claude/VectorStore.swift */; };
@@ -357,6 +360,9 @@
 		020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/SubscriptionManager.swift; sourceTree = "<group>"; };
 		020000000000000000000159 /* projectStats/Utilities/Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/Logger.swift; sourceTree = "<group>"; };
 		02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Utilities/AppStorageKeys.swift; sourceTree = "<group>"; };
+		02000000000000000000J001 /* projectStats/Services/ProjectSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ProjectSyncService.swift; sourceTree = "<group>"; };
+		02000000000000000000J002 /* projectStats/Services/ActivityCalculationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/ActivityCalculationService.swift; sourceTree = "<group>"; };
+		02000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Services/GitHubSyncService.swift; sourceTree = "<group>"; };
 		020000000000000000000160 /* projectStats/Views/Settings/TerminalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Settings/TerminalSettings.swift; sourceTree = "<group>"; };
 		020000000000000000000167 /* projectStats/Views/Dashboard/V5/HomePageV5View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/HomePageV5View.swift; sourceTree = "<group>"; };
 		020000000000000000000176 /* projectStats/Views/Dashboard/V5/V5XPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectStats/Views/Dashboard/V5/V5XPHeader.swift; sourceTree = "<group>"; };
@@ -625,6 +631,9 @@
 				020000000000000000000158 /* projectStats/Services/SubscriptionManager.swift */,
 				020000000000000000000080 /* projectStats/Services/TelegramProvider.swift */,
 				020000000000000000000081 /* projectStats/Services/TimeTrackingService.swift */,
+				02000000000000000000J001 /* projectStats/Services/ProjectSyncService.swift */,
+				02000000000000000000J002 /* projectStats/Services/ActivityCalculationService.swift */,
+				02000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift */,
 				020000000000000000000083 /* projectStats/Utilities/NotificationNames.swift */,
 				020000000000000000000159 /* projectStats/Utilities/Logger.swift */,
 				02000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift */,
@@ -877,6 +886,9 @@
 				010000000000000000000158 /* projectStats/Services/SubscriptionManager.swift in Sources */,
 				010000000000000000000080 /* projectStats/Services/TelegramProvider.swift in Sources */,
 				010000000000000000000081 /* projectStats/Services/TimeTrackingService.swift in Sources */,
+				01000000000000000000J001 /* projectStats/Services/ProjectSyncService.swift in Sources */,
+				01000000000000000000J002 /* projectStats/Services/ActivityCalculationService.swift in Sources */,
+				01000000000000000000J003 /* projectStats/Services/GitHubSyncService.swift in Sources */,
 				010000000000000000000083 /* projectStats/Utilities/NotificationNames.swift in Sources */,
 				010000000000000000000159 /* projectStats/Utilities/Logger.swift in Sources */,
 				01000000000000000000I002 /* projectStats/Utilities/AppStorageKeys.swift in Sources */,
