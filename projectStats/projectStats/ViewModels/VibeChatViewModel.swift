@@ -196,6 +196,7 @@ final class VibeChatViewModel: ObservableObject {
                 sessionState = .done
                 isThinking = false
                 stopTimer()
+                saveSession(resultEvent: resultEvent)
 
             case .error(let msg):
                 messages.append(.fromError(msg))
@@ -219,5 +220,18 @@ final class VibeChatViewModel: ObservableObject {
     private func stopTimer() {
         sessionTimer?.invalidate()
         sessionTimer = nil
+    }
+
+    private func saveSession(resultEvent: ResultEvent) {
+        ConversationStore.shared.saveSession(
+            projectPath: projectPath,
+            sessionId: resultEvent.sessionId,
+            messages: messages,
+            rawLines: rawLines,
+            toolBreakdown: toolBreakdown,
+            costUsd: resultEvent.costUsd,
+            durationMs: resultEvent.durationMs,
+            numTurns: resultEvent.numTurns
+        )
     }
 }
