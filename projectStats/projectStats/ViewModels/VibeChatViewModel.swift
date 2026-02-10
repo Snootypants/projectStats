@@ -85,6 +85,12 @@ final class VibeChatViewModel: ObservableObject {
     // MARK: - Session Control
 
     func startSession(appendSystemPrompt: String? = nil) {
+        // Prevent double-starts while process is launching
+        if sessionState == .running || sessionState == .thinking {
+            print("[VibeChatVM] Already running, ignoring startSession()")
+            return
+        }
+
         messages = []
         toolCallCount = 0
         elapsedTime = 0
@@ -92,6 +98,7 @@ final class VibeChatViewModel: ObservableObject {
         toolUseIdToMessageIndex = [:]
         autoApproveAll = false
         isReplayMode = false
+        sessionState = .running // Set immediately so Start button hides
         sessionStartTime = Date()
 
         startTimer()

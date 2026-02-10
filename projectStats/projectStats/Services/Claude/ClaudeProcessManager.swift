@@ -26,6 +26,7 @@ final class ClaudeProcessManager: ObservableObject {
     private var stderrPipe: Pipe?
     private var eventHandler: (([ClaudeEvent]) -> Void)?
     private var lineBuffer = ""
+    private var processGeneration: Int = 0 // Guards against stale termination handlers
 
     private let decoder = JSONDecoder()
 
@@ -79,6 +80,9 @@ final class ClaudeProcessManager: ObservableObject {
         }
 
         stop() // Clean up any existing session
+
+        processGeneration += 1
+        let currentGeneration = processGeneration
 
         self.eventHandler = onEvent
 
@@ -153,18 +157,22 @@ final class ClaudeProcessManager: ObservableObject {
             }
         }
 
-        // Handle process exit
+        // Handle process exit — only act if this is still the current process
         proc.terminationHandler = { [weak self] proc in
             print("[ClaudeProcess] Process exited with code \(proc.terminationStatus)")
             Task { @MainActor [weak self] in
+                guard let self, self.processGeneration == currentGeneration else {
+                    print("[ClaudeProcess] Ignoring stale termination handler (generation mismatch)")
+                    return
+                }
                 if proc.terminationStatus == 0 {
-                    self?.sessionState = .done
+                    self.sessionState = .done
                 } else {
                     let msg = "Process exited with code \(proc.terminationStatus)"
-                    self?.sessionState = .error(msg)
-                    self?.eventHandler?([.error(msg)])
+                    self.sessionState = .error(msg)
+                    self.eventHandler?([.error(msg)])
                 }
-                self?.cleanup()
+                self.cleanup()
             }
         }
 
