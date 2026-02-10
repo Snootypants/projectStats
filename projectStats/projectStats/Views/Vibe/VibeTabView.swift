@@ -90,6 +90,9 @@ struct VibeTabView: View {
                         .padding(.vertical, 12)
                 }
                 .buttonStyle(.borderedProminent)
+            } else if !viewModel.hasCheckedForClaude {
+                ProgressView("Locating Claude...")
+                    .font(.caption)
             } else {
                 VStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")

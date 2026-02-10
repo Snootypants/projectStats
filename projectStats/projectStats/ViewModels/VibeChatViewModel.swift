@@ -80,6 +80,10 @@ final class VibeChatViewModel: ObservableObject {
         processManager.claudeBinaryPath != nil
     }
 
+    var hasCheckedForClaude: Bool {
+        processManager.hasCheckedForClaude
+    }
+
     @Published var isReplayMode: Bool = false
 
     // MARK: - Session Control

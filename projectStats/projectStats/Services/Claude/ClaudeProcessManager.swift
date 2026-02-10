@@ -19,6 +19,7 @@ enum SessionState: Equatable {
 final class ClaudeProcessManager: ObservableObject {
     @Published var sessionState: SessionState = .idle
     @Published var claudeBinaryPath: String?
+    @Published var hasCheckedForClaude: Bool = false
 
     private var process: Process?
     private var stdinPipe: Pipe?
@@ -36,6 +37,8 @@ final class ClaudeProcessManager: ObservableObject {
 
     /// Locate the claude binary
     func locateClaude() async {
+        defer { hasCheckedForClaude = true }
+
         // Try `which claude` first via login shell so PATH is populated
         let result = Shell.runResult("/bin/zsh -lc 'which claude'")
         let path = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -287,9 +290,8 @@ final class ClaudeProcessManager: ObservableObject {
                 eventHandler?(events)
             }
         } catch {
-            // Log parse error but don't crash -- skip malformed lines
-            print("[ClaudeProcess] Parse error: \(error.localizedDescription) -- line: \(line.prefix(200))")
-            eventHandler?([.error("Parse error: \(error.localizedDescription) -- line: \(line.prefix(100))")])
+            // Log parse error but don't surface to UI -- unknown event types (e.g. "type":"user" echoes) are expected
+            print("[ClaudeProcess] Skipping unrecognized line: \(line.prefix(200))")
         }
     }
 
