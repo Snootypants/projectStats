@@ -26,6 +26,11 @@ struct VibeTabView: View {
                 ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
             }
             .frame(maxWidth: .infinity)
+            .overlay(alignment: .topTrailing) {
+                codeToggleButton
+                    .padding(.top, 8)
+                    .padding(.trailing, 12)
+            }
 
             Divider()
 
@@ -36,6 +41,29 @@ struct VibeTabView: View {
                     .background(Color(nsColor: .windowBackgroundColor))
             }
         }
+    }
+
+    // MARK: - Code Toggle Button
+
+    private var codeToggleButton: some View {
+        Button {
+            tabManager.toggleVibeMode()
+        } label: {
+            HStack(spacing: 4) {
+                Text("</>")
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                Text("Code")
+                    .font(.system(size: 11, weight: .bold))
+            }
+            .foregroundStyle(.green)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(Color.green.opacity(0.15))
+            .cornerRadius(12)
+            .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 0)
+        }
+        .buttonStyle(.plain)
+        .help("Switch back to Code mode")
     }
 
     // MARK: - Chat Area
@@ -54,25 +82,6 @@ struct VibeTabView: View {
     private var emptyState: some View {
         VStack(spacing: 24) {
             Spacer()
-
-            // Back to code button
-            HStack {
-                Spacer()
-                Button {
-                    tabManager.toggleVibeMode()
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                        Text("Code")
-                            .font(.caption.bold())
-                    }
-                    .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-                .help("Switch back to Code mode")
-                .padding(.trailing, 16)
-                .padding(.top, 8)
-            }
 
             Image(systemName: "bolt.fill")
                 .font(.system(size: 48))
