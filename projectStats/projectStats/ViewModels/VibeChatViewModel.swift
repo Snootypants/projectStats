@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import SwiftUI
 import os.log
 
@@ -81,6 +82,25 @@ final class VibeChatViewModel: ObservableObject {
 
     init(projectPath: String) {
         self.projectPath = projectPath
+        // Auto-load most recent session so chat persists across launches
+        Task { @MainActor [weak self] in
+            self?.loadMostRecentSession()
+        }
+    }
+
+    /// Restore the most recent completed session so the chat area isn't blank
+    private func loadMostRecentSession() {
+        guard messages.isEmpty, sessionState == .idle else { return }
+
+        let context = AppModelContainer.shared.mainContext
+        let path = projectPath
+        var descriptor = FetchDescriptor<ConversationSession>(
+            predicate: #Predicate { $0.projectPath == path },
+            sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        guard let session = (try? context.fetch(descriptor))?.first else { return }
+        loadSessionForReplay(session: session)
     }
 
     var claudeFound: Bool {

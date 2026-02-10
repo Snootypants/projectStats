@@ -19,51 +19,21 @@ struct VibeTabView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // Main chat area (75%)
+            // Main chat area
             VStack(spacing: 0) {
                 missingKeysWarning
                 chatArea
-                    .overlay(alignment: .topTrailing) {
-                        codeToggleButton
-                            .padding(.top, 8)
-                            .padding(.trailing, 12)
-                    }
                 ChatInputView(viewModel: viewModel, isEnabled: !viewModel.isReplayMode && (viewModel.sessionState == .running || viewModel.sessionState == .thinking))
             }
             .frame(maxWidth: .infinity)
 
             Divider()
 
-            // Sidebar (25%)
-            if viewModel.sessionState != .idle {
-                SessionStatsView(viewModel: viewModel)
-                    .frame(width: 200)
-                    .background(Color(nsColor: .windowBackgroundColor))
-            }
+            // Sidebar — always visible, shows Code button + stats when active
+            SessionStatsView(viewModel: viewModel, onToggleCode: { tabManager.toggleVibeMode() })
+                .frame(width: 200)
+                .background(Color(nsColor: .windowBackgroundColor))
         }
-    }
-
-    // MARK: - Code Toggle Button
-
-    private var codeToggleButton: some View {
-        Button {
-            tabManager.toggleVibeMode()
-        } label: {
-            HStack(spacing: 4) {
-                Text("</>")
-                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                Text("Code")
-                    .font(.system(size: 11, weight: .bold))
-            }
-            .foregroundStyle(.green)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(Color.green.opacity(0.15))
-            .cornerRadius(12)
-            .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 0)
-        }
-        .buttonStyle(.plain)
-        .help("Switch back to Code mode")
     }
 
     // MARK: - Chat Area

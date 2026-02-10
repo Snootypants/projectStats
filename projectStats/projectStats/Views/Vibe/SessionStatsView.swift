@@ -2,10 +2,11 @@ import SwiftUI
 
 struct SessionStatsView: View {
     @ObservedObject var viewModel: VibeChatViewModel
+    var onToggleCode: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Session state
+            // Session state + Code button
             HStack(spacing: 8) {
                 Circle()
                     .fill(stateColor)
@@ -13,28 +14,49 @@ struct SessionStatsView: View {
                 Text(stateLabel)
                     .font(.caption.bold())
                     .foregroundStyle(.primary)
+                Spacer()
+                if let onToggleCode {
+                    Button(action: onToggleCode) {
+                        HStack(spacing: 4) {
+                            Text("</>")
+                                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                            Text("Code")
+                                .font(.system(size: 11, weight: .bold))
+                        }
+                        .foregroundStyle(.green)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.green.opacity(0.15))
+                        .cornerRadius(12)
+                        .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 0)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Switch back to Code mode")
+                }
             }
 
-            Divider()
+            if viewModel.sessionState != .idle {
+                Divider()
 
-            // Timer
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Elapsed")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                Text(formattedTime)
-                    .font(.system(.title3, design: .monospaced))
-                    .foregroundStyle(.primary)
-            }
+                // Timer
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Elapsed")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    Text(formattedTime)
+                        .font(.system(.title3, design: .monospaced))
+                        .foregroundStyle(.primary)
+                }
 
-            // Tool calls
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Tool Calls")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                Text("\(viewModel.toolCallCount)")
-                    .font(.title3.bold())
-                    .foregroundStyle(.primary)
+                // Tool calls
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Tool Calls")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    Text("\(viewModel.toolCallCount)")
+                        .font(.title3.bold())
+                        .foregroundStyle(.primary)
+                }
             }
 
             // Live tokens
